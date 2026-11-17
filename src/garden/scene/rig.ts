@@ -202,6 +202,9 @@ export function buildRig(s: Setup): Rig {
   }
 
   // ---------- ground ----------
+  // Dark floor disc under the gravel, like the PC workshop's.
+  const ground = add(new THREE.CircleGeometry(8.6, 72), toon(0x1d2133, { halftone: 1 }), root, [0, -0.005, 0], { rot: [-Math.PI / 2, 0, 0], ink: null });
+  ground.castShadow = false;
   const gravelShape = new THREE.Shape();
   {
     const w = 5.9;
@@ -225,9 +228,6 @@ export function buildRig(s: Setup): Rig {
     for (let i = 0; i < pos.count; i++) uv.setXY(i, (pos.getX(i) + 5.9) / 11.8, (pos.getY(i) + 4.9) / 9.8);
   }
   const gravel = add(gravelGeo, M.gravel, root, [0, 0.004, 0], { rot: [-Math.PI / 2, 0, 0], ink: null });
-  // The garden sits on a slab of earth, like a diorama base.
-  const slab = add(new THREE.ExtrudeGeometry(gravelShape, { depth: 0.28, bevelEnabled: false, curveSegments: 8 }), toon(0x3a2a1e), root, [0, -0.29, 0], { rot: [-Math.PI / 2, 0, 0], ink: 'body' });
-  slab.castShadow = false;
   gravel.castShadow = false;
   // Steel edging around the gravel.
   tube(gravelShape.getSpacedPoints(120).map((p) => V(p.x, 0.02, -p.y)), 0.02, M.galvDark, root, { radial: 4, seg: 240 });
