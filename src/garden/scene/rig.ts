@@ -96,11 +96,9 @@ export function buildRig(s: Setup): Rig {
   root.scale.setScalar(K);
 
   // Materials. White ones are tinted per instance.
-  const grassCol = season === 'spring' ? '#6fbf4a' : season === 'summer' ? '#5aa83f' : '#8fa548';
   const white = toon(0xffffff);
   const whiteShiny = toon(0xffffff, { shine: 0.7 });
   const M = {
-    grass: mapped(0xffffff, speckle(grassCol, ['#4f9a36', '#7cc957', '#3f8a2e', season === 'fall' ? '#b0a048' : '#68b84a'], 2400, [2, 5], [14, 14], 6), { halftone: 0.9 }),
     galv: toon(0xb4bcc6, { shine: 0.75, metal: 0.65 }),
     galvDark: toon(0x6d7480, { shine: 0.5, metal: 0.5 }),
     cedar: mapped(0xffffff, woodTexture('#c27a4c', '#8a4628', [1, 1])),
@@ -204,8 +202,6 @@ export function buildRig(s: Setup): Rig {
   }
 
   // ---------- ground ----------
-  const ground = add(new THREE.CircleGeometry(8.6, 72), M.grass, root, [0, -0.005, 0], { rot: [-Math.PI / 2, 0, 0], ink: null });
-  ground.castShadow = false;
   const gravelShape = new THREE.Shape();
   {
     const w = 5.9;
@@ -229,6 +225,9 @@ export function buildRig(s: Setup): Rig {
     for (let i = 0; i < pos.count; i++) uv.setXY(i, (pos.getX(i) + 5.9) / 11.8, (pos.getY(i) + 4.9) / 9.8);
   }
   const gravel = add(gravelGeo, M.gravel, root, [0, 0.004, 0], { rot: [-Math.PI / 2, 0, 0], ink: null });
+  // The garden sits on a slab of earth, like a diorama base.
+  const slab = add(new THREE.ExtrudeGeometry(gravelShape, { depth: 0.28, bevelEnabled: false, curveSegments: 8 }), toon(0x3a2a1e), root, [0, -0.29, 0], { rot: [-Math.PI / 2, 0, 0], ink: 'body' });
+  slab.castShadow = false;
   gravel.castShadow = false;
   // Steel edging around the gravel.
   tube(gravelShape.getSpacedPoints(120).map((p) => V(p.x, 0.02, -p.y)), 0.02, M.galvDark, root, { radial: 4, seg: 240 });
@@ -240,20 +239,6 @@ export function buildRig(s: Setup): Rig {
   const stone = (x: number, z: number) => inst(stones, UNIT_BOX, M.stone, [x + jitter(r, 0.02), 0.025, z + jitter(r, 0.02)], [0.44, 0.05, 0.44], new THREE.Color(0xffffff).offsetHSL(0, 0, jitter(r, 0.05)), [0, jitter(r, 0.08), 0]);
   for (let z = 4.4; z > -1.7; z -= 0.56) if (Math.abs(z - 1.25) > 0.3) stone(0, z);
   for (let x = -3.6; x < 4.2; x += 0.56) stone(x, 1.25);
-
-  // Grass tufts around the lawn, denser near the gravel edge.
-  const lawn = new THREE.Group();
-  lawn.userData.batchRoot = true;
-  root.add(lawn);
-  for (let i = 0; i < 340; i++) {
-    const a = r() * Math.PI * 2;
-    const rad = range(r, 6.4, 8.4);
-    const x = Math.cos(a) * rad * 1.02;
-    const z = Math.sin(a) * rad * 0.98;
-    if (Math.abs(x) < 6.1 && Math.abs(z) < 5.1) continue;
-    const m = new THREE.Matrix4().compose(V(x, 0, z), new THREE.Quaternion().setFromAxisAngle(UP, r() * 6.28), V(1, range(r, 0.8, 1.5), 1).multiplyScalar(range(r, 1.2, 2)));
-    b.add(lawn, P.TUFT, k.plain, m, { color: new THREE.Color(grassCol).offsetHSL(jitter(r, 0.02), 0, jitter(r, 0.08)), ink: null, wind: WIND });
-  }
 
   // ---------- raised beds ----------
   function galvBed(g: THREE.Group, w: number, d: number, h: number, front?: THREE.Group): void {
@@ -1065,7 +1050,9 @@ export function buildRig(s: Setup): Rig {
     const list: THREE.Mesh[] = [];
     g.traverse((o) => {
       const m = o as THREE.Mesh;
-      if (m.isMesh && !m.userData.ink && m.children.some((c) => c.userData.ink)) list.push(m);
+      // Everything visible except ink hulls and invisible pick boxes: the outline traces its silhouette.
+      const mat = m.material as THREE.Material & { isLineMaterial?: boolean; opacity: number };
+      if (m.isMesh && !m.userData.ink && mat.visible !== false && !mat.isLineMaterial && !(mat.transparent && mat.opacity < 0.05)) list.push(m);
     });
     glow.set(id, list);
   }
@@ -1120,7 +1107,7 @@ export function buildRig(s: Setup): Rig {
     seedlings: view(at('seedlings', 0, 1.0, 0), [1, 0.5, 0.25], 2.6),
     arbor: view(at('arbor', 0, 1.3, 0), [0.25, 0.25, 1], 4.4),
   };
-  const overview: View = view([0, 0.4, 0.3], [0.16, 0.72, 1], 16.5);
+  const overview: View = view([0, 0.2, 0.2], [0.16, 0.72, 1], 15.5);
 
   // ---------- behaviour ----------
   const lids = new Map<LidId, { open: boolean; k: number }>();

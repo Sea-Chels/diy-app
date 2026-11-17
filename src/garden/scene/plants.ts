@@ -90,7 +90,7 @@ const BERRY = (() => {
 })();
 
 /** Corn leaf: long strap that arches up and over. */
-const CORN_LEAF = leafGeo({ shape: 'strap', w: 0.055, bend: 1.9, fold: 0.14, ruffle: 0.012, ruffleFreq: 30, segments: 24 });
+const CORN_LEAF = leafGeo({ shape: 'strap', w: 0.075, bend: 1.2, fold: 0.14, ruffle: 0.012, ruffleFreq: 30, segments: 24 });
 
 // ---------- materials ----------
 
@@ -454,17 +454,18 @@ export function corn(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3, o: {
   const H = k.season === 'spring' ? 0.55 : range(k.r, 1.75, 2.0);
   const green = fall ? 0xc9b36a : 0x69ab3c;
   tube([V(0, 0, 0), V(jitter(k.r, 0.02), H * 0.5, jitter(k.r, 0.02)), V(jitter(k.r, 0.03), H, jitter(k.r, 0.03))], 0.016, k.stem(fall ? 0xb59c58 : 0x7fb048), g, { wind: WIND, taper: 0.55 });
-  const leaves = k.season === 'spring' ? 5 : 11;
+  // Shortish leaves held up along the stalk, as in a real cornfield.
+  const leaves = k.season === 'spring' ? 5 : 13;
   for (let i = 0; i < leaves; i++) {
-    const h = H * (0.08 + 0.82 * (i / leaves));
+    const h = H * (0.06 + 0.78 * (i / leaves));
     const a = i * Math.PI + i * 0.35 + jitter(k.r, 0.6);
-    const len = (k.season === 'spring' ? 0.35 : 0.78) * (1 - 0.35 * Math.abs(i / leaves - 0.45));
-    put(k, g, CORN_LEAF, k.leaf, leafMatrix(V(0, h, 0), outUp(a, range(k.r, 1.25, 1.42)), UP, len), vary(k, green, 0.05));
+    const len = (k.season === 'spring' ? 0.28 : 0.46) * (1 - 0.4 * Math.abs(i / leaves - 0.4));
+    put(k, g, CORN_LEAF, k.leaf, leafMatrix(V(0, h, 0), outUp(a, range(k.r, 1.0, 1.25)), UP, len), vary(k, green, 0.05));
   }
   if (k.season !== 'spring') {
     // Tassel.
-    for (let i = 0; i < 7; i++) {
-      put(k, g, CYL, k.plain, stalkM(V(0, H, 0), outUp(i * 0.9, i === 0 ? 1.57 : 0.9), 0.14, 0.0025), fall ? 0xa98a4a : 0xd8c46a, null);
+    for (let i = 0; i < 10; i++) {
+      put(k, g, CYL, k.plain, stalkM(V(0, H - (i ? 0.03 : 0), 0), outUp(i * 0.7, i === 0 ? 1.57 : range(k.r, 1.0, 1.3)), i === 0 ? 0.24 : 0.17, 0.004), fall ? 0xa98a4a : 0xe2d48a, null);
     }
     // Ears in husks with silk.
     for (let e = 0; e < 2; e++) {

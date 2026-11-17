@@ -54,6 +54,7 @@ export function openPlanner(): void {
     p.splice(p.lastIndexOf(id), 1);
     setPlan(p);
   };
+  const removeAll = (id: string) => setPlan(plan().filter((x) => x !== id));
 
   function renderChips(): void {
     clear(chips);
@@ -74,6 +75,7 @@ export function openPlanner(): void {
           h('button', { class: 'plan-opt-main', onClick: () => add(p.id), 'aria-label': `Add ${p.name}` },
             h('span', { class: 'opt-name' }, p.name),
             h('span', { class: 'muted small' }, `${perLabel(p)} · ${SUN_LABEL[p.sun]}`)),
+          n ? h('button', { class: 'icon-btn small-btn', 'aria-label': `One less ${p.name}`, onClick: () => remove(p.id) }, icon('minus', 15)) : null,
           n ? h('span', { class: 'opt-tick' }, `×${n}`) : null,
           h('button', { class: 'icon-btn small-btn', 'aria-label': `Add ${p.name}`, onClick: () => add(p.id) }, icon('plus', 15))),
       );
@@ -101,7 +103,7 @@ export function openPlanner(): void {
     for (const r of rows) {
       for (let i = 0; i < r.squares; i++) {
         const sq = squares(r.plant);
-        cells.push(h('button', { class: `sq t-${r.plant.type}${i ? ' cont' : ''}`, title: r.plant.name, onClick: () => openPlantGuide(r.plant.id) },
+        cells.push(h('button', { class: `sq t-${r.plant.type}${i ? ' cont' : ''}`, title: `${r.plant.name}: click to remove one`, 'aria-label': `Remove one ${r.plant.name}`, onClick: () => remove(r.plant.id) },
           i ? '' : h('span', {}, r.plant.name.split(' (')[0]), i || sq.squares > 1 ? '' : h('small', {}, `×${sq.perSquare}`)));
       }
     }
@@ -114,7 +116,7 @@ export function openPlanner(): void {
     side.append(
       h('p', { class: 'paint-label' }, 'Bed size'), seg,
       h('div', { class: `meter${used > total ? ' over' : ''}` }, h('span', { style: `width:${Math.min(100, (used / total) * 100)}%` })),
-      h('p', { class: 'muted small' }, `${used} of ${total} square feet planted`),
+      h('p', { class: 'muted small' }, `${used} of ${total} square feet planted${rows.length ? ' · click a square to remove it' : ''}`),
       grid,
     );
 
@@ -129,7 +131,8 @@ export function openPlanner(): void {
         h('span', { class: 'muted small' }, `${r.plants} plant${r.plants > 1 ? 's' : ''} · ${r.squares} sq ft`),
         h('span', { class: 'stepper' },
           h('button', { class: 'icon-btn small-btn', 'aria-label': `One less ${r.plant.name}`, onClick: () => remove(r.plant.id) }, icon('minus', 14)),
-          h('button', { class: 'icon-btn small-btn', 'aria-label': `One more ${r.plant.name}`, onClick: () => add(r.plant.id) }, icon('plus', 14)))))));
+          h('button', { class: 'icon-btn small-btn', 'aria-label': `One more ${r.plant.name}`, onClick: () => add(r.plant.id) }, icon('plus', 14)),
+          h('button', { class: 'icon-btn small-btn danger', 'aria-label': `Remove all ${r.plant.name}`, title: 'Remove from the bed', onClick: () => removeAll(r.plant.id) }, icon('trash', 14)))))));
 
     side.append(h('h4', { class: 'side-h' }, 'Checks'), h('ul', { class: 'issues' }, ...issues.map((i) => h('li', { class: `lvl-${i.level}` }, icon(LEVEL_ICON[i.level], 16), h('span', {}, i.text)))));
     if (good.length) {

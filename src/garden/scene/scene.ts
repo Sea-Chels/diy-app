@@ -4,7 +4,7 @@ import { AREAS, type AreaId, type LidId } from '../data/areas';
 import type { Setup } from '../data/setup';
 import { buildRig, rigKey, type Rig } from './rig';
 import { tween, updateTweens, easeInOutCubic, easeOutBack, lerp } from '../../shared/tween';
-import { lineMaterials, setHighlight, shared } from '../../shared/toon';
+import { lineMaterials, shared } from '../../shared/toon';
 
 export interface SceneApi {
   focus(area: AreaId | null): void;
@@ -14,6 +14,47 @@ export interface SceneApi {
 }
 
 const ALL_LIDS: LidId[] = ['bedFront', 'shedDoors', 'compostSlats', 'rowCover'];
+const HOVER_LAYER = 1;
+const SELECT_LAYER = 2;
+
+/** Mask of the highlighted area (red = hovered, green = selected) turned into a cyan rim. */
+function makeOutline(): { target: THREE.WebGLRenderTarget; mask: THREE.MeshBasicMaterial; quad: THREE.Mesh; cam: THREE.OrthographicCamera; uniforms: { uMask: { value: THREE.Texture }; uTexel: { value: THREE.Vector2 }; uScale: { value: number } } } {
+  const target = new THREE.WebGLRenderTarget(1, 1);
+  const mask = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, depthTest: false, depthWrite: false });
+  const uniforms = { uMask: { value: target.texture as THREE.Texture }, uTexel: { value: new THREE.Vector2(1, 1) }, uScale: { value: 1 } };
+  const mat = new THREE.ShaderMaterial({
+    uniforms,
+    transparent: true,
+    depthTest: false,
+    depthWrite: false,
+    vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+    fragmentShader: `
+      uniform sampler2D uMask; uniform vec2 uTexel; uniform float uScale;
+      varying vec2 vUv;
+      void main() {
+        vec2 c = texture2D(uMask, vUv).rg;
+        // Near the mask (rim width) and how surrounded we are (to skip gaps between leaves).
+        vec2 near = vec2(0.0), cover = vec2(0.0);
+        for (int i = 0; i < 16; i++) {
+          float a = float(i) * 0.3927;
+          vec2 d = vec2(cos(a), sin(a)) * uTexel * uScale;
+          vec2 s1 = texture2D(uMask, vUv + d * 1.6).rg;
+          vec2 s2 = texture2D(uMask, vUv + d * 3.2).rg;
+          near = max(near, max(s1, s2));
+          cover += step(0.5, texture2D(uMask, vUv + d * 14.0).rg);
+        }
+        cover /= 16.0;
+        float sel = near.g * (1.0 - c.g) * (1.0 - smoothstep(0.55, 0.75, cover.g));
+        float hover = near.r * (1.0 - c.r) * (1.0 - smoothstep(0.55, 0.75, cover.r)) * 0.85;
+        float rim = max(sel, hover);
+        if (rim < 0.01) discard;
+        gl_FragColor = vec4(0.431, 0.906, 1.0, rim);
+      }`,
+  });
+  const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat);
+  quad.frustumCulled = false;
+  return { target, mask, quad, cam: new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1), uniforms };
+}
 
 export function createScene(canvas: HTMLCanvasElement, initial: Setup): SceneApi {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
@@ -58,13 +99,6 @@ export function createScene(canvas: HTMLCanvasElement, initial: Setup): SceneApi
   front.position.set(-3, 3, 8);
   scene.add(front);
 
-  const ring = new THREE.Mesh(
-    new THREE.RingGeometry(5.12, 5.7, 72),
-    new THREE.MeshBasicMaterial({ color: 0x0f1218, transparent: true, opacity: 0.9, side: THREE.DoubleSide }),
-  );
-  ring.rotation.x = -Math.PI / 2;
-  ring.position.y = 0.002;
-  scene.add(ring);
 
   let rig: Rig = buildRig(initial);
   scene.add(rig.group);
@@ -87,9 +121,16 @@ export function createScene(canvas: HTMLCanvasElement, initial: Setup): SceneApi
   const selectCbs: ((a: AreaId | null) => void)[] = [];
   const hoverCbs: ((a: AreaId | null) => void)[] = [];
 
+  // Highlights draw one outline around an area's silhouette instead of
+  // tinting every leaf's ink. Hovered meshes go on layer 1, selected on 2.
   function setGlow(a: AreaId | null, level: 'none' | 'hover' | 'selected'): void {
     if (!a) return;
-    for (const m of rig.glow.get(a) ?? []) setHighlight(m, level);
+    for (const m of rig.glow.get(a) ?? []) {
+      m.layers.disable(HOVER_LAYER);
+      m.layers.disable(SELECT_LAYER);
+      if (level === 'hover') m.layers.enable(HOVER_LAYER);
+      if (level === 'selected') m.layers.enable(SELECT_LAYER);
+    }
   }
   function refreshGlow(): void {
     for (const a of rig.glow.keys()) setGlow(a, 'none');
@@ -264,12 +305,46 @@ export function createScene(canvas: HTMLCanvasElement, initial: Setup): SceneApi
     const { clientWidth: w, clientHeight: h } = canvas.parentElement ?? canvas;
     lineMaterials.forEach((m) => m.resolution.set(w, h));
   }
+  const outline = makeOutline();
+  const maskScene = new THREE.Scene();
+  maskScene.add(outline.quad);
+  function renderOutline(): void {
+    if (!hovered && !selected) return;
+    const layers = camera.layers.mask;
+    const bg = scene.background;
+    renderer.setRenderTarget(outline.target);
+    renderer.setClearColor(0x000000, 0);
+    renderer.clear();
+    scene.overrideMaterial = outline.mask;
+    scene.background = null;
+    const shadows = renderer.shadowMap.autoUpdate;
+    renderer.shadowMap.autoUpdate = false;
+    for (const [layer, col] of [[HOVER_LAYER, 0xff0000], [SELECT_LAYER, 0x00ff00]] as const) {
+      camera.layers.set(layer);
+      outline.mask.color.setHex(col);
+      outline.mask.blending = THREE.AdditiveBlending;
+      renderer.autoClear = false;
+      renderer.render(scene, camera);
+    }
+    renderer.shadowMap.autoUpdate = shadows;
+    scene.overrideMaterial = null;
+    scene.background = bg;
+    camera.layers.mask = layers;
+    renderer.setRenderTarget(null);
+    renderer.render(maskScene, outline.cam);
+    renderer.autoClear = true;
+  }
+
   function resize(): void {
     const { clientWidth: w, clientHeight: h } = canvas.parentElement ?? canvas;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     shared.uDotSize.value = 5.5 * renderer.getPixelRatio();
+    const pr = renderer.getPixelRatio();
+    outline.target.setSize(Math.round(w * pr), Math.round(h * pr));
+    outline.uniforms.uTexel.value.set(1 / (w * pr), 1 / (h * pr));
+    outline.uniforms.uScale.value = pr;
     syncLineResolution();
   }
   window.addEventListener('resize', resize);
@@ -297,6 +372,7 @@ export function createScene(canvas: HTMLCanvasElement, initial: Setup): SceneApi
     shared.uKeyDir.value.copy(keyDir).transformDirection(camera.matrixWorldInverse);
     shared.uUpView.value.set(0, 1, 0).transformDirection(camera.matrixWorldInverse);
     renderer.render(scene, camera);
+    renderOutline();
   });
   (window as unknown as { __garden?: unknown }).__garden = { renderer, camera, controls, scene };
 

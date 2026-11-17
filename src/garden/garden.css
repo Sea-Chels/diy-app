@@ -90,6 +90,8 @@ button.rel-chip:hover { border-color: rgba(255,255,255,0.3); }
 }
 .sq span { max-width: 100%; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sq small { opacity: 0.8; font-size: 0.58rem; }
+.sq:not(.empty):hover { outline: 2px solid var(--diff-3); outline-offset: -2px; cursor: pointer; }
+.icon-btn.danger:hover { color: var(--diff-3); border-color: rgba(248,113,113,0.4); }
 .sq.cont { background: color-mix(in srgb, var(--t) 22%, #3a2a1d); }
 .sq.empty { background: rgba(0,0,0,0.22); }
 .sq.over { outline: 2px solid var(--diff-3); outline-offset: -2px; }
