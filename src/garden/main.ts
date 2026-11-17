@@ -12,6 +12,7 @@ import { GUIDES, GUIDE_BY_ID } from './data/guides';
 import { PLANT_BY_ID } from './data/plants';
 import { h } from '../shared/dom';
 import { hydrateIcons } from '../shared/icons';
+import { hideLoaderAfterFrames } from '../shared/loader';
 
 hydrateIcons();
 
@@ -62,3 +63,5 @@ function applyHash(): void {
 }
 window.addEventListener('hashchange', applyHash);
 if (location.hash) applyHash();
+
+hideLoaderAfterFrames();

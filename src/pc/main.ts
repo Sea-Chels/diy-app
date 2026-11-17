@@ -11,6 +11,7 @@ import { openBuilder } from './ui/builder';
 import { specsFor } from './ui/context';
 import { h, clear } from '../shared/dom';
 import { hydrateIcons } from '../shared/icons';
+import { hideLoaderAfterFrames } from '../shared/loader';
 
 hydrateIcons();
 
@@ -69,3 +70,5 @@ function applyHash(): void {
 }
 window.addEventListener('hashchange', applyHash);
 if (location.hash) applyHash();
+
+hideLoaderAfterFrames();

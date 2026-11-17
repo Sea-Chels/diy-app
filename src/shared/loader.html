@@ -1,0 +1,54 @@
+<style>
+  #loader {
+    position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; align-content: center; gap: 26px;
+    background: radial-gradient(900px 600px at 50% 45%, #1c2230 0%, #0f1218 60%, #0a0c10 100%);
+    color: #e8ecf3; font-family: system-ui, sans-serif; transition: opacity 0.45s ease, visibility 0.45s;
+  }
+  #loader.done { opacity: 0; visibility: hidden; }
+  #loader::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1.4px) 0 0 / 7px 7px;
+  }
+  .ld-stage { position: relative; width: 210px; height: 210px; display: grid; place-items: center; }
+  /* The burst ratchets round in clicks, like a socket wrench. */
+  .ld-burst {
+    position: absolute; width: 150px; height: 150px; animation: ld-ratchet 2.4s steps(12) infinite;
+    clip-path: polygon(50% 0%, 58% 18%, 75% 6%, 74% 26%, 96% 20%, 84% 38%, 100% 50%, 84% 62%, 96% 80%, 74% 74%, 75% 94%, 58% 82%, 50% 100%, 42% 82%, 25% 94%, 26% 74%, 4% 80%, 16% 62%, 0% 50%, 16% 38%, 4% 20%, 26% 26%, 25% 6%, 42% 18%);
+    background: radial-gradient(circle, rgba(22,17,31,0.28) 1.4px, transparent 1.8px) 0 0 / 8px 8px, linear-gradient(135deg, #ff4fd8, #7b3fe4 55%, #1d9bf0);
+    filter: drop-shadow(5px 5px 0 #16111f);
+  }
+  .ld-word {
+    position: relative; font: 900 46px/1 Impact, 'Arial Black', sans-serif; letter-spacing: 0.02em; color: #ffd23f;
+    -webkit-text-stroke: 4px #16111f; paint-order: stroke fill; text-shadow: 3px 3px 0 #16111f; transform: rotate(-4deg);
+    animation: ld-pop 2.4s ease-in-out infinite;
+  }
+  /* A wrench orbits the burst and gives it a turn. */
+  .ld-orbit { position: absolute; inset: 0; animation: ld-spin 2.4s cubic-bezier(0.6, 0, 0.3, 1) infinite; }
+  .ld-wrench {
+    position: absolute; top: -6px; left: 50%; width: 44px; height: 44px; margin-left: -22px; padding: 7px; border-radius: 12px;
+    background: var(--ws, #6ee7ff); color: #16111f; border: 3px solid #16111f; box-shadow: 3px 3px 0 #16111f; transform: rotate(45deg);
+  }
+  .ld-cap { font: 700 15px/1 system-ui, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #9aa3b2; }
+  .ld-cap b { color: var(--ws, #6ee7ff); }
+  .ld-cap i { display: inline-block; width: 1.4em; text-align: left; font-style: normal; }
+  .ld-cap i::after { content: '…'; animation: ld-dots 1.2s steps(4) infinite; display: inline-block; overflow: hidden; vertical-align: bottom; width: 0; }
+  @keyframes ld-ratchet { to { transform: rotate(360deg); } }
+  @keyframes ld-spin { to { transform: rotate(360deg); } }
+  @keyframes ld-pop { 0%, 100% { transform: rotate(-4deg) scale(1); } 50% { transform: rotate(-4deg) scale(1.08); } }
+  @keyframes ld-dots { to { width: 1.2em; } }
+  @media (prefers-reduced-motion: reduce) {
+    .ld-burst, .ld-orbit, .ld-word, .ld-cap i::after { animation: none; }
+    .ld-cap i::after { width: auto; }
+  }
+</style>
+<div id="loader" role="status" aria-live="polite" style="--ws: __COLOR__">
+  <div class="ld-stage" aria-hidden="true">
+    <div class="ld-burst"></div>
+    <span class="ld-word">DIY</span>
+    <div class="ld-orbit">
+      <svg class="ld-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg>
+    </div>
+  </div>
+  <p class="ld-cap">__VERB__ <b>__WHAT__</b><i></i></p>
+</div>
+<script>setTimeout(function () { var l = document.getElementById('loader'); if (l) l.classList.add('done'); }, 15000);</script>
