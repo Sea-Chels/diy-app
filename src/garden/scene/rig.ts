@@ -334,7 +334,11 @@ export function buildRig(s: Setup): Rig {
       if (s.fill === 'hugel' && i === 1) {
         const twig = toon(0x6a4a30);
         for (let t = 0; t < 26; t++) {
-          inst(bed, UNIT_CYL, twig, [range(r, -1.1, 1.1), y + range(r, 0.01, L.h - 0.01), id / 2 - 0.02], [0.014, range(r, 0.2, 0.5), 0.014], 0xffffff, [Math.PI / 2 + jitter(r, 0.6), jitter(r, 1.4), 0], null);
+          // Cut ends sit flush with the layer's face, so nothing pokes through the closed front panel.
+          const len = range(r, 0.2, 0.5);
+          const tilt = jitter(r, 0.6);
+          const z = id / 2 + 0.005 - (len / 2) * Math.abs(Math.cos(tilt));
+          inst(bed, UNIT_CYL, twig, [range(r, -1.1, 1.1), y + range(r, 0.01, L.h - 0.01), z], [0.014, len, 0.014], 0xffffff, [Math.PI / 2 + tilt, jitter(r, 1.4), 0], null);
         }
       }
       // A comic caption per layer, shown when the front is open.
