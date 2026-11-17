@@ -557,25 +557,28 @@ export function sunflower(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3,
     const d = outUp(a, 0.4);
     put(k, g, CYL, k.plain, stalkM(V(0, h, 0), d, sl, 0.004), 0x5f9a38);
     const size = (0.34 - 0.14 * (i / leaves)) * (k.season === 'spring' ? 0.7 : 1);
-    const droop = k.season === 'fall' ? -0.9 : -0.25;
-    put(k, g, G.heartTooth, k.leaf, leafMatrix(V(0, h, 0).addScaledVector(d, sl), outUp(a, droop), UP, size), k.season === 'fall' && i < 4 ? 0xa59a46 : vary(k, 0x55993a, 0.05));
+    // In fall the lowest leaves brown and hang; the rest stay green.
+    const old = k.season === 'fall' && i < 4;
+    const droop = old ? -0.9 : k.season === 'fall' ? -0.4 : -0.25;
+    put(k, g, G.heartTooth, k.leaf, leafMatrix(V(0, h, 0).addScaledVector(d, sl), outUp(a, droop), UP, size), old ? 0xa59a46 : vary(k, 0x55993a, 0.05));
   }
   if (k.season === 'spring') return g;
   // Head: textured seed disc, petals in two rows, green back.
-  const droop = k.season === 'fall' ? 1.1 : 0.25;
+  // Fall heads nod a little but still face forward.
+  const droop = k.season === 'fall' ? 0.45 : 0.25;
   const face = V(Math.cos(facing) * Math.cos(droop), Math.sin(-droop) * 0.6 + 0.25, Math.sin(facing) * Math.cos(droop)).normalize();
   const center = top.clone().addScaledVector(face, 0.03);
   const head = add(DISC, k.seedHead, g, [center.x, center.y, center.z], { wind: WIND });
   head.quaternion.setFromUnitVectors(UP, face);
   head.scale.set(0.11, 0.5, 0.11);
-  const petals = k.season === 'fall' ? 10 : 22;
+  const petals = k.season === 'fall' ? 16 : 22;
   for (let i = 0; i < petals; i++) {
     const a = (i / petals) * Math.PI * 2;
     const X = new THREE.Vector3().crossVectors(UP, face).normalize();
     const Y = new THREE.Vector3().crossVectors(face, X);
     const d = X.clone().multiplyScalar(Math.cos(a)).addScaledVector(Y, Math.sin(a));
     const base = center.clone().addScaledVector(d, 0.1).addScaledVector(face, -0.004 - (i % 2) * 0.004);
-    put(k, g, G.petal, k.plain, leafMatrix(base, d.clone().addScaledVector(face, -0.15), face, 0.085), k.season === 'fall' ? 0xc8902a : i % 2 ? 0xffc21a : 0xffd84a);
+    put(k, g, G.petal, k.plain, leafMatrix(base, d.clone().addScaledVector(face, -0.15), face, 0.085), k.season === 'fall' ? (i % 2 ? 0xe0a020 : 0xc8862a) : i % 2 ? 0xffc21a : 0xffd84a);
   }
   return g;
 }

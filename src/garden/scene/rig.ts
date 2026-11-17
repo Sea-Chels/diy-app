@@ -299,6 +299,10 @@ export function buildRig(s: Setup): Rig {
       ],
     };
     let y = 0.01;
+    // Twigs get their own batch so they can slide out when the front opens.
+    const twigs = new THREE.Group();
+    twigs.userData.batchRoot = true;
+    bed.add(twigs);
     const labels = new THREE.Group();
     bed.add(labels);
     LAYERS[s.fill].forEach((L, i) => {
@@ -338,7 +342,7 @@ export function buildRig(s: Setup): Rig {
           const len = range(r, 0.2, 0.5);
           const tilt = jitter(r, 0.6);
           const z = id / 2 + 0.005 - (len / 2) * Math.abs(Math.cos(tilt));
-          inst(bed, UNIT_CYL, twig, [range(r, -1.1, 1.1), y + range(r, 0.01, L.h - 0.01), z], [0.014, len, 0.014], 0xffffff, [Math.PI / 2 + tilt, jitter(r, 1.4), 0], null);
+          inst(twigs, UNIT_CYL, twig, [range(r, -1.1, 1.1), y + range(r, 0.01, L.h - 0.01), z], [0.014, len, 0.014], 0xffffff, [Math.PI / 2 + tilt, jitter(r, 1.4), 0], null);
         }
       }
       // A comic caption per layer, shown when the front is open.
@@ -356,6 +360,7 @@ export function buildRig(s: Setup): Rig {
     labels.userData.labels = true;
     lidHooks.bedFront = (t) => {
       bedFront.rotation.x = 1.5 * t;
+      twigs.position.z = 0.16 * t;
       labels.scale.setScalar(Math.max(0.001, t));
     };
   }
@@ -733,7 +738,10 @@ export function buildRig(s: Setup): Rig {
   const hydro = area('hydro', 2.0, 2.65);
   {
     // Brick base, as in the photo, holds the reservoir or the frame.
-    for (let row = 0; row < 3; row++) inst(hydro, UNIT_BOX, M.brick, [0, 0.06 + row * 0.12, 0], [1.3, 0.12, 0.7], new THREE.Color(0xffffff).offsetHSL(0, 0, jitter(r, 0.04)));
+    // The NFT rack stands on the ground, so its reservoir gets a smaller base beside it.
+    const nftMode = s.hydro === 'nft';
+    const baseX = nftMode ? -0.82 : 0;
+    for (let row = 0; row < 3; row++) inst(hydro, UNIT_BOX, M.brick, [baseX, 0.06 + row * 0.12, 0], nftMode ? [0.78, 0.12, 0.62] : [1.3, 0.12, 0.7], new THREE.Color(0xffffff).offsetHSL(0, 0, jitter(r, 0.04)));
     const baseTop = 0.36;
     const net = toon(0x2a2a2e);
     const cup = (g: THREE.Object3D, p: THREE.Vector3, dir: THREE.Vector3, plant: number) => {
@@ -763,21 +771,25 @@ export function buildRig(s: Setup): Rig {
       }
       tube([V(0.45, baseTop + 0.3, 0.25), V(0.48, baseTop + 1.2, 0.25), V(0.45, baseTop + 1.9, 0.2)], 0.012, M.hose, hydro, { seg: 20 });
     } else if (s.hydro === 'nft') {
-      // A-frame of sloped channels; water trickles from the top back to the tote.
-      box(1.1, 0.3, 0.5, M.tote, hydro, [0, baseTop + 0.15, 0], { r: 0.03 });
+      // A-frame of sloped channels on the ground; water trickles down and drains into the tote.
+      box(0.66, 0.3, 0.5, M.tote, hydro, [baseX, baseTop + 0.15, 0], { r: 0.03 });
+      const RX = 0.42;
       for (const sd of [-1, 1]) {
-        add(UNIT_BOX, M.weathered, hydro, [sd * 0.62, baseTop + 0.7, -0.05], { scale: [0.05, 1.4, 0.05], rot: [0.32, 0, 0] });
-        add(UNIT_BOX, M.weathered, hydro, [sd * 0.62, baseTop + 0.7, 0.4], { scale: [0.05, 1.4, 0.05], rot: [-0.32, 0, 0] });
+        add(UNIT_BOX, M.weathered, hydro, [RX + sd * 0.6, 0.72, -0.05], { scale: [0.05, 1.45, 0.05], rot: [0.32, 0, 0] });
+        add(UNIT_BOX, M.weathered, hydro, [RX + sd * 0.6, 0.72, 0.4], { scale: [0.05, 1.45, 0.05], rot: [-0.32, 0, 0] });
+        add(UNIT_BOX, M.weathered, hydro, [RX + sd * 0.6, 0.3, 0.175], { scale: [0.04, 0.04, 0.62] });
       }
       for (let lvl = 0; lvl < 3; lvl++) {
         for (const sd of [-1, 1]) {
-          const y = baseTop + 0.45 + lvl * 0.38;
+          const y = 0.42 + lvl * 0.38;
           const z = 0.18 + sd * (0.34 - lvl * 0.12);
-          box(1.35, 0.08, 0.1, M.pvc, hydro, [0, y, z], { rot: [0, 0, 0.03], r: 0.025 });
-          for (let i = 0; i < 6; i++) cup(hydro, V(-0.55 + i * 0.22, y + 0.04, z), UP, (i + lvl) % 3 === 1 ? 2 : 0);
+          box(1.3, 0.08, 0.1, M.pvc, hydro, [RX, y, z], { rot: [0, 0, 0.03], r: 0.025 });
+          for (let i = 0; i < 5; i++) cup(hydro, V(RX - 0.44 + i * 0.22, y + 0.04 + i * 0.0066, z), UP, (i + lvl) % 3 === 1 ? 2 : 0);
         }
       }
-      tube([V(-0.68, baseTop + 1.2, 0.18), V(-0.7, baseTop + 0.6, 0.18), V(-0.5, baseTop + 0.3, 0.1)], 0.02, M.pvc, hydro, { seg: 20 });
+      // Drain from the low ends into the tote, feed hose from the pump up to the high ends.
+      tube([V(RX - 0.66, 1.1, 0.18), V(RX - 0.7, 0.75, 0.18), V(baseX + 0.2, baseTop + 0.4, 0.1), V(baseX + 0.15, baseTop + 0.28, 0.05)], 0.02, M.pvc, hydro, { seg: 24 });
+      tube([V(baseX - 0.1, baseTop + 0.3, -0.05), V(baseX - 0.05, baseTop + 0.55, -0.2), V(RX, 1.45, -0.25), V(RX + 0.68, 1.3, 0.18)], 0.012, M.hose, hydro, { seg: 30 });
     } else {
       // Deep water culture: a tote with a floating raft and an air pump.
       box(1.2, 0.36, 0.6, M.tote, hydro, [0, baseTop + 0.18, 0], { r: 0.03 });
@@ -786,7 +798,7 @@ export function buildRig(s: Setup): Rig {
       box(0.18, 0.1, 0.12, toon(0x2a2a2e), hydro, [0.75, 0.05, 0.3], { r: 0.02 });
       tube([V(0.75, 0.1, 0.3), V(0.7, 0.4, 0.3), V(0.55, 0.6, 0.25), V(0.4, 0.58, 0.2)], 0.006, toon(0xe8f4ff), hydro, { seg: 20, ink: null });
     }
-    pick(hydro, 1.4, 2.4, 0.9, [0, 1.2, 0]);
+    pick(hydro, nftMode ? 2.3 : 1.4, 2.4, 0.9, [nftMode ? -0.1 : 0, 1.2, 0]);
   }
 
   // ---------- herb spiral ----------
