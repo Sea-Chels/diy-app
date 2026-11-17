@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>DIY</title>
+    <meta name="description" content="Fix it yourself. Interactive 3D workshops for your PC, car, home and garden." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="hub">
+    <header class="topbar">
+      <a class="brand" href="./"><span class="brand-mark"><i data-icon="wrench" data-size="20"></i></span> DIY</a>
+    </header>
+    <main class="hub-main">
+      <section class="hero">
+        <h1 class="burst"><span>DIY</span></h1>
+        <p class="tagline">Fix it yourself. Pick a workshop, click the part that’s giving you trouble, and follow along.</p>
+      </section>
+      <section class="workshops" aria-label="Workshops">
+        <a class="ws ws-pc" href="./pc/">
+          <span class="ws-art"><i data-icon="cpu" data-size="64"></i></span>
+          <span class="ws-body">
+            <span class="ws-status live">Open</span>
+            <span class="ws-title">PC</span>
+            <span class="ws-text">Troubleshoot, swap parts, get into the BIOS and install an OS. Check your parts fit together.</span>
+          </span>
+          <span class="ws-go"><i data-icon="next" data-size="20"></i></span>
+        </a>
+        <a class="ws ws-garage" href="https://sea-chels.github.io/diy-garage/" target="_blank" rel="noopener noreferrer">
+          <span class="ws-art"><i data-icon="car" data-size="64"></i></span>
+          <span class="ws-body">
+            <span class="ws-status moving">Moving in soon</span>
+            <span class="ws-title">Garage</span>
+            <span class="ws-text">Oil, bulbs, fuses, wipers and more on a clickable car. Opens the current Garage site for now.</span>
+          </span>
+          <span class="ws-go"><i data-icon="external" data-size="18"></i></span>
+        </a>
+        <div class="ws ws-home soon" aria-disabled="true">
+          <span class="ws-art"><i data-icon="house" data-size="64"></i></span>
+          <span class="ws-body">
+            <span class="ws-status">Coming soon</span>
+            <span class="ws-title">Home</span>
+            <span class="ws-text">Leaky taps, running toilets, outlets and drywall patches.</span>
+          </span>
+        </div>
+        <div class="ws ws-garden soon" aria-disabled="true">
+          <span class="ws-art"><i data-icon="sprout" data-size="64"></i></span>
+          <span class="ws-body">
+            <span class="ws-status">Coming soon</span>
+            <span class="ws-title">Garden</span>
+            <span class="ws-text">Beds, irrigation, pruning and keeping tools sharp.</span>
+          </span>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="/src/hub/main.ts"></script>
+  </body>
+</html>
