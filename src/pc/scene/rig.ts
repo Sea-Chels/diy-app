@@ -92,7 +92,7 @@ const ATX: Layout = {
   ram: { u0: 172, n: 4, v0: 12, v1: 145, fill: [1, 3] },
   pcie: [192, 258],
   m2: [48, 138, 160],
-  cmos: [150, 232],
+  cmos: [206, 284],
   atx24: [237, 110, 162],
   eps: [34, 9],
   chipset: [172, 226, 200, 250],
@@ -107,7 +107,7 @@ const ITX: Layout = {
   ram: { u0: 140, n: 2, v0: 8, v1: 141, fill: [0, 1] },
   pcie: [152],
   m2: [25, 105, 118],
-  cmos: [120, 100],
+  cmos: [124, 124],
   atx24: [163, 20, 72],
   eps: [30, 7],
   chipset: null,
@@ -949,7 +949,8 @@ export function buildRig(s: Setup): Rig {
     storage: view(storageC, s.size === 'itx' ? [-0.5, 0.3, 1] : [-1, 0.42, 0.45], s.size === 'itx' ? 360 : 460),
     psu: view(psuC, [-1, 0.36, 0.3], 560),
     fans: dm.front.n ? view(fanC, [-0.65, 0.25, 1], 740 * scale) : view(fanC, [-0.6, 1, 0.4], 520),
-    cmos: view(P(L.cmos[0], L.cmos[1], 0), [-1, 0.2, 0.15], 360),
+    // On Mini-ITX the battery sits just under the socket (the cooler lifts away), so look straight in over the GPU.
+    cmos: L === ITX ? view(P(L.cmos[0], L.cmos[1], 0), [-1, 0.06, -0.32], 380) : view(P(L.cmos[0], L.cmos[1], 0), [-1, 0.2, 0.15], 360),
     monitor: view(monPt(0, 300, 0), [-0.707, 0.12, 0.707], 900, false),
   };
   const ovT = new THREE.Vector3(monX * 0.42, H * 0.44 + FEET, monZ * 0.42);

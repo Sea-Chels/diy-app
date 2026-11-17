@@ -43,7 +43,7 @@ export const PARTS: Record<PartId, PartInfo> = {
   storage: { id: 'storage', label: 'SATA drives', blurb: '2.5" SSDs and 3.5" hard drives sit in sleds and take a SATA data cable plus a SATA power cable.', related: ['m2', 'psu'], opens: ['glass', 'shroud'] },
   psu: { id: 'psu', label: 'Power supply', blurb: 'Turns wall power into what the parts need. It hides under the shroud at the bottom.', related: ['power', 'gpu'], opens: ['glass', 'shroud'] },
   fans: { id: 'fans', label: 'Case fans', blurb: 'Front fans pull cool air in, rear and top fans push hot air out.', related: ['case', 'cooler'] },
-  cmos: { id: 'cmos', label: 'CMOS battery', blurb: 'A coin cell that keeps BIOS settings and the clock. Pulling it resets the BIOS.', related: ['motherboard', 'monitor'], opens: ['glass'] },
+  cmos: { id: 'cmos', label: 'CMOS battery', blurb: 'A coin cell that keeps BIOS settings and the clock. Pulling it resets the BIOS.', related: ['motherboard', 'monitor'], opens: ['glass', 'cooler'] },
   monitor: { id: 'monitor', label: 'Monitor, BIOS & OS', blurb: 'Where you watch it boot, enter the BIOS and install an operating system.', related: ['power', 'gpu'] },
 };
 
