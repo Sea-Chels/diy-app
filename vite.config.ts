@@ -14,6 +14,7 @@ export default defineConfig({
       input: {
         hub: resolve(import.meta.dirname, 'index.html'),
         pc: resolve(import.meta.dirname, 'pc/index.html'),
+        garden: resolve(import.meta.dirname, 'garden/index.html'),
       },
     },
   },

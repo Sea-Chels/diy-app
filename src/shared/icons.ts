@@ -4,8 +4,8 @@
  */
 import {
   createElement, ArrowLeft, ArrowRight, BookOpen, Car, Check, CircleAlert, CircleCheck, CircleX, Copy, Cpu, Droplet, ExternalLink,
-  Fan, Flower2, Hammer, House, ListChecks, Menu, MousePointerClick, Pause, PiggyBank, Play, PlugZap, Power, Scissors, Shovel,
-  SlidersHorizontal, Sprout, Trash2, TriangleAlert, Wrench, X, Zap, type IconNode,
+  Fan, Flower2, Hammer, House, ListChecks, Menu, Minus, MousePointerClick, Pause, PiggyBank, Play, PlugZap, Plus, Power, Scissors, Shovel,
+  SlidersHorizontal, Sprout, Sun, Trash2, TriangleAlert, Wrench, X, Zap, type IconNode,
 } from 'lucide';
 
 const ICONS = {
@@ -27,16 +27,19 @@ const ICONS = {
   house: House,
   list: ListChecks,
   menu: Menu,
+  minus: Minus,
   click: MousePointerClick,
   pause: Pause,
   savings: PiggyBank,
   play: Play,
+  plus: Plus,
   plug: PlugZap,
   power: Power,
   scissors: Scissors,
   shovel: Shovel,
   sliders: SlidersHorizontal,
   sprout: Sprout,
+  sun: Sun,
   trash: Trash2,
   warning: TriangleAlert,
   wrench: Wrench,

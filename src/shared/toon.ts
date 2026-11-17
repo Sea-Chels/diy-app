@@ -16,7 +16,24 @@ export const shared = {
   uKeyDir: { value: new THREE.Vector3(0, 1, 0) }, // key light direction, view space
   uUpView: { value: new THREE.Vector3(0, 1, 0) }, // world up, view space
   uDotSize: { value: 6 }, // halftone cell size in device pixels
+  uTime: { value: 0 }, // seconds, drives wind sway
+  uGust: { value: 1 }, // multiplies every material's wind; tween it for a gust
 };
+
+/**
+ * Gentle wind: sways vertices sideways, more the higher they are above the
+ * ground (world y), so trunks stay planted and leaves at the top move most.
+ */
+const WIND = /* glsl */ `
+uniform float uTime;
+uniform float uWind;
+uniform float uGust;
+vec3 windOffset(vec3 wp) {
+  float h = max(wp.y, 0.0);
+  float s = sin(uTime * 1.25 + wp.x * 0.8 + wp.z * 0.6) + 0.45 * sin(uTime * 2.9 + wp.x * 2.3 - wp.z * 1.7);
+  return vec3(s, 0.0, s * 0.55) * h * h * uWind * uGust;
+}
+`;
 
 let gradient: THREE.DataTexture | null = null;
 function gradientMap(): THREE.DataTexture {
@@ -76,6 +93,21 @@ const COMIC = /* glsl */ `
 }
 `;
 
+/** Replaces three's project_vertex chunk: same transform, plus wind in world space. */
+const WIND_PROJECT = /* glsl */ `
+vec4 mvPosition = vec4( transformed, 1.0 );
+#ifdef USE_BATCHING
+  mvPosition = batchingMatrix * mvPosition;
+#endif
+#ifdef USE_INSTANCING
+  mvPosition = instanceMatrix * mvPosition;
+#endif
+vec4 windWorld = modelMatrix * mvPosition;
+windWorld.xyz += windOffset( windWorld.xyz );
+mvPosition = viewMatrix * windWorld;
+gl_Position = projectionMatrix * mvPosition;
+`;
+
 export interface ToonOpts {
   shine?: number;
   metal?: number;
@@ -83,6 +115,8 @@ export interface ToonOpts {
   emissive?: THREE.ColorRepresentation;
   emissiveIntensity?: number;
   side?: THREE.Side;
+  /** Sway strength for plants. 0 (default) leaves the vertex shader alone. */
+  wind?: number;
 }
 
 export type ToonUniforms = { uShine: { value: number }; uMetal: { value: number }; uHalftone: { value: number } };
@@ -97,13 +131,20 @@ export function toon(color: THREE.ColorRepresentation, o: ToonOpts = {}): THREE.
   });
   const u: ToonUniforms = { uShine: { value: o.shine ?? 0 }, uMetal: { value: o.metal ?? 0 }, uHalftone: { value: o.halftone ?? 1 } };
   m.userData.uniforms = u;
+  const wind = o.wind ?? 0;
   m.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, shared, u);
     shader.fragmentShader = shader.fragmentShader
       .replace('#include <common>', `#include <common>\n${DECL}`)
       .replace('#include <opaque_fragment>', `${COMIC}\n#include <opaque_fragment>`);
+    if (wind) {
+      shader.uniforms.uWind = { value: wind };
+      shader.vertexShader = shader.vertexShader
+        .replace('#include <common>', `#include <common>\n${WIND}`)
+        .replace('#include <project_vertex>', WIND_PROJECT);
+    }
   };
-  m.customProgramCacheKey = () => 'comic-toon';
+  m.customProgramCacheKey = () => (wind ? 'comic-toon-wind' : 'comic-toon');
   return m;
 }
 
@@ -168,6 +209,59 @@ function hullMaterial(thickness: number, color: THREE.ColorRepresentation = INK)
 }
 
 const HULLS = { body: hullMaterial(0.0034), thin: hullMaterial(0.002) };
+
+/**
+ * Ink hull that also works on InstancedMesh and can sway with the wind, so
+ * outlines stay glued to plants. Used by the garden; the PC keeps the simpler one.
+ */
+function hullMaterialX(thickness: number, color: THREE.ColorRepresentation, wind: number): THREE.ShaderMaterial {
+  return new THREE.ShaderMaterial({
+    side: THREE.BackSide,
+    uniforms: { uThickness: { value: thickness }, uColor: { value: new THREE.Color(color) }, uTime: shared.uTime, uGust: shared.uGust, uWind: { value: wind } },
+    vertexShader: /* glsl */ `
+      uniform float uThickness;
+      ${WIND}
+      void main() {
+        vec4 lp = vec4(position, 1.0);
+        vec3 n = normal;
+        #ifdef USE_INSTANCING
+          lp = instanceMatrix * lp;
+          n = mat3(instanceMatrix) * n;
+        #endif
+        vec4 wp = modelMatrix * lp;
+        wp.xyz += windOffset(wp.xyz);
+        vec4 mv = viewMatrix * wp;
+        vec3 vn = normalize(mat3(viewMatrix) * mat3(modelMatrix) * n);
+        mv.xyz += vn * uThickness * max(-mv.z, 0.5);
+        gl_Position = projectionMatrix * mv;
+      }`,
+    fragmentShader: /* glsl */ `
+      uniform vec3 uColor;
+      void main() { gl_FragColor = vec4(uColor, 1.0); }`,
+  });
+}
+
+export interface HullSet {
+  base: THREE.ShaderMaterial;
+  hover: THREE.ShaderMaterial;
+  selected: THREE.ShaderMaterial;
+}
+const hullSets = new Map<string, HullSet>();
+/** Shared ink + highlight hulls for a given weight and wind strength. */
+export function hullSet(weight: InkWeight, wind = 0): HullSet {
+  const key = `${weight}|${wind}`;
+  let set = hullSets.get(key);
+  if (!set) {
+    const t = weight === 'body' ? 0.0034 : 0.002;
+    set = {
+      base: hullMaterialX(t, INK, wind),
+      hover: hullMaterialX(t + 0.0013, 0x6ee7ff, wind),
+      selected: hullMaterialX(t + 0.003, 0x6ee7ff, wind),
+    };
+    hullSets.set(key, set);
+  }
+  return set;
+}
 export type InkWeight = keyof typeof HULLS;
 
 /** Highlight outlines: the selected part gets a thick cyan ink line, hover a thinner one. */
@@ -177,7 +271,8 @@ export function setHighlight(mesh: THREE.Mesh, level: 'none' | 'hover' | 'select
   const hull = mesh.children.find((c) => c.userData.ink) as THREE.Mesh | undefined;
   if (!hull) return;
   hull.userData.base ??= hull.material;
-  hull.material = level === 'none' ? hull.userData.base : HIGHLIGHT[level];
+  const set = hull.userData.hl as HullSet | undefined;
+  hull.material = level === 'none' ? hull.userData.base : (set?.[level] ?? HIGHLIGHT[level]);
 }
 
 const smoothCache = new WeakMap<THREE.BufferGeometry, THREE.BufferGeometry>();
@@ -202,6 +297,29 @@ export function outline(mesh: THREE.Mesh, weight: InkWeight = 'body'): void {
   mesh.add(hull);
 }
 
+/**
+ * Like `outline`, but the hull understands instancing and wind. For an
+ * InstancedMesh the hull shares its instance matrices, so call it after the
+ * instances are set (or keep using the same InstancedMesh).
+ */
+export function outlineX(mesh: THREE.Mesh, weight: InkWeight = 'thin', wind = 0): void {
+  const set = hullSet(weight, wind);
+  let hull: THREE.Mesh;
+  if ((mesh as THREE.InstancedMesh).isInstancedMesh) {
+    const inst = mesh as THREE.InstancedMesh;
+    const h = new THREE.InstancedMesh(smoothNormals(inst.geometry), set.base, inst.count);
+    h.instanceMatrix = inst.instanceMatrix;
+    h.frustumCulled = false;
+    hull = h;
+  } else {
+    hull = new THREE.Mesh(smoothNormals(mesh.geometry), set.base);
+  }
+  hull.raycast = () => {};
+  hull.userData.ink = true;
+  hull.userData.hl = set;
+  mesh.add(hull);
+}
+
 /** Every live LineMaterial, so the scene can keep their resolution in sync. */
 export const lineMaterials = new Set<LineMaterial>();
 
@@ -223,6 +341,7 @@ export function disposeTree(root: THREE.Object3D): void {
       (o as THREE.Mesh).geometry.dispose(); // hull materials are shared; keep them
       return;
     }
+    if (o.userData.shared) return; // geometry/material owned by a shared kit
     const mesh = o as THREE.Mesh;
     mesh.geometry?.dispose();
     const mats = Array.isArray(mesh.material) ? mesh.material : mesh.material ? [mesh.material] : [];
