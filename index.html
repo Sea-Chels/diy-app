@@ -9,48 +9,207 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body class="hub">
-    <header class="topbar">
-      <a class="brand" href="./"><span class="brand-mark"><i data-icon="wrench" data-size="20"></i></span> DIY</a>
+    <header class="nav">
+      <a class="logo" href="./" aria-label="DIY home"><span class="logo-burst"><span>DIY</span></span></a>
+      <nav class="nav-links" id="nav-links" aria-label="Workshops">
+        <a class="nav-link" href="./pc/" style="--ws: #6ee7ff"><i data-icon="cpu" data-size="18"></i> PC</a>
+        <a class="nav-link" href="https://sea-chels.github.io/diy-garage/" target="_blank" rel="noopener noreferrer" style="--ws: #f2694c"><i data-icon="car" data-size="18"></i> Garage <i data-icon="external" data-size="13"></i></a>
+        <button class="nav-link soon" type="button" data-goto="home" style="--ws: #ffd23f"><i data-icon="house" data-size="18"></i> Home <span class="soon-tag">Soon</span></button>
+        <button class="nav-link soon" type="button" data-goto="garden" style="--ws: #4ade80"><i data-icon="sprout" data-size="18"></i> Garden <span class="soon-tag">Soon</span></button>
+        <a class="nav-link" href="#how"><i data-icon="book" data-size="18"></i> How it works</a>
+      </nav>
+      <a class="nav-cta" href="./pc/">Start fixing <i data-icon="next" data-size="16"></i></a>
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><i data-icon="menu" data-size="20"></i></button>
     </header>
+
     <main class="hub-main">
-      <section class="hero">
-        <h1 class="burst"><span>DIY</span></h1>
-        <p class="tagline">Fix it yourself. Pick a workshop, click the part that’s giving you trouble, and follow along.</p>
-      </section>
-      <section class="workshops" aria-label="Workshops">
-        <a class="ws ws-pc" href="./pc/">
-          <span class="ws-art"><i data-icon="cpu" data-size="64"></i></span>
-          <span class="ws-body">
-            <span class="ws-status live">Open</span>
-            <span class="ws-title">PC</span>
-            <span class="ws-text">Troubleshoot, swap parts, get into the BIOS and install an OS. Check your parts fit together.</span>
-          </span>
-          <span class="ws-go"><i data-icon="next" data-size="20"></i></span>
-        </a>
-        <a class="ws ws-garage" href="https://sea-chels.github.io/diy-garage/" target="_blank" rel="noopener noreferrer">
-          <span class="ws-art"><i data-icon="car" data-size="64"></i></span>
-          <span class="ws-body">
-            <span class="ws-status moving">Moving in soon</span>
-            <span class="ws-title">Garage</span>
-            <span class="ws-text">Oil, bulbs, fuses, wipers and more on a clickable car. Opens the current Garage site for now.</span>
-          </span>
-          <span class="ws-go"><i data-icon="external" data-size="18"></i></span>
-        </a>
-        <div class="ws ws-home soon" aria-disabled="true">
-          <span class="ws-art"><i data-icon="house" data-size="64"></i></span>
-          <span class="ws-body">
-            <span class="ws-status">Coming soon</span>
-            <span class="ws-title">Home</span>
-            <span class="ws-text">Leaky taps, running toilets, outlets and drywall patches.</span>
-          </span>
+      <section class="carousel" id="carousel" aria-roledescription="carousel" aria-label="Workshops">
+        <div class="rays" aria-hidden="true"></div>
+        <div class="slides">
+          <article class="slide slide-intro" data-id="intro" data-label="Start" style="--ws: #b46cff">
+            <div class="page">
+              <div class="cpanel cpanel-hero">
+                <span class="caption">Issue #1</span>
+                <h1 class="burst"><span>DIY</span></h1>
+                <span class="sfx sfx-1" aria-hidden="true">KRAK!</span>
+              </div>
+              <div class="copy">
+                <p class="bubble">Something broke? Good. Let’s fix it.</p>
+                <p class="lede">Interactive 3D workshops. Click the part that’s giving you trouble, follow the steps, and watch how-to videos when you’re stuck.</p>
+                <div class="cta-row">
+                  <a class="btn-comic" href="./pc/">Open the PC workshop <i data-icon="next" data-size="18"></i></a>
+                  <a class="btn-plain" href="#workshops">Every workshop</a>
+                </div>
+              </div>
+              <div class="cover" aria-hidden="true">
+                <span class="mini mini-1" style="--ws: #6ee7ff"><img src="hub/pc.webp" alt="" /></span>
+                <span class="mini mini-2" style="--ws: #f2694c"><img src="hub/garage.webp" alt="" /></span>
+                <span class="mini mini-3 drawn" style="--ws: #ffd23f"><i data-icon="house" data-size="56"></i></span>
+              </div>
+            </div>
+          </article>
+
+          <article class="slide" data-id="pc" data-label="PC" style="--ws: #6ee7ff">
+            <div class="page">
+              <div class="copy">
+                <span class="caption">Workshop 01 · Open now</span>
+                <h2 class="title">The PC</h2>
+                <p class="bubble">Fans spin but no picture? Let’s find out why.</p>
+                <ul class="ticks">
+                  <li><i data-icon="wrench" data-size="16"></i> 34 guides to troubleshoot, replace and set up</li>
+                  <li><i data-icon="power" data-size="16"></i> First boot, BIOS and installing an OS</li>
+                  <li><i data-icon="list" data-size="16"></i> Parts picker that checks what fits</li>
+                </ul>
+                <a class="btn-comic" href="./pc/">Open the PC workshop <i data-icon="next" data-size="18"></i></a>
+              </div>
+              <div class="art-wrap">
+                <div class="cpanel cpanel-art"><img src="hub/pc-loop.webp" alt="A comic-style PC with its glass side open, a pink custom water loop inside, beside a monitor" /></div>
+                <div class="cpanel cpanel-inset"><img src="hub/pc-bios.webp" alt="The monitor showing the BIOS boot menu" /><span class="caption small">Meanwhile, in the BIOS…</span></div>
+                <span class="sfx sfx-2" aria-hidden="true">WHIRR!</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="slide" data-id="garage" data-label="Garage" style="--ws: #f2694c">
+            <div class="page">
+              <div class="copy">
+                <span class="caption">Workshop 02 · Moving in soon</span>
+                <h2 class="title">The Garage</h2>
+                <p class="bubble">Check engine light? Pop the hood with me.</p>
+                <ul class="ticks">
+                  <li><i data-icon="wrench" data-size="16"></i> Oil, bulbs, fuses, wipers and more</li>
+                  <li><i data-icon="play" data-size="16"></i> Videos for your year, make and model</li>
+                  <li><i data-icon="savings" data-size="16"></i> See what you save over the shop</li>
+                </ul>
+                <a class="btn-comic" href="https://sea-chels.github.io/diy-garage/" target="_blank" rel="noopener noreferrer">Open the Garage <i data-icon="external" data-size="16"></i></a>
+              </div>
+              <div class="art-wrap">
+                <div class="cpanel cpanel-art"><img src="hub/garage.webp" alt="A comic-style red sports car with glowing dots on its parts" /></div>
+                <span class="sfx sfx-2" aria-hidden="true">VROOM!</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="slide" data-id="home" data-label="Home" style="--ws: #ffd23f">
+            <div class="page">
+              <div class="copy">
+                <span class="caption">Workshop 03 · Coming soon</span>
+                <h2 class="title">The Home</h2>
+                <p class="bubble">That tap’s been dripping all week.</p>
+                <ul class="ticks">
+                  <li><i data-icon="droplet" data-size="16"></i> Leaky taps and running toilets</li>
+                  <li><i data-icon="plug" data-size="16"></i> Outlets, switches and breakers</li>
+                  <li><i data-icon="hammer" data-size="16"></i> Drywall patches and squeaky doors</li>
+                </ul>
+                <span class="btn-comic disabled" aria-disabled="true">In the works</span>
+              </div>
+              <div class="art-wrap">
+                <div class="cpanel cpanel-art drawn">
+                  <i data-icon="house" data-size="150"></i>
+                  <span class="float f1"><i data-icon="droplet" data-size="44"></i></span>
+                  <span class="float f2"><i data-icon="hammer" data-size="44"></i></span>
+                  <span class="float f3"><i data-icon="plug" data-size="40"></i></span>
+                </div>
+                <span class="sfx sfx-2" aria-hidden="true">DRIP!</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="slide" data-id="garden" data-label="Garden" style="--ws: #4ade80">
+            <div class="page">
+              <div class="copy">
+                <span class="caption">Workshop 04 · Coming soon</span>
+                <h2 class="title">The Garden</h2>
+                <p class="bubble">Raised beds, drip lines and sharp shears.</p>
+                <ul class="ticks">
+                  <li><i data-icon="shovel" data-size="16"></i> Build and fill a raised bed</li>
+                  <li><i data-icon="droplet" data-size="16"></i> Fix sprinklers and drip irrigation</li>
+                  <li><i data-icon="scissors" data-size="16"></i> Pruning and sharpening tools</li>
+                </ul>
+                <span class="btn-comic disabled" aria-disabled="true">In the works</span>
+              </div>
+              <div class="art-wrap">
+                <div class="cpanel cpanel-art drawn">
+                  <i data-icon="sprout" data-size="150"></i>
+                  <span class="float f1"><i data-icon="flower" data-size="44"></i></span>
+                  <span class="float f2"><i data-icon="scissors" data-size="42"></i></span>
+                  <span class="float f3"><i data-icon="shovel" data-size="40"></i></span>
+                </div>
+                <span class="sfx sfx-2" aria-hidden="true">SNIP!</span>
+              </div>
+            </div>
+          </article>
         </div>
-        <div class="ws ws-garden soon" aria-disabled="true">
-          <span class="ws-art"><i data-icon="sprout" data-size="64"></i></span>
-          <span class="ws-body">
-            <span class="ws-status">Coming soon</span>
-            <span class="ws-title">Garden</span>
-            <span class="ws-text">Beds, irrigation, pruning and keeping tools sharp.</span>
-          </span>
+
+        <div class="car-controls">
+          <button class="car-btn" type="button" data-step="-1" aria-label="Previous slide"><i data-icon="back" data-size="20"></i></button>
+          <div class="dots" role="group" aria-label="Choose a slide"></div>
+          <button class="car-btn" type="button" data-step="1" aria-label="Next slide"><i data-icon="next" data-size="20"></i></button>
+          <button class="car-btn pause" type="button" aria-label="Pause"><i data-icon="pause" data-size="18"></i></button>
+        </div>
+      </section>
+
+      <section class="how" id="how" aria-labelledby="how-title">
+        <h2 class="section-title" id="how-title">How it works</h2>
+        <ol class="strip">
+          <li class="strip-panel" style="--ws: #6ee7ff">
+            <span class="num">1</span>
+            <i data-icon="cpu" data-size="40"></i>
+            <h3>Pick a workshop</h3>
+            <p>Set it up like yours: the case size, the cooling, the car you drive.</p>
+          </li>
+          <li class="strip-panel" style="--ws: #ff4fd8">
+            <span class="num">2</span>
+            <i data-icon="click" data-size="40"></i>
+            <h3>Click the part</h3>
+            <p>The camera flies in and panels swing open so you can see what you’re working on.</p>
+          </li>
+          <li class="strip-panel" style="--ws: #ffd23f">
+            <span class="num">3</span>
+            <i data-icon="wrench" data-size="40"></i>
+            <h3>Follow along</h3>
+            <p>Steps, tools and cautions for each job, plus a YouTube search when you’d rather watch.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="workshops-wrap" id="workshops" aria-labelledby="ws-title">
+        <h2 class="section-title" id="ws-title">Every workshop</h2>
+        <div class="workshops">
+          <a class="ws ws-pc" href="./pc/">
+            <span class="ws-art"><i data-icon="cpu" data-size="64"></i></span>
+            <span class="ws-body">
+              <span class="ws-status live">Open</span>
+              <span class="ws-title">PC</span>
+              <span class="ws-text">Troubleshoot, swap parts, get into the BIOS and install an OS. Check your parts fit together.</span>
+            </span>
+            <span class="ws-go"><i data-icon="next" data-size="20"></i></span>
+          </a>
+          <a class="ws ws-garage" href="https://sea-chels.github.io/diy-garage/" target="_blank" rel="noopener noreferrer">
+            <span class="ws-art"><i data-icon="car" data-size="64"></i></span>
+            <span class="ws-body">
+              <span class="ws-status moving">Moving in soon</span>
+              <span class="ws-title">Garage</span>
+              <span class="ws-text">Oil, bulbs, fuses, wipers and more on a clickable car. Opens the current Garage site for now.</span>
+            </span>
+            <span class="ws-go"><i data-icon="external" data-size="18"></i></span>
+          </a>
+          <div class="ws ws-home soon" aria-disabled="true">
+            <span class="ws-art"><i data-icon="house" data-size="64"></i></span>
+            <span class="ws-body">
+              <span class="ws-status">Coming soon</span>
+              <span class="ws-title">Home</span>
+              <span class="ws-text">Leaky taps, running toilets, outlets and drywall patches.</span>
+            </span>
+          </div>
+          <div class="ws ws-garden soon" aria-disabled="true">
+            <span class="ws-art"><i data-icon="sprout" data-size="64"></i></span>
+            <span class="ws-body">
+              <span class="ws-status">Coming soon</span>
+              <span class="ws-title">Garden</span>
+              <span class="ws-text">Beds, irrigation, pruning and keeping tools sharp.</span>
+            </span>
+          </div>
         </div>
       </section>
     </main>

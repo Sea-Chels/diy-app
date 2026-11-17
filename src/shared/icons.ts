@@ -3,8 +3,9 @@
  * ones end up in the bundle.
  */
 import {
-  createElement, ArrowLeft, ArrowRight, BookOpen, Car, Check, CircleAlert, CircleCheck, CircleX, Copy, Cpu, ExternalLink,
-  Fan, House, ListChecks, PiggyBank, Play, Power, SlidersHorizontal, Sprout, Trash2, TriangleAlert, Wrench, X, Zap, type IconNode,
+  createElement, ArrowLeft, ArrowRight, BookOpen, Car, Check, CircleAlert, CircleCheck, CircleX, Copy, Cpu, Droplet, ExternalLink,
+  Fan, Flower2, Hammer, House, ListChecks, Menu, MousePointerClick, Pause, PiggyBank, Play, PlugZap, Power, Scissors, Shovel,
+  SlidersHorizontal, Sprout, Trash2, TriangleAlert, Wrench, X, Zap, type IconNode,
 } from 'lucide';
 
 const ICONS = {
@@ -18,13 +19,22 @@ const ICONS = {
   bad: CircleX,
   copy: Copy,
   cpu: Cpu,
+  droplet: Droplet,
   external: ExternalLink,
   fan: Fan,
+  flower: Flower2,
+  hammer: Hammer,
   house: House,
   list: ListChecks,
+  menu: Menu,
+  click: MousePointerClick,
+  pause: Pause,
   savings: PiggyBank,
   play: Play,
+  plug: PlugZap,
   power: Power,
+  scissors: Scissors,
+  shovel: Shovel,
   sliders: SlidersHorizontal,
   sprout: Sprout,
   trash: Trash2,
