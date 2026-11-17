@@ -100,6 +100,14 @@ export function createScene(canvas: HTMLCanvasElement, initial: Setup): SceneApi
   scene.add(front);
 
 
+  const ring = new THREE.Mesh(
+    new THREE.RingGeometry(5.12, 5.7, 72),
+    new THREE.MeshBasicMaterial({ color: 0x0f1218, transparent: true, opacity: 0.9, side: THREE.DoubleSide }),
+  );
+  ring.rotation.x = -Math.PI / 2;
+  ring.position.y = 0.002;
+  scene.add(ring);
+
   let rig: Rig = buildRig(initial);
   scene.add(rig.group);
 
