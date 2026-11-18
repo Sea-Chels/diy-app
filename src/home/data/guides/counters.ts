@@ -3,8 +3,8 @@ import { LEAD, POWER_OFF } from './common';
 
 export const COUNTERS_GUIDES: Guide[] = [
   {
-    id: 'counter-laminate', title: 'Replace a laminate countertop', areas: ['counters'], aliases: ['formica', 'post-form', 'countertop', 'new counter'],
-    kind: 'install', difficulty: 3, minutes: [300, 600], savings: 'half or more of an installed price',
+    id: 'counter-laminate', title: 'Replace a laminate countertop', spots: ['counters'], aliases: ['formica', 'post-form', 'countertop', 'new counter'],
+    kind: 'install', difficulty: 3, minutes: [300, 600], savings: 'saves half or more of an installed price',
     tools: ['circular-saw', 'jigsaw', 'drill', 'tape', 'level', 'clamps', 'pry-bar', 'knife', 'caulk-gun', 'glasses'],
     supplies: ['Pre-formed (post-form) countertop sections and end caps', 'Miter bolts for corner joints', 'Wood screws shorter than the counter is thick', 'Painter\'s tape', 'Silicone caulk', 'Shims'],
     summary: 'Pre-formed laminate tops come in stock lengths with the backsplash built in. Cut to length, cut the sink hole from a template, join corners with miter bolts and screw from below.',
@@ -22,7 +22,7 @@ export const COUNTERS_GUIDES: Guide[] = [
     query: 'how to install laminate countertop post form cut sink hole',
   },
   {
-    id: 'counter-butcher', title: 'Install butcher block countertops', areas: ['counters'], aliases: ['wood counter', 'butcher block', 'oil counter', 'seal butcher block'],
+    id: 'counter-butcher', title: 'Install butcher block countertops', spots: ['counters'], aliases: ['wood counter', 'butcher block', 'oil counter', 'seal butcher block'],
     kind: 'install', difficulty: 3, minutes: [360, 720], savings: 'butcher block runs about half the price of stone, and you can install it yourself',
     tools: ['circular-saw', 'jigsaw', 'clamps', 'drill', 'sander', 'tape', 'level', 'glasses', 'Straightedge guide'],
     supplies: ['Butcher block slabs', 'Figure-8 fasteners or screws through slotted holes', 'Finish: food-safe oil for prep areas, or a polyurethane/varnish for a sealed top', 'Painter\'s tape'],
@@ -40,7 +40,7 @@ export const COUNTERS_GUIDES: Guide[] = [
     query: 'how to install butcher block countertops seal underside',
   },
   {
-    id: 'counter-stone', title: 'Get ready for quartz or stone counters', areas: ['counters'], aliases: ['quartz', 'granite', 'stone countertop', 'template', 'fabricator'],
+    id: 'counter-stone', title: 'Get ready for quartz or stone counters', spots: ['counters'], aliases: ['quartz', 'granite', 'stone countertop', 'template', 'fabricator'],
     kind: 'install', difficulty: 2, minutes: [120, 300], savings: 'doing the tear-out and plumbing yourself can save several hundred dollars',
     tools: ['pry-bar', 'level', 'drill', 'channel-locks', 'wrench', 'knife', 'glasses', 'gloves'],
     supplies: ['Shims', 'Construction screws for any extra cabinet support'],
@@ -57,8 +57,8 @@ export const COUNTERS_GUIDES: Guide[] = [
     query: 'prepare cabinets for quartz countertop install level',
   },
   {
-    id: 'tile-backsplash', title: 'Tile a kitchen backsplash', areas: ['counters'], aliases: ['subway tile', 'backsplash', 'grout', 'mosaic'],
-    kind: 'finish', difficulty: 2, minutes: [360, 720], savings: '$600–1,500 in labor for an average kitchen',
+    id: 'tile-backsplash', title: 'Tile a kitchen backsplash', spots: ['counters'], aliases: ['subway tile', 'backsplash', 'grout', 'mosaic'],
+    kind: 'finish', difficulty: 2, minutes: [360, 720], savings: 'saves $600–1,500 in labor for an average kitchen',
     tools: ['trowel', 'tile-cutter', 'grout-float', 'level', 'tape', 'screwdriver', 'voltage-tester', 'bucket'],
     supplies: ['Tile', 'Pre-mixed tile adhesive or thinset (check the tile maker\'s recommendation)', 'Spacers', 'Grout and grout sealer', 'Outlet box extenders', '100% silicone caulk matched to the grout'],
     summary: 'A backsplash is the friendliest first tile job: small area, vertical, no traffic. Set the bottom row level, keep the joints even and caulk (don\'t grout) the joint with the counter.',
@@ -75,7 +75,7 @@ export const COUNTERS_GUIDES: Guide[] = [
     query: 'how to tile a kitchen backsplash subway tile outlets',
   },
   {
-    id: 'recaulk-counter', title: 'Recaulk the counter and sink seams', areas: ['counters', 'sink'], aliases: ['caulk', 'gap', 'backsplash seam', 'moldy caulk'],
+    id: 'recaulk-counter', title: 'Recaulk the counter and sink seams', spots: ['counters', 'sink'], aliases: ['caulk', 'gap', 'backsplash seam', 'moldy caulk'],
     kind: 'maintain', difficulty: 1, minutes: [30, 60], savings: 'stops water damage that costs hundreds to repair',
     tools: ['knife', 'caulk-gun', 'scraper', 'Caulk remover tool'],
     supplies: ['100% silicone kitchen-and-bath caulk', 'Painter\'s tape', 'Rubbing alcohol'],
@@ -90,8 +90,8 @@ export const COUNTERS_GUIDES: Guide[] = [
     query: 'how to recaulk kitchen backsplash countertop seam',
   },
   {
-    id: 'paint-cabinets', title: 'Paint kitchen cabinets', areas: ['counters', 'paint'], aliases: ['cabinet paint', 'refresh cabinets', 'primer', 'oak cabinets'],
-    kind: 'finish', difficulty: 3, minutes: [900, 1800], savings: 'thousands compared with new cabinets',
+    id: 'paint-cabinets', title: 'Paint kitchen cabinets', spots: ['counters', 'paint'], aliases: ['cabinet paint', 'refresh cabinets', 'primer', 'oak cabinets'],
+    kind: 'finish', difficulty: 3, minutes: [900, 1800], savings: 'saves thousands compared with new cabinets',
     tools: ['screwdriver', 'drill', 'sanding-sponge', 'brush', 'roller', 'drop-cloth', 'respirator', 'Small foam roller'],
     supplies: ['Degreaser', 'Bonding or shellac-based primer (shellac blocks tannin bleed from oak)', 'Cabinet enamel', 'Painter\'s tape', 'Wood filler', 'Labels for doors'],
     summary: 'The finish lasts if the prep is right: degrease, scuff, prime with a bonding primer, then thin coats of a hard cabinet enamel. Give it time to cure before heavy use.',

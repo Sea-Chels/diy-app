@@ -1,9 +1,7 @@
-import { AREAS, type AreaId, type LidId } from '../data/areas';
+import { AREAS, LIDS, type AreaId, type LidId } from '../data/areas';
 import type { Setup } from '../data/setup';
 import { buildRig, rigKey } from './rig';
 import { createStage } from '../../shared/scene/stage';
-
-const LIDS: LidId[] = ['bedFront', 'shedDoors', 'compostSlats', 'rowCover'];
 
 export function createScene(canvas: HTMLCanvasElement, initial: Setup) {
   return createStage<Setup, AreaId, LidId, ReturnType<typeof buildRig>>(canvas, {

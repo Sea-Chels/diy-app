@@ -5,7 +5,7 @@ export const WHEEL_GUIDES: Guide[] = [
   {
     id: 'tire-pressure',
     title: 'Check and set tire pressure',
-    parts: ['wheel'],
+    spots: ['wheel'],
     aliases: ['tpms', 'low tire', 'psi', 'inflate', 'tire light'],
     difficulty: 1,
     minutes: [5, 10],
@@ -26,7 +26,7 @@ export const WHEEL_GUIDES: Guide[] = [
   {
     id: 'change-flat',
     title: 'Change a flat with the spare',
-    parts: ['wheel', 'trunk'],
+    spots: ['wheel', 'trunk'],
     aliases: ['flat tire', 'spare', 'donut', 'lug nuts', 'jack'],
     difficulty: 2,
     minutes: [20, 40],
@@ -48,7 +48,7 @@ export const WHEEL_GUIDES: Guide[] = [
   {
     id: 'tire-plug',
     title: 'Plug a nail hole',
-    parts: ['wheel'],
+    spots: ['wheel'],
     aliases: ['puncture', 'nail', 'screw', 'slow leak', 'tire repair'],
     difficulty: 2,
     minutes: [15, 30],
@@ -69,7 +69,7 @@ export const WHEEL_GUIDES: Guide[] = [
   {
     id: 'tire-rotation',
     title: 'Rotate the tires',
-    parts: ['wheel'],
+    spots: ['wheel'],
     aliases: ['rotation', 'even wear', 'cross pattern'],
     difficulty: 2,
     minutes: [30, 60],
@@ -90,7 +90,7 @@ export const WHEEL_GUIDES: Guide[] = [
   {
     id: 'brake-pads',
     title: 'Front brake pads',
-    parts: ['brakes', 'wheel'],
+    spots: ['brakes', 'wheel'],
     aliases: ['brakes', 'squealing', 'grinding', 'caliper', 'rotor'],
     difficulty: 3,
     minutes: [60, 120],
@@ -113,7 +113,7 @@ export const WHEEL_GUIDES: Guide[] = [
   {
     id: 'brake-fluid-check',
     title: 'Check brake fluid',
-    parts: ['brakes', 'coolant'],
+    spots: ['brakes', 'coolant'],
     aliases: ['brake reservoir', 'dot 3', 'dot 4', 'spongy pedal'],
     difficulty: 1,
     minutes: [2, 5],

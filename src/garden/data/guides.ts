@@ -1,4 +1,4 @@
-import type { GuideBase } from '../../shared/guides';
+import { guideBook, type GuideBase } from '../../shared/guides';
 import type { AreaId } from './areas';
 import { RAISED_BEDS_GUIDES } from './guides/raisedBeds';
 import { KITCHEN_BED_GUIDES } from './guides/kitchenBed';
@@ -19,10 +19,8 @@ import { TOOLS_GUIDES } from './guides/tools';
 export type GuideKind = 'build' | 'grow' | 'fix' | 'preserve';
 export const KIND_LABEL: Record<GuideKind, string> = { build: 'Build', grow: 'Grow', fix: 'Troubleshoot', preserve: 'Preserve' };
 
-export interface Guide extends GuideBase {
+export interface Guide extends GuideBase<AreaId> {
   kind: GuideKind;
-  /** Areas this guide is listed under. First one is the primary. */
-  areas: AreaId[];
   /** Waiting time on top of the hands-on work, if any. */
   wait?: string;
   /** Plant cards this guide relates to. */
@@ -46,11 +44,7 @@ export const GUIDES: Guide[] = [
   ...TOOLS_GUIDES,
 ];
 
-export const GUIDE_BY_ID = new Map(GUIDES.map((g) => [g.id, g]));
-
-export function guidesForArea(area: AreaId): Guide[] {
-  return GUIDES.filter((g) => g.areas.includes(area));
-}
+export const BOOK = guideBook<AreaId, Guide>(GUIDES);
 
 export function guidesForPlant(id: string): Guide[] {
   return GUIDES.filter((g) => g.plants?.includes(id));

@@ -21,7 +21,15 @@ export const COOLING_LABEL: Record<Cooling, string> = { air: 'Air', aio: 'AIO', 
 export const GPU_LABEL: Record<GpuSize, string> = { none: 'None', dual: 'Dual fan', triple: 'Triple fan' };
 export const RGB_LABEL: Record<RgbMode, string> = { off: 'Off', solid: 'Solid', rainbow: 'Rainbow' };
 
-export const RGB_SWATCHES = ['#6ee7ff', '#ff4fd8', '#9b5cff', '#ff3b3b', '#ffb020', '#4ade80', '#ffffff'];
+export const RGB_SWATCHES = [
+  { name: 'Ice blue', hex: '#6ee7ff' },
+  { name: 'Hot pink', hex: '#ff4fd8' },
+  { name: 'Purple', hex: '#9b5cff' },
+  { name: 'Red', hex: '#ff3b3b' },
+  { name: 'Amber', hex: '#ffb020' },
+  { name: 'Green', hex: '#4ade80' },
+  { name: 'White', hex: '#ffffff' },
+];
 export const CASE_SWATCHES = [
   { name: 'Black', hex: '#24232b' },
   { name: 'White', hex: '#e9e7ef' },

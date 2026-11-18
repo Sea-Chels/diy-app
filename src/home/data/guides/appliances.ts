@@ -3,8 +3,8 @@ import { POWER_OFF } from './common';
 
 export const APPLIANCES_GUIDES: Guide[] = [
   {
-    id: 'replace-dishwasher', title: 'Replace a dishwasher', areas: ['appliances'], aliases: ['dishwasher install', 'new dishwasher'],
-    kind: 'install', difficulty: 2, minutes: [120, 240], savings: '$150–300 in installation',
+    id: 'replace-dishwasher', title: 'Replace a dishwasher', spots: ['appliances'], aliases: ['dishwasher install', 'new dishwasher'],
+    kind: 'install', difficulty: 2, minutes: [120, 240], savings: 'saves $150–300 in installation',
     tools: ['screwdriver', 'wrench', 'channel-locks', 'level', 'voltage-tester', 'headlamp', 'bucket'],
     supplies: ['Dishwasher install kit (supply line, 90° elbow, power cord or wire connectors)', 'Thread tape for the elbow threads only'],
     summary: 'Three connections: water in, drain out, power. Slide the old one out, move or replace the connections, level the new one and fix it to the counter.',
@@ -21,8 +21,8 @@ export const APPLIANCES_GUIDES: Guide[] = [
     query: 'how to replace a dishwasher step by step install kit',
   },
   {
-    id: 'dishwasher-drain', title: 'Fix a dishwasher that won\'t drain', areas: ['appliances', 'sink'], aliases: ['standing water', 'dishwasher water', 'not draining', 'filter'],
-    kind: 'fix', difficulty: 1, minutes: [20, 60], savings: 'a $150+ repair visit',
+    id: 'dishwasher-drain', title: 'Fix a dishwasher that won\'t drain', spots: ['appliances', 'sink'], aliases: ['standing water', 'dishwasher water', 'not draining', 'filter'],
+    kind: 'fix', difficulty: 1, minutes: [20, 60], savings: 'saves a $150+ repair visit',
     tools: ['screwdriver', 'bucket', 'gloves'],
     supplies: ['Dish soap and an old toothbrush'],
     summary: 'Usually a clogged filter, a kinked hose, or a new disposal whose knockout plug was never removed.',
@@ -37,8 +37,8 @@ export const APPLIANCES_GUIDES: Guide[] = [
     query: 'dishwasher not draining clean filter hose disposal knockout',
   },
   {
-    id: 'fridge-not-cooling', title: 'Fix a fridge that isn\'t cooling', areas: ['appliances'], aliases: ['refrigerator warm', 'condenser coils', 'fridge', 'door seal', 'gasket'],
-    kind: 'fix', difficulty: 1, minutes: [30, 60], savings: 'a $200 service call, often',
+    id: 'fridge-not-cooling', title: 'Fix a fridge that isn\'t cooling', spots: ['appliances'], aliases: ['refrigerator warm', 'condenser coils', 'fridge', 'door seal', 'gasket'],
+    kind: 'fix', difficulty: 1, minutes: [30, 60], savings: 'often saves a $200 service call',
     tools: ['screwdriver', 'headlamp', 'Coil brush', 'Vacuum'],
     supplies: [],
     summary: 'Before calling for service: check the settings, clean the condenser coils, check the door seals and make sure the fans run.',
@@ -53,7 +53,7 @@ export const APPLIANCES_GUIDES: Guide[] = [
     query: 'refrigerator not cooling clean condenser coils check fan',
   },
   {
-    id: 'oven-element', title: 'Replace an electric oven bake element', areas: ['appliances'], aliases: ['oven not heating', 'bake element', 'element', 'electric range'],
+    id: 'oven-element', title: 'Replace an electric oven bake element', spots: ['appliances'], aliases: ['oven not heating', 'bake element', 'element', 'electric range'],
     kind: 'fix', difficulty: 2, minutes: [30, 60], savings: 'a $30–60 part instead of a $200 visit',
     tools: ['screwdriver', 'multimeter', 'headlamp', 'gloves'],
     supplies: ['Replacement element for your model number (on a sticker inside the door frame or drawer)'],
@@ -70,8 +70,8 @@ export const APPLIANCES_GUIDES: Guide[] = [
     query: 'how to replace oven bake element test multimeter',
   },
   {
-    id: 'replace-range', title: 'Swap a range (and install the anti-tip bracket)', areas: ['appliances'], aliases: ['stove', 'range install', 'anti-tip', 'oven install', 'gas range'],
-    kind: 'install', difficulty: 2, minutes: [60, 120], savings: '$100–200 delivery and install',
+    id: 'replace-range', title: 'Swap a range (and install the anti-tip bracket)', spots: ['appliances'], aliases: ['stove', 'range install', 'anti-tip', 'oven install', 'gas range'],
+    kind: 'install', difficulty: 2, minutes: [60, 120], savings: 'saves $100–200 delivery and install',
     tools: ['drill', 'screwdriver', 'level', 'wrench', 'tape'],
     supplies: ['Range cord matching your outlet (3- or 4-prong) for electric', 'New flexible gas connector for gas (never reuse the old one)', 'Anti-tip bracket (comes with the range)'],
     summary: 'Electric ranges plug into a 240 V outlet with a cord you attach. Every range needs its anti-tip bracket: a child standing on an open door can pull an unanchored range over.',
@@ -79,7 +79,7 @@ export const APPLIANCES_GUIDES: Guide[] = [
       'Measure the opening (most are 30 in) and doorways for delivery.',
       'Electric: attach the cord that matches your wall outlet to the range\'s terminal block, following the manual for 3- or 4-wire.',
       'Fit the anti-tip bracket to the floor or wall where the manual shows.',
-      'Gas: shut the gas valve, connect a new flexible connector with gas-rated sealant on threads, open the valve and check every joint with soapy water: bubbles mean a leak.',
+      'Gas: shut the gas valve, connect a new flexible connector (gas-rated sealant on the tapered pipe threads of the adapters only, never on the flare nuts), open the valve and check every joint with soapy water: bubbles mean a leak.',
       'Slide the range in so its rear foot engages the anti-tip bracket, then level it with the feet.',
       'Check the bracket: tilting the range forward gently should stop against it.',
     ],
@@ -88,8 +88,8 @@ export const APPLIANCES_GUIDES: Guide[] = [
     query: 'install range anti-tip bracket range cord 4 prong',
   },
   {
-    id: 'range-hood', title: 'Replace a range hood', areas: ['appliances'], aliases: ['vent hood', 'exhaust fan', 'kitchen fan', 'duct'],
-    kind: 'install', difficulty: 2, minutes: [120, 240], savings: '$200–400 in labor',
+    id: 'range-hood', title: 'Replace a range hood', spots: ['appliances'], aliases: ['vent hood', 'exhaust fan', 'kitchen fan', 'duct'],
+    kind: 'install', difficulty: 2, minutes: [120, 240], savings: 'saves $200–400 in labor',
     tools: ['drill', 'screwdriver', 'voltage-tester', 'strippers', 'level', 'tape', 'Tin snips'],
     supplies: ['New hood', 'Rigid metal duct and foil tape (not cloth duct tape)', 'Wire connectors'],
     summary: 'Match the new hood to the existing duct if you can. Duct it outside, never into the attic or a wall cavity.',
@@ -104,8 +104,8 @@ export const APPLIANCES_GUIDES: Guide[] = [
     query: 'how to replace a range hood ducted wiring',
   },
   {
-    id: 'fridge-water-line', title: 'Hook up a fridge water line', areas: ['appliances'], aliases: ['ice maker', 'water line', 'fridge filter', 'water dispenser'],
-    kind: 'install', difficulty: 2, minutes: [45, 90], savings: '$100–200',
+    id: 'fridge-water-line', title: 'Hook up a fridge water line', spots: ['appliances'], aliases: ['ice maker', 'water line', 'fridge filter', 'water dispenser'],
+    kind: 'install', difficulty: 2, minutes: [45, 90], savings: 'saves $100–200',
     tools: ['wrench', 'drill', 'headlamp', 'bucket'],
     supplies: ['Braided stainless fridge supply line (long enough to pull the fridge out)', 'A tee or valve with a ¼ in compression outlet at the sink cold supply'],
     summary: 'Tee off the sink\'s cold supply with a proper valve and run a braided line to the fridge. Skip saddle valves and plastic tubing; they\'re the usual source of leaks.',

@@ -5,7 +5,7 @@ export const TROUBLESHOOTING_GUIDES: Guide[] = [
   {
     id: 'no-power',
     title: 'PC won’t turn on at all',
-    parts: ['power', 'psu'],
+    spots: ['power', 'psu'],
     aliases: ['dead', 'no power', 'nothing happens', 'power button', 'psu test', 'won’t start', 'won\'t turn on'],
     kind: 'fix',
     difficulty: 1,
@@ -28,7 +28,7 @@ export const TROUBLESHOOTING_GUIDES: Guide[] = [
   {
     id: 'no-post',
     title: 'Fans spin but no picture (no POST)',
-    parts: ['motherboard', 'ram'],
+    spots: ['motherboard', 'ram'],
     aliases: ['no post', 'black screen', 'debug led', 'dram light', 'cpu light', 'vga light', 'won’t boot', 'won\'t boot'],
     kind: 'fix',
     difficulty: 2,
@@ -53,7 +53,7 @@ export const TROUBLESHOOTING_GUIDES: Guide[] = [
   {
     id: 'no-signal',
     title: 'No signal on the monitor',
-    parts: ['monitor', 'gpu'],
+    spots: ['monitor', 'gpu'],
     aliases: ['no signal', 'no display', 'monitor black', 'hdmi', 'displayport', 'wrong port'],
     kind: 'fix',
     difficulty: 1,
@@ -74,7 +74,7 @@ export const TROUBLESHOOTING_GUIDES: Guide[] = [
   {
     id: 'shutdowns',
     title: 'Random shutdowns or restarts',
-    parts: ['psu', 'cooler'],
+    spots: ['psu', 'cooler'],
     aliases: ['shuts off', 'restarts', 'reboots', 'kernel-power 41', 'crash under load', 'turns off gaming'],
     kind: 'fix',
     difficulty: 2,
@@ -96,7 +96,7 @@ export const TROUBLESHOOTING_GUIDES: Guide[] = [
   {
     id: 'overheating',
     title: 'CPU running hot or throttling',
-    parts: ['cooler', 'cpu'],
+    spots: ['cooler', 'cpu'],
     aliases: ['hot', 'temperature', 'temps', 'thermal throttling', 'overheating', 'cpu temp'],
     kind: 'fix',
     difficulty: 2,
@@ -119,7 +119,7 @@ export const TROUBLESHOOTING_GUIDES: Guide[] = [
   {
     id: 'loud-fans',
     title: 'Fans loud or ramping up and down',
-    parts: ['fans', 'motherboard'],
+    spots: ['fans', 'motherboard'],
     aliases: ['noise', 'loud', 'fan curve', 'q-fan', 'smart fan', 'rattle', 'buzzing'],
     kind: 'fix',
     difficulty: 1,
@@ -140,7 +140,7 @@ export const TROUBLESHOOTING_GUIDES: Guide[] = [
   {
     id: 'gpu-crash',
     title: 'Game crashes, artifacts or black screens',
-    parts: ['gpu'],
+    spots: ['gpu'],
     aliases: ['artifacts', 'driver crash', 'black screen gaming', 'ddu', '12vhpwr', 'melted connector', 'gpu temps'],
     kind: 'fix',
     difficulty: 2,
@@ -163,7 +163,7 @@ export const TROUBLESHOOTING_GUIDES: Guide[] = [
   {
     id: 'drive-missing',
     title: 'New drive doesn’t show up',
-    parts: ['storage', 'm2'],
+    spots: ['storage', 'm2'],
     aliases: ['ssd not showing', 'disk management', 'initialize disk', 'gpt', 'drive not detected'],
     kind: 'fix',
     difficulty: 1,
@@ -183,7 +183,7 @@ export const TROUBLESHOOTING_GUIDES: Guide[] = [
   {
     id: 'clear-cmos',
     title: 'Clear CMOS (reset the BIOS)',
-    parts: ['cmos', 'motherboard'],
+    spots: ['cmos', 'motherboard'],
     aliases: ['reset bios', 'clr_cmos', 'jbat1', 'bios reset', 'factory reset bios'],
     kind: 'fix',
     difficulty: 1,
@@ -205,7 +205,7 @@ export const TROUBLESHOOTING_GUIDES: Guide[] = [
   {
     id: 'memtest',
     title: 'Test RAM for errors',
-    parts: ['ram'],
+    spots: ['ram'],
     aliases: ['memtest', 'memtest86', 'memory diagnostic', 'bad ram', 'blue screen'],
     kind: 'fix',
     difficulty: 1,
@@ -226,7 +226,7 @@ export const TROUBLESHOOTING_GUIDES: Guide[] = [
   {
     id: 'dust-clean',
     title: 'Dust clean and filters',
-    parts: ['case', 'fans'],
+    spots: ['case', 'fans'],
     aliases: ['dust', 'clean', 'filters', 'compressed air', 'maintenance'],
     kind: 'fix',
     difficulty: 1,
@@ -249,7 +249,7 @@ export const TROUBLESHOOTING_GUIDES: Guide[] = [
   {
     id: 'aio-pump',
     title: 'AIO pump check',
-    parts: ['cooler'],
+    spots: ['cooler'],
     aliases: ['aio', 'pump', 'gurgling', 'liquid cooler', 'pump rpm', 'aio_pump'],
     kind: 'fix',
     difficulty: 1,

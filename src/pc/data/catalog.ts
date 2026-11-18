@@ -66,7 +66,7 @@ export const CATALOG: Part[] = [
   // watts = the most the chip will pull at stock (AMD PPT, Intel max turbo power).
   { cat: 'cpu', id: 'r5-7600', name: 'AMD Ryzen 5 7600', blurb: '6 cores · AM5 · 65 W · has graphics', socket: 'AM5', gen: 'ryzen7000', watts: 88, igpu: true },
   { cat: 'cpu', id: 'r5-9600x', name: 'AMD Ryzen 5 9600X', blurb: '6 cores · AM5 · 65 W · has graphics', socket: 'AM5', gen: 'ryzen9000', watts: 88, igpu: true },
-  { cat: 'cpu', id: 'r7-9800x3d', name: 'AMD Ryzen 7 9800X3D', blurb: '8 cores · AM5 · 120 W · gaming favourite', socket: 'AM5', gen: 'ryzen9000', watts: 162, igpu: true },
+  { cat: 'cpu', id: 'r7-9800x3d', name: 'AMD Ryzen 7 9800X3D', blurb: '8 cores · AM5 · 120 W · gaming favorite', socket: 'AM5', gen: 'ryzen9000', watts: 162, igpu: true },
   { cat: 'cpu', id: 'r9-9950x', name: 'AMD Ryzen 9 9950X', blurb: '16 cores · AM5 · 170 W', socket: 'AM5', gen: 'ryzen9000', watts: 230, igpu: true },
   { cat: 'cpu', id: 'r5-5600', name: 'AMD Ryzen 5 5600', blurb: '6 cores · AM4 · 65 W · no graphics', socket: 'AM4', gen: 'ryzen5000', watts: 76, igpu: false },
   { cat: 'cpu', id: 'r7-5700x3d', name: 'AMD Ryzen 7 5700X3D', blurb: '8 cores · AM4 · 105 W · no graphics', socket: 'AM4', gen: 'ryzen5000', watts: 142, igpu: false },

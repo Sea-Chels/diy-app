@@ -4,7 +4,7 @@ export const FIRST_BOOT_GUIDES: Guide[] = [
   {
     id: 'first-boot',
     title: 'First power-on (POST)',
-    parts: ['power', 'monitor'],
+    spots: ['power', 'monitor'],
     aliases: ['first boot', 'post', 'new build', 'turn on', 'memory training', 'debug led', 'q-led'],
     kind: 'setup',
     difficulty: 1,
@@ -28,7 +28,7 @@ export const FIRST_BOOT_GUIDES: Guide[] = [
   {
     id: 'enter-bios',
     title: 'Enter the BIOS and check your parts',
-    parts: ['monitor', 'motherboard'],
+    spots: ['monitor', 'motherboard'],
     aliases: ['bios', 'uefi', 'setup', 'del key', 'f2', 'firmware settings'],
     kind: 'setup',
     difficulty: 1,
@@ -50,7 +50,7 @@ export const FIRST_BOOT_GUIDES: Guide[] = [
   {
     id: 'xmp',
     title: 'Turn on XMP / EXPO for full RAM speed',
-    parts: ['ram', 'monitor'],
+    spots: ['ram', 'monitor'],
     aliases: ['xmp', 'expo', 'docp', 'ram speed', 'memory speed', 'mhz', 'mt/s', 'slow ram'],
     kind: 'setup',
     difficulty: 1,
@@ -73,7 +73,7 @@ export const FIRST_BOOT_GUIDES: Guide[] = [
   {
     id: 'boot-usb',
     title: 'Boot from a USB stick',
-    parts: ['monitor'],
+    spots: ['monitor'],
     aliases: ['boot menu', 'boot order', 'boot priority', 'usb boot', 'f11', 'f12', 'f8'],
     kind: 'setup',
     difficulty: 1,
@@ -94,7 +94,7 @@ export const FIRST_BOOT_GUIDES: Guide[] = [
   {
     id: 'make-usb',
     title: 'Make a bootable Windows or Linux USB',
-    parts: ['monitor'],
+    spots: ['monitor'],
     aliases: ['installer', 'iso', 'rufus', 'etcher', 'media creation tool', 'usb installer'],
     kind: 'setup',
     difficulty: 1,
@@ -115,7 +115,7 @@ export const FIRST_BOOT_GUIDES: Guide[] = [
   {
     id: 'install-windows',
     title: 'Install Windows 11',
-    parts: ['monitor'],
+    spots: ['monitor'],
     aliases: ['windows', 'os', 'operating system', 'install os', 'tpm', 'secure boot', 'clean install'],
     kind: 'setup',
     difficulty: 2,
@@ -140,7 +140,7 @@ export const FIRST_BOOT_GUIDES: Guide[] = [
   {
     id: 'install-linux',
     title: 'Install Linux',
-    parts: ['monitor'],
+    spots: ['monitor'],
     aliases: ['linux', 'ubuntu', 'mint', 'fedora', 'os', 'operating system', 'dual boot'],
     kind: 'setup',
     difficulty: 2,
@@ -161,7 +161,7 @@ export const FIRST_BOOT_GUIDES: Guide[] = [
   {
     id: 'bios-update',
     title: 'Update the BIOS',
-    parts: ['motherboard', 'monitor'],
+    spots: ['motherboard', 'monitor'],
     aliases: ['bios update', 'flash bios', 'flashback', 'q-flash', 'ez flash', 'm-flash', 'agesa', 'cpu support'],
     kind: 'setup',
     difficulty: 2,
@@ -185,7 +185,7 @@ export const FIRST_BOOT_GUIDES: Guide[] = [
   {
     id: 'drivers',
     title: 'Install drivers after a fresh install',
-    parts: ['monitor', 'gpu'],
+    spots: ['monitor', 'gpu'],
     aliases: ['drivers', 'chipset driver', 'graphics driver', 'nvidia app', 'adrenalin', 'device manager'],
     kind: 'setup',
     difficulty: 1,
@@ -206,7 +206,7 @@ export const FIRST_BOOT_GUIDES: Guide[] = [
   {
     id: 'front-panel',
     title: 'Connect the power button and front ports',
-    parts: ['power', 'motherboard'],
+    spots: ['power', 'motherboard'],
     aliases: ['front panel', 'jfp1', 'f_panel', 'power switch', 'power led', 'usb header', 'hd audio'],
     kind: 'setup',
     difficulty: 1,
@@ -227,7 +227,7 @@ export const FIRST_BOOT_GUIDES: Guide[] = [
   {
     id: 'open-case',
     title: 'Open the case safely',
-    parts: ['case'],
+    spots: ['case'],
     aliases: ['side panel', 'glass panel', 'tempered glass', 'thumbscrews', 'open pc'],
     kind: 'setup',
     difficulty: 1,

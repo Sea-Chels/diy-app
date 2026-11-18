@@ -3,7 +3,7 @@ import { LEAD } from './common';
 
 export const DRYWALL_GUIDES: Guide[] = [
   {
-    id: 'patch-small-holes', title: 'Patch nail holes and dents', areas: ['wall'], aliases: ['spackle', 'nail holes', 'dent', 'small hole', 'picture holes'],
+    id: 'patch-small-holes', title: 'Patch nail holes and dents', spots: ['wall'], aliases: ['spackle', 'nail holes', 'dent', 'small hole', 'picture holes'],
     kind: 'finish', difficulty: 1, minutes: [15, 30], savings: 'free',
     tools: ['putty-knife', 'sanding-sponge'],
     supplies: ['Lightweight spackle', 'Primer and matching paint'],
@@ -17,14 +17,14 @@ export const DRYWALL_GUIDES: Guide[] = [
     query: 'how to patch nail holes in drywall spackle',
   },
   {
-    id: 'patch-doorknob-hole', title: 'Fix a doorknob-sized hole in drywall', areas: ['wall'], aliases: ['hole in wall', 'drywall patch', 'mesh patch', 'california patch', 'doorknob hole', 'medium hole'],
-    kind: 'finish', difficulty: 1, minutes: [60, 120], savings: '$150–300 for a handyman',
+    id: 'patch-doorknob-hole', title: 'Fix a doorknob-sized hole in drywall', spots: ['wall'], aliases: ['hole in wall', 'drywall patch', 'mesh patch', 'california patch', 'doorknob hole', 'medium hole'],
+    kind: 'finish', difficulty: 1, minutes: [60, 120], savings: 'saves $150–300 for a handyman',
     tools: ['knife', 'taping-knives', 'mud-pan', 'sanding-sponge', 'jab-saw'],
     supplies: ['Self-adhesive mesh patch (or a scrap of drywall)', 'Joint compound', 'Primer and paint', 'Door stop for the door behind it'],
     summary: 'For holes up to about 6 in, a self-adhesive mesh patch and three thin coats of joint compound make it disappear. Then add a door stop so it doesn\'t happen again.',
     steps: [
       'Trim loose paper and crumbled gypsum from the edges with a utility knife.',
-      'Stick the mesh patch over the hole, centred.',
+      'Stick the mesh patch over the hole, centered.',
       'Spread a thin coat of compound over it with the 6 in knife, feathering past the edges. Let it dry.',
       'Sand lightly, then apply a second coat a couple of inches wider with the 10 in knife.',
       'A third thin coat, wider again, then sand smooth with a fine sponge. Check by shining a light across it.',
@@ -33,8 +33,8 @@ export const DRYWALL_GUIDES: Guide[] = [
     query: 'how to fix a doorknob hole in drywall mesh patch', featured: true,
   },
   {
-    id: 'patch-large-hole', title: 'Patch a large hole in drywall', areas: ['wall'], aliases: ['big hole', 'drywall repair', 'replace drywall', 'water damage drywall'],
-    kind: 'finish', difficulty: 2, minutes: [120, 300], savings: '$200–500',
+    id: 'patch-large-hole', title: 'Patch a large hole in drywall', spots: ['wall'], aliases: ['big hole', 'drywall repair', 'replace drywall', 'water damage drywall'],
+    kind: 'finish', difficulty: 2, minutes: [120, 300], savings: 'saves $200–500',
     tools: ['jab-saw', 'knife', 'drill', 'tape', 'speed-square', 'taping-knives', 'mud-pan', 'sanding-sponge', 'stud-finder'],
     supplies: ['Drywall sheet the same thickness (usually ½ in)', 'Scrap wood for backing strips', 'Drywall screws', 'Paper or mesh tape', 'Joint compound', 'Primer and paint'],
     summary: 'Cut the damage out as a neat rectangle, add wood backing inside, screw in a matching piece of drywall, then tape and mud the seams.',
@@ -46,11 +46,11 @@ export const DRYWALL_GUIDES: Guide[] = [
       'Tape the seams, then apply three thin coats of compound, each wider than the last, sanding between coats.',
       'Prime and paint.',
     ],
-    cautions: ['Drywall compound and textures from before the 1980s may contain asbestos. Test before sanding or cutting.', 'Water-damaged drywall: fix the leak first and check for mould.'],
+    cautions: ['Drywall compound and textures from before the 1980s may contain asbestos. Test before sanding or cutting.', 'Water-damaged drywall: fix the leak first and check for mold.'],
     query: 'how to patch a large hole in drywall backing',
   },
   {
-    id: 'nail-pops-cracks', title: 'Fix nail pops and drywall cracks', areas: ['wall'], aliases: ['nail pop', 'crack in wall', 'corner crack', 'ceiling crack', 'settling'],
+    id: 'nail-pops-cracks', title: 'Fix nail pops and drywall cracks', spots: ['wall'], aliases: ['nail pop', 'crack in wall', 'corner crack', 'ceiling crack', 'settling'],
     kind: 'finish', difficulty: 1, minutes: [30, 90], savings: 'free',
     tools: ['drill', 'taping-knives', 'sanding-sponge', 'knife'],
     supplies: ['1⅝ in drywall screws', 'Mesh tape', 'Joint compound', 'Primer and paint'],
@@ -65,10 +65,10 @@ export const DRYWALL_GUIDES: Guide[] = [
     query: 'how to fix drywall nail pops and cracks',
   },
   {
-    id: 'paint-room', title: 'Paint a room', areas: ['wall'], aliases: ['paint walls', 'cut in', 'roller', 'interior paint', 'two coats'],
-    kind: 'finish', difficulty: 1, minutes: [240, 480], savings: '$400–1,000 per room',
+    id: 'paint-room', title: 'Paint a room', spots: ['wall'], aliases: ['paint walls', 'cut in', 'roller', 'interior paint', 'two coats'],
+    kind: 'finish', difficulty: 1, minutes: [240, 480], savings: 'saves $400–1,000 per room',
     tools: ['roller', 'brush', 'drop-cloth', 'putty-knife', 'sanding-sponge', 'screwdriver'],
-    supplies: ['Paint (use the calculator: about 350–400 sq ft per gallon per coat)', 'Primer for patches and big colour changes', 'Painter\'s tape', 'Spackle'],
+    supplies: ['Paint (use the calculator: about 350–400 sq ft per gallon per coat)', 'Primer for patches and big color changes', 'Painter\'s tape', 'Spackle'],
     summary: 'Prep is most of the job: patch, clean, tape. Then cut in the edges with a brush and roll the walls while the cut-in is still wet.',
     steps: [
       'Move furniture to the middle, lay drop cloths and remove cover plates.',
@@ -83,8 +83,8 @@ export const DRYWALL_GUIDES: Guide[] = [
     query: 'how to paint a room like a pro cut in roll',
   },
   {
-    id: 'hang-heavy', title: 'Hang shelves and TVs safely', areas: ['wall'], aliases: ['anchor', 'stud', 'tv mount', 'toggle bolt', 'shelf', 'hang mirror'],
-    kind: 'install', difficulty: 1, minutes: [20, 60], savings: '$100+ for mounting',
+    id: 'hang-heavy', title: 'Hang shelves and TVs safely', spots: ['wall'], aliases: ['anchor', 'stud', 'tv mount', 'toggle bolt', 'shelf', 'hang mirror'],
+    kind: 'install', difficulty: 1, minutes: [20, 60], savings: 'saves $100+ for mounting',
     tools: ['stud-finder', 'drill', 'level', 'tape', 'screwdriver'],
     supplies: ['Screws long enough for 1¼ in into the stud', 'Toggle bolts or rated drywall anchors where there\'s no stud'],
     summary: 'Screw into studs whenever you can. Where you can\'t, use toggle bolts or anchors rated for the load. TVs and heavy shelves belong on studs.',

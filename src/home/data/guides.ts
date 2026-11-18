@@ -1,4 +1,4 @@
-import type { GuideBase } from '../../shared/guides';
+import { guideBook, type GuideBase } from '../../shared/guides';
 import type { AreaId } from './areas';
 import { SINK_GUIDES } from './guides/sink';
 import { COUNTERS_GUIDES } from './guides/counters';
@@ -20,10 +20,8 @@ import { OUTSIDE_GUIDES } from './guides/outside';
 export type GuideKind = 'fix' | 'install' | 'finish' | 'maintain';
 export const KIND_LABEL: Record<GuideKind, string> = { fix: 'Troubleshoot', install: 'Install & replace', finish: 'Patch & finish', maintain: 'Maintain' };
 
-export interface Guide extends GuideBase {
+export interface Guide extends GuideBase<AreaId> {
   kind: GuideKind;
-  /** Areas this guide is listed under. First one is the primary. */
-  areas: AreaId[];
   /** When it stops being a DIY job. */
   pro?: string;
 }
@@ -46,5 +44,4 @@ export const GUIDES: Guide[] = [
   ...OUTSIDE_GUIDES,
 ];
 
-export const GUIDE_BY_ID = new Map(GUIDES.map((g) => [g.id, g]));
-export const guidesForArea = (a: AreaId) => GUIDES.filter((g) => g.areas.includes(a));
+export const BOOK = guideBook<AreaId, Guide>(GUIDES);

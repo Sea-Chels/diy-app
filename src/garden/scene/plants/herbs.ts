@@ -84,7 +84,7 @@ export function chamomile(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3)
   return g;
 }
 
-/** Marshmallow (Althaea officinalis): tall velvety grey-green stems, pale pink flowers up top. */
+/** Marshmallow (Althaea officinalis): tall velvety gray-green stems, pale pink flowers up top. */
 export function marshmallow(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3): THREE.Group {
   const g = plantGroup(parent, p, k.r() * 6.28);
   const H = k.season === 'spring' ? 0.55 : range(k.r, 1.15, 1.35);

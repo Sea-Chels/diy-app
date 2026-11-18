@@ -4,7 +4,7 @@ export const BODY_GUIDES: Guide[] = [
   {
     id: 'key-fob-battery',
     title: 'Key fob battery',
-    parts: ['cabin'],
+    spots: ['cabin'],
     aliases: ['remote', 'keyless', 'CR2032', 'CR2025', 'fob not working'],
     difficulty: 1,
     minutes: [5, 10],
@@ -24,7 +24,7 @@ export const BODY_GUIDES: Guide[] = [
   {
     id: 'read-codes',
     title: 'Read a check-engine code',
-    parts: ['cabin'],
+    spots: ['cabin'],
     aliases: ['check engine light', 'obd2', 'scanner', 'diagnostic', 'code reader', 'CEL'],
     difficulty: 1,
     minutes: [5, 10],
@@ -45,7 +45,7 @@ export const BODY_GUIDES: Guide[] = [
   {
     id: 'gas-cap',
     title: 'Replace a loose or worn gas cap',
-    parts: ['fueldoor'],
+    spots: ['fueldoor'],
     aliases: ['check engine', 'P0455', 'P0457', 'P0442', 'evap', 'fuel cap', 'check fuel cap'],
     difficulty: 1,
     minutes: [2, 5],
@@ -65,7 +65,7 @@ export const BODY_GUIDES: Guide[] = [
   {
     id: 'lift-struts',
     title: 'Hood or trunk gas struts',
-    parts: ['trunk', 'hood'],
+    spots: ['trunk', 'hood'],
     aliases: ['lift support', 'hood wont stay up', 'trunk falls', 'hatch strut'],
     difficulty: 1,
     minutes: [10, 20],
@@ -85,7 +85,7 @@ export const BODY_GUIDES: Guide[] = [
   {
     id: 'mirror-glass',
     title: 'Side mirror glass',
-    parts: ['door'],
+    spots: ['door'],
     aliases: ['broken mirror', 'mirror replacement', 'cracked mirror'],
     difficulty: 1,
     minutes: [10, 20],
@@ -105,17 +105,17 @@ export const BODY_GUIDES: Guide[] = [
   {
     id: 'touch-up-paint',
     title: 'Touch up a paint chip',
-    parts: ['door'],
+    spots: ['door'],
     aliases: ['scratch', 'chip', 'rust spot', 'paint code'],
     difficulty: 1,
     minutes: [20, 40],
     savings: 'a body shop charges $150 and up; a touch-up pen is $15',
-    tools: ['Fine brush or toothpick', 'Rubbing alcohol', 'Microfibre'],
+    tools: ['Fine brush or toothpick', 'Rubbing alcohol', 'Microfiber'],
     supplies: ['Touch-up paint matching the paint code on the door jamb sticker', 'Clear coat'],
     summary: 'Clean, dab paint into the chip in thin layers, let each dry, top with clear. Not invisible, but it stops rust.',
     steps: [
       'Find the paint code on the door jamb sticker and buy the matching pen.',
-      'Clean the chip with alcohol. Remove any rust with a fibreglass pen.',
+      'Clean the chip with alcohol. Remove any rust with a fiberglass pen.',
       'Dab a thin layer of base color into the chip. Let it dry 20 minutes.',
       'Add layers until level with the surrounding paint, then a layer of clear.',
       'After a week, polish lightly to blend.',
@@ -125,7 +125,7 @@ export const BODY_GUIDES: Guide[] = [
   {
     id: 'dome-light',
     title: 'Dome or map light bulb',
-    parts: ['cabin'],
+    spots: ['cabin'],
     aliases: ['interior light', 'courtesy light', 'map light', 'festoon'],
     difficulty: 1,
     minutes: [5, 10],

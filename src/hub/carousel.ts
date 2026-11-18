@@ -1,35 +1,30 @@
+import { h } from '../shared/dom';
 import { icon } from '../shared/icons';
+import { reducedMotion } from '../shared/motion';
 
 /** How long each slide stays up before the next one turns in. */
 const SLIDE_MS = 7000;
-
-export interface Carousel {
-  goTo(id: string): void;
-}
 
 /**
  * Comic-page carousel. The active dot's progress bar is a CSS animation; when it
  * finishes the next slide turns in, so pausing is just pausing that animation.
  */
-export function initCarousel(root: HTMLElement): Carousel {
+export function initCarousel(root: HTMLElement): void {
   const slides = [...root.querySelectorAll<HTMLElement>('.slide')];
   const dotsEl = root.querySelector<HTMLElement>('.dots')!;
   const pauseBtn = root.querySelector<HTMLButtonElement>('.pause')!;
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let index = 0;
-  let userPaused = reduceMotion;
+  let userPaused = reducedMotion();
 
   root.style.setProperty('--slide-ms', `${SLIDE_MS}ms`);
 
   const dots = slides.map((slide, i) => {
-    const dot = document.createElement('button');
-    dot.type = 'button';
-    dot.className = 'dot';
+    const label = slide.dataset.label ?? '';
+    const fill = h('span', { class: 'dot-fill', onAnimationend: () => go(index + 1, 1) });
+    const dot = h('button', { type: 'button', class: 'dot', 'aria-label': `Slide ${i + 1} of ${slides.length}: ${label}`, onClick: () => go(i, i < index ? -1 : 1) },
+      h('span', { class: 'dot-label' }, label),
+      h('span', { class: 'dot-bar' }, fill));
     dot.style.setProperty('--ws', slide.style.getPropertyValue('--ws'));
-    dot.setAttribute('aria-label', `Slide ${i + 1} of ${slides.length}: ${slide.dataset.label}`);
-    dot.innerHTML = `<span class="dot-label">${slide.dataset.label}</span><span class="dot-bar"><span class="dot-fill"></span></span>`;
-    dot.addEventListener('click', () => go(i, i < index ? -1 : 1));
-    dot.querySelector('.dot-fill')!.addEventListener('animationend', () => go(index + 1, 1));
     dotsEl.append(dot);
     return dot;
   });
@@ -71,7 +66,8 @@ export function initCarousel(root: HTMLElement): Carousel {
     void dotsEl.offsetWidth;
     dots.forEach((d, i) => {
       d.classList.toggle('is-active', i === index);
-      d.toggleAttribute('aria-current', i === index);
+      if (i === index) d.setAttribute('aria-current', 'true');
+      else d.removeAttribute('aria-current');
     });
     root.style.setProperty('--ws', slides[index].style.getPropertyValue('--ws'));
   }
@@ -120,11 +116,4 @@ export function initCarousel(root: HTMLElement): Carousel {
 
   setUserPaused(userPaused);
   show();
-
-  return {
-    goTo(id) {
-      const i = slides.findIndex((s) => s.dataset.id === id);
-      if (i >= 0 && i !== index) go(i, i < index ? -1 : 1);
-    },
-  };
 }

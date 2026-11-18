@@ -3,7 +3,7 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import type { V3 } from '../../shared/scene/kit';
 import type { View } from '../../shared/scene/stage';
 import type { LidId, PartId } from '../data/parts';
-import { createBeacons, createLids, createParts, viewInParent, viewsInParent, type LidSpec, type RideRig } from './parts3d';
+import { createPartBeacons, createPivotLids, createParts, viewInParent, viewsInParent, type LidSpec, type RideRig } from './parts3d';
 
 /**
  * Geometry the motorcycle and bike share. Both are built facing +z with the wheels on the
@@ -61,7 +61,7 @@ export function spokes(n: number, hubR: number, flange: number, rimR: number, r:
   return mergeGeometries(parts);
 }
 
-/** A pulley the chain wraps: centre (z, y), radius, and 1 if the chain turns round it from +z toward +y, -1 the other way. */
+/** A pulley the chain wraps: center (z, y), radius, and 1 if the chain turns round it from +z toward +y, -1 the other way. */
 export interface Pulley {
   c: [number, number];
   r: number;
@@ -70,7 +70,7 @@ export interface Pulley {
 
 /**
  * The closed path of a chain around pulleys in the order it meets them, in the plane x.
- * Same-direction neighbours are joined by an outer tangent, opposite ones (a derailleur's S-bend) by a crossing one.
+ * Same-direction neighbors are joined by an outer tangent, opposite ones (a derailleur's S-bend) by a crossing one.
  */
 export function chainPath(pulleys: Pulley[], x: number, step = 0.012): V3[] {
   const n = pulleys.length;
@@ -85,6 +85,7 @@ export function chainPath(pulleys: Pulley[], x: number, step = 0.012): V3[] {
     const ra = A.wrap * A.r;
     const rb = B.wrap * B.r;
     const a = (ra - rb) / L;
+    if (!(Math.abs(a) < 1)) throw new Error(`chainPath: pulleys ${i} and ${(i + 1) % n} overlap, so no chain run joins them`);
     const b0 = Math.sqrt(Math.max(0, 1 - a * a));
     for (const b of [b0, -b0]) {
       const nz = a * uz - b * uy;
@@ -135,15 +136,15 @@ export function createCycle(lean: number) {
   const body = new THREE.Group();
   body.rotation.z = lean;
   group.add(body);
-  const { hotspots, put, tag } = createParts();
+  const { hotspots, tag } = createParts();
   /** Height above `body`'s origin at which a stand foot `x` out from the wheels meets the ground. */
   const groundY = (x: number) => x * Math.tan(-lean);
   const finish = <P extends PartId>(
     key: string,
     spec: { lids?: Partial<Record<LidId, LidSpec>>; dots: Record<P, V3>; views: Record<P, View>; overview: View },
   ): RideRig<P> => {
-    const { setLid, canPick } = createLids(spec.lids ?? {}, key);
-    const { beacons, beaconAt } = createBeacons(body, canPick);
+    const { setLid, canPick } = createPivotLids(spec.lids ?? {}, key);
+    const { beacons, beaconAt } = createPartBeacons(body, canPick);
     for (const p of Object.keys(spec.dots) as P[]) beaconAt(p, spec.dots[p]);
     return {
       group,
@@ -156,5 +157,5 @@ export function createCycle(lean: number) {
       poke: () => {},
     };
   };
-  return { body, put, tag, groundY, finish };
+  return { body, tag, groundY, finish };
 }

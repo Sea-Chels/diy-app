@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
-import { mapped, tube } from '../../../shared/scene/kit';
+import { add, mapped, tube } from '../../../shared/scene/kit';
 import { C, M, decal, rbox } from '../kit';
 import { batteryLabel, engineLabel, fuseLabel, oilIcon, radiatorTex, washerIcon } from '../textures';
 import type { CarCtx } from '../ctx';
@@ -9,28 +9,28 @@ const v = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 const FLAT: [number, number, number] = [-Math.PI / 2, 0, 0];
 
 export function buildEngineBay(c: CarCtx) {
-  const { S, group, put, tag } = c;
+  const { S, group, tag } = c;
   const F = S.bayFloor;
   const bz0 = S.cowlZ + 0.06;
   const bz1 = S.fasciaZ - 0.02;
   const bm = (bz0 + bz1) / 2;
   const hose = () => toon(C.hose, { shine: 0.3 });
 
-  const block = put(group, rbox(0.56, 0.26, 0.4, 0.04), M.casting(), [0.02, F + 0.13, bm], 'thin');
-  const cover = put(group, rbox(0.5, 0.07, 0.34, 0.03), toon(C.cover, { shine: 0.5, metal: 0.4 }), [0.02, F + 0.315, bm], 'thin');
+  const block = add(rbox(0.56, 0.26, 0.4, 0.04), M.casting(), group, { at: [0.02, F + 0.13, bm] });
+  const cover = add(rbox(0.5, 0.07, 0.34, 0.03), toon(C.cover, { shine: 0.5, metal: 0.4 }), group, { at: [0.02, F + 0.315, bm] });
   const badge = decal(group, engineLabel(), 0.2, 0.1, [-0.09, F + 0.351, bm + 0.06], FLAT);
   const plenumZ = bm - 0.25;
-  const plenum = put(group, new THREE.CylinderGeometry(0.05, 0.05, 0.44, 20), toon(C.cover, { shine: 0.5 }), [0, F + 0.27, plenumZ], 'thin');
+  const plenum = add(new THREE.CylinderGeometry(0.05, 0.05, 0.44, 20), M.cover(), group, { at: [0, F + 0.27, plenumZ] });
   plenum.rotation.z = Math.PI / 2;
-  const runners = [-0.15, -0.05, 0.05, 0.15].map((x) => tube([v(x, F + 0.28, plenumZ), v(x, F + 0.34, plenumZ + 0.07), v(x, F + 0.3, plenumZ + 0.12)], 0.026, toon(C.cover, { shine: 0.5 }), group, { radial: 10 }));
-  const throttle = put(group, new THREE.CylinderGeometry(0.045, 0.045, 0.06, 18), M.chrome(), [0.25, F + 0.27, plenumZ], 'thin');
+  const runners = [-0.15, -0.05, 0.05, 0.15].map((x) => tube([v(x, F + 0.28, plenumZ), v(x, F + 0.34, plenumZ + 0.07), v(x, F + 0.3, plenumZ + 0.12)], 0.026, M.cover(), group, { radial: 10 }));
+  const throttle = add(new THREE.CylinderGeometry(0.045, 0.045, 0.06, 18), M.chrome(), group, { at: [0.25, F + 0.27, plenumZ] });
   throttle.rotation.z = Math.PI / 2;
 
   // Accessory drive on the engine's +x end: crank, alternator and tensioner pulleys wrapped by one belt.
   const px = 0.33;
   const pulleys: [number, number, number][] = [[F + 0.08, bm + 0.04, 0.075], [F + 0.27, bm + 0.15, 0.045], [F + 0.22, bm - 0.1, 0.04]];
   const drive: THREE.Mesh[] = pulleys.map(([y, z, r]) => {
-    const p = put(group, new THREE.CylinderGeometry(r, r, 0.035, 24), M.chrome(), [px, y, z], 'thin');
+    const p = add(new THREE.CylinderGeometry(r, r, 0.035, 24), M.chrome(), group, { at: [px, y, z] });
     p.rotation.z = Math.PI / 2;
     return p;
   });
@@ -42,35 +42,35 @@ export function buildEngineBay(c: CarCtx) {
   });
   const belt = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(beltPts, true), 60, 0.009, 6, true), toon(C.darkPart));
   group.add(belt);
-  const alternator = put(group, new THREE.CylinderGeometry(0.07, 0.07, 0.12, 20), toon(C.disc, { shine: 0.6, metal: 0.5 }), [0.41, F + 0.27, bm + 0.15], 'thin');
+  const alternator = add(new THREE.CylinderGeometry(0.07, 0.07, 0.12, 20), toon(C.disc, { shine: 0.6, metal: 0.5 }), group, { at: [0.41, F + 0.27, bm + 0.15] });
   alternator.rotation.z = Math.PI / 2;
   tag('engine', block, cover, badge, plenum, ...runners, throttle, ...drive, belt, alternator);
 
-  const oilCap = put(group, new THREE.CylinderGeometry(0.05, 0.05, 0.04, 20), toon(C.oil, { shine: 0.6 }), [0.14, F + 0.37, bm - 0.07], 'thin');
+  const oilCap = add(new THREE.CylinderGeometry(0.05, 0.05, 0.04, 20), toon(C.oil, { shine: 0.6 }), group, { at: [0.14, F + 0.37, bm - 0.07] });
   const oilMark = decal(group, oilIcon(), 0.08, 0.08, [0.14, F + 0.391, bm - 0.07], FLAT, { round: true });
-  const dipRing = put(group, new THREE.TorusGeometry(0.035, 0.01, 8, 20), toon(C.oil), [-0.22, F + 0.32, bm + 0.18], 'thin');
-  const dipstick = put(group, new THREE.CylinderGeometry(0.011, 0.011, 0.24, 8), toon(C.oil), [-0.22, F + 0.19, bm + 0.18], false);
+  const dipRing = add(new THREE.TorusGeometry(0.035, 0.01, 8, 20), toon(C.oil), group, { at: [-0.22, F + 0.32, bm + 0.18] });
+  const dipstick = add(new THREE.CylinderGeometry(0.011, 0.011, 0.24, 8), toon(C.oil), group, { at: [-0.22, F + 0.19, bm + 0.18], ink: null });
   tag('oil', oilCap, oilMark, dipRing, dipstick);
 
   const bx = -0.34;
   const bz = bz0 + 0.16;
-  const battery = put(group, rbox(0.26, 0.2, 0.18, 0.02), toon(C.battery), [bx, F + 0.1, bz], 'thin');
+  const battery = add(rbox(0.26, 0.2, 0.18, 0.02), toon(C.battery), group, { at: [bx, F + 0.1, bz] });
   const sticker = decal(group, batteryLabel(), 0.2, 0.1, [bx, F + 0.11, bz + 0.092]);
-  const termPos = put(group, new THREE.CylinderGeometry(0.026, 0.026, 0.05, 12), toon(C.positive, { shine: 0.5 }), [bx - 0.08, F + 0.22, bz - 0.06], false);
-  const termNeg = put(group, new THREE.CylinderGeometry(0.022, 0.022, 0.05, 12), M.trim(), [bx + 0.08, F + 0.22, bz - 0.06], false);
-  const holdDown = put(group, rbox(0.3, 0.018, 0.03, 0.006), M.trim(), [bx, F + 0.209, bz + 0.03], false);
+  const termPos = add(new THREE.CylinderGeometry(0.026, 0.026, 0.05, 12), toon(C.positive, { shine: 0.5 }), group, { at: [bx - 0.08, F + 0.22, bz - 0.06], ink: null });
+  const termNeg = add(new THREE.CylinderGeometry(0.022, 0.022, 0.05, 12), M.trim(), group, { at: [bx + 0.08, F + 0.22, bz - 0.06], ink: null });
+  const holdDown = add(rbox(0.3, 0.018, 0.03, 0.006), M.trim(), group, { at: [bx, F + 0.209, bz + 0.03], ink: null });
   const cablePos = tube([v(bx - 0.08, F + 0.24, bz - 0.06), v(bx - 0.1, F + 0.28, bz + 0.1), v(-0.4, F + 0.16, bm - 0.06), v(-0.4, F + 0.1, bm - 0.02)], 0.013, toon(C.positive, { shine: 0.4 }), group);
   const cableNeg = tube([v(bx + 0.08, F + 0.24, bz - 0.06), v(bx + 0.1, F + 0.27, bz + 0.04), v(-0.26, F + 0.18, bm - 0.16)], 0.012, hose(), group);
   tag('battery', battery, sticker, termPos, termNeg, holdDown, cablePos, cableNeg);
 
-  const airbox = put(group, rbox(0.26, 0.18, 0.24, 0.03), toon(C.airbox), [0.4, F + 0.09, bz0 + 0.17], 'thin');
-  const airLid = put(group, rbox(0.27, 0.04, 0.25, 0.02), toon(C.airbox, { shine: 0.3 }), [0.4, F + 0.19, bz0 + 0.17], 'thin');
-  const clips = [-0.08, 0.08].map((dz) => put(group, rbox(0.02, 0.06, 0.03, 0.006), M.chrome(), [0.535, F + 0.17, bz0 + 0.17 + dz], false));
+  const airbox = add(rbox(0.26, 0.18, 0.24, 0.03), toon(C.airbox), group, { at: [0.4, F + 0.09, bz0 + 0.17] });
+  const airLid = add(rbox(0.27, 0.04, 0.25, 0.02), toon(C.airbox, { shine: 0.3 }), group, { at: [0.4, F + 0.19, bz0 + 0.17] });
+  const clips = [-0.08, 0.08].map((dz) => add(rbox(0.02, 0.06, 0.03, 0.006), M.chrome(), group, { at: [0.535, F + 0.17, bz0 + 0.17 + dz], ink: null }));
   const ductPts = [v(0.38, F + 0.2, bz0 + 0.24), v(0.37, F + 0.28, bz0 + 0.3), v(0.3, F + 0.27, plenumZ)];
   const duct = tube(ductPts, 0.04, toon(C.airbox, { shine: 0.3 }), group, { radial: 14 });
   const curve = new THREE.CatmullRomCurve3(ductPts);
   const ribs = [0.3, 0.55, 0.8].map((k) => {
-    const rib = put(group, new THREE.TorusGeometry(0.043, 0.006, 6, 18), toon(C.airbox), undefined, false);
+    const rib = add(new THREE.TorusGeometry(0.043, 0.006, 6, 18), toon(C.airbox), group, { ink: null });
     rib.position.copy(curve.getPointAt(k));
     rib.lookAt(rib.position.clone().add(curve.getTangentAt(k)));
     return rib;
@@ -79,31 +79,31 @@ export function buildEngineBay(c: CarCtx) {
 
   // Fill caps sit just under the hood line, where you'd actually find them, so they show from above.
   const tankZ = bm + 0.31;
-  const coolant = put(group, rbox(0.15, 0.2, 0.16, 0.03), toon(C.coolant, { shine: 0.5 }), [0.43, F + 0.22, tankZ], 'thin');
+  const coolant = add(rbox(0.15, 0.2, 0.16, 0.03), toon(C.coolant, { shine: 0.5 }), group, { at: [0.43, F + 0.22, tankZ] });
   const coolMat = coolant.material as THREE.MeshToonMaterial;
   coolMat.transparent = true;
   coolMat.opacity = 0.62;
   coolMat.depthWrite = false;
-  const fluid = put(group, rbox(0.13, 0.12, 0.14, 0.02), toon(C.coolantCap, { halftone: 0.3 }), [0.43, F + 0.18, tankZ], false);
-  const marks = [F + 0.15, F + 0.27].map((y) => put(group, rbox(0.06, 0.008, 0.004, 0.002), M.trim(), [0.43, y, tankZ + 0.081], false));
-  const coolantCap = put(group, new THREE.CylinderGeometry(0.042, 0.042, 0.035, 18), toon(C.coolantCap, { shine: 0.5 }), [0.43, F + 0.337, tankZ], 'thin');
+  const fluid = add(rbox(0.13, 0.12, 0.14, 0.02), toon(C.coolantCap, { halftone: 0.3 }), group, { at: [0.43, F + 0.18, tankZ], ink: null });
+  const marks = [F + 0.15, F + 0.27].map((y) => add(rbox(0.06, 0.008, 0.004, 0.002), M.trim(), group, { at: [0.43, y, tankZ + 0.081], ink: null }));
+  const coolantCap = add(new THREE.CylinderGeometry(0.042, 0.042, 0.035, 18), toon(C.coolantCap, { shine: 0.5 }), group, { at: [0.43, F + 0.337, tankZ] });
   tag('coolant', coolant, fluid, ...marks, coolantCap);
 
-  const washer = put(group, rbox(0.15, 0.2, 0.16, 0.03), toon(C.washer, { shine: 0.5 }), [-0.43, F + 0.22, tankZ], 'thin');
-  const washerCap = put(group, new THREE.CylinderGeometry(0.045, 0.045, 0.035, 18), toon(C.washerCap, { shine: 0.4 }), [-0.43, F + 0.337, tankZ], 'thin');
+  const washer = add(rbox(0.15, 0.2, 0.16, 0.03), toon(C.washer, { shine: 0.5 }), group, { at: [-0.43, F + 0.22, tankZ] });
+  const washerCap = add(new THREE.CylinderGeometry(0.045, 0.045, 0.035, 18), toon(C.washerCap, { shine: 0.4 }), group, { at: [-0.43, F + 0.337, tankZ] });
   const washerMark = decal(group, washerIcon(), 0.08, 0.08, [-0.43, F + 0.356, tankZ], FLAT, { round: true });
   tag('washer', washer, washerCap, washerMark);
 
-  const fuseEngine = put(group, rbox(0.2, 0.1, 0.15, 0.02), toon(C.darkPart), [-0.38, F + 0.05, bm + 0.05], 'thin');
-  const fuseLid = put(group, rbox(0.21, 0.03, 0.16, 0.012), toon(C.darkPart, { shine: 0.3 }), [-0.38, F + 0.11, bm + 0.05], 'thin');
+  const fuseEngine = add(rbox(0.2, 0.1, 0.15, 0.02), toon(C.darkPart), group, { at: [-0.38, F + 0.05, bm + 0.05] });
+  const fuseLid = add(rbox(0.21, 0.03, 0.16, 0.012), M.frame(), group, { at: [-0.38, F + 0.11, bm + 0.05] });
   const fuseTag = decal(group, fuseLabel(), 0.14, 0.07, [-0.38, F + 0.126, bm + 0.05], FLAT);
   tag('fusebox_engine', fuseEngine, fuseLid, fuseTag);
 
   // Untagged plumbing: the radiator across the nose, its hose to the thermostat, heater hoses into the firewall.
   const radZ = bz1 - 0.035;
-  put(group, rbox(0.9, 0.3, 0.05, 0.01), mapped(0xffffff, radiatorTex(), { shine: 0.3, metal: 0.3 }), [0, F + 0.17, radZ], 'thin');
-  put(group, rbox(1.0, 0.04, 0.08, 0.012), toon(C.trim, { halftone: 0.5 }), [0, F + 0.34, radZ], 'thin');
-  put(group, rbox(0.06, 0.02, 0.04, 0.006), M.chrome(), [0, F + 0.35, radZ + 0.01], false);
+  add(rbox(0.9, 0.3, 0.05, 0.01), mapped(0xffffff, radiatorTex(), { shine: 0.3, metal: 0.3 }), group, { at: [0, F + 0.17, radZ] });
+  add(rbox(1.0, 0.04, 0.08, 0.012), toon(C.trim, { halftone: 0.5 }), group, { at: [0, F + 0.34, radZ] });
+  add(rbox(0.06, 0.02, 0.04, 0.006), M.chrome(), group, { at: [0, F + 0.35, radZ + 0.01], ink: null });
   tube([v(0.22, F + 0.26, radZ - 0.03), v(0.2, F + 0.31, (radZ + bm) / 2 + 0.05), v(0.16, F + 0.24, bm + 0.21)], 0.022, hose(), group, { radial: 10 });
   for (const x of [-0.02, 0.08]) tube([v(x, F + 0.16, bm - 0.2), v(x, F + 0.2, bm - 0.3), v(x + 0.02, F + 0.24, bz0 + 0.005)], 0.017, hose(), group, { radial: 8 });
   return { F, bz0, bz1, bm, tankZ };

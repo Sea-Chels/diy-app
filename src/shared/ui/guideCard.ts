@@ -28,6 +28,9 @@ export const summary = (g: GuideBase) => h('p', { class: 'summary' }, g.summary)
 
 export const note = (cls: string, name: IconName, ...content: Child[]) => h('p', { class: cls }, icon(name, 16), h('span', {}, ...content));
 
+/** Savings strings are lowercase phrases ("a shop charges $40", "free"), capitalised here. */
+export const savings = (g: GuideBase) => (g.savings ? note('savings', 'savings', g.savings[0].toUpperCase() + g.savings.slice(1)) : null);
+
 export const videoButton = (query: string, label = 'Watch how-to videos') =>
   h('a', { class: 'primary-btn', href: searchUrl(query), target: '_blank', rel: 'noopener noreferrer' }, icon('play', 16), label, icon('external', 15));
 

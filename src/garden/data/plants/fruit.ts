@@ -42,7 +42,7 @@ export const FRUIT_PLANTS: Plant[] = [
     id: 'pawpaw', name: 'Pawpaw', latin: 'Asimina triloba', type: 'fruit', life: 'tree', zones: [5, 8], sun: 'full', water: 'medium', spacing: 180, height: '15–25 ft',
     sow: 'Plant small container trees in spring (long taproot: don\'t transplant later). Plant two genetically different trees for fruit.', days: 'Fruit in 4–7 years (grafted 3–4)',
     care: ['Seedlings need shade for the first year or two; a tree tube or shade cloth works.', 'Then give them full sun for the best crops.', 'Flowers are pollinated by flies and beetles; hand-pollinate with a small paintbrush for bigger crops.', 'Keep evenly moist and mulched.'],
-    harvest: 'Late summer to early fall when fruit softens like a ripe peach and smells fruity. Custardy, mango-banana flavour; keeps only days at room temperature.',
+    harvest: 'Late summer to early fall when fruit softens like a ripe peach and smells fruity. Custardy, mango-banana flavor; keeps only days at room temperature.',
     problems: ['Poor fruit set (one tree or one clone)', 'Sun scorch on young trees'], friends: ['comfrey'], avoid: ['walnut'], area: 'fruit', unusual: true,
     note: 'America\'s largest native fruit, and the only host plant of the zebra swallowtail butterfly.',
   },
@@ -70,7 +70,7 @@ export const FRUIT_PLANTS: Plant[] = [
   {
     id: 'apple', name: 'Apple', latin: 'Malus domestica', type: 'fruit', life: 'tree', zones: [3, 8], sun: 'full', water: 'medium', spacing: 144, height: '8–20 ft depending on rootstock',
     sow: 'Plant bare-root trees in early spring. Most need a different variety blooming at the same time nearby.', days: 'Fruit in 2–5 years',
-    care: ['Pick a dwarfing rootstock for small gardens.', 'Prune in late winter to an open centre or central leader.', 'Thin fruitlets to one per cluster for bigger apples.'],
+    care: ['Pick a dwarfing rootstock for small gardens.', 'Prune in late winter to an open center or central leader.', 'Thin fruitlets to one per cluster for bigger apples.'],
     harvest: 'Ripe when the apple lifts and twists off easily and seeds are brown.', problems: ['Codling moth', 'Apple scab', 'Fire blight'],
     friends: ['chives', 'nasturtium', 'comfrey', 'marigold'], avoid: ['walnut', 'potato'],
   },
@@ -78,7 +78,7 @@ export const FRUIT_PLANTS: Plant[] = [
     id: 'peach', name: 'Peach', latin: 'Prunus persica', type: 'fruit', life: 'tree', zones: [5, 9], sun: 'full', water: 'medium', spacing: 180, height: '12–15 ft',
     sow: 'Plant bare-root in early spring in well-drained soil; most are self-fertile.', days: 'Fruit in 2–4 years',
     care: ['Prune to an open vase every late winter; peaches fruit on last year\'s wood.', 'Thin fruit to 6–8 inches apart.'],
-    harvest: 'Pick when the green background colour turns yellow and the fruit gives slightly.', problems: ['Peach leaf curl (dormant copper spray)', 'Brown rot', 'Late frosts'],
+    harvest: 'Pick when the green background color turns yellow and the fruit gives slightly.', problems: ['Peach leaf curl (dormant copper spray)', 'Brown rot', 'Late frosts'],
     friends: ['garlic', 'chives', 'marigold'], avoid: ['potato', 'tomato'],
   },
   {
@@ -98,7 +98,7 @@ export const FRUIT_PLANTS: Plant[] = [
   {
     id: 'aronia', name: 'Aronia (chokeberry)', latin: 'Aronia melanocarpa', type: 'fruit', life: 'shrub', zones: [3, 8], sun: 'full', water: 'medium', spacing: 48, height: '3–6 ft',
     sow: 'Plant in spring or fall; self-fertile and very adaptable.', days: 'Fruit in 2–3 years',
-    care: ['Nearly pest free. Brilliant red fall colour.'], harvest: 'Pick in late summer; very astringent raw, so use in juice, jam or dried.',
+    care: ['Nearly pest free. Brilliant red fall color.'], harvest: 'Pick in late summer; very astringent raw, so use in juice, jam or dried.',
     problems: ['Few'], friends: [], avoid: [], unusual: true,
   },
   {

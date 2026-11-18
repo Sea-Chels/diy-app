@@ -10,10 +10,10 @@ import { createParts } from './parts3d';
 export function createCtx(kind: BodyKind) {
   const S = SPECS[kind];
   const group = new THREE.Group();
-  const { hotspots, put, tag } = createParts();
+  const { hotspots, tag } = createParts();
   const paintMats: THREE.MeshToonMaterial[] = [];
 
-  // The rig paints every body panel before the first frame, so the starting colour never shows.
+  // The rig paints every body panel before the first frame, so the starting color never shows.
   const paint = () => {
     const m = toon(0xffffff);
     paintMats.push(m);
@@ -75,7 +75,7 @@ export function createCtx(kind: BodyKind) {
     const v = (y - s.yb) / (s.yt - s.yb);
     if (v < 0 || v > 1) return 0;
     const ey = Math.abs(2 * v - 1);
-    return (s.wb + (s.wt - s.wb) * v) * Math.pow(1 - Math.pow(ey, LOWER_N), 1 / LOWER_N);
+    return (s.wb + (s.wt - s.wb) * v) * (1 - ey ** LOWER_N) ** (1 / LOWER_N);
   };
   /** The most forward z where the nose surface passes through (x, y). */
   const noseZAt = (x: number, y: number) => {
@@ -113,7 +113,7 @@ export function createCtx(kind: BodyKind) {
   /** Black trim along the foot of the side glass, between z0 and z1, wide enough to cap the door top and reach in to the glass. */
   const beltTrim = (side: number, z0: number, z1: number) => rbox(0.064, 0.022, z1 - z0, 0.008).translate(side * (sill.x + 0.003), ghBaseY + 0.008, (z0 + z1) / 2);
 
-  /** Height of the glasshouse (roof) surface at (x, z); it falls away from the centre line toward the edges. */
+  /** Height of the glasshouse (roof) surface at (x, z); it falls away from the center line toward the edges. */
   const roofY = (x: number, z: number) => {
     const s = gh(z);
     let t = 0.25;
@@ -129,7 +129,7 @@ export function createCtx(kind: BodyKind) {
   };
 
   return {
-    S, kind, group, hotspots, paintMats, paint, put, tag,
+    S, kind, group, hotspots, paintMats, paint, tag,
     lowerTop, lowerBottom, lowerWidth, hoodLine, fasciaBottom, fasciaWidth, roofLine,
     archR, LOWER_N, lower, fenderW, hoodW, hoodZ1, fender, front, hoodEdgeT, noseTopY, onNose, GH_N, TUB_T, sill, ghBaseY, gh, GH_CORNER_T, beltTrim, roofY, sideX,
   };

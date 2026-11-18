@@ -19,7 +19,8 @@ export type PartId =
   | 'monitor';
 
 /** Things that move out of the way so a part can be seen. */
-export type LidId = 'glass' | 'cooler' | 'heatsink' | 'shroud';
+export const LIDS = ['glass', 'cooler', 'heatsink', 'shroud'] as const;
+export type LidId = (typeof LIDS)[number];
 
 export interface PartInfo {
   id: PartId;

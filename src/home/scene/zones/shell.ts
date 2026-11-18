@@ -47,14 +47,14 @@ export function buildFloor(c: HomeCtx) {
     sh.holes.push(hole);
     const g = new THREE.ShapeGeometry(sh);
     g.rotateX(-Math.PI / 2);
-    const f = add(g, floorMat, root, [0, 0.002, 0], { ink: null });
+    const f = add(g, floorMat, root, { at: [0, 0.002, 0], ink: null });
     f.castShadow = false;
     f.userData.crease = true;
   }
   {
     const g = new THREE.PlaneGeometry(BX - X0, BZ - Z0);
     g.rotateX(-Math.PI / 2);
-    const f = add(g, mapped(0xffffff, hexTile([4, 6]), { halftone: 0.5 }), root, [(X0 + BX) / 2, 0.003, (Z0 + BZ) / 2], { ink: null });
+    const f = add(g, mapped(0xffffff, hexTile([4, 6]), { halftone: 0.5 }), root, { at: [(X0 + BX) / 2, 0.003, (Z0 + BZ) / 2], ink: null });
     f.castShadow = false;
   }
 }

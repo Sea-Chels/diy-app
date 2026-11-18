@@ -1,13 +1,14 @@
 /**
- * Procedural, recognisable comic plants. Each builder drops a plant at a spot
+ * Procedural, recognizable comic plants. Each builder drops a plant at a spot
  * inside an area group. Leaves, petals, berries and short stalks go through
  * instance batches (one draw call per kind per area); stems and vines are
  * tubes. Everything plant-like sways with the same wind so outlines stay put.
- * Sizes are metres.
+ * Sizes are meters.
  */
 import * as THREE from 'three';
-import { Batches, canvasTex, leafGeo, leafMatrix, leafTexture, plantMat, jitter, WIND } from '../../../shared/scene/kit';
+import { type Batches, canvasTex, leafGeo, leafMatrix, leafTexture, plantMat, jitter, WIND } from '../../../shared/scene/kit';
 import type { Season } from '../../data/setup';
+import type { InkWeight } from '../../../shared/toon';
 
 export const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 export const UP = V(0, 1, 0);
@@ -20,7 +21,7 @@ export const CAPSULE = new THREE.CapsuleGeometry(1, 2, 4, 8);
 export const ROOT = new THREE.ConeGeometry(1, 1, 8, 1).rotateX(Math.PI).translate(0, -0.5, 0);
 export const DISC = new THREE.CylinderGeometry(1, 1, 0.06, 18, 1);
 
-/** Flat flower with `n` rounded petals, face +z, centred on the origin. */
+/** Flat flower with `n` rounded petals, face +z, centered on the origin. */
 const flowerCache = new Map<string, THREE.BufferGeometry>();
 export function flowerGeo(n: number, inner = 0.25, cup = 0.2, sharp = 0.6): THREE.BufferGeometry {
   const key = `${n}|${inner}|${cup}|${sharp}`;
@@ -30,7 +31,7 @@ export function flowerGeo(n: number, inner = 0.25, cup = 0.2, sharp = 0.6): THRE
   const steps = n * 10;
   for (let i = 0; i < steps; i++) {
     const a = (i / steps) * Math.PI * 2;
-    const r = inner + (1 - inner) * Math.pow(Math.abs(Math.cos((n * a) / 2)), sharp);
+    const r = inner + (1 - inner) * Math.abs(Math.cos((n * a) / 2)) ** sharp;
     pts.push(new THREE.Vector2(Math.cos(a) * r, Math.sin(a) * r));
   }
   const g = new THREE.ExtrudeGeometry(new THREE.Shape(pts), { depth: 0.04, bevelEnabled: false, curveSegments: 2 });
@@ -66,7 +67,7 @@ export const PUMPKIN = (() => {
   for (let i = 0; i < pos.count; i++) {
     const v = V(pos.getX(i), pos.getY(i), pos.getZ(i));
     const a = Math.atan2(v.z, v.x);
-    const rib = 1 - 0.08 * Math.pow(Math.abs(Math.sin(a * 5)), 0.6);
+    const rib = 1 - 0.08 * Math.abs(Math.sin(a * 5)) ** 0.6;
     v.x *= rib;
     v.z *= rib;
     v.y *= 0.72;
@@ -131,8 +132,8 @@ export function plantKit(b: Batches, season: Season, r: () => number): PlantKit 
     shiny: plantMat(0xffffff, { shine: 0.65 }),
     stem: (c) => {
       const key = new THREE.Color(c).getHex();
-      let m = stems.get(key);
-      if (!m) stems.set(key, (m = plantMat(c)));
+      const m = stems.get(key) ?? plantMat(c);
+      stems.set(key, m);
       return m;
     },
     seedHead: (() => {
@@ -161,7 +162,7 @@ export function plantGroup(parent: THREE.Object3D, p: THREE.Vector3, rotY = 0, s
 }
 
 /** Add an instance given in the plant group's local space. */
-export function put(k: PlantKit, g: THREE.Object3D, geo: THREE.BufferGeometry, mat: THREE.Material, local: THREE.Matrix4, color: THREE.ColorRepresentation, ink: 'thin' | 'body' | null = 'thin'): void {
+export function put(k: PlantKit, g: THREE.Object3D, geo: THREE.BufferGeometry, mat: THREE.Material, local: THREE.Matrix4, color: THREE.ColorRepresentation, ink: InkWeight | null = 'thin'): void {
   const root = batchRoot(g);
   root.updateWorldMatrix(true, false);
   g.updateWorldMatrix(true, false);

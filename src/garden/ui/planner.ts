@@ -6,9 +6,11 @@ import { BED_SIZES, checkPlan, planRows, suggestions, type PlanIssue } from '../
 import { PLANTS, PLANT_BY_ID, SUN_LABEL, TYPE_LABEL, squares, type Plant, type PlantType } from '../data/plants';
 import { getState, setState } from '../store';
 import { h, clear } from '../../shared/dom';
+import { keepFocus } from '../../shared/focus';
 import { icon, type IconName } from '../../shared/icons';
 import { openModal } from '../../shared/modal';
 import { openPlantGuide } from './plantGuide';
+import { chip } from '../../shared/ui/choices';
 
 const LEVEL_ICON: Record<PlanIssue['level'], IconName> = { error: 'bad', warn: 'alert', ok: 'ok' };
 const BED_KEY = 'diy-garden:bed';
@@ -56,13 +58,15 @@ export function openPlanner(): void {
   };
   const removeAll = (id: string) => setPlan(plan().filter((x) => x !== id));
 
-  function renderChips(): void {
+  const renderChips = () => keepFocus(chips, renderChipsNow);
+  function renderChipsNow(): void {
     clear(chips);
-    const mk = (label: string, t: PlantType | null) => h('button', { class: `chip-btn${type === t ? ' active' : ''}`, onClick: () => { type = t; renderChips(); renderOptions(); } }, label);
+    const mk = (label: string, t: PlantType | null) => chip(label, type === t, () => { type = t; renderChips(); renderOptions(); });
     chips.append(mk('Everything', null), ...(Object.keys(TYPE_LABEL) as PlantType[]).map((t) => mk(TYPE_LABEL[t], t)));
   }
 
-  function renderOptions(): void {
+  const renderOptions = () => keepFocus(options, renderOptionsNow);
+  function renderOptionsNow(): void {
     const keep = options.scrollTop;
     clear(options);
     const inPlan = new Set(plan());
@@ -72,18 +76,19 @@ export function openPlanner(): void {
       const n = plan().filter((id) => id === p.id).length;
       options.append(
         h('div', { class: `plan-opt t-${p.type}${inPlan.has(p.id) ? ' picked' : ''}` },
-          h('button', { class: 'plan-opt-main', onClick: () => add(p.id), 'aria-label': `Add ${p.name}` },
+          h('button', { class: 'plan-opt-main', 'data-key': `add-${p.id}`, onClick: () => add(p.id), 'aria-label': `Add ${p.name}` },
             h('span', { class: 'opt-name' }, p.name),
             h('span', { class: 'muted small' }, `${perLabel(p)} · ${SUN_LABEL[p.sun]}`)),
-          n ? h('button', { class: 'icon-btn small-btn', 'aria-label': `One less ${p.name}`, onClick: () => remove(p.id) }, icon('minus', 15)) : null,
+          n ? h('button', { class: 'icon-btn small-btn', 'data-key': `less-${p.id}`, 'aria-label': `One less ${p.name}`, onClick: () => remove(p.id) }, icon('minus', 15)) : null,
           n ? h('span', { class: 'opt-tick' }, `×${n}`) : null,
-          h('button', { class: 'icon-btn small-btn', 'aria-label': `Add ${p.name}`, onClick: () => add(p.id) }, icon('plus', 15))),
+          h('button', { class: 'icon-btn small-btn', 'data-key': `more-${p.id}`, 'aria-label': `Add ${p.name}`, onClick: () => add(p.id) }, icon('plus', 15))),
       );
     }
     options.scrollTop = keep;
   }
 
-  function renderSide(): void {
+  const renderSide = () => keepFocus(side, renderSideNow);
+  function renderSideNow(): void {
     clear(side);
     const bed = BED_SIZES.find((b) => b.id === bedId)!;
     const total = bed.w * bed.l;

@@ -1,10 +1,12 @@
-/** Modelling helpers shared by the rigs. Instance batches let hundreds of leaves cost a handful of draw calls. */
+/** Modeling helpers shared by the rigs. Instance batches let hundreds of leaves cost a handful of draw calls. */
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
-import { outlineX, toon, type InkWeight, type ToonOpts } from '../toon';
+import { outline, toon, type InkWeight, type ToonOpts } from '../toon';
 import { PALETTE } from '../theme';
 
 export type V3 = [number, number, number];
+export const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
+export const UNIT_BOX = new THREE.BoxGeometry(1, 1, 1);
 
 /** Sway strength shared by every plant material, so stems, leaves and fruit move together. */
 export const WIND = 0.008;
@@ -40,7 +42,7 @@ export function canvasTex(w: number, h: number, draw: (ctx: CanvasRenderingConte
   return t;
 }
 
-/** White leaf with a darker midrib and veins; instance colour tints it. */
+/** White leaf with a darker midrib and veins; instance color tints it. */
 export function leafTexture(veins = 6, rib = 0.16): THREE.CanvasTexture {
   return canvasTex(64, 128, (ctx) => {
     const g = ctx.createLinearGradient(0, 128, 0, 0);
@@ -171,14 +173,14 @@ export interface LeafOpts {
 
 function profile(shape: LeafShape, t: number, w: number): number {
   switch (shape) {
-    case 'ovate': return w * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.8)), 0.85);
-    case 'obovate': return w * Math.pow(Math.sin(Math.PI * Math.pow(t, 1.5)), 0.8);
-    case 'lance': return w * Math.pow(Math.sin(Math.PI * t), 1.1) * (1 - 0.3 * t);
+    case 'ovate': return w * Math.sin(Math.PI * t ** 0.8) ** 0.85;
+    case 'obovate': return w * Math.sin(Math.PI * t ** 1.5) ** 0.8;
+    case 'lance': return w * Math.sin(Math.PI * t) ** 1.1 * (1 - 0.3 * t);
     case 'round': return w * Math.sqrt(Math.max(0, t * (1 - t))) * 2;
-    case 'heart': return w * Math.pow(Math.sin(Math.PI * (0.18 + 0.82 * t)), 0.8);
-    case 'strap': return w * (1 - Math.pow(t, 3)) * Math.min(1, t * 12 + 0.4);
-    case 'pinnate': return w * Math.pow(Math.sin(Math.PI * t), 0.7) * (0.12 + 0.88 * Math.pow(Math.abs(Math.sin(t * Math.PI * 7)), 1.4));
-    case 'petal': return w * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.75)), 0.7);
+    case 'heart': return w * Math.sin(Math.PI * (0.18 + 0.82 * t)) ** 0.8;
+    case 'strap': return w * (1 - t ** 3) * Math.min(1, t * 12 + 0.4);
+    case 'pinnate': return w * Math.sin(Math.PI * t) ** 0.7 * (0.12 + 0.88 * Math.abs(Math.sin(t * Math.PI * 7)) ** 1.4);
+    case 'petal': return w * Math.sin(Math.PI * t ** 0.75) ** 0.7;
     case 'blade': return w * (1 - t) * Math.min(1, t * 8 + 0.3);
     default: return w * Math.sin(Math.PI * t);
   }
@@ -203,7 +205,7 @@ export function leafGeo(o: LeafOpts): THREE.BufferGeometry {
     const n = 44;
     for (let i = 0; i <= n; i++) {
       const phi = -Math.PI + 0.32 + (i / n) * (2 * Math.PI - 0.64);
-      let r = 0.5 * (0.66 + 0.34 * Math.pow(Math.abs(Math.cos((5 * phi) / 2)), 0.7));
+      let r = 0.5 * (0.66 + 0.34 * Math.abs(Math.cos((5 * phi) / 2)) ** 0.7);
       if (o.teeth) r *= 1 - (o.toothDepth ?? 0.04) * (0.5 + 0.5 * Math.cos(phi * o.teeth * 5));
       pts.push(new THREE.Vector2(r * Math.sin(phi), 0.5 + r * Math.cos(phi)));
     }
@@ -303,32 +305,43 @@ export class Batches {
       inst.castShadow = b.shadow;
       inst.receiveShadow = true;
       inst.computeBoundingSphere();
-      inst.userData.shared = true; // geometry is cached and shared
-      if (b.ink) outlineX(inst, b.ink, b.wind);
+      inst.userData.sharedGeometry = true; // the geometry is cached across rebuilds; the material isn't
+      if (b.ink) outline(inst, b.ink, b.wind);
       b.parent.add(inst);
     }
     this.batches.clear();
   }
 }
 
+export interface MeshOpts {
+  at?: V3;
+  rot?: V3;
+  scale?: V3 | number;
+  /** Defaults to a thin line; null for none. */
+  ink?: InkWeight | null;
+  /** Plant parts pass the wind strength so the outline sways with them. */
+  wind?: number;
+  shadow?: boolean;
+}
 
-/** Adds a mesh with optional ink outline. Plant parts pass `wind` so the outline sways with them. */
-export function add(geo: THREE.BufferGeometry, mat: THREE.Material, parent: THREE.Object3D, p: V3 = [0, 0, 0], o: { ink?: InkWeight | null; wind?: number; rot?: V3; scale?: V3 | number; shadow?: boolean } = {}): THREE.Mesh {
+/** Adds an inked mesh to `parent`. */
+export function add(geo: THREE.BufferGeometry, mat: THREE.Material | THREE.Material[], parent: THREE.Object3D, o: MeshOpts = {}): THREE.Mesh {
   const m = new THREE.Mesh(geo, mat);
-  m.position.set(...p);
+  if (o.at) m.position.set(...o.at);
   if (o.rot) m.rotation.set(...o.rot);
   if (o.scale !== undefined) typeof o.scale === 'number' ? m.scale.setScalar(o.scale) : m.scale.set(...o.scale);
   m.castShadow = o.shadow ?? true;
   m.receiveShadow = true;
   const ink = o.ink === undefined ? 'thin' : o.ink;
-  if (ink) outlineX(m, ink, o.wind ?? 0);
+  if (ink) outline(m, ink, o.wind ?? 0);
   parent.add(m);
   return m;
 }
 
-export function box(w: number, h: number, d: number, mat: THREE.Material, parent: THREE.Object3D, p: V3 = [0, 0, 0], o: Parameters<typeof add>[4] & { r?: number } = {}): THREE.Mesh {
+/** A rounded box; `r` is the corner radius, clamped to fit. */
+export function box(w: number, h: number, d: number, mat: THREE.Material, parent: THREE.Object3D, o: MeshOpts & { r?: number } = {}): THREE.Mesh {
   const r = Math.max(0.002, Math.min(o.r ?? 0.01, Math.min(w, h, d) / 2 - 0.001));
-  return add(new RoundedBoxGeometry(w, h, d, 2, r), mat, parent, p, o);
+  return add(new RoundedBoxGeometry(w, h, d, 2, r), mat, parent, o);
 }
 
 /** A tube along a curve, for stems, vines and hoops. */
@@ -351,7 +364,7 @@ export function tube(points: THREE.Vector3[], radius: number, mat: THREE.Materia
     }
     g.computeVertexNormals();
   }
-  return add(g, mat, parent, [0, 0, 0], { ink: o.ink === undefined ? 'thin' : o.ink, wind: o.wind });
+  return add(g, mat, parent, o);
 }
 
 /** Plant-part material: toon that sways with the wind. */

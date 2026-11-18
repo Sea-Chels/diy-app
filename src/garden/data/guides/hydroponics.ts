@@ -2,7 +2,7 @@ import type { Guide } from '../guides';
 
 export const HYDROPONICS_GUIDES: Guide[] = [
   {
-    id: 'pvc-tower', title: 'Build a vertical PVC hydroponic tower', areas: ['hydro'], aliases: ['vertical garden', 'tower garden', 'pvc', 'aeroponic', 'strawberry tower'],
+    id: 'pvc-tower', title: 'Build a vertical PVC hydroponic tower', spots: ['hydro'], aliases: ['vertical garden', 'tower garden', 'pvc', 'aeroponic', 'strawberry tower'],
     kind: 'build', difficulty: 3, minutes: [240, 480],
     tools: ['Drill with 2 in hole saw', 'Heat gun (to shape cup holes)', 'Hacksaw or PVC cutter', 'Tape measure, marker'],
     supplies: ['4 in white PVC pipe rated for drinking water (NSF-61), 5 ft per tower', 'End caps and a manifold of 1½ in PVC', 'Submersible pump (around 250–400 GPH) and ½ in tubing', 'Opaque reservoir tote with lid (20–30 gal)', 'Net cups, clay pebbles or rockwool', 'Hydroponic nutrients, pH test kit, timer'],
@@ -21,7 +21,7 @@ export const HYDROPONICS_GUIDES: Guide[] = [
     plants: ['lettuce', 'strawberry', 'basil', 'bokchoy'], query: 'DIY vertical PVC hydroponic tower build', featured: true,
   },
   {
-    id: 'nft-rack', title: 'Build an NFT channel rack', areas: ['hydro'], aliases: ['nft', 'nutrient film', 'channels', 'gutter hydroponics'],
+    id: 'nft-rack', title: 'Build an NFT channel rack', spots: ['hydro'], aliases: ['nft', 'nutrient film', 'channels', 'gutter hydroponics'],
     kind: 'build', difficulty: 3, minutes: [240, 420],
     tools: ['Drill with hole saw', 'Saw', 'Level'],
     supplies: ['Square NFT channels or 3–4 in PVC (food-safe)', 'Lumber for an A-frame or rack', 'Pump, tubing and fittings', 'Reservoir tote', 'Net cups, rockwool, nutrients, pH kit'],
@@ -37,7 +37,7 @@ export const HYDROPONICS_GUIDES: Guide[] = [
     plants: ['lettuce', 'basil', 'spinach'], query: 'DIY NFT hydroponic system channels',
   },
   {
-    id: 'dwc-tote', title: 'Build a deep water culture tote', areas: ['hydro'], aliases: ['dwc', 'deep water', 'bucket', 'raft', 'beginner hydroponics'],
+    id: 'dwc-tote', title: 'Build a deep water culture tote', spots: ['hydro'], aliases: ['dwc', 'deep water', 'bucket', 'raft', 'beginner hydroponics'],
     kind: 'build', difficulty: 1, minutes: [45, 90],
     tools: ['Drill with 2 in hole saw'], supplies: ['Opaque storage tote (10–20 gal)', 'Air pump, airline and air stone', 'Check valve', 'Net cups, clay pebbles or rockwool', 'Nutrients, pH kit'],
     summary: 'The simplest pumped system: plants float on a lid with their roots dangling in bubbling nutrient water. Lettuce goes from seedling to harvest in about 4–5 weeks.',
@@ -52,7 +52,7 @@ export const HYDROPONICS_GUIDES: Guide[] = [
     plants: ['lettuce', 'basil', 'bokchoy'], query: 'deep water culture tote DIY lettuce',
   },
   {
-    id: 'kratky', title: 'Grow lettuce in a jar (Kratky method)', areas: ['hydro'], aliases: ['kratky', 'passive hydroponics', 'mason jar', 'no pump'],
+    id: 'kratky', title: 'Grow lettuce in a jar (Kratky method)', spots: ['hydro'], aliases: ['kratky', 'passive hydroponics', 'mason jar', 'no pump'],
     kind: 'build', difficulty: 1, minutes: [15, 30], wait: 'Harvest in 4–6 weeks',
     tools: [], supplies: ['Quart mason jar (paint it or wrap it to block light)', '3 in net cup', 'Rockwool cube or coco plug', 'Lettuce seed', 'Hydroponic nutrients'],
     summary: 'No pump, no electricity: fill a jar with nutrient water once. As the plant drinks, the water drops and the upper roots get air.',
@@ -66,7 +66,7 @@ export const HYDROPONICS_GUIDES: Guide[] = [
     plants: ['lettuce', 'basil'], query: 'kratky method mason jar lettuce',
   },
   {
-    id: 'hydro-nutrients', title: 'Mix nutrients and balance pH', areas: ['hydro'], aliases: ['ph', 'ec', 'tds', 'nutrient solution', 'yellow leaves hydroponics'],
+    id: 'hydro-nutrients', title: 'Mix nutrients and balance pH', spots: ['hydro'], aliases: ['ph', 'ec', 'tds', 'nutrient solution', 'yellow leaves hydroponics'],
     kind: 'grow', difficulty: 2, minutes: [10, 20],
     tools: ['pH meter or drops', 'EC/TDS meter', 'Measuring spoons or syringes'], supplies: ['Hydroponic nutrients (2- or 3-part)', 'pH Up / pH Down'],
     summary: 'Most hydroponic crops like pH 5.5–6.5, where every nutrient is available. EC tells you how strong the solution is: about 0.8–1.2 mS/cm for lettuce and herbs, higher for tomatoes and strawberries.',
@@ -80,7 +80,7 @@ export const HYDROPONICS_GUIDES: Guide[] = [
     query: 'hydroponic nutrients ph ec beginner',
   },
   {
-    id: 'root-rot', title: 'Brown, slimy roots in hydroponics', areas: ['hydro'], aliases: ['root rot', 'pythium', 'algae', 'slime', 'smelly reservoir', 'wilting hydroponics'],
+    id: 'root-rot', title: 'Brown, slimy roots in hydroponics', spots: ['hydro'], aliases: ['root rot', 'pythium', 'algae', 'slime', 'smelly reservoir', 'wilting hydroponics'],
     kind: 'fix', difficulty: 2, minutes: [30, 60],
     tools: ['Clean bucket', 'Thermometer'], supplies: ['Hydrogen peroxide (3%) or beneficial microbes', 'Fresh nutrients', 'Foil or paint to block light'],
     summary: 'Healthy roots are white and crisp. Brown, slimy, smelly roots mean root rot, usually from warm water low in oxygen. Green slime is algae from light getting in.',

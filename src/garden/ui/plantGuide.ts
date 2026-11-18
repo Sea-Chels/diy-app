@@ -1,11 +1,13 @@
 import { AREAS } from '../data/areas';
 import { guidesForPlant } from '../data/guides';
 import { LIFE_LABEL, PLANTS, PLANT_BY_ID, SUN_LABEL, TYPE_LABEL, WATER_LABEL, plantName, type Plant, type PlantType } from '../data/plants';
-import { getState, setState } from '../store';
+import { getState, select, setState } from '../store';
 import { h, clear } from '../../shared/dom';
+import { keepFocus } from '../../shared/focus';
 import { openModal, closeModal } from '../../shared/modal';
 import { searchUrl } from '../../shared/youtube';
 import { icon } from '../../shared/icons';
+import { chip } from '../../shared/ui/choices';
 
 type Filter = PlantType | 'unusual' | null;
 
@@ -22,9 +24,10 @@ export function openPlantGuide(startAt?: string): void {
   const grid = h('div', { class: 'plant-grid' });
   input.addEventListener('input', () => { query = input.value; renderGrid(); });
 
-  function renderChips(): void {
+  const renderChips = () => keepFocus(chips, renderChipsNow);
+  function renderChipsNow(): void {
     clear(chips);
-    const mk = (label: string, f: Filter) => h('button', { class: `chip-btn${filter === f ? ' active' : ''}`, onClick: () => { filter = f; renderChips(); renderGrid(); } }, label);
+    const mk = (label: string, f: Filter) => chip(label, filter === f, () => { filter = f; renderChips(); renderGrid(); });
     chips.append(mk('Everything', null), ...(Object.keys(TYPE_LABEL) as PlantType[]).map((t) => mk(TYPE_LABEL[t], t)), mk('Unusual & exotic', 'unusual'));
   }
 
@@ -46,7 +49,7 @@ export function openPlantGuide(startAt?: string): void {
     }
     for (const p of list) {
       grid.append(
-        h('button', { class: `plant-tile t-${p.type}`, onClick: () => { listScroll = body.scrollTop; show(p.id); } },
+        h('button', { class: `plant-tile t-${p.type}`, 'data-key': p.id, onClick: () => { listScroll = body.scrollTop; show(p.id); } },
           h('span', { class: 'plant-name' }, p.name, p.unusual ? h('span', { class: 'badge' }, 'Unusual') : null),
           h('span', { class: 'latin' }, p.latin),
           h('span', { class: 'chips' }, h('span', { class: 'chip' }, LIFE_LABEL[p.life]), h('span', { class: 'chip' }, SUN_LABEL[p.sun]))),
@@ -55,12 +58,15 @@ export function openPlantGuide(startAt?: string): void {
   }
 
   function showList(): void {
+    const from = current;
+    const hadFocus = body.contains(document.activeElement);
     current = null;
     clear(body);
     body.append(input, chips, grid);
     renderChips();
     renderGrid();
     body.scrollTop = listScroll;
+    if (hadFocus && from) grid.querySelector<HTMLElement>(`[data-key="${from}"]`)?.focus({ preventScroll: true });
   }
 
   function relChips(ids: string[], cls: string): HTMLElement {
@@ -73,6 +79,7 @@ export function openPlantGuide(startAt?: string): void {
   function show(id: string): void {
     const p = PLANT_BY_ID.get(id)!;
     current = id;
+    const hadFocus = body.contains(document.activeElement);
     clear(body);
     const facts = [LIFE_LABEL[p.life], SUN_LABEL[p.sun], WATER_LABEL[p.water], p.zones ? `Zones ${p.zones[0]}–${p.zones[1]}` : null, `${p.spacing} in apart`, p.height, p.ph ? `pH ${p.ph}` : null];
     const guides = guidesForPlant(id);
@@ -93,7 +100,7 @@ export function openPlantGuide(startAt?: string): void {
         p.note ? h('p', { class: 'summary' }, p.note) : null,
         h('div', { class: 'plant-actions' },
           h('a', { class: 'primary-btn', href: searchUrl(`how to grow ${p.name} ${p.latin.split(' /')[0]}`), target: '_blank', rel: 'noopener noreferrer' }, icon('play', 16), 'Growing videos', icon('external', 15)),
-          p.area ? h('button', { class: 'ghost-btn', onClick: () => { closeModal(); setState({ selectedArea: p.area!, openGuide: null }); } }, icon('click', 16), `Show in garden: ${AREAS[p.area].label}`) : null,
+          p.area ? h('button', { class: 'ghost-btn', onClick: () => { closeModal(); select(p.area!); } }, icon('click', 16), `Show in garden: ${AREAS[p.area].label}`) : null,
           addBtn),
         h('div', { class: 'two-col plant-cols' },
           h('div', {}, h('h4', {}, 'Planting'), h('p', {}, p.sow), h('p', { class: 'muted small' }, `First harvest: ${p.days}`)),
@@ -105,10 +112,11 @@ export function openPlantGuide(startAt?: string): void {
           h('div', {}, h('h4', {}, 'Keep apart'), relChips(p.avoid, 'bad'))),
         guides.length ? h('h4', {}, 'Guides') : null,
         guides.length ? h('div', { class: 'plant-chips' }, ...guides.map((g) =>
-          h('button', { class: 'link-chip', onClick: () => { closeModal(); setState({ selectedArea: g.areas[0], openGuide: g.id }); } }, icon('book', 13), g.title))) : null,
+          h('button', { class: 'link-chip', onClick: () => { closeModal(); select(g.spots[0], g.id); } }, icon('book', 13), g.title))) : null,
       ),
     );
     body.scrollTop = 0;
+    if (hadFocus) body.querySelector<HTMLElement>('.back-link')?.focus({ preventScroll: true });
   }
 
   const unusual = PLANTS.filter((p) => p.unusual).length;

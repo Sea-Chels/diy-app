@@ -1,68 +1,43 @@
 import { guessBody } from '../data/makes';
-import { BODY_LABEL, FINISHES, SWATCHES, type BodyChoice, type Finish } from '../data/paint';
+import { BODY_LABEL, FINISHES, SWATCHES, type Finish } from '../data/paint';
 import { getState, setState, subscribe, type Appearance } from '../store';
 import { h } from '../../shared/dom';
+import { segControl, swatchRow } from '../../shared/ui/choices';
 import { sceneMenu } from '../../shared/ui/sceneMenu';
 
-/** Floating "Paint" menu: body style, colour and finish. Built once, then kept in sync. */
+const FINISH_LABEL = Object.fromEntries(Object.entries(FINISHES).map(([f, v]) => [f, v.label])) as Record<Finish, string>;
+
+/** Floating "Paint" menu: body style, color and finish. Built once, then kept in sync. */
 export function mountPaintShop(root: HTMLElement): void {
   const { toggle, card } = sceneMenu(root, { id: 'paint-card', icon: 'palette', label: 'Paint', title: 'Paint and body style' });
 
   const setAppearance = (patch: Partial<Appearance>) => setState({ appearance: { ...getState().appearance, ...patch } });
 
-  const bodyBtns = new Map<BodyChoice, HTMLButtonElement>();
-  const bodyRow = h('div', { class: 'seg' });
-  for (const b of Object.keys(BODY_LABEL) as BodyChoice[]) {
-    const btn = h('button', { onClick: () => setAppearance({ body: b }) });
-    bodyBtns.set(b, btn);
-    bodyRow.append(btn);
-  }
-
-  const swatchBtns: HTMLButtonElement[] = [];
-  const swatches = h('div', { class: 'swatches' });
-  for (const s of SWATCHES) {
-    const btn = h('button', { class: 'swatch', title: s.name, 'aria-label': s.name, onClick: () => setAppearance({ color: s.hex }) });
-    btn.style.setProperty('--c', s.hex);
-    btn.dataset.hex = s.hex;
-    swatchBtns.push(btn);
-    swatches.append(btn);
-  }
-  const custom = h('input', { type: 'color', 'aria-label': 'Custom colour' });
+  const body = segControl('Body', BODY_LABEL, (b) => setAppearance({ body: b }));
+  const color = swatchRow('Color', SWATCHES.map((s) => ({ value: s.hex, color: s.hex, name: s.name })), (c) => setAppearance({ color: c }));
+  const custom = h('input', { type: 'color', 'aria-label': 'Custom color' });
   custom.addEventListener('input', () => setAppearance({ color: custom.value }));
-  const customWrap = h('label', { class: 'swatch custom', title: 'Custom colour' }, custom);
-  swatches.append(customWrap);
-
-  const finishBtns = new Map<Finish, HTMLButtonElement>();
-  const finishRow = h('div', { class: 'seg' });
-  for (const f of Object.keys(FINISHES) as Finish[]) {
-    const btn = h('button', { onClick: () => setAppearance({ finish: f }) }, FINISHES[f].label);
-    finishBtns.set(f, btn);
-    finishRow.append(btn);
-  }
+  const customWrap = h('label', { class: 'swatch custom', title: 'Custom color' }, custom);
+  color.el.append(customWrap);
+  const finish = segControl('Finish', FINISH_LABEL, (f) => setAppearance({ finish: f }));
 
   card.append(
-    h('p', { class: 'paint-label' }, 'Body'), bodyRow,
-    h('p', { class: 'paint-label' }, 'Color'), swatches,
-    h('p', { class: 'paint-label' }, 'Finish'), finishRow,
+    h('p', { class: 'paint-label' }, 'Body'), body.el,
+    h('p', { class: 'paint-label' }, 'Color'), color.el,
+    h('p', { class: 'paint-label' }, 'Finish'), finish.el,
   );
 
   function sync(): void {
     const { appearance: a, vehicle: v } = getState();
-    const guess = guessBody(v.make, v.model);
-    bodyBtns.forEach((btn, b) => {
-      btn.textContent = b === 'auto' ? `${BODY_LABEL.auto} · ${BODY_LABEL[guess]}` : BODY_LABEL[b];
-      btn.classList.toggle('active', a.body === b);
-    });
-    let matched = false;
-    for (const btn of swatchBtns) {
-      const on = btn.dataset.hex!.toLowerCase() === a.color.toLowerCase();
-      matched ||= on;
-      btn.classList.toggle('active', on);
-    }
-    customWrap.classList.toggle('active', !matched);
+    body.buttons.get('auto')!.textContent = `${BODY_LABEL.auto} · ${BODY_LABEL[guessBody(v.make, v.model)]}`;
+    body.sync(a.body);
+    // Swatch hexes are lowercase; a stored color may not be.
+    const current = a.color.toLowerCase();
+    color.sync(current);
+    customWrap.classList.toggle('active', !color.buttons.has(current));
     customWrap.style.setProperty('--c', a.color);
     if (document.activeElement !== custom) custom.value = a.color;
-    finishBtns.forEach((btn, f) => btn.classList.toggle('active', a.finish === f));
+    finish.sync(a.finish);
     toggle.style.setProperty('--c', a.color);
   }
 

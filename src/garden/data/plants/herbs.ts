@@ -20,7 +20,7 @@ export const HERBS_PLANTS: Plant[] = [
     id: 'thyme', name: 'Thyme', latin: 'Thymus vulgaris', type: 'herb', life: 'perennial', zones: [5, 9], sun: 'full', water: 'low', spacing: 12, height: '6–12 in',
     sow: 'Buy plants or divide an old clump in spring; well-drained, lean soil.', days: 'Harvest once established',
     care: ['Shear back by a third after flowering.', 'Replace every 3–4 years when it gets woody in the middle.'],
-    harvest: 'Cut sprigs before flowering for the strongest flavour; dries very well.', problems: ['Root rot in wet soil'],
+    harvest: 'Cut sprigs before flowering for the strongest flavor; dries very well.', problems: ['Root rot in wet soil'],
     friends: [...BRASSICAS, 'strawberry', 'tomato', 'eggplant', 'blueberry'], avoid: [], area: 'herbs',
   },
   {
@@ -32,8 +32,8 @@ export const HERBS_PLANTS: Plant[] = [
   },
   {
     id: 'oregano', name: 'Oregano', latin: 'Origanum vulgare', type: 'herb', life: 'perennial', zones: [4, 9], sun: 'full', water: 'low', spacing: 12, height: '1–2 ft',
-    sow: 'Plant nursery plants or divisions in spring; Greek oregano has the best flavour.', days: 'Harvest once established',
-    care: ['Lean soil and sun concentrate the flavour.', 'Cut back after flowering.'], harvest: 'Harvest sprigs just before flowering for drying.',
+    sow: 'Plant nursery plants or divisions in spring; Greek oregano has the best flavor.', days: 'Harvest once established',
+    care: ['Lean soil and sun concentrate the flavor.', 'Cut back after flowering.'], harvest: 'Harvest sprigs just before flowering for drying.',
     problems: ['Spreads; divide every few years'], friends: ['basil', 'pepper', 'tomato', 'sweetpotato'], avoid: [],
   },
   {
@@ -63,7 +63,7 @@ export const HERBS_PLANTS: Plant[] = [
   {
     id: 'fennel', name: 'Fennel', latin: 'Foeniculum vulgare', type: 'herb', life: 'perennial', zones: [4, 9], sun: 'full', water: 'medium', spacing: 12, height: '3–5 ft',
     sow: 'Direct sow in spring or summer.', days: '60–90 days',
-    care: ['Give it its own spot: it is said to stunt many neighbours.', 'Don\'t grow it near dill or they cross.'], harvest: 'Harvest bulbs (Florence fennel) at tennis-ball size; fronds and seeds any time.',
+    care: ['Give it its own spot: it is said to stunt many neighbors.', 'Don\'t grow it near dill or they cross.'], harvest: 'Harvest bulbs (Florence fennel) at tennis-ball size; fronds and seeds any time.',
     problems: ['Bolting'], friends: [], avoid: ['tomato', 'beans', 'bushbeans', 'pepper', 'dill', 'cilantro', 'strawberry'],
   },
   {
@@ -95,7 +95,7 @@ export const HERBS_PLANTS: Plant[] = [
   {
     id: 'marshmallow', name: 'Marshmallow', latin: 'Althaea officinalis', type: 'herb', life: 'perennial', zones: [3, 9], sun: 'full', water: 'high', spacing: 24, height: '3–5 ft',
     sow: 'Cold-stratify seed in the fridge for 3–4 weeks, then sow indoors in early spring; or plant root divisions. It loves moist soil, like the foot of a herb spiral.', days: 'Roots ready in fall of year 2',
-    care: ['Plant where it can stay damp: the edge of a pond, a rain garden, or the bottom of the spiral.', 'Velvety grey-green leaves and pale pink flowers in late summer; cut stems back in fall.', 'Divide every few years when you harvest.'],
+    care: ['Plant where it can stay damp: the edge of a pond, a rain garden, or the bottom of the spiral.', 'Velvety gray-green leaves and pale pink flowers in late summer; cut stems back in fall.', 'Divide every few years when you harvest.'],
     harvest: 'Dig roots in fall of the second year, after the tops die back. Scrub, chop while fresh (they get rock hard) and dry. Leaves and flowers can be picked in summer.',
     problems: ['Hollyhock rust', 'Japanese beetles'], friends: ['chamomile', 'mint'], avoid: [], area: 'herbs', unusual: true,
     note: 'The root\'s mucilage was the original marshmallow confection. It\'s traditionally used in cold infusions; it may slow the absorption of medicines, so take it separately and ask a pharmacist.',
@@ -133,7 +133,7 @@ export const HERBS_PLANTS: Plant[] = [
   },
   {
     id: 'tarragon', name: 'French tarragon', latin: 'Artemisia dracunculus', type: 'herb', life: 'perennial', zones: [4, 8], sun: 'full', water: 'low', spacing: 24, height: '2 ft',
-    sow: 'Buy plants: true French tarragon doesn\'t set seed (seed packets are flavourless Russian tarragon).', days: 'Harvest once established',
+    sow: 'Buy plants: true French tarragon doesn\'t set seed (seed packets are flavorless Russian tarragon).', days: 'Harvest once established',
     care: ['Divide every 3 years to keep it vigorous.'], harvest: 'Snip sprigs through summer.', problems: ['Root rot'], friends: [], avoid: [], unusual: true,
   },
   {

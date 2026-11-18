@@ -1,5 +1,7 @@
 import { h, clear } from '../../shared/dom';
+import { keepFocus } from '../../shared/focus';
 import { openModal } from '../../shared/modal';
+import { chip } from '../../shared/ui/choices';
 
 export type CalcTab = 'paint' | 'floor' | 'wire';
 const TAB_LABEL: Record<CalcTab, string> = { paint: 'Paint', floor: 'Flooring', wire: 'Wire & breakers' };
@@ -78,16 +80,17 @@ function wireChart(): HTMLElement {
     h('table', { class: 'wire-table' },
       h('thead', {}, h('tr', {}, h('th', {}, 'Breaker'), h('th', {}, 'Copper wire'), h('th', {}, 'Typical use'))),
       h('tbody', {}, ...rows.map(([a, w, u]) => h('tr', {}, h('td', {}, a), h('td', {}, w), h('td', {}, u))))),
-    h('p', { class: 'fine-print' }, 'Wire gauge must match or be heavier than the breaker calls for: never put a bigger breaker on thinner wire. Smaller AWG numbers are thicker wire. 15 A outlets are allowed on a 20 A circuit with more than one outlet; a 20 A outlet never goes on a 15 A circuit. Aluminium wire, long runs and appliance circuits follow the nameplate and local code: check with an electrician.'));
+    h('p', { class: 'fine-print' }, 'Wire gauge must match or be heavier than the breaker calls for: never put a bigger breaker on thinner wire. Smaller AWG numbers are thicker wire. 15 A outlets are allowed on a 20 A circuit with more than one outlet; a 20 A outlet never goes on a 15 A circuit. Aluminum wire, long runs and appliance circuits follow the nameplate and local code: check with an electrician.'));
 }
 
 export function openCalculators(start: CalcTab = 'paint'): void {
   const tabs = h('div', { class: 'filter-row' });
   const pane = h('div', {});
   const BUILD: Record<CalcTab, () => HTMLElement> = { paint: paintCalc, floor: floorCalc, wire: wireChart };
-  function show(t: CalcTab): void {
+  const show = (t: CalcTab) => keepFocus(tabs, () => showNow(t));
+  function showNow(t: CalcTab): void {
     clear(tabs);
-    for (const k of Object.keys(TAB_LABEL) as CalcTab[]) tabs.append(h('button', { class: `chip-btn${k === t ? ' active' : ''}`, onClick: () => show(k) }, TAB_LABEL[k]));
+    for (const k of Object.keys(TAB_LABEL) as CalcTab[]) tabs.append(chip(TAB_LABEL[k], k === t, () => show(k)));
     clear(pane);
     pane.append(BUILD[t]());
   }

@@ -1,36 +1,29 @@
 import { FILL_LABEL, HYDRO_LABEL, SEASON_LABEL, type Setup } from '../data/setup';
-import { getState, setSetup, setState, subscribe } from '../store';
+import { getState, select, setSetup, subscribe } from '../store';
 import { h } from '../../shared/dom';
+import { segControl } from '../../shared/ui/choices';
 import { sceneMenu } from '../../shared/ui/sceneMenu';
 
 /** Floating "Your garden" menu: season, how the cutaway bed is filled, and the hydro system. */
 export function mountGardenMenu(root: HTMLElement): void {
   const { toggle, card } = sceneMenu(root, { id: 'garden-card', icon: 'sliders', label: 'Your garden', title: 'Garden setup' });
 
-  type SegKey = keyof Setup;
-  const segs = new Map<SegKey, Map<string, HTMLButtonElement>>();
-  function seg<K extends SegKey>(key: K, labels: Record<Setup[K], string>, then?: () => void): HTMLElement {
-    const row = h('div', { class: 'seg' });
-    const btns = new Map<string, HTMLButtonElement>();
-    for (const v of Object.keys(labels) as Setup[K][]) {
-      const b = h('button', { onClick: () => { setSetup({ [key]: v } as Partial<Setup>); then?.(); } }, labels[v]);
-      btns.set(v, b);
-      row.append(b);
-    }
-    segs.set(key, btns);
-    return row;
-  }
+  const season = segControl('Season', SEASON_LABEL, (v) => setSetup({ season: v }));
+  const fill = segControl('Raised bed fill', FILL_LABEL, (v) => { setSetup({ fill: v }); select('bed'); });
+  const hydro = segControl('Hydroponics', HYDRO_LABEL, (v) => { setSetup({ hydro: v }); select('hydro'); });
 
   card.append(
-    h('p', { class: 'paint-label' }, 'Season'), seg('season', SEASON_LABEL),
-    h('p', { class: 'paint-label' }, 'Raised bed fill'), seg('fill', FILL_LABEL, () => setState({ selectedArea: 'bed', openGuide: null })),
-    h('p', { class: 'paint-label' }, 'Hydroponics'), seg('hydro', HYDRO_LABEL, () => setState({ selectedArea: 'hydro', openGuide: null })),
+    h('p', { class: 'paint-label' }, 'Season'), season.el,
+    h('p', { class: 'paint-label' }, 'Raised bed fill'), fill.el,
+    h('p', { class: 'paint-label' }, 'Hydroponics'), hydro.el,
   );
 
   const DOT: Record<Setup['season'], string> = { spring: '#a3e635', summer: '#4ade80', fall: '#f59e0b' };
   function sync(): void {
     const s = getState().setup;
-    (Object.keys(s) as SegKey[]).forEach((k) => segs.get(k)!.forEach((b, v) => b.classList.toggle('active', s[k] === v)));
+    season.sync(s.season);
+    fill.sync(s.fill);
+    hydro.sync(s.hydro);
     toggle.style.setProperty('--c', DOT[s.season]);
   }
 

@@ -1,6 +1,8 @@
 import type { GuideBase } from '../guides';
 import { h, clear } from '../dom';
+import { keepFocus } from '../focus';
 import { openModal, closeModal } from '../modal';
+import { chip } from './choices';
 
 export interface GuideFilter<G> {
   label: string;
@@ -42,13 +44,11 @@ export function openGuideIndex<Z extends string, G extends GuideBase>(o: GuideIn
   const results = h('div', { class: 'glossary-results' });
   const chips = h('div', { class: 'filter-row' });
 
-  function renderChips(): void {
+  const renderChips = () => keepFocus(chips, renderChipsNow);
+  function renderChipsNow(): void {
     clear(chips);
-    const mk = (label: string, active: boolean, onClick: () => void) => h('button', { class: `chip-btn${active ? ' active' : ''}`, onClick }, label);
-    chips.append(
-      ...o.filters.map((f) => mk(f.label, filter === f, () => { filter = f; renderAll(); })),
-    );
-    if (o.toggle) chips.append(h('span', { class: 'spacer' }), mk(o.toggle.label(toggled), toggled, () => { toggled = !toggled; renderAll(); }));
+    chips.append(...o.filters.map((f) => chip(f.label, filter === f, () => { filter = f; renderAll(); })));
+    if (o.toggle) chips.append(h('span', { class: 'spacer' }), chip(o.toggle.label(toggled), toggled, () => { toggled = !toggled; renderAll(); }));
   }
 
   function matches(g: G, q: string): boolean {

@@ -3,7 +3,7 @@ import { LEAD } from './common';
 
 export const REFINISHING_GUIDES: Guide[] = [
   {
-    id: 'strip-paint-wood', title: 'Strip paint from wood', areas: ['paint'], aliases: ['paint stripper', 'remove paint', 'strip furniture', 'heat gun', 'chemical stripper', 'refinish dresser'],
+    id: 'strip-paint-wood', title: 'Strip paint from wood', spots: ['paint'], aliases: ['paint stripper', 'remove paint', 'strip furniture', 'heat gun', 'chemical stripper', 'refinish dresser'],
     kind: 'finish', difficulty: 2, minutes: [180, 480], savings: 'a professional strip runs $200+ per piece',
     tools: ['scraper', 'putty-knife', 'heat-gun', 'gloves', 'glasses', 'respirator', 'drop-cloth', 'hepa-vac', 'Brass brush and dental picks'],
     supplies: ['Lead test kit (EPA-recognized)', 'Paint stripper (citrus, soy or benzyl-alcohol based)', 'Plastic wrap', 'Mineral spirits or the cleaner the stripper label calls for', 'Sandpaper 120–220'],
@@ -25,7 +25,7 @@ export const REFINISHING_GUIDES: Guide[] = [
     query: 'how to strip paint from wood furniture chemical stripper heat gun', featured: true,
   },
   {
-    id: 'refinish-wood', title: 'Stain and finish bare wood', areas: ['paint'], aliases: ['refinish furniture', 'stain', 'polyurethane', 'wipe on poly', 'oil finish', 'refinish'],
+    id: 'refinish-wood', title: 'Stain and finish bare wood', spots: ['paint'], aliases: ['refinish furniture', 'stain', 'polyurethane', 'wipe on poly', 'oil finish', 'refinish'],
     kind: 'finish', difficulty: 2, minutes: [120, 300], savings: 'a professional refinish runs hundreds',
     tools: ['sander', 'sanding-sponge', 'brush', 'gloves', 'respirator', 'Lint-free rags'],
     supplies: ['Pre-stain conditioner (for pine, maple, birch, cherry)', 'Stain', 'Finish: wipe-on poly, brushing poly or hard-wax oil', '220 and 320 grit paper', 'Metal can with lid for oily rags'],
@@ -42,7 +42,7 @@ export const REFINISHING_GUIDES: Guide[] = [
     query: 'how to stain and finish wood furniture wipe on poly',
   },
   {
-    id: 'sticking-drawer', title: 'Fix a sticking drawer', areas: ['paint'], aliases: ['drawer sticks', 'drawer slides', 'drawer runner', 'wax'],
+    id: 'sticking-drawer', title: 'Fix a sticking drawer', spots: ['paint'], aliases: ['drawer sticks', 'drawer slides', 'drawer runner', 'wax'],
     kind: 'fix', difficulty: 1, minutes: [15, 45], savings: 'free',
     tools: ['screwdriver', 'sanding-sponge'],
     supplies: ['Paraffin wax or a candle stub', 'Wood glue and clamps for loose joints'],

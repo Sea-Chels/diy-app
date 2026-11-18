@@ -70,7 +70,7 @@ export const GREENS_PLANTS: Plant[] = [
     id: 'collards', name: 'Collard greens', latin: 'Brassica oleracea var. viridis', type: 'veg', life: 'biennial', sun: 'full', water: 'medium', spacing: 18, height: '2–3 ft',
     sow: 'Direct sow in spring or, for the sweetest leaves, midsummer for fall.', days: '60–80 days',
     care: ['The most heat-tolerant of the cabbage family, and frost sweetens it.'], harvest: 'Pick lower leaves as needed; plants produce for months.',
-    problems: ['Cabbage worms', 'Aphids'], friends: ['dill', 'onion', 'tomato'], avoid: ['strawberry'],
+    problems: ['Cabbage worms', 'Aphids'], friends: ['dill', 'onion'], avoid: ['strawberry', 'tomato'],
   },
   {
     id: 'arugula', name: 'Arugula', latin: 'Eruca vesicaria', type: 'veg', life: 'annual', sun: 'part', water: 'medium', spacing: 4, height: '8 in',

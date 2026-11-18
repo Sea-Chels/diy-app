@@ -4,7 +4,7 @@ export const LIGHT_GUIDES: Guide[] = [
   {
     id: 'headlight-bulb',
     title: 'Headlight bulb',
-    parts: ['headlight'],
+    spots: ['headlight'],
     aliases: ['low beam', 'high beam', 'halogen', 'bulb out', 'H11', 'H7', '9005', '9006'],
     difficulty: 2,
     minutes: [15, 45],
@@ -26,12 +26,12 @@ export const LIGHT_GUIDES: Guide[] = [
   {
     id: 'headlight-restore',
     title: 'Restore cloudy headlights',
-    parts: ['headlight'],
+    spots: ['headlight'],
     aliases: ['yellow headlights', 'hazy', 'oxidized', 'polish', 'lens'],
     difficulty: 1,
     minutes: [30, 60],
     savings: 'shops charge $75 to $150; a kit is $15 to $25',
-    tools: ['Masking tape', 'Restoration kit or 800 to 3000 grit wet sandpaper', 'Microfibre cloths'],
+    tools: ['Masking tape', 'Restoration kit or 800 to 3000 grit wet sandpaper', 'Microfiber cloths'],
     supplies: ['Headlight restoration kit with UV sealant'],
     summary: 'Wet sand the oxidized layer off, polish, then seal it or it will yellow again in months.',
     steps: [
@@ -46,7 +46,7 @@ export const LIGHT_GUIDES: Guide[] = [
   {
     id: 'turn-signal-bulb',
     title: 'Turn signal bulb',
-    parts: ['headlight', 'taillight'],
+    spots: ['headlight', 'taillight'],
     aliases: ['blinker', 'hyperflash', 'fast blinking', 'indicator'],
     difficulty: 1,
     minutes: [10, 30],
@@ -66,7 +66,7 @@ export const LIGHT_GUIDES: Guide[] = [
   {
     id: 'brake-light-bulb',
     title: 'Brake / tail light bulb',
-    parts: ['taillight'],
+    spots: ['taillight'],
     aliases: ['brake light', 'tail light', 'stop lamp', 'rear light', 'reverse light', '7443', '3157'],
     difficulty: 1,
     minutes: [10, 25],
@@ -88,7 +88,7 @@ export const LIGHT_GUIDES: Guide[] = [
   {
     id: 'license-plate-bulb',
     title: 'License plate light',
-    parts: ['taillight', 'trunk'],
+    spots: ['taillight', 'trunk'],
     aliases: ['plate light', 'tag light', 'ticket'],
     difficulty: 1,
     minutes: [5, 15],

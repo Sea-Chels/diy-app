@@ -37,8 +37,8 @@ export type PartId =
   | 'bike_gears'
   | 'bike_saddle';
 
-export type LidId = 'hood' | 'trunk' | 'door' | 'moto_seat';
-export const LIDS: LidId[] = ['hood', 'trunk', 'door', 'moto_seat'];
+export const LIDS = ['hood', 'trunk', 'door', 'moto_seat'] as const;
+export type LidId = (typeof LIDS)[number];
 
 export interface PartInfo {
   id: PartId;

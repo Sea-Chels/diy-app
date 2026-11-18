@@ -10,8 +10,8 @@ export const PALETTE = {
   bgDeep: '#0a0c10',
   text: '#eef0f4',
   muted: '#9aa3b2',
-  card: '#151924',
-  sheet: '#141820',
+  /** Cards, sheets, fields and the glass behind panels. */
+  surface: '#151924',
   onAccent: '#06202a',
   cyan: '#6ee7ff',
   pink: '#ff4fd8',
@@ -39,10 +39,17 @@ export const LIGHT = { key: 0xfff0dc, front: 0xb8c4ff, rimPink: 0xff4fd8, rimCya
 
 export const hex = (name: ColorName): number => parseInt(PALETTE[name].slice(1), 16);
 
+/** A 0xrrggbb number as a CSS color. */
+export const cssHex = (c: number) => `#${c.toString(16).padStart(6, '0')}`;
+
 const kebab = (s: string) => s.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
 
+/** Colors CSS uses at several alphas go out as bare channels, as in `rgb(var(--surface) / 0.9)`. */
+const CHANNELS: ColorName[] = ['surface'];
+const channels = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)).join(' ');
+
 export function paletteCss(): string {
-  const vars = Object.entries(PALETTE).map(([k, v]) => `--${kebab(k)}:${v}`);
+  const vars = Object.entries(PALETTE).map(([k, v]) => `--${kebab(k)}:${CHANNELS.includes(k as ColorName) ? channels(v) : v}`);
   for (const [ws, c] of Object.entries(WORKSHOP_COLOR)) vars.push(`--ws-${ws}:var(--${kebab(c)})`);
   vars.push('--burst:linear-gradient(135deg,var(--pink),var(--purple) 55%,var(--sky))');
   return `:root{${vars.join(';')}}`;

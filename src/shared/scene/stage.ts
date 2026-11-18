@@ -1,10 +1,13 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { tween, updateTweens, easeInOutCubic, easeOutBack, lerp } from '../tween';
-import { lineMaterials, setHighlight, shared, toon } from '../toon';
+import { tween, updateTweens, cancelTweens, easeInOutCubic, easeOutBack, lerp } from '../tween';
+import { reducedMotion } from '../motion';
+import { media } from '../media';
+import { lineMaterials, setHighlight, shared } from '../toon';
 import { hex, LIGHT } from '../theme';
 import { createOutlinePass, HOVER_LAYER, SELECT_LAYER } from './outline';
 import type { V3 } from './kit';
+import { MAT } from './materials';
 
 export interface View {
   pos: V3;
@@ -46,7 +49,7 @@ export interface StageConfig<S, Id extends string, Lid extends string, R extends
   swapTarget?(rig: R): THREE.Object3D;
   lids: readonly Lid[];
   opens(id: Id): readonly Lid[] | undefined;
-  /** 'hull' recolours each mesh's ink; 'outline' draws one rim round the whole area. */
+  /** 'hull' recolors each mesh's ink; 'outline' draws one rim round the whole area. */
   highlight: 'hull' | 'outline';
   /** Fly back to the current view once a rebuilt rig is in. */
   reflyOnSwap?: boolean;
@@ -109,7 +112,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   controls.maxDistance = cfg.controls.maxDistance;
   controls.maxPolarAngle = Math.PI / 2 - cfg.controls.polarMargin;
   controls.enablePan = cfg.controls.pan;
-  controls.autoRotate = true;
+  controls.autoRotate = !reducedMotion();
   controls.autoRotateSpeed = cfg.controls.rotateSpeed;
 
   scene.add(new THREE.HemisphereLight(cfg.sky.color, LIGHT.ground, cfg.sky.intensity));
@@ -135,7 +138,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
 
   const g = cfg.ground;
   if (g.disc) {
-    const disc = new THREE.Mesh(new THREE.CircleGeometry(g.disc, g.segments), toon(0x1d2133, { halftone: 1 }));
+    const disc = new THREE.Mesh(new THREE.CircleGeometry(g.disc, g.segments), MAT.ground());
     disc.rotation.x = -Math.PI / 2;
     disc.position.set(...g.center);
     disc.receiveShadow = true;
@@ -239,12 +242,13 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   let idleTimer: number | undefined;
   controls.addEventListener('start', () => {
     controls.autoRotate = false;
+    cancelTweens('camera');
     window.clearTimeout(idleTimer);
   });
   controls.addEventListener('end', () => {
     window.clearTimeout(idleTimer);
     idleTimer = window.setTimeout(() => {
-      if (!selected) controls.autoRotate = true;
+      if (!selected) controls.autoRotate = !reducedMotion();
     }, 9000);
   });
 
@@ -267,13 +271,14 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     });
   }
 
+  const onPhone = media('phone');
   /** An area's view, nudged clear of the side panel (right on desktop, bottom on phones). */
   function framed(id: Id): View {
     const v = rig.views[id];
     const t = new THREE.Vector3(...v.target);
     const p = new THREE.Vector3(...v.pos);
     const { desktop, phone } = cfg.framing;
-    if (window.innerWidth <= 720) {
+    if (onPhone.matches) {
       p.sub(t).multiplyScalar(phone.pullback).add(t);
       const down = new THREE.Vector3(0, -1, 0).multiplyScalar(p.distanceTo(t) * phone.drop);
       t.add(down);
@@ -289,9 +294,12 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   }
 
   function flyToArea(id: Id | null): void {
-    if (id) return flyTo(framed(id));
+    if (id) {
+      flyTo(framed(id));
+      return;
+    }
     flyTo(overviewFit());
-    idleTimer = window.setTimeout(() => (controls.autoRotate = true), 4000);
+    idleTimer = window.setTimeout(() => (controls.autoRotate = !reducedMotion()), 4000);
   }
 
   function applyLids(id: Id | null): void {
@@ -368,6 +376,8 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
 
   function resize(): void {
     const { clientWidth: w, clientHeight: h } = canvas.parentElement ?? canvas;
+    // Not laid out yet: a 0 × 0 aspect would make every camera position NaN. The observer calls again.
+    if (!w || !h) return;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -390,13 +400,16 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     const t = clock.getElapsedTime();
     updateTweens(performance.now());
     rig.update(t);
-    const pulse = 1 + Math.sin(t * cfg.beaconPulse.speed) * cfg.beaconPulse.amp;
+    const pulse = reducedMotion() ? 1 : 1 + Math.sin(t * cfg.beaconPulse.speed) * cfg.beaconPulse.amp;
     const bs = cfg.beaconScale;
     rig.beacons.forEach((b, id) => {
       // Beacons draw without depth testing, so ones on the far side of an outer wall have to hide themselves.
       const seen = b.userData.seen as ((cam: THREE.Vector3) => boolean) | undefined;
       b.visible = id !== selected && (!seen || seen(camera.position));
-      if (!bs) return b.scale.setScalar(pulse);
+      if (!bs) {
+        b.scale.setScalar(pulse);
+        return;
+      }
       b.getWorldPosition(tmpV);
       b.scale.setScalar(pulse * Math.min(bs.max, Math.max(0.3, tmpV.distanceTo(camera.position) / bs.near)));
     });

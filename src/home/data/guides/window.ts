@@ -3,8 +3,8 @@ import { LEAD } from './common';
 
 export const WINDOW_GUIDES: Guide[] = [
   {
-    id: 'replace-window', title: 'Replace a window (insert)', areas: ['window'], aliases: ['new window', 'replacement window', 'pocket window', 'double hung', 'vinyl window'],
-    kind: 'install', difficulty: 3, minutes: [180, 360], savings: '$150–400 per window in labor',
+    id: 'replace-window', title: 'Replace a window (insert)', spots: ['window'], aliases: ['new window', 'replacement window', 'pocket window', 'double hung', 'vinyl window'],
+    kind: 'install', difficulty: 3, minutes: [180, 360], savings: 'saves $150–400 per window in labor',
     tools: ['pry-bar', 'putty-knife', 'knife', 'drill', 'level', 'tape', 'caulk-gun', 'glasses', 'Low-expansion foam gun'],
     supplies: ['Replacement (insert) window sized to your opening', 'Shims', 'Low-expansion window-and-door foam', 'Exterior sealant', 'Insulation for the old weight pockets'],
     summary: 'An insert window fits inside the existing frame, so the trim and walls stay. The work is in measuring right, then shimming the new unit plumb, level and square.',
@@ -21,7 +21,7 @@ export const WINDOW_GUIDES: Guide[] = [
     query: 'how to install a replacement insert window double hung',
   },
   {
-    id: 'drafty-window', title: 'Seal a drafty window', areas: ['window', 'door'], aliases: ['draft', 'weatherstrip', 'shrink film', 'cold window', 'caulk window'],
+    id: 'drafty-window', title: 'Seal a drafty window', spots: ['window', 'door'], aliases: ['draft', 'weatherstrip', 'shrink film', 'cold window', 'caulk window'],
     kind: 'maintain', difficulty: 1, minutes: [30, 90], savings: 'lower heating and cooling bills',
     tools: ['caulk-gun', 'knife', 'putty-knife', 'heat-gun'],
     supplies: ['Exterior caulk', 'Self-adhesive weatherstrip (V-strip or foam)', 'Window shrink film kit (winter)'],
@@ -35,7 +35,7 @@ export const WINDOW_GUIDES: Guide[] = [
     query: 'how to seal a drafty window weatherstrip caulk shrink film',
   },
   {
-    id: 'stuck-window', title: 'Free a painted-shut window', areas: ['window'], aliases: ['stuck window', 'painted shut', 'window won\'t open', 'sticky sash'],
+    id: 'stuck-window', title: 'Free a painted-shut window', spots: ['window'], aliases: ['stuck window', 'painted shut', 'window won\'t open', 'sticky sash'],
     kind: 'fix', difficulty: 1, minutes: [20, 60], savings: 'free',
     tools: ['knife', 'putty-knife', 'hammer', 'Window zipper (optional)'],
     supplies: ['Wood block', 'Paraffin wax or dry silicone spray'],
@@ -52,8 +52,8 @@ export const WINDOW_GUIDES: Guide[] = [
     query: 'how to open a painted shut window',
   },
   {
-    id: 'reglaze-pane', title: 'Replace a broken window pane', areas: ['window'], aliases: ['broken glass', 'glazing', 'window putty', 'glazier points', 'single pane'],
-    kind: 'fix', difficulty: 2, minutes: [60, 180], savings: '$100–200',
+    id: 'reglaze-pane', title: 'Replace a broken window pane', spots: ['window'], aliases: ['broken glass', 'glazing', 'window putty', 'glazier points', 'single pane'],
+    kind: 'fix', difficulty: 2, minutes: [60, 180], savings: 'saves $100–200',
     tools: ['putty-knife', 'heat-gun', 'pliers', 'tape', 'gloves', 'glasses'],
     supplies: ['Replacement glass cut ⅛ in smaller than the opening each way', 'Glazing compound', 'Glazier\'s points', 'Primer'],
     summary: 'For single-pane wood sashes: remove the old putty and points, set new glass on a thin bed of glazing compound, push in points and tool a new putty bevel.',
@@ -71,8 +71,8 @@ export const WINDOW_GUIDES: Guide[] = [
     query: 'how to replace window glass glazing putty points',
   },
   {
-    id: 'rescreen', title: 'Rescreen a window screen', areas: ['window'], aliases: ['screen', 'torn screen', 'spline', 'bug screen'],
-    kind: 'fix', difficulty: 1, minutes: [20, 45], savings: '$30–60 per screen',
+    id: 'rescreen', title: 'Rescreen a window screen', spots: ['window'], aliases: ['screen', 'torn screen', 'spline', 'bug screen'],
+    kind: 'fix', difficulty: 1, minutes: [20, 45], savings: 'saves $30–60 per screen',
     tools: ['knife', 'screwdriver', 'Spline roller'],
     supplies: ['Fiberglass screen', 'Spline sized to the old one'],
     summary: 'Pull the old spline, lay new screen over the frame and roll the spline back into its groove. Fiberglass is the easiest to work with.',

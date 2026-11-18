@@ -1,11 +1,10 @@
 import * as THREE from 'three';
+import { V } from '../../shared/scene/kit';
 
-/** Metres to scene units. */
+/** Meters to scene units. */
 export const K = 0.6;
-export const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 export const UP = V(0, 1, 0);
 
-export const UNIT_BOX = new THREE.BoxGeometry(1, 1, 1);
 export const UNIT_CYL = new THREE.CylinderGeometry(1, 1, 1, 12, 1);
 export const LOW_SPHERE = new THREE.SphereGeometry(1, 14, 10);
 

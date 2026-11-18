@@ -3,7 +3,7 @@ import { POWER_OFF } from './common';
 
 export const SINK_GUIDES: Guide[] = [
   {
-    id: 'dripping-faucet', title: 'Fix a dripping faucet', areas: ['sink', 'bath'], aliases: ['leaky faucet', 'drip', 'cartridge', 'washer', 'o-ring', 'tap'],
+    id: 'dripping-faucet', title: 'Fix a dripping faucet', spots: ['sink', 'bath'], aliases: ['leaky faucet', 'drip', 'cartridge', 'washer', 'o-ring', 'tap'],
     kind: 'fix', difficulty: 2, minutes: [30, 90], savings: 'a $10–30 part instead of a $150+ plumber visit',
     tools: ['screwdriver', 'wrench', 'channel-locks', 'headlamp', 'Hex (Allen) keys'],
     supplies: ['Replacement cartridge, washer or O-ring kit for your faucet brand', 'Plumber\'s silicone grease', 'Rag to plug the drain'],
@@ -21,8 +21,8 @@ export const SINK_GUIDES: Guide[] = [
     query: 'how to fix a dripping kitchen faucet cartridge replacement', featured: true,
   },
   {
-    id: 'replace-kitchen-faucet', title: 'Replace a kitchen faucet', areas: ['sink'], aliases: ['new faucet', 'pull-down', 'install faucet', 'tap'],
-    kind: 'install', difficulty: 2, minutes: [60, 150], savings: '$150–250 in labor',
+    id: 'replace-kitchen-faucet', title: 'Replace a kitchen faucet', spots: ['sink'], aliases: ['new faucet', 'pull-down', 'install faucet', 'tap'],
+    kind: 'install', difficulty: 2, minutes: [60, 150], savings: 'saves $150–250 in labor',
     tools: ['basin-wrench', 'wrench', 'channel-locks', 'headlamp', 'bucket', 'glasses'],
     supplies: ['New faucet', 'New braided supply lines if the old ones are older than ~5 years', 'Plumber\'s putty or silicone if the faucet calls for it'],
     summary: 'Shut the water off, unhook the old faucet from below, set the new one from above, and connect the lines. The hard part is lying under the sink; a basin wrench fixes the reach.',
@@ -39,8 +39,8 @@ export const SINK_GUIDES: Guide[] = [
     query: 'how to replace a kitchen faucet step by step',
   },
   {
-    id: 'clear-sink-clog', title: 'Clear a clogged kitchen sink', areas: ['sink'], aliases: ['clog', 'slow drain', 'p-trap', 'blocked', 'snake', 'plunge'],
-    kind: 'fix', difficulty: 1, minutes: [15, 60], savings: '$150–300 for a drain call',
+    id: 'clear-sink-clog', title: 'Clear a clogged kitchen sink', spots: ['sink'], aliases: ['clog', 'slow drain', 'p-trap', 'blocked', 'snake', 'plunge'],
+    kind: 'fix', difficulty: 1, minutes: [15, 60], savings: 'saves $150–300 for a drain call',
     tools: ['plunger-sink', 'bucket', 'channel-locks', 'snake', 'gloves', 'glasses'],
     supplies: ['Rags', 'New trap washers if the old ones are flattened'],
     summary: 'Plunge first, then open the P-trap and clean it, then snake the line past the trap. Skip chemical drain cleaners: they rarely clear grease clogs and make the next steps dangerous.',
@@ -56,8 +56,8 @@ export const SINK_GUIDES: Guide[] = [
     query: 'how to unclog kitchen sink p-trap snake', featured: true,
   },
   {
-    id: 'disposal-jammed', title: 'Unjam a garbage disposal', areas: ['sink'], aliases: ['disposal', 'humming', 'garburator', 'reset button', 'jammed'],
-    kind: 'fix', difficulty: 1, minutes: [10, 30], savings: 'a $150 service call or a new $120+ disposal',
+    id: 'disposal-jammed', title: 'Unjam a garbage disposal', spots: ['sink'], aliases: ['disposal', 'humming', 'garburator', 'reset button', 'jammed'],
+    kind: 'fix', difficulty: 1, minutes: [10, 30], savings: 'saves a $150 service call or a new $120+ disposal',
     tools: ['headlamp', 'pliers', 'Disposal wrench (¼ in hex key)'],
     supplies: [],
     summary: 'A humming disposal is jammed, a silent one has tripped its overload. Free the flywheel from underneath with a hex key, press the red reset button, and it\'s usually fine.',
@@ -72,8 +72,8 @@ export const SINK_GUIDES: Guide[] = [
     query: 'how to unjam garbage disposal hex key reset button',
   },
   {
-    id: 'replace-disposal', title: 'Replace a garbage disposal', areas: ['sink'], aliases: ['new disposal', 'install disposal', 'insinkerator'],
-    kind: 'install', difficulty: 2, minutes: [60, 150], savings: '$150–250 in labor',
+    id: 'replace-disposal', title: 'Replace a garbage disposal', spots: ['sink'], aliases: ['new disposal', 'install disposal', 'insinkerator'],
+    kind: 'install', difficulty: 2, minutes: [60, 150], savings: 'saves $150–250 in labor',
     tools: ['screwdriver', 'channel-locks', 'voltage-tester', 'strippers', 'hammer', 'bucket', 'glasses'],
     supplies: ['New disposal (½–¾ hp for most homes)', 'Power cord kit if it\'s plugged in', 'Plumber\'s putty'],
     summary: 'Same brand and size often reuse the existing mount, making it a 30-minute swap. If you have a dishwasher, knock out the plug in the new disposal\'s inlet or the dishwasher won\'t drain.',
@@ -90,8 +90,8 @@ export const SINK_GUIDES: Guide[] = [
     query: 'how to replace a garbage disposal dishwasher knockout',
   },
   {
-    id: 'supply-valves', title: 'Replace sink supply lines and shut-off valves', areas: ['sink', 'bath', 'toilet'], aliases: ['shut off valve', 'angle stop', 'supply line', 'braided line', 'leaking valve', 'quarter turn'],
-    kind: 'install', difficulty: 2, minutes: [30, 90], savings: '$150+ per valve in labor',
+    id: 'supply-valves', title: 'Replace sink supply lines and shut-off valves', spots: ['sink', 'bath', 'toilet'], aliases: ['shut off valve', 'angle stop', 'supply line', 'braided line', 'leaking valve', 'quarter turn'],
+    kind: 'install', difficulty: 2, minutes: [30, 90], savings: 'saves $150+ per valve in labor',
     tools: ['wrench', 'channel-locks', 'bucket', 'headlamp', 'Tubing cutter (for copper)'],
     supplies: ['Quarter-turn angle stop valves to fit your pipe (compression, push-to-connect or threaded)', 'Braided stainless supply lines', 'Thread tape (threaded pipe only)'],
     summary: 'Old multi-turn valves seize and leak, and rubber supply lines burst. Quarter-turn valves and braided lines are cheap insurance. You\'ll need the main water off for this one.',
@@ -107,7 +107,7 @@ export const SINK_GUIDES: Guide[] = [
     query: 'replace angle stop shut off valve under sink quarter turn',
   },
   {
-    id: 'low-pressure-aerator', title: 'Fix low water pressure at one faucet', areas: ['sink', 'bath'], aliases: ['weak flow', 'aerator', 'low pressure', 'sputtering'],
+    id: 'low-pressure-aerator', title: 'Fix low water pressure at one faucet', spots: ['sink', 'bath'], aliases: ['weak flow', 'aerator', 'low pressure', 'sputtering'],
     kind: 'fix', difficulty: 1, minutes: [10, 30], savings: 'free',
     tools: ['pliers', 'Old toothbrush'],
     supplies: ['White vinegar', 'Replacement aerator if the old one is damaged'],

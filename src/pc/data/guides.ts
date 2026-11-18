@@ -1,4 +1,4 @@
-import type { GuideBase } from '../../shared/guides';
+import { guideBook, type GuideBase } from '../../shared/guides';
 import type { PartId } from './parts';
 import type { Cooling } from './setup';
 import type { Category } from './catalog';
@@ -10,10 +10,8 @@ import { REPLACE_GUIDES } from './guides/replace';
 export type GuideKind = 'fix' | 'swap' | 'setup';
 export const KIND_LABEL: Record<GuideKind, string> = { fix: 'Troubleshoot', swap: 'Replace', setup: 'Set up' };
 
-export interface Guide extends GuideBase {
+export interface Guide extends GuideBase<PartId> {
   kind: GuideKind;
-  /** Hotspots this guide is listed under. First one is the primary. */
-  parts: PartId[];
   /** Only shown for these cooling setups. Omit for all. */
   cooling?: Cooling[];
   /** When the parts picker has a part in this category, its name leads the video search. */
@@ -26,12 +24,12 @@ export const GUIDES: Guide[] = [
   ...REPLACE_GUIDES,
 ];
 
-export const GUIDE_BY_ID = new Map(GUIDES.map((g) => [g.id, g]));
+export const BOOK = guideBook<PartId, Guide>(GUIDES);
 
 export function appliesTo(g: Guide, cooling: Cooling): boolean {
   return !g.cooling || g.cooling.includes(cooling);
 }
 
 export function guidesForPart(part: PartId, cooling: Cooling): Guide[] {
-  return GUIDES.filter((g) => g.parts.includes(part) && appliesTo(g, cooling));
+  return BOOK.forSpot(part).filter((g) => appliesTo(g, cooling));
 }

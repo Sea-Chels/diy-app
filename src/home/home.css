@@ -1,7 +1,7 @@
 /* Home workshop additions on top of shared/workshop.css */
 .home-swatches { grid-template-columns: repeat(4, 32px); }
 
-.pro { display: flex; gap: 8px; align-items: flex-start; font-size: 0.9rem; color: var(--lilac); background: rgba(155,92,255,0.1); border-radius: 10px; padding: 8px 10px; }
+.pro { display: flex; gap: 8px; align-items: flex-start; font-size: 0.9rem; color: var(--lilac); background: rgb(var(--advise) / 0.1); border-radius: var(--r-md); padding: 8px 10px; }
 .pro .icon { margin-top: 2px; flex-shrink: 0; }
 
 .have-count { background: none; border: 0; padding: 0; margin-left: 4px; color: var(--accent); font-size: 0.72rem; text-transform: none; letter-spacing: 0; cursor: pointer; }
@@ -16,16 +16,16 @@
 .tool-stats strong { font-size: 1.2rem; color: var(--accent); }
 .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
 .tool-tile {
-  display: flex; flex-direction: column; gap: 4px; text-align: left; padding: 10px 12px; border-radius: 12px;
-  background: rgba(255,255,255,0.025); border: 1px solid var(--line); color: var(--text); cursor: pointer;
+  display: flex; flex-direction: column; gap: 4px; text-align: left; padding: 10px 12px; border-radius: var(--r-lg);
+  background: rgb(var(--hi) / 0.025); border: 1px solid var(--line); color: var(--text); cursor: pointer;
 }
-.tool-tile:hover { border-color: rgba(255,255,255,0.22); }
+.tool-tile:hover { border-color: rgb(var(--hi) / 0.22); }
 .tool-tile.has { border-color: color-mix(in srgb, var(--green) 50%, transparent); background: color-mix(in srgb, var(--green) 6%, transparent); }
 .tool-tile.has .tool-name .icon { color: var(--green); }
 .tool-name { font-weight: 650; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .tool-name .icon { color: var(--muted); }
 .tool-meta { display: flex; gap: 10px; font-size: 0.75rem; color: var(--muted); }
-.badge { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 6px; border-radius: 6px; background: color-mix(in srgb, var(--yellow) 16%, transparent); color: var(--yellow); font-weight: 700; }
+.badge { --badge: var(--yellow); }
 .small { font-size: 0.82rem; }
 
 .calc-modal { width: min(640px, 100%); }
@@ -33,7 +33,7 @@
 .calc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
 .calc-field { display: flex; flex-direction: column; gap: 4px; font-size: 0.82rem; color: var(--muted); }
 .calc-field input {
-  background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; color: var(--text); font-size: 1rem;
+  background: rgb(var(--surface)); border: 1px solid var(--line); border-radius: var(--r-md); padding: 8px 10px; color: var(--text); font-size: 1rem;
 }
 .calc-check { display: flex; gap: 8px; align-items: center; font-size: 0.85rem; color: var(--muted); }
 .calc-result { border-left: 3px solid var(--yellow); padding: 4px 0 4px 14px; display: flex; flex-direction: column; gap: 4px; }
@@ -42,10 +42,3 @@
 .wire-table th, .wire-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
 .wire-table th { color: var(--muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
 .wire-table td:nth-child(2) { color: var(--yellow); font-weight: 700; white-space: nowrap; }
-
-@media (max-width: 720px) {
-  .two-col { grid-template-columns: 1fr; }
-  .topbar-actions .ghost-btn { padding: 7px 10px; white-space: nowrap; }
-  .lbl-long { display: none; }
-}
-@media (min-width: 721px) { .lbl-short { display: none; } }

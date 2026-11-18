@@ -1,8 +1,9 @@
+@import '../shared/media.css';
 .ride-switch { left: 50%; transform: translateX(-50%); border-radius: var(--pill); }
 .ride-switch button { flex: 0 0 auto; padding: 6px 14px; border-radius: var(--pill); }
 .ride-switch ~ .hint { top: var(--overlay-row); }
 
-@media (max-width: 720px) {
+@media (--phone) {
   .ride-switch { left: auto; right: 12px; transform: none; }
   .ride-switch button { padding: 6px 10px; }
 }

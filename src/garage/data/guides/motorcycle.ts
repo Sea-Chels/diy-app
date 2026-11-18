@@ -1,13 +1,13 @@
 import type { Guide } from '../guides';
+import { WARM_OIL } from './common';
 
-const HOT_PIPES = 'The exhaust and engine stay hot enough to burn for a good while after a ride. Let them cool first.';
 const STAND = 'Work with the bike on a paddock or center stand on firm, level ground, or have a helper hold it upright. Never lean on a bike that is only on its side stand.';
 
 export const MOTORCYCLE_GUIDES: Guide[] = [
   {
     id: 'moto-tire-check',
     title: 'Check motorcycle tire pressure and tread',
-    parts: ['moto_tire'],
+    spots: ['moto_tire'],
     aliases: ['psi', 'flat', 'tread depth', 'wear bars', 'inflate', 'motorbike tyre'],
     difficulty: 1,
     minutes: [5, 10],
@@ -29,7 +29,7 @@ export const MOTORCYCLE_GUIDES: Guide[] = [
   {
     id: 'moto-chain-lube',
     title: 'Clean and lube the chain',
-    parts: ['moto_chain'],
+    spots: ['moto_chain'],
     aliases: ['chain lube', 'chain wax', 'o-ring chain', 'x-ring', 'sprocket', 'dry chain'],
     difficulty: 1,
     minutes: [15, 25],
@@ -55,7 +55,7 @@ export const MOTORCYCLE_GUIDES: Guide[] = [
   {
     id: 'moto-chain-slack',
     title: 'Check and adjust chain slack',
-    parts: ['moto_chain'],
+    spots: ['moto_chain'],
     aliases: ['chain tension', 'loose chain', 'chain adjuster', 'axle nut', 'free play'],
     difficulty: 2,
     minutes: [20, 40],
@@ -80,7 +80,7 @@ export const MOTORCYCLE_GUIDES: Guide[] = [
   {
     id: 'moto-oil-check',
     title: 'Check the engine oil level',
-    parts: ['moto_oil'],
+    spots: ['moto_oil'],
     aliases: ['sight glass', 'oil window', 'dipstick', 'low oil', 'oil light'],
     difficulty: 1,
     minutes: [5, 10],
@@ -94,13 +94,13 @@ export const MOTORCYCLE_GUIDES: Guide[] = [
       'Read the oil level in the window, or unscrew the dipstick, wipe it, rest it in without screwing it in and pull it out. It should sit between the upper and lower marks.',
       'If it is low, add a little of the right oil through the filler cap, wait, and recheck. Do not overfill.',
     ],
-    cautions: [HOT_PIPES],
+    cautions: [WARM_OIL],
     query: 'motorcycle oil level sight glass check',
   },
   {
     id: 'moto-oil-change',
     title: 'Change the oil and filter',
-    parts: ['moto_oil'],
+    spots: ['moto_oil'],
     aliases: ['oil change', 'oil filter', 'drain plug', 'service', 'jaso ma'],
     difficulty: 2,
     minutes: [40, 60],
@@ -116,7 +116,7 @@ export const MOTORCYCLE_GUIDES: Guide[] = [
       'Pour in the amount of oil the manual lists for an oil-and-filter change, start the engine for a minute, switch off, wait, and check the level. Top up to the mark and check for leaks.',
     ],
     cautions: [
-      HOT_PIPES,
+      WARM_OIL,
       'Use oil rated for motorcycles (JASO MA or MA2) if your bike has a wet clutch, as most do. Many car oils contain friction modifiers that make the clutch slip.',
       STAND,
       'Take the old oil and filter to an auto parts store or recycling center. Never pour it down a drain.',
@@ -126,7 +126,7 @@ export const MOTORCYCLE_GUIDES: Guide[] = [
   {
     id: 'moto-battery',
     title: 'Charge or replace the battery',
-    parts: ['moto_battery'],
+    spots: ['moto_battery'],
     aliases: ['dead battery', 'wont start', 'clicks', 'trickle charger', 'battery tender', 'maintainer', 'winter storage'],
     difficulty: 1,
     minutes: [15, 30],
@@ -151,7 +151,7 @@ export const MOTORCYCLE_GUIDES: Guide[] = [
   {
     id: 'moto-brake-check',
     title: 'Check brake pads and fluid',
-    parts: ['moto_brakes'],
+    spots: ['moto_brakes'],
     aliases: ['brake pads', 'brake fluid', 'reservoir', 'spongy brake', 'dot 4', 'squeal'],
     difficulty: 1,
     minutes: [10, 15],
@@ -175,7 +175,7 @@ export const MOTORCYCLE_GUIDES: Guide[] = [
   {
     id: 'moto-bulb',
     title: 'Replace a headlight or signal bulb',
-    parts: ['moto_lights'],
+    spots: ['moto_lights'],
     aliases: ['headlight', 'turn signal', 'blinker', 'indicator', 'tail light', 'brake light', 'bulb out', 'hyper flash'],
     difficulty: 1,
     minutes: [10, 30],
@@ -195,7 +195,7 @@ export const MOTORCYCLE_GUIDES: Guide[] = [
   {
     id: 'moto-clutch-lever',
     title: 'Adjust clutch lever free play',
-    parts: ['moto_controls'],
+    spots: ['moto_controls'],
     aliases: ['clutch cable', 'slipping clutch', 'hard to find neutral', 'lever play', 'barrel adjuster', 'mirror'],
     difficulty: 1,
     minutes: [5, 15],

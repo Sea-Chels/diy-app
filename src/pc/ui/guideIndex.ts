@@ -1,6 +1,6 @@
 import { PARTS, PART_ORDER } from '../data/parts';
 import { GUIDES, KIND_LABEL, appliesTo } from '../data/guides';
-import { getState, setState } from '../store';
+import { getState, select } from '../store';
 import { kindFilters, openGuideIndex as open } from '../../shared/ui/guideIndex';
 import { guideChips } from './guideCard';
 
@@ -11,10 +11,10 @@ export function openGuideIndex(): void {
     filters: kindFilters(KIND_LABEL),
     zones: PART_ORDER,
     zoneLabel: (p) => PARTS[p].label,
-    zoneOf: (g) => g.parts[0],
-    searchWords: (g) => g.parts.map((p) => PARTS[p].label),
+    zoneOf: (g) => g.spots[0],
+    searchWords: (g) => g.spots.map((p) => PARTS[p].label),
     chips: guideChips,
-    onPick: (g) => setState({ selectedPart: g.parts[0], openGuide: g.id }),
+    onPick: (g) => select(g.spots[0], g.id),
     placeholder: 'Search: no post, bios, xmp, thermal paste, install windows…',
     empty: 'No guides match. Try a broader word.',
     sub: `${guides.length} guides: troubleshooting, replacing parts, BIOS and OS setup.`,

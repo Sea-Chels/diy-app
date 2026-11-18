@@ -5,7 +5,7 @@ export const ENGINE_GUIDES: Guide[] = [
   {
     id: 'coolant-top-up',
     title: 'Check and top up coolant',
-    parts: ['coolant'],
+    spots: ['coolant'],
     aliases: ['antifreeze', 'overheating', 'reservoir', 'radiator'],
     difficulty: 1,
     minutes: [5, 10],
@@ -25,7 +25,7 @@ export const ENGINE_GUIDES: Guide[] = [
   {
     id: 'spark-plugs',
     title: 'Spark plugs',
-    parts: ['engine'],
+    spots: ['engine'],
     aliases: ['misfire', 'rough idle', 'ignition coil', 'tune up', 'P0300'],
     difficulty: 2,
     minutes: [45, 120],
@@ -48,7 +48,7 @@ export const ENGINE_GUIDES: Guide[] = [
   {
     id: 'serpentine-belt',
     title: 'Serpentine belt',
-    parts: ['engine'],
+    spots: ['engine'],
     aliases: ['drive belt', 'squeal', 'belt tensioner', 'accessory belt'],
     difficulty: 2,
     minutes: [30, 60],
@@ -71,7 +71,7 @@ export const ENGINE_GUIDES: Guide[] = [
   {
     id: 'pcv-valve',
     title: 'PCV valve',
-    parts: ['engine'],
+    spots: ['engine'],
     aliases: ['crankcase', 'oil consumption', 'whistle', 'P0171'],
     difficulty: 1,
     minutes: [10, 20],
@@ -91,7 +91,7 @@ export const ENGINE_GUIDES: Guide[] = [
   {
     id: 'throttle-body-clean',
     title: 'Clean the throttle body',
-    parts: ['engine', 'airbox'],
+    spots: ['engine', 'airbox'],
     aliases: ['rough idle', 'stalling', 'hesitation', 'carbon'],
     difficulty: 2,
     minutes: [20, 40],
@@ -112,7 +112,7 @@ export const ENGINE_GUIDES: Guide[] = [
   {
     id: 'maf-clean',
     title: 'Clean the mass airflow sensor',
-    parts: ['airbox'],
+    spots: ['airbox'],
     aliases: ['MAF', 'air flow sensor', 'hesitation', 'P0101', 'P0171'],
     difficulty: 1,
     minutes: [10, 15],
@@ -132,7 +132,7 @@ export const ENGINE_GUIDES: Guide[] = [
   {
     id: 'o2-sensor',
     title: 'Oxygen (O2) sensor',
-    parts: ['exhaust'],
+    spots: ['exhaust'],
     aliases: ['lambda', 'check engine', 'P0135', 'P0141', 'P0420', 'fuel economy'],
     difficulty: 3,
     minutes: [30, 90],

@@ -13,7 +13,7 @@ export interface Section {
   /** Half width at the bottom and at the top (tumblehome). */
   wb: number;
   wt: number;
-  /** Lateral offset of the section centre. */
+  /** Lateral offset of the section center. */
   x?: number;
 }
 
@@ -24,8 +24,8 @@ export function ringPoint(s: Section, t: number, n: number): THREE.Vector3 {
   const a = t * Math.PI * 2;
   const c = Math.cos(a);
   const si = Math.sin(a);
-  const ex = Math.sign(c) * Math.pow(Math.abs(c), 2 / n);
-  const ey = Math.sign(si) * Math.pow(Math.abs(si), 2 / n);
+  const ex = Math.sign(c) * Math.abs(c) ** (2 / n);
+  const ey = Math.sign(si) * Math.abs(si) ** (2 / n);
   const v = (ey + 1) / 2;
   const hw = s.wb + (s.wt - s.wb) * v;
   return new THREE.Vector3((s.x ?? 0) + ex * hw, s.yb + (s.yt - s.yb) * v, s.z);
@@ -35,7 +35,7 @@ export function ringPoint(s: Section, t: number, n: number): THREE.Vector3 {
 export function tAtY(s: Section, y: number, n: number): number {
   const v = THREE.MathUtils.clamp((y - s.yb) / (s.yt - s.yb), 0, 1);
   const ey = 2 * v - 1;
-  const sin = Math.sign(ey) * Math.pow(Math.abs(ey), n / 2);
+  const sin = Math.sign(ey) * Math.abs(ey) ** (n / 2);
   return Math.asin(THREE.MathUtils.clamp(sin, -1, 1)) / (Math.PI * 2);
 }
 
@@ -87,8 +87,8 @@ export function loft(fn: SectionFn, z0: number, z1: number, n: number, steps = 6
   const cap = (z: number, flip: boolean) => {
     const s = fn(z);
     const pts = Array.from({ length: ring }, (_, i) => ringPoint(s, i / ring, n));
-    const centre = pts.reduce((acc, p) => acc.add(p), new THREE.Vector3()).divideScalar(ring);
-    const cp: number[] = [centre.x, centre.y, centre.z];
+    const center = pts.reduce((acc, p) => acc.add(p), new THREE.Vector3()).divideScalar(ring);
+    const cp: number[] = [center.x, center.y, center.z];
     for (const p of pts) cp.push(p.x, p.y, p.z);
     const ci: number[] = [];
     for (let i = 0; i < ring; i++) {

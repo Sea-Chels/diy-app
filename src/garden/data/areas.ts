@@ -19,7 +19,8 @@ export type AreaId =
   | 'tools';
 
 /** Things that move out of the way so an area can be seen. */
-export type LidId = 'bedFront' | 'shedDoors' | 'compostSlats' | 'rowCover';
+export const LIDS = ['bedFront', 'shedDoors', 'compostSlats', 'rowCover'] as const;
+export type LidId = (typeof LIDS)[number];
 
 export interface AreaInfo {
   id: AreaId;

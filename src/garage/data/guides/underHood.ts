@@ -4,7 +4,7 @@ export const UNDER_HOOD_GUIDES: Guide[] = [
   {
     id: 'hood-latch',
     title: 'Sticky hood latch',
-    parts: ['hood'],
+    spots: ['hood'],
     aliases: ['hood wont open', 'hood release', 'latch stuck'],
     difficulty: 1,
     minutes: [5, 10],
@@ -23,7 +23,7 @@ export const UNDER_HOOD_GUIDES: Guide[] = [
   {
     id: 'power-steering-fluid',
     title: 'Top up power steering fluid',
-    parts: ['engine'],
+    spots: ['engine'],
     aliases: ['whining when turning', 'steering fluid', 'hard steering'],
     difficulty: 1,
     minutes: [5, 10],
@@ -43,7 +43,7 @@ export const UNDER_HOOD_GUIDES: Guide[] = [
   {
     id: 'horn-fuse',
     title: 'Dead horn',
-    parts: ['fusebox_engine'],
+    spots: ['fusebox_engine'],
     aliases: ['horn not working', 'horn relay'],
     difficulty: 1,
     minutes: [10, 20],

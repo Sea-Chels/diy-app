@@ -2,7 +2,7 @@ import type { Guide } from '../guides';
 
 export const COMPOST_GUIDES: Guide[] = [
   {
-    id: 'build-compost-bays', title: 'Build a three-bay compost bin', areas: ['compost'], aliases: ['compost bin', 'pallets', 'three bin', 'compost bay'],
+    id: 'build-compost-bays', title: 'Build a three-bay compost bin', spots: ['compost'], aliases: ['compost bin', 'pallets', 'three bin', 'compost bay'],
     kind: 'build', difficulty: 2, minutes: [180, 360], savings: 'free with reclaimed pallets',
     tools: ['Drill/driver', 'Saw', 'Level', 'Post-hole digger (optional)'],
     supplies: ['7 pallets marked HT (heat-treated), or untreated lumber', '1×6 boards for removable front slats', '2×2 cleats for slat slots', 'Exterior screws, hardware cloth (to stop rats)'],
@@ -19,7 +19,7 @@ export const COMPOST_GUIDES: Guide[] = [
     query: 'build three bin compost system pallets', featured: true,
   },
   {
-    id: 'hot-compost', title: 'Make hot compost', areas: ['compost'], aliases: ['how to compost', 'browns greens', 'carbon nitrogen', 'compost ratio', 'turning compost'],
+    id: 'hot-compost', title: 'Make hot compost', spots: ['compost'], aliases: ['how to compost', 'browns greens', 'carbon nitrogen', 'compost ratio', 'turning compost'],
     kind: 'grow', difficulty: 2, minutes: [60, 120], wait: 'Finished in 2–4 months if turned; 6–12 months if left',
     tools: ['Pitchfork', 'Compost thermometer', 'Hose'], supplies: ['Browns: dry leaves, straw, shredded cardboard, wood chips', 'Greens: grass clippings, kitchen scraps, coffee grounds, manure (herbivores only)'],
     summary: 'Mix roughly 2–3 parts browns to 1 part greens by volume, keep it as damp as a wrung-out sponge and turn it. A good pile reaches 130–160°F in days and breaks down fast.',
@@ -35,7 +35,7 @@ export const COMPOST_GUIDES: Guide[] = [
     query: 'hot composting method browns greens ratio turning', featured: true,
   },
   {
-    id: 'compost-problems', title: 'Compost smells or won\'t heat up', areas: ['compost'], aliases: ['smelly compost', 'ammonia', 'slimy', 'cold pile', 'flies', 'rats'],
+    id: 'compost-problems', title: 'Compost smells or won\'t heat up', spots: ['compost'], aliases: ['smelly compost', 'ammonia', 'slimy', 'cold pile', 'flies', 'rats'],
     kind: 'fix', difficulty: 1, minutes: [20, 45],
     tools: ['Pitchfork'], supplies: ['Dry leaves or shredded cardboard', 'Fresh grass clippings or coffee grounds'],
     summary: 'Compost problems come down to the mix, moisture or air. Use your nose and hand to diagnose.',
@@ -49,7 +49,7 @@ export const COMPOST_GUIDES: Guide[] = [
     query: 'compost troubleshooting smell not heating',
   },
   {
-    id: 'worm-bin', title: 'Start a worm bin', areas: ['compost', 'pantry'], aliases: ['vermicompost', 'worm castings', 'red wigglers', 'indoor compost'],
+    id: 'worm-bin', title: 'Start a worm bin', spots: ['compost', 'pantry'], aliases: ['vermicompost', 'worm castings', 'red wigglers', 'indoor compost'],
     kind: 'build', difficulty: 1, minutes: [30, 60], wait: 'First castings in 2–3 months',
     tools: ['Drill'], supplies: ['Two stackable plastic totes', 'Shredded newspaper or cardboard for bedding', '1 lb red wiggler worms (Eisenia fetida)', 'A handful of soil'],
     summary: 'Red wigglers turn kitchen scraps into rich worm castings in a bin small enough for a garage or under the sink.',

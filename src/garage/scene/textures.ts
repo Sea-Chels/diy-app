@@ -1,13 +1,19 @@
-import { canvasTex, label, stripes } from '../../shared/scene/kit';
-import { PALETTE } from '../../shared/theme';
+import type * as THREE from 'three';
+import { canvasTex, label, mapped, stripes } from '../../shared/scene/kit';
+import { cssHex, PALETTE } from '../../shared/theme';
 import { C } from './kit';
 
-const css = (c: number) => `#${c.toString(16).padStart(6, '0')}`;
 
 // Built once and shared by both bodies, so swapping sedan/SUV doesn't make new canvases.
-const once = <T>(make: () => T) => {
-  let v: T | undefined;
-  return () => (v ??= make());
+const once = (make: () => THREE.Texture) => {
+  let v: THREE.Texture | undefined;
+  return () => {
+    if (!v) {
+      v = make();
+      v.userData.shared = true;
+    }
+    return v;
+  };
 };
 
 /**
@@ -17,7 +23,7 @@ const once = <T>(make: () => T) => {
 export const tireTex = once(() =>
   canvasTex(1024, 128, (ctx) => {
     const band = (v0: number, v1: number) => [(1 - v1) * 128, (v1 - v0) * 128] as const;
-    ctx.fillStyle = css(C.tire);
+    ctx.fillStyle = cssHex(C.tire);
     ctx.fillRect(0, 0, 1024, 128);
     const [ty, th] = band(3 / 8, 4 / 8);
     ctx.fillStyle = '#141219';
@@ -37,6 +43,7 @@ export const tireTex = once(() =>
 );
 
 export const plateTex = once(() => label([{ text: 'DIY·4U', size: 46, color: PALETTE.ink }, { text: 'GARAGE STATE', size: 15, color: '#2b6cb0' }], '#e8f2ff', 256, 80));
+export const plateMat = () => mapped(0xffffff, plateTex(), { shine: 0.5, halftone: 0.3 });
 /** The MX-5's oval mouth: grille mesh inside a stadium outline, transparent outside it. */
 export const mouthTex = once(() =>
   canvasTex(512, 96, (ctx) => {
@@ -54,14 +61,14 @@ export const mouthTex = once(() =>
 );
 export const radiatorTex = once(() => stripes([60, 1], '#8a91a2', '#2b2f3a'));
 export const seatTex = once(() => stripes([1, 5], '#47434f', '#34313d'));
-export const engineLabel = once(() => label([{ text: 'DIY', size: 64, color: '#e6ecf5' }, { text: '2.0 · 16V', size: 22, color: PALETTE.cyan }], css(C.cover), 256, 128));
+export const engineLabel = once(() => label([{ text: 'DIY', size: 64, color: '#e6ecf5' }, { text: '2.0 · 16V', size: 22, color: PALETTE.cyan }], cssHex(C.cover), 256, 128));
 export const batteryLabel = once(() => label([{ text: '12V', size: 52, color: PALETTE.ink }, { text: 'DIY POWER', size: 20, color: PALETTE.ink }], PALETTE.yellow, 256, 128));
-export const fuseLabel = once(() => label([{ text: 'FUSE', size: 44, color: '#e6ecf5' }, { text: '· RELAY ·', size: 20, color: PALETTE.muted }], css(C.darkPart), 256, 128));
+export const fuseLabel = once(() => label([{ text: 'FUSE', size: 44, color: '#e6ecf5' }, { text: '· RELAY ·', size: 20, color: PALETTE.muted }], cssHex(C.darkPart), 256, 128));
 
 /** The washer cap's windshield-and-spray symbol, the one every car uses. */
 export const washerIcon = once(() =>
   canvasTex(128, 128, (ctx) => {
-    ctx.fillStyle = css(C.washerCap);
+    ctx.fillStyle = cssHex(C.washerCap);
     ctx.fillRect(0, 0, 128, 128);
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 8;
@@ -86,7 +93,7 @@ export const washerIcon = once(() =>
 /** The oil can with a drip, as printed on oil filler caps. */
 export const oilIcon = once(() =>
   canvasTex(128, 128, (ctx) => {
-    ctx.fillStyle = css(C.oil);
+    ctx.fillStyle = cssHex(C.oil);
     ctx.fillRect(0, 0, 128, 128);
     ctx.fillStyle = PALETTE.ink;
     ctx.beginPath();

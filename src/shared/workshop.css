@@ -1,6 +1,7 @@
 /* Shared by the 3D workshop pages, on top of base.css. */
+@import './media.css';
 .topbar .spacer { flex: 1; }
-.scene-menu { position: absolute; top: var(--overlay-gap); left: 16px; z-index: 3; }
+.scene-menu { position: absolute; top: var(--overlay-gap); left: 16px; z-index: var(--z-overlay); }
 .scene-menu.open .paint-card { display: flex; }
 .paint-card .seg button:disabled { opacity: 0.35; cursor: not-allowed; }
 .swatches.dim { opacity: 0.35; }
@@ -10,16 +11,16 @@
 .chip.kind { font-weight: 600; }
 .chip.kind-fix { color: var(--peach); background: color-mix(in srgb, var(--coral) 14%, transparent); }
 .chip:is(.kind-swap, .kind-build, .kind-install) { color: var(--accent); background: color-mix(in srgb, var(--cyan) 12%, transparent); }
-.chip:is(.kind-setup, .kind-preserve) { color: var(--lilac); background: rgba(155,92,255,0.16); }
+.chip:is(.kind-setup, .kind-preserve) { color: var(--lilac); background: rgb(var(--advise) / 0.16); }
 .chip:is(.kind-grow, .kind-maintain) { color: var(--mint); background: color-mix(in srgb, var(--green) 13%, transparent); }
 .chip.kind-finish { color: var(--yellow); background: color-mix(in srgb, var(--yellow) 13%, transparent); }
 
 .panel-links { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 14px; }
 .link-chip {
   display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: var(--pill); font-size: 0.8rem;
-  background: rgba(255,255,255,0.04); border: 1px solid var(--line); color: var(--muted); text-decoration: none;
+  background: rgb(var(--hi) / 0.04); border: 1px solid var(--line); color: var(--muted); text-decoration: none;
 }
-.link-chip:hover { color: var(--text); border-color: rgba(255,255,255,0.22); }
+.link-chip:hover { color: var(--text); border-color: rgb(var(--hi) / 0.22); }
 button.link-chip { cursor: pointer; }
 .repair-body .panel-links { margin: 0; }
 
@@ -36,7 +37,29 @@ button.link-chip { cursor: pointer; }
 .ghost-btn.danger:hover { color: var(--diff-3); border-color: color-mix(in srgb, var(--red) 40%, transparent); }
 .opt-name { font-weight: 650; line-height: 1.25; }
 
-@media (max-width: 720px) {
+/* Picker modals (the PC parts picker, the garden bed planner): a list beside a summary column. */
+.builder-modal { width: min(1080px, 100%); --side-w: 320px; --list-gap: 8px; --side-gap: 12px; }
+.builder-body { display: grid; grid-template-columns: minmax(0, 1fr) var(--side-w); gap: 18px; overflow: hidden; padding: 0; }
+.builder-list { overflow-y: auto; padding: 16px 0 16px 18px; display: flex; flex-direction: column; gap: var(--list-gap); }
+.builder-side { overflow-y: auto; padding: 16px 18px 16px 0; display: flex; flex-direction: column; gap: var(--side-gap); }
+
+/* Small caps tag beside a name; a workshop sets --badge (and --badge-text if the tint is too dark to read). */
+.badge {
+  font-size: 0.66rem; font-style: normal; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 6px; border-radius: var(--r-sm); font-weight: 700;
+  background: color-mix(in srgb, var(--badge) 16%, transparent); color: var(--badge-text, var(--badge));
+}
+
+@media (--narrow) {
+  .builder-body { grid-template-columns: 1fr; overflow-y: auto; }
+  .builder-list { overflow: visible; padding: 14px; }
+  .builder-side { overflow: visible; padding: 0 14px 18px; }
+}
+
+@media (--phone) {
   .hint { top: var(--overlay-row); }
   .topbar .spacer { display: none; }
+  .lbl-long { display: none; }
+  /* Topbars with long labels are the crowded ones. */
+  .topbar-actions:has(.lbl-short) .ghost-btn { padding: 7px 10px; white-space: nowrap; }
 }
+@media (--above-phone) { .lbl-short { display: none; } }

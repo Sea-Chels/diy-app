@@ -3,8 +3,8 @@ import { ESFI, POWER_OFF } from './common';
 
 export const LIGHTS_GUIDES: Guide[] = [
   {
-    id: 'replace-light-fixture', title: 'Replace a ceiling light fixture', areas: ['lights'], aliases: ['light fixture', 'flush mount', 'chandelier', 'pendant', 'ceiling light'],
-    kind: 'install', difficulty: 2, minutes: [30, 90], savings: '$100–200',
+    id: 'replace-light-fixture', title: 'Replace a ceiling light fixture', spots: ['lights'], aliases: ['light fixture', 'flush mount', 'chandelier', 'pendant', 'ceiling light'],
+    kind: 'install', difficulty: 2, minutes: [30, 90], savings: 'saves $100–200',
     tools: ['screwdriver', 'voltage-tester', 'strippers', 'pliers', 'glasses', 'ladder'],
     supplies: ['New fixture', 'Wire connectors'],
     summary: 'Turn the breaker off (not just the switch), take the old fixture down, attach the new crossbar and connect black to black, white to white, ground to ground.',
@@ -20,8 +20,8 @@ export const LIGHTS_GUIDES: Guide[] = [
     query: 'how to replace a ceiling light fixture safely',
   },
   {
-    id: 'install-ceiling-fan', title: 'Install a ceiling fan', areas: ['lights'], aliases: ['ceiling fan', 'fan install', 'fan rated box', 'downrod', 'replace light with fan'],
-    kind: 'install', difficulty: 3, minutes: [120, 240], savings: '$150–300',
+    id: 'install-ceiling-fan', title: 'Install a ceiling fan', spots: ['lights'], aliases: ['ceiling fan', 'fan install', 'fan rated box', 'downrod', 'replace light with fan'],
+    kind: 'install', difficulty: 3, minutes: [120, 240], savings: 'saves $150–300',
     tools: ['screwdriver', 'drill', 'voltage-tester', 'strippers', 'pliers', 'glasses', 'ladder'],
     supplies: ['Ceiling fan', 'Fan-rated ceiling box and brace (if the box isn\'t marked for fans)', 'Wire connectors'],
     summary: 'A fan must hang from a box marked "acceptable for fan support", because a light box can pull loose as the fan wobbles. Swap the box first if you need to, then follow the fan\'s mounting kit.',
@@ -38,7 +38,7 @@ export const LIGHTS_GUIDES: Guide[] = [
     query: 'how to install a ceiling fan fan rated box brace', featured: true,
   },
   {
-    id: 'wobbly-fan', title: 'Fix a wobbly or noisy ceiling fan', areas: ['lights'], aliases: ['wobble', 'fan balance', 'noisy fan', 'clicking fan', 'fan direction'],
+    id: 'wobbly-fan', title: 'Fix a wobbly or noisy ceiling fan', spots: ['lights'], aliases: ['wobble', 'fan balance', 'noisy fan', 'clicking fan', 'fan direction'],
     kind: 'fix', difficulty: 1, minutes: [20, 60], savings: 'free with the balancing kit',
     tools: ['screwdriver', 'tape', 'ladder'],
     supplies: ['Fan balancing kit (clip and weights)'],
@@ -47,13 +47,13 @@ export const LIGHTS_GUIDES: Guide[] = [
       'Turn the fan off. Tighten the blade screws, the blade arm screws and the canopy and downrod screws.',
       'Measure from the ceiling to each blade tip: if one is off, gently bend that arm or swap it.',
       'Clip the balancing clip mid-way along one blade and run the fan. Move it blade to blade to find where wobble drops most.',
-      'Slide the clip in and out on that blade to fine-tune, then stick a weight on the blade\'s centreline at that spot.',
+      'Slide the clip in and out on that blade to fine-tune, then stick a weight on the blade\'s centerline at that spot.',
       'Clicking? Check the light kit glass and the switch housing screws. Use the direction switch: counter-clockwise (seen from below) for summer breeze, clockwise on low to push warm air down in winter.',
     ],
     query: 'how to balance a wobbly ceiling fan',
   },
   {
-    id: 'flickering-lights', title: 'Track down flickering lights', areas: ['lights', 'utility'], aliases: ['flicker', 'dimming lights', 'lights dim', 'buzzing'],
+    id: 'flickering-lights', title: 'Track down flickering lights', spots: ['lights', 'utility'], aliases: ['flicker', 'dimming lights', 'lights dim', 'buzzing'],
     kind: 'fix', difficulty: 1, minutes: [10, 30], savings: 'free when it\'s the bulb or dimmer',
     tools: ['voltage-tester', 'screwdriver'],
     supplies: ['A known-good bulb', 'LED-compatible dimmer, if needed'],

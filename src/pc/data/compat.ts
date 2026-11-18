@@ -23,14 +23,15 @@ export interface Issue {
   also?: Category[];
 }
 
+/** A build's parts looked up from the catalog; a slot is undefined until it's picked. */
 export interface Picked {
-  cpu?: Cpu;
-  board?: Board;
-  ram?: Ram;
-  gpu?: Gpu;
-  cooler?: Cooler;
-  case?: Case;
-  psu?: Psu;
+  cpu: Cpu | undefined;
+  board: Board | undefined;
+  ram: Ram | undefined;
+  gpu: Gpu | undefined;
+  cooler: Cooler | undefined;
+  case: Case | undefined;
+  psu: Psu | undefined;
   storage: Storage[];
 }
 

@@ -3,16 +3,16 @@
  * removed, like a dollhouse. A kitchen runs along the back wall, a small
  * bathroom sits behind half-height walls in the back-left corner, and the
  * left wall carries the breaker panel, an outlet, a hole in the drywall and
- * the front door. Modelled in metres and scaled down; the contract with the
+ * the front door. Modelled in meters and scaled down; the contract with the
  * scene is `Rig`. Every AreaId in data/areas.ts gets a pick proxy, a beacon
  * and a view.
  */
 import * as THREE from 'three';
-import { tween, easeInOutCubic, lerp } from '../../shared/tween';
 import { disposeTree, shared, toon } from '../../shared/toon';
 import type { V3 } from '../../shared/scene/kit';
 import { hex } from '../../shared/theme';
 import type { StageRig, View } from '../../shared/scene/stage';
+import { createBeacons, createLids, glowMeshes, viewFrom } from '../../shared/scene/rigKit';
 import type { AreaId, LidId } from '../data/areas';
 import type { Setup } from '../data/setup';
 import { createCtx } from './ctx';
@@ -23,7 +23,7 @@ import { buildLeftWall } from './zones/leftWall';
 import { buildLiving, buildLights, buildPaintCorner, buildFloorCutaway } from './zones/living';
 import { buildExterior } from './zones/exterior';
 import { addCreases } from './creases';
-import { K, V, X0, Z0, WH } from './room';
+import { K, X0, Z0, WH } from './room';
 
 export type Rig = StageRig<AreaId, LidId>;
 
@@ -44,31 +44,9 @@ export function buildRig(s: Setup): Rig {
   const { XO, ZO, OV, porchBulb } = buildExterior(c);
   addCreases(c, fanBlades);
 
-  const glow = new Map<AreaId, THREE.Mesh[]>();
-  for (const [id, g] of areas) {
-    const list: THREE.Mesh[] = [];
-    g.traverse((o) => {
-      const m = o as THREE.Mesh;
-      // Everything visible except ink hulls and invisible pick boxes: the outline traces its silhouette.
-      const mat = m.material as THREE.Material & { opacity: number };
-      if (m.isMesh && !m.userData.ink && !Array.isArray(m.material) && mat.visible !== false && !(mat.transparent && mat.opacity < 0.05)) list.push(m);
-      else if (m.isMesh && Array.isArray(m.material)) list.push(m);
-    });
-    glow.set(id, list);
-  }
+  const glow = glowMeshes(areas);
 
-  const beacons = new Map<AreaId, THREE.Mesh>();
-  const beaconGeom = new THREE.SphereGeometry(0.09, 16, 12);
-  const beaconAt = (id: AreaId, p: V3) => {
-    const bm = new THREE.Mesh(beaconGeom, new THREE.MeshBasicMaterial({ color: hex('cyan'), transparent: true, opacity: 0.92, depthTest: false }));
-    bm.position.set(...p);
-    bm.renderOrder = 10;
-    bm.userData.area = id;
-    bm.userData.beacon = true;
-    root.add(bm);
-    beacons.set(id, bm);
-    picks.push(bm);
-  };
+  const { beacons, beaconAt } = createBeacons<AreaId>(root, { radius: 0.09, segments: [16, 12], onTop: true, picks });
   beaconAt('counters', [1.15, 1.15, Z0 + 0.45]);
   beaconAt('sink', [SINK.cx, 1.4, Z0 + 0.45]);
   beaconAt('appliances', [-1.38, 1.3, Z0 + 0.6]);
@@ -92,11 +70,7 @@ export function buildRig(s: Setup): Rig {
       : (c: THREE.Vector3) => c.x > X0 * K && c.z > Z0 * K;
   }
 
-  const view = (target: V3, dir: V3, dist: number): View => {
-    const t = V(...target);
-    const p = t.clone().addScaledVector(V(...dir).normalize(), dist);
-    return { target: [t.x * K, t.y * K, t.z * K], pos: [p.x * K, p.y * K, p.z * K] };
-  };
+  const view = (target: V3, dir: V3, dist: number) => viewFrom(target, dir, dist, K);
   const views: Record<AreaId, View> = {
     counters: view([0.45, 1.05, Z0 + 0.4], [0.15, 0.5, 1], 3.4),
     sink: view([SINK.cx, 0.7, Z0 + 0.35], [0.15, 0.35, 1], 2.3),
@@ -116,8 +90,7 @@ export function buildRig(s: Setup): Rig {
   };
   const overview: View = view([0, 0.6, 0.1], [0.85, 0.95, 1.1], 11.5);
 
-
-  const lids = new Map<LidId, { open: boolean; k: number }>();
+  const { setLid } = createLids<LidId>(lidHooks, { tag: 'home-lid', ms: 900 });
   let clock = 0;
   const drops: THREE.Mesh[] = [];
   const dropMat = new THREE.MeshBasicMaterial({ color: hex('water') });
@@ -147,32 +120,13 @@ export function buildRig(s: Setup): Rig {
 
   return {
     key: rigKey(s),
-    group: (() => {
-      const g = new THREE.Group();
-      g.add(root);
-      return g;
-    })(),
+    group: new THREE.Group().add(root),
     picks,
     glow,
     beacons,
     views,
     overview,
-    setLid(lid, open) {
-      const st = lids.get(lid) ?? { open: false, k: 0 };
-      lids.set(lid, st);
-      if (st.open === open) return;
-      st.open = open;
-      const k0 = st.k;
-      tween({
-        duration: 900,
-        ease: easeInOutCubic,
-        tag: `hlid-${lid}`,
-        update: (t) => {
-          st.k = lerp(k0, open ? 1 : 0, t);
-          lidHooks[lid]?.(st.k);
-        },
-      });
-    },
+    setLid,
     poke(id) {
       if (id === 'sink') for (let i = 0; i < 5; i++) setTimeout(drip, i * 160);
       else if (id === 'lights') {

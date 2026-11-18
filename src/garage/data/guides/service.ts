@@ -1,11 +1,11 @@
 import type { Guide } from '../guides';
-import { JACK_WARNING, HOT_ENGINE } from './common';
+import { JACK_WARNING, WARM_OIL } from './common';
 
 export const SERVICE_GUIDES: Guide[] = [
   {
     id: 'oil-change',
     title: 'Engine oil & filter change',
-    parts: ['oil', 'engine'],
+    spots: ['oil', 'engine'],
     aliases: ['oil', 'oil filter', 'drain plug', 'motor oil', 'synthetic', 'service'],
     difficulty: 2,
     minutes: [30, 60],
@@ -23,7 +23,7 @@ export const SERVICE_GUIDES: Guide[] = [
       'Lower the car, pour in the specified amount minus half a quart, wait a minute, check the dipstick, then top to the full mark.',
       'Start the engine, check for drips at the plug and filter, then reset the maintenance light if your car has one.',
     ],
-    cautions: [HOT_ENGINE, JACK_WARNING, 'Used oil goes to any auto parts store for free recycling, never down a drain.'],
+    cautions: [WARM_OIL, JACK_WARNING, 'Used oil goes to any auto parts store for free recycling, never down a drain.'],
     powertrains: ['gas', 'diesel', 'hybrid'],
     query: 'oil change',
     featured: true,
@@ -31,7 +31,7 @@ export const SERVICE_GUIDES: Guide[] = [
   {
     id: 'engine-air-filter',
     title: 'Engine air filter',
-    parts: ['airbox'],
+    spots: ['airbox'],
     aliases: ['air filter', 'intake filter', 'airbox'],
     difficulty: 1,
     minutes: [5, 15],
@@ -53,7 +53,7 @@ export const SERVICE_GUIDES: Guide[] = [
   {
     id: 'cabin-air-filter',
     title: 'Cabin air filter',
-    parts: ['cabin'],
+    spots: ['cabin'],
     aliases: ['pollen filter', 'ac filter', 'glovebox filter', 'hvac filter', 'smell'],
     difficulty: 1,
     minutes: [10, 20],
@@ -74,7 +74,7 @@ export const SERVICE_GUIDES: Guide[] = [
   {
     id: 'wiper-blades',
     title: 'Wiper blades',
-    parts: ['wiper'],
+    spots: ['wiper'],
     aliases: ['windshield wipers', 'wiper refill', 'streaking', 'chatter'],
     difficulty: 1,
     minutes: [5, 10],
@@ -94,7 +94,7 @@ export const SERVICE_GUIDES: Guide[] = [
   {
     id: 'washer-fluid',
     title: 'Top up washer fluid',
-    parts: ['washer'],
+    spots: ['washer'],
     aliases: ['windshield washer', 'washer reservoir', 'spray'],
     difficulty: 1,
     minutes: [2, 5],

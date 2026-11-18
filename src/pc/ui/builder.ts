@@ -5,8 +5,9 @@
 import { CATEGORIES, CATEGORY_LABEL, PART_BY_ID, partsIn, pppSearch, type Category, type Part } from '../data/catalog';
 import { checkBuild, conflictsFor, estimateWatts, resolve, suggestedPsu, type Build, type Issue } from '../data/compat';
 import type { Setup } from '../data/setup';
-import { getState, setSetup, setState } from '../store';
+import { getState, select, setSetup, setState } from '../store';
 import { h, clear } from '../../shared/dom';
+import { keepFocus } from '../../shared/focus';
 import { icon, type IconName } from '../../shared/icons';
 import { closeModal, openModal } from '../../shared/modal';
 
@@ -34,10 +35,9 @@ export function openBuilder(focus?: Category): void {
       return;
     }
     const next = { ...b, [part.cat]: b[part.cat] === part.id ? undefined : part.id };
-    setBuild(next);
     // Move on to the next empty category.
     if (next[part.cat]) active = CATEGORIES.find((c) => c !== part.cat && (c === 'storage' ? !next.storage.length : !next[c])) ?? null;
-    render();
+    setBuild(next);
   }
 
   function renderList(issues: Issue[]): void {
@@ -95,7 +95,7 @@ export function openBuilder(focus?: Category): void {
     side.append(h('ul', { class: 'issues' }, ...issues.map((i) => h('li', { class: `lvl-${i.level}` }, icon(LEVEL_ICON[i.level], 15), h('span', {}, i.text)))));
 
     const patch = setupFromBuild(b);
-    const show = h('button', { class: 'primary-btn', disabled: !patch, onClick: () => { if (!patch) return; setSetup(patch); setState({ selectedPart: null, openGuide: null }); closeModal(); } }, icon('cpu', 16), 'Show this build in 3D');
+    const show = h('button', { class: 'primary-btn', disabled: !patch, onClick: () => { if (!patch) return; setSetup(patch); select(null); closeModal(); } }, icon('cpu', 16), 'Show this build in 3D');
     const copy = h('button', { class: 'ghost-btn', onClick: () => {
       const text = CATEGORIES.flatMap((c) => (c === 'storage' ? b.storage : b[c] ? [b[c]!] : []).map((id) => `${CATEGORY_LABEL[c]}: ${PART_BY_ID.get(id)?.name}`)).join('\n');
       navigator.clipboard?.writeText(text || 'Empty build').then(() => {
@@ -113,7 +113,8 @@ export function openBuilder(focus?: Category): void {
     );
   }
 
-  function render(): void {
+  const render = () => keepFocus(body, renderNow);
+  function renderNow(): void {
     const issues = checkBuild(build());
     renderList(issues);
     renderSide(issues);

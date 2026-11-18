@@ -2,15 +2,15 @@
  * The comic garden: galvanized and cedar raised beds on gravel, a Three
  * Sisters patch, compost bays, a hydroponic rack, a herb spiral, a fruit
  * corner, a shed pantry, a rain barrel, a potting bench, an arbor and a tool
- * fence. Modelled in metres and scaled down; the contract with the scene is
+ * fence. Modelled in meters and scaled down; the contract with the scene is
  * `Rig`. Every AreaId in data/areas.ts gets a pick proxy, a beacon and a view.
  */
 import * as THREE from 'three';
-import { tween, easeInOutCubic, lerp } from '../../shared/tween';
 import { disposeTree, shared } from '../../shared/toon';
-import { jitter, type V3 } from '../../shared/scene/kit';
+import { jitter, V, type V3 } from '../../shared/scene/kit';
 import { hex } from '../../shared/theme';
 import type { StageRig, View } from '../../shared/scene/stage';
+import { createBeacons, createLids, glowMeshes, viewFrom } from '../../shared/scene/rigKit';
 import type { AreaId, LidId } from '../data/areas';
 import type { Setup } from '../data/setup';
 import { createCtx } from './ctx';
@@ -23,7 +23,7 @@ import { buildHerbSpiral, buildPollinators } from './zones/herbs';
 import { buildFruit, buildArbor } from './zones/fruit';
 import { buildPottingBench } from './zones/bench';
 import { buildWildlife } from './zones/wildlife';
-import { K, V, LOW_SPHERE } from './geometry';
+import { K, LOW_SPHERE } from './geometry';
 
 export type Rig = StageRig<AreaId, LidId>;
 
@@ -47,30 +47,9 @@ export function buildRig(s: Setup): Rig {
   buildArbor(c);
   const { bugs } = buildWildlife(c);
 
-  const glow = new Map<AreaId, THREE.Mesh[]>();
-  for (const [id, g] of areas) {
-    const list: THREE.Mesh[] = [];
-    g.traverse((o) => {
-      const m = o as THREE.Mesh;
-      // Everything visible except ink hulls and invisible pick boxes: the outline traces its silhouette.
-      const mat = m.material as THREE.Material & { isLineMaterial?: boolean; opacity: number };
-      if (m.isMesh && !m.userData.ink && mat.visible !== false && !mat.isLineMaterial && !(mat.transparent && mat.opacity < 0.05)) list.push(m);
-    });
-    glow.set(id, list);
-  }
+  const glow = glowMeshes(areas);
 
-  const beacons = new Map<AreaId, THREE.Mesh>();
-  const beaconGeom = new THREE.SphereGeometry(0.11, 16, 12);
-  const beaconAt = (id: AreaId, p: V3) => {
-    const bm = new THREE.Mesh(beaconGeom, new THREE.MeshBasicMaterial({ color: hex('cyan'), transparent: true, opacity: 0.92, depthTest: false }));
-    bm.position.set(...p);
-    bm.renderOrder = 10;
-    bm.userData.area = id;
-    bm.userData.beacon = true;
-    root.add(bm);
-    beacons.set(id, bm);
-    picks.push(bm);
-  };
+  const { beacons, beaconAt } = createBeacons<AreaId>(root, { radius: 0.11, segments: [16, 12], onTop: true, picks });
   const pos = (id: AreaId) => areas.get(id)!.position;
   const at = (id: AreaId, dx: number, y: number, dz: number): V3 => [pos(id).x + dx, y, pos(id).z + dz];
   beaconAt('bed', at('bed', 1.2, 0.95, 0.6));
@@ -88,11 +67,7 @@ export function buildRig(s: Setup): Rig {
   beaconAt('seedlings', at('seedlings', 0.0, 1.65, 0.0));
   beaconAt('arbor', at('arbor', -0.95, 2.55, 0.0));
 
-  const view = (target: V3, dir: V3, dist: number): View => {
-    const t = V(...target);
-    const p = t.clone().addScaledVector(V(...dir).normalize(), dist);
-    return { target: [t.x * K, t.y * K, t.z * K], pos: [p.x * K, p.y * K, p.z * K] };
-  };
+  const view = (target: V3, dir: V3, dist: number) => viewFrom(target, dir, dist, K);
   const views: Record<AreaId, View> = {
     bed: view(at('bed', 0.65, 0.4, 0.3), [0.3, 0.55, 1], 3.9),
     kitchen: view(at('kitchen', 0, 0.75, 0), [0.25, 0.6, 1], 3.6),
@@ -111,8 +86,7 @@ export function buildRig(s: Setup): Rig {
   };
   const overview: View = view([0, 0.2, 0.2], [0.16, 0.72, 1], 15.5);
 
-
-  const lids = new Map<LidId, { open: boolean; k: number }>();
+  const { setLid } = createLids<LidId>(lidHooks, { tag: 'garden-lid', ms: 900 });
   let gustUntil = 0;
   let clock = 0;
   const drops: THREE.Mesh[] = [];
@@ -122,32 +96,13 @@ export function buildRig(s: Setup): Rig {
 
   return {
     key: rigKey(s),
-    group: (() => {
-      const g = new THREE.Group();
-      g.add(root);
-      return g;
-    })(),
+    group: new THREE.Group().add(root),
     picks,
     glow,
     beacons,
     views,
     overview,
-    setLid(lid, open) {
-      const st = lids.get(lid) ?? { open: false, k: 0 };
-      lids.set(lid, st);
-      if (st.open === open) return;
-      st.open = open;
-      const k0 = st.k;
-      tween({
-        duration: 900,
-        ease: easeInOutCubic,
-        tag: `glid-${lid}`,
-        update: (t) => {
-          st.k = lerp(k0, open ? 1 : 0, t);
-          lidHooks[lid]?.(st.k);
-        },
-      });
-    },
+    setLid,
     poke(id) {
       if (id === 'water' || id === 'hydro') {
         for (let i = 0; i < 6; i++) {

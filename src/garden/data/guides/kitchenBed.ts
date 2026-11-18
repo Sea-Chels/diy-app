@@ -3,7 +3,7 @@ import { EXTENSION } from './common';
 
 export const KITCHEN_BED_GUIDES: Guide[] = [
   {
-    id: 'plant-tomatoes', title: 'Plant tomatoes deep and cage them', areas: ['kitchen'], aliases: ['tomato', 'transplant', 'cage', 'stake', 'trellis'],
+    id: 'plant-tomatoes', title: 'Plant tomatoes deep and cage them', spots: ['kitchen'], aliases: ['tomato', 'transplant', 'cage', 'stake', 'trellis'],
     kind: 'grow', difficulty: 1, minutes: [15, 30],
     tools: ['Trowel', 'Tomato cages or 6 ft stakes and soft ties'], supplies: ['Tomato transplants', 'Compost', 'A handful of balanced organic fertilizer per hole'],
     summary: 'Tomatoes grow roots all along a buried stem, so planting deep makes a stronger plant. Put supports in now, before the roots spread.',
@@ -18,7 +18,7 @@ export const KITCHEN_BED_GUIDES: Guide[] = [
     plants: ['tomato', 'basil', 'marigold'], query: 'plant tomatoes deep trench cage', featured: true,
   },
   {
-    id: 'prune-tomatoes', title: 'Prune tomato suckers', areas: ['kitchen'], aliases: ['suckers', 'pruning', 'indeterminate', 'determinate', 'too many leaves'],
+    id: 'prune-tomatoes', title: 'Prune tomato suckers', spots: ['kitchen'], aliases: ['suckers', 'pruning', 'indeterminate', 'determinate', 'too many leaves'],
     kind: 'grow', difficulty: 1, minutes: [10, 20],
     tools: ['Clean fingers or snips'], supplies: [],
     summary: 'Suckers are shoots that grow in the angle between a leaf and the main stem. Removing some on vining (indeterminate) tomatoes means bigger, earlier fruit and better airflow.',
@@ -32,7 +32,7 @@ export const KITCHEN_BED_GUIDES: Guide[] = [
     plants: ['tomato'], query: 'how to prune tomato suckers indeterminate',
   },
   {
-    id: 'blossom-end-rot', title: 'Black, sunken bottoms on tomatoes', areas: ['kitchen'], aliases: ['blossom end rot', 'black spot on tomato', 'calcium', 'rotten bottom', 'peppers', 'zucchini'],
+    id: 'blossom-end-rot', title: 'Black, sunken bottoms on tomatoes', spots: ['kitchen'], aliases: ['blossom end rot', 'black spot on tomato', 'calcium', 'rotten bottom', 'peppers', 'zucchini'],
     kind: 'fix', difficulty: 1, minutes: [10, 20],
     tools: ['Watering can or drip line'], supplies: ['Mulch'],
     summary: 'Blossom-end rot is calcium not reaching the fruit, almost always from uneven watering rather than a lack of calcium in the soil. It often fixes itself after the first few fruit.',
@@ -46,21 +46,21 @@ export const KITCHEN_BED_GUIDES: Guide[] = [
     plants: ['tomato', 'pepper', 'zucchini'], query: 'blossom end rot tomatoes fix watering',
   },
   {
-    id: 'tomato-leaf-spots', title: 'Yellowing, spotted tomato leaves', areas: ['kitchen'], aliases: ['early blight', 'septoria', 'late blight', 'yellow leaves', 'brown spots'],
+    id: 'tomato-leaf-spots', title: 'Yellowing, spotted tomato leaves', spots: ['kitchen'], aliases: ['early blight', 'septoria', 'late blight', 'yellow leaves', 'brown spots'],
     kind: 'fix', difficulty: 1, minutes: [15, 30],
     tools: ['Clean pruners', 'Bucket for diseased leaves'], supplies: ['Mulch'],
-    summary: 'Spots with rings (early blight) or tiny dark-centred specks (septoria) start on the lowest leaves and climb up. Both are soil-splashed fungi you can slow down a lot.',
+    summary: 'Spots with rings (early blight) or tiny dark-centered specks (septoria) start on the lowest leaves and climb up. Both are soil-splashed fungi you can slow down a lot.',
     steps: [
       'Remove spotted lower leaves as soon as you see them and bin them (not the compost).',
       'Mulch so rain can\'t splash soil onto leaves; water at the base, in the morning.',
       'Prune for airflow and space plants properly.',
       'Rotate: don\'t grow tomatoes, peppers, eggplant or potatoes in the same spot for 3 years.',
-      'Big greasy grey-brown blotches that spread fast in cool wet weather may be late blight: remove whole plants, bag them and tell your Extension office.',
+      'Big greasy gray-brown blotches that spread fast in cool wet weather may be late blight: remove whole plants, bag them and tell your Extension office.',
     ],
     plants: ['tomato', 'potato'], links: [EXTENSION], query: 'tomato early blight septoria leaf spot organic control',
   },
   {
-    id: 'hornworms', title: 'Hornworms stripping tomatoes', areas: ['kitchen'], aliases: ['caterpillar', 'hornworm', 'leaves eaten', 'big green worm'],
+    id: 'hornworms', title: 'Hornworms stripping tomatoes', spots: ['kitchen'], aliases: ['caterpillar', 'hornworm', 'leaves eaten', 'big green worm'],
     kind: 'fix', difficulty: 1, minutes: [10, 20],
     tools: ['Bucket of soapy water', 'UV flashlight (they glow at night)'], supplies: ['Bt (Bacillus thuringiensis) if overrun'],
     summary: 'Fat green caterpillars with a horn on the tail can strip a plant in days. Look for black droppings on leaves below bare stems.',
@@ -74,7 +74,7 @@ export const KITCHEN_BED_GUIDES: Guide[] = [
     plants: ['tomato', 'pepper'], query: 'tomato hornworm control hand pick braconid',
   },
   {
-    id: 'companion-planting', title: 'Companion planting basics', areas: ['kitchen', 'sisters', 'pollinators'], aliases: ['companions', 'what grows together', 'plant together', 'bad neighbors', 'three sisters', 'trap crop'],
+    id: 'companion-planting', title: 'Companion planting basics', spots: ['kitchen', 'sisters', 'pollinators'], aliases: ['companions', 'what grows together', 'plant together', 'bad neighbors', 'three sisters', 'trap crop'],
     kind: 'grow', difficulty: 1, minutes: [15, 30],
     tools: ['The bed planner on this page'], supplies: [],
     summary: 'Some plants help each other: by shading, by feeding the soil, by luring pests away or by attracting predators. Others compete or share diseases. Use the bed planner to check pairs.',
@@ -89,7 +89,7 @@ export const KITCHEN_BED_GUIDES: Guide[] = [
     plants: ['tomato', 'basil', 'marigold', 'nasturtium', 'corn', 'beans', 'pumpkin'], query: 'companion planting guide vegetables what to plant together', featured: true,
   },
   {
-    id: 'succession-sowing', title: 'Succession sow for a steady harvest', areas: ['bed', 'tunnel'], aliases: ['succession planting', 'continuous harvest', 'lettuce all summer', 'relay'],
+    id: 'succession-sowing', title: 'Succession sow for a steady harvest', spots: ['bed', 'tunnel'], aliases: ['succession planting', 'continuous harvest', 'lettuce all summer', 'relay'],
     kind: 'grow', difficulty: 1, minutes: [10, 20],
     tools: ['Calendar or notebook'], supplies: ['Seed for lettuce, radish, beans, carrots, cilantro'],
     summary: 'Instead of sowing a whole row once, sow a little every 2–3 weeks so harvests overlap instead of all arriving at once.',

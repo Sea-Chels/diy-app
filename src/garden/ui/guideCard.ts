@@ -18,7 +18,7 @@ export function guideCard(g: Guide, open: boolean): HTMLElement {
       return [
         card.summary(g),
         g.wait && card.note('wait', 'sprout', g.wait),
-        g.savings && card.note('savings', 'savings', g.savings),
+        card.savings(g),
         card.videoButton(g.query),
         card.cautions(g),
         card.linkChips(g),

@@ -6,7 +6,7 @@ export const FRUITING_PLANTS: Plant[] = [
     id: 'tomato', name: 'Tomato', latin: 'Solanum lycopersicum', type: 'veg', life: 'annual', sun: 'full', water: 'medium', spacing: 24, height: '3–8 ft (indeterminate)',
     sow: 'Start indoors 6–8 weeks before your last frost. Plant out when nights stay above 50°F, burying the stem up to the top leaves.', days: '60–85 days from transplant',
     care: ['Cage or stake at planting time, before roots spread.', 'Water deeply and evenly, 1–2 inches a week; mulch to keep moisture steady.', 'On indeterminate types pinch the suckers below the first flower cluster.', 'Feed with compost at planting and a balanced fertilizer when fruit sets; too much nitrogen gives leaves, not fruit.'],
-    harvest: 'Pick when fully coloured and slightly soft, or at first blush and let them finish on the counter. Never refrigerate ripe tomatoes for flavour.',
+    harvest: 'Pick when fully colored and slightly soft, or at first blush and let them finish on the counter. Never refrigerate ripe tomatoes for flavor.',
     problems: ['Blossom-end rot (uneven watering)', 'Early blight and septoria leaf spot', 'Hornworms', 'Cracking after heavy rain'],
     friends: ['basil', 'marigold', 'carrot', 'onion', 'garlic', 'chives', 'parsley', 'nasturtium', 'borage', 'lettuce'], avoid: ['fennel', 'potato', 'corn', ...BRASSICAS, 'dill', 'walnut'], area: 'kitchen',
   },
@@ -21,7 +21,7 @@ export const FRUITING_PLANTS: Plant[] = [
     id: 'hotpepper', name: 'Hot pepper', latin: 'Capsicum annuum / chinense', type: 'veg', life: 'annual', sun: 'full', water: 'medium', spacing: 18, height: '1.5–4 ft',
     sow: 'Start indoors 8–12 weeks before last frost; habaneros and superhots are slow, so start them first.', days: '70–120 days from transplant',
     care: ['Same care as sweet peppers. A little water stress late in the season makes them hotter.', 'Wear gloves when handling superhots and wash before touching your face.'],
-    harvest: 'Pick at any colour; heat and sweetness peak when fully ripe. Dry, freeze or ferment into hot sauce.',
+    harvest: 'Pick at any color; heat and sweetness peak when fully ripe. Dry, freeze or ferment into hot sauce.',
     problems: ['Slow germination (keep warm)', 'Aphids', 'Blossom drop'], friends: ['basil', 'onion', 'tomato', 'carrot'], avoid: ['fennel'],
   },
   {

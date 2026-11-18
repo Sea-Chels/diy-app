@@ -5,7 +5,7 @@ export const ELECTRICAL_GUIDES: Guide[] = [
   {
     id: 'blown-fuse',
     title: 'Find and replace a blown fuse',
-    parts: ['fusebox_cabin', 'fusebox_engine'],
+    spots: ['fusebox_cabin', 'fusebox_engine'],
     aliases: ['fuse', 'no power', 'cigarette lighter', '12v socket', 'radio dead', 'wipers dead', 'lights dead'],
     difficulty: 1,
     minutes: [5, 20],
@@ -27,7 +27,7 @@ export const ELECTRICAL_GUIDES: Guide[] = [
   {
     id: 'battery-replace',
     title: 'Replace the 12V battery',
-    parts: ['battery'],
+    spots: ['battery'],
     aliases: ['car battery', 'dead battery', 'wont start', 'clicking', 'agm'],
     difficulty: 2,
     minutes: [20, 40],
@@ -52,7 +52,7 @@ export const ELECTRICAL_GUIDES: Guide[] = [
   {
     id: 'battery-terminals',
     title: 'Clean corroded battery terminals',
-    parts: ['battery'],
+    spots: ['battery'],
     aliases: ['corrosion', 'white powder', 'green crust', 'slow crank'],
     difficulty: 1,
     minutes: [10, 20],
@@ -73,7 +73,7 @@ export const ELECTRICAL_GUIDES: Guide[] = [
   {
     id: 'jump-start',
     title: 'Jump start a dead battery',
-    parts: ['battery'],
+    spots: ['battery'],
     aliases: ['jumper cables', 'boost', 'jump pack', 'dead'],
     difficulty: 1,
     minutes: [10, 15],

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.6.8/schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": { "includes": ["src/**/*.ts", "src/**/*.css", "e2e/**/*.ts", "*.ts"] },
+  "formatter": { "enabled": false },
+  "assist": { "enabled": false },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "style": { "noNonNullAssertion": "off", "noDescendingSpecificity": "off" },
+      "suspicious": { "useIterableCallbackReturn": "off" }
+    }
+  }
+}

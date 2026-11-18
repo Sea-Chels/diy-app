@@ -20,7 +20,8 @@ export type AreaId =
   | 'exterior';
 
 /** Things that move out of the way so an area can be seen. */
-export type LidId = 'sinkDoors' | 'sash' | 'tankLid' | 'vanityDoors' | 'panelDoor' | 'coverPlates' | 'frontDoor' | 'canopy' | 'drawer' | 'planks' | 'gutterGuard' | 'sidingPanel';
+export const LIDS = ['sinkDoors', 'sash', 'tankLid', 'vanityDoors', 'panelDoor', 'coverPlates', 'frontDoor', 'canopy', 'drawer', 'planks', 'gutterGuard', 'sidingPanel'] as const;
+export type LidId = (typeof LIDS)[number];
 
 export interface AreaInfo {
   id: AreaId;

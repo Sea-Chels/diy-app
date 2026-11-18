@@ -1,7 +1,7 @@
 /**
  * Stylized comic-book PC: a glass-sided case with a motherboard, CPU, cooler
  * (air, AIO or custom loop), RAM, GPU, drives and PSU, plus a monitor that
- * shows POST, the BIOS and an OS install. Modelled in millimetres and scaled
+ * shows POST, the BIOS and an OS install. Modelled in millimeters and scaled
  * down; the contract with the scene is `Rig`. Every PartId in data/parts.ts
  * gets hotspot meshes, a beacon and a camera view.
  */
@@ -9,8 +9,8 @@ import * as THREE from 'three';
 import { tween, easeInOutCubic, lerp } from '../../shared/tween';
 import { disposeTree } from '../../shared/toon';
 import type { V3 } from '../../shared/scene/kit';
-import { hex } from '../../shared/theme';
 import type { StageRig, View } from '../../shared/scene/stage';
+import { createBeacons, createLids, viewFrom } from '../../shared/scene/rigKit';
 import type { LidId, PartId } from '../data/parts';
 import type { Setup } from '../data/setup';
 import { createCtx } from './ctx';
@@ -24,7 +24,7 @@ import { K, FEET, ITX } from './layout';
 import { label } from './kit';
 
 export interface Rig extends StageRig<PartId, LidId> {
-  /** Colours and RGB update in place, without a rebuild. */
+  /** Colors and RGB update in place, without a rebuild. */
   setLook(s: Setup): void;
   setSpecs(s: Specs): void;
   /** The scene tells the rig what's selected so the monitor can follow along. */
@@ -35,7 +35,7 @@ export const rigKey = (s: Setup) => `${s.size}|${s.cooling}|${s.gpu}`;
 
 export function buildRig(s: Setup): Rig {
   const c = createCtx(s);
-  const { dm, W, H, D, L, root, hotspots, beacons, rgbMats, coolantMats, rotors, boost, mats } = c;
+  const { dm, W, H, D, L, root, hotspots, rgbMats, coolantMats, rotors, boost, mats } = c;
   const shell = buildCaseShell(c);
   const { innerX0, innerCx, bw, bh, P, glassPivot, ioz, btnX, ledMat, usb } = shell;
   const board = buildMotherboard(c, shell);
@@ -53,32 +53,25 @@ export function buildRig(s: Setup): Rig {
   const desk = buildDesk(c);
   const { mon, monX, monZ, screen } = desk;
 
-  type Lid = { open: boolean; k: number; apply: (k: number) => void };
-  const lids = new Map<LidId, Lid>();
-  const defineLid = (id: LidId, apply: (k: number) => void) => lids.set(id, { open: false, k: 0, apply });
-  defineLid('glass', (k) => (glassPivot.rotation.y = -1.3 * k));
-  defineLid('cooler', (k) => {
-    coolerG.position.set(-150 * k, 34 * Math.sin(k * Math.PI * 0.5), 0);
-    if (aioTubes.length) aioTubes.forEach((t) => setTube(t, coolerG.position));
-    loopCpuTubes.forEach((m) => (m.visible = k < 0.05));
-  });
-  defineLid('heatsink', (k) => {
-    sinkG.position.set(-55 * k, 20 * Math.sin(k * Math.PI), 0);
-    sinkG.rotation.y = 0.25 * k;
-  });
-  defineLid('shroud', (k) => (shroudG.rotation.z = 1.45 * k));
-
+  const { setLid } = createLids<LidId>({
+    glass: (k) => (glassPivot.rotation.y = -1.3 * k),
+    cooler: (k) => {
+      coolerG.position.set(-150 * k, 34 * Math.sin(k * Math.PI * 0.5), 0);
+      if (aioTubes.length) aioTubes.forEach((t) => setTube(t, coolerG.position));
+      loopCpuTubes.forEach((m) => (m.visible = k < 0.05));
+    },
+    heatsink: (k) => {
+      sinkG.position.set(-55 * k, 20 * Math.sin(k * Math.PI), 0);
+      sinkG.rotation.y = 0.25 * k;
+    },
+    shroud: (k) => (shroudG.rotation.z = 1.45 * k),
+  }, { tag: 'pc-lid', ms: (lid) => (lid === 'glass' ? 850 : 750) });
 
   const toRoot = (v: THREE.Vector3) => v.clone().add(new THREE.Vector3(0, FEET, 0));
-  const beaconGeom = new THREE.SphereGeometry(9, 16, 16);
+  const { beacons, beaconAt: dot } = createBeacons<PartId>(root, { radius: 9, segments: [16, 16], onTop: true });
   const beaconAt = (part: PartId, p: THREE.Vector3, local = true) => {
-    const b = new THREE.Mesh(beaconGeom, new THREE.MeshBasicMaterial({ color: hex('cyan'), transparent: true, opacity: 0.92, depthTest: false }));
-    b.position.copy(local ? toRoot(p) : p);
-    b.renderOrder = 10;
-    b.userData.area = part;
-    b.userData.beacon = true;
-    root.add(b);
-    beacons.set(part, b);
+    const q = local ? toRoot(p) : p;
+    dot(part, [q.x, q.y, q.z]);
   };
   const gx = gpuDims ? gpuDims.cx - gpuDims.hx / 2 - 14 : 0;
   beaconAt('case', new THREE.Vector3(-W / 2 - 14, H * 0.82, -D * 0.25));
@@ -99,9 +92,8 @@ export function buildRig(s: Setup): Rig {
   beaconAt('monitor', monPt(250, 500, -10), false);
 
   const view = (target: THREE.Vector3, dir: V3, dist: number, local = true): View => {
-    const t = local ? toRoot(target) : target.clone();
-    const p = t.clone().addScaledVector(new THREE.Vector3(...dir).normalize(), dist);
-    return { target: [t.x * K, t.y * K, t.z * K], pos: [p.x * K, p.y * K, p.z * K] };
+    const t = local ? toRoot(target) : target;
+    return viewFrom([t.x, t.y, t.z], dir, dist, K);
   };
   const scale = H / 465;
   const views: Record<PartId, View> = {
@@ -118,7 +110,7 @@ export function buildRig(s: Setup): Rig {
     fans: dm.front.n ? view(fanC, [-0.65, 0.25, 1], 740 * scale) : view(fanC, [-0.6, 1, 0.4], 520),
     // On Mini-ITX the battery sits just under the socket (the cooler lifts away), so look straight in over the GPU.
     cmos: L === ITX ? view(P(L.cmos[0], L.cmos[1], 0), [-1, 0.06, -0.32], 380) : view(P(L.cmos[0], L.cmos[1], 0), [-1, 0.2, 0.15], 360),
-    monitor: view(monPt(0, 300, 0), [-0.707, 0.12, 0.707], 900, false),
+    monitor: view(monPt(0, 300, 0), [-Math.SQRT1_2, 0.12, Math.SQRT1_2], 900, false),
   };
   const ovT = new THREE.Vector3(monX * 0.42, H * 0.44 + FEET, monZ * 0.42);
   const ovP = ovT.clone().addScaledVector(new THREE.Vector3(-0.62, 0.4, 1).normalize(), 1900 * Math.max(scale, 0.8));
@@ -128,7 +120,6 @@ export function buildRig(s: Setup): Rig {
   glow.position.set(innerCx * K, (H * 0.6 + FEET) * K, 0);
   const glowHolder = new THREE.Group();
   glowHolder.add(glow);
-
 
   let rgbMode = s.rgb;
   const rgbColor = new THREE.Color(s.rgbColor);
@@ -187,31 +178,13 @@ export function buildRig(s: Setup): Rig {
   const tmp = new THREE.Color();
   return {
     key: rigKey(s),
-    group: (() => {
-      const g = new THREE.Group();
-      g.add(root, glowHolder);
-      return g;
-    })(),
+    group: new THREE.Group().add(root, glowHolder),
     picks: [...[...hotspots.values()].flat(), ...beacons.values()],
     glow: hotspots,
     beacons,
     views,
     overview,
-    setLid(lid, open) {
-      const l = lids.get(lid);
-      if (!l || l.open === open) return;
-      l.open = open;
-      const k0 = l.k;
-      tween({
-        duration: lid === 'glass' ? 850 : 750,
-        ease: easeInOutCubic,
-        tag: `lid-${lid}`,
-        update: (k) => {
-          l.k = lerp(k0, open ? 1 : 0, k);
-          l.apply(l.k);
-        },
-      });
-    },
+    setLid,
     setLook,
     setSpecs: (sp) => screen.setSpecs(sp),
     focus(part) {

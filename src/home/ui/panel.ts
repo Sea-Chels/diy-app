@@ -1,9 +1,10 @@
 import { AREAS, type AreaId } from '../data/areas';
-import { guidesForArea, type Guide } from '../data/guides';
+import { BOOK, type Guide } from '../data/guides';
 import type { Setup } from '../data/setup';
-import { getState, setState, subscribe } from '../store';
-import { h, clear } from '../../shared/dom';
+import { select, store } from '../store';
+import { h } from '../../shared/dom';
 import { icon, type IconName } from '../../shared/icons';
+import { mountGuidePanel } from '../../shared/ui/guidePanel';
 import { guideCard } from './guideCard';
 import { openCalculators, type CalcTab } from './calculators';
 
@@ -25,55 +26,25 @@ const CALC_LINKS: { [A in AreaId]?: { tab: CalcTab; label: string; icon: IconNam
 };
 
 export function mountPanel(root: HTMLElement): void {
-  function render(): void {
-    const { selectedArea, openGuide, setup } = getState();
-    clear(root);
-    root.classList.toggle('open', Boolean(selectedArea));
-    if (!selectedArea) return;
-
-    const info = AREAS[selectedArea];
-    const lead = SETUP_GUIDE[selectedArea]?.(setup);
-    // Setup lead first, then guides that live here, then ones shared from elsewhere.
-    const rank = (g: Guide) => (g.id === lead ? 0 : g.areas[0] === selectedArea ? 1 : 2);
-    const primary = guidesForArea(selectedArea).sort((a, b) => rank(a) - rank(b));
-    const seen = new Set(primary.map((g) => g.id));
-    const nearby: Guide[] = [];
-    for (const rel of info.related ?? []) {
-      for (const g of guidesForArea(rel)) {
-        if (!seen.has(g.id)) {
-          seen.add(g.id);
-          nearby.push(g);
-        }
-      }
-    }
-
-    root.append(
-      h('header', { class: 'panel-head' },
-        h('div', {}, h('h2', {}, info.label), h('p', { class: 'muted' }, info.blurb)),
-        h('button', { class: 'icon-btn', 'aria-label': 'Close', onClick: () => setState({ selectedArea: null, openGuide: null }) }, icon('close'))),
-    );
-    const calc = CALC_LINKS[selectedArea];
-    if (calc) root.append(h('div', { class: 'panel-links' }, h('button', { class: 'link-chip', onClick: () => openCalculators(calc.tab) }, icon(calc.icon, 14), calc.label)));
-
-    const list = h('div', { class: 'repair-list' });
-    list.append(h('h3', { class: 'section-label' }, 'Guides'));
-    for (const g of primary) list.append(guideCard(g, g.id === openGuide));
-    if (nearby.length) {
-      list.append(h('h3', { class: 'section-label' }, 'Related'));
-      for (const g of nearby) list.append(guideCard(g, g.id === openGuide));
-    }
-    root.append(list);
-
-    if (openGuide) {
-      requestAnimationFrame(() => {
-        const card = root.querySelector<HTMLElement>('.repair-card.open');
-        if (card) root.scrollTo({ top: Math.max(0, card.offsetTop - 120), behavior: 'smooth' });
-      });
-    }
-  }
-
-  subscribe((s, prev) => {
-    if (s.selectedArea !== prev.selectedArea || s.openGuide !== prev.openGuide || s.setup !== prev.setup || s.owned !== prev.owned) render();
+  mountGuidePanel(root, {
+    store,
+    select,
+    info: (area) => AREAS[area],
+    guides: (area) => BOOK.forSpot(area),
+    primary: (area, s) => {
+      const lead = SETUP_GUIDE[area]?.(s.setup);
+      // Setup lead first, then guides that live here, then ones shared from elsewhere.
+      const rank = (g: Guide) => (g.id === lead ? 0 : g.spots[0] === area ? 1 : 2);
+      return [...BOOK.forSpot(area)].sort((a, b) => rank(a) - rank(b));
+    },
+    card: guideCard,
+    extras: (area) => {
+      const calc = CALC_LINKS[area];
+      return calc ? [h('div', { class: 'panel-links' }, h('button', { class: 'link-chip', onClick: () => openCalculators(calc.tab) }, icon(calc.icon, 14), calc.label))] : [];
+    },
+    heading: 'Guides',
+    relatedLabel: 'Related',
+    // Owned tools mark each guide's tool list.
+    refresh: (s, prev) => s.setup !== prev.setup || s.owned !== prev.owned,
   });
-  render();
 }

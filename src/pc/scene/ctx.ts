@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
-import { outline, toon, type InkWeight } from '../../shared/toon';
+import { toon } from '../../shared/toon';
+import { add, type MeshOpts } from '../../shared/scene/kit';
 import type { Setup } from '../data/setup';
 import type { PartId } from '../data/parts';
 import { K, FEET, DIMS, ATX, ITX } from './layout';
@@ -19,31 +20,22 @@ export function createCtx(s: Setup) {
   root.add(cg);
 
   const hotspots = new Map<PartId, THREE.Mesh[]>();
-  const beacons = new Map<PartId, THREE.Mesh>();
   const rgbMats: { mat: THREE.MeshToonMaterial; phase: number }[] = [];
   const coolantMats: THREE.MeshToonMaterial[] = [];
   type Boost = 'case' | 'cooler' | 'gpu';
   const rotors: { obj: THREE.Object3D; speed: number; boost: Boost }[] = [];
   const boost: Record<Boost, number> = { case: 0, cooler: 0, gpu: 0 };
 
-  function mesh(geo: THREE.BufferGeometry, mat: THREE.Material, parent: THREE.Object3D, x = 0, y = 0, z = 0, ink: InkWeight | null = 'thin'): THREE.Mesh {
-    const m = new THREE.Mesh(geo, mat);
-    m.position.set(x, y, z);
-    m.castShadow = true;
-    m.receiveShadow = true;
-    if (ink) outline(m, ink);
-    parent.add(m);
-    return m;
-  }
-  function rbox(w: number, h: number, d: number, mat: THREE.Material, parent: THREE.Object3D, x = 0, y = 0, z = 0, r = 2, ink: InkWeight | null = 'thin'): THREE.Mesh {
-    const rr = Math.max(0.05, Math.min(r, Math.min(w, h, d) / 2 - 0.05));
-    return mesh(new RoundedBoxGeometry(w, h, d, 2, rr), mat, parent, x, y, z, ink);
+  /** A rounded box in millimeters; `r` is the corner radius, clamped to fit. */
+  function rbox(w: number, h: number, d: number, mat: THREE.Material, parent: THREE.Object3D, o: MeshOpts & { r?: number } = {}): THREE.Mesh {
+    const r = Math.max(0.05, Math.min(o.r ?? 2, Math.min(w, h, d) / 2 - 0.05));
+    return add(new RoundedBoxGeometry(w, h, d, 2, r), mat, parent, o);
   }
   /** Cylinder lying along x (perpendicular to the motherboard). */
-  function cylX(r: number, len: number, mat: THREE.Material, parent: THREE.Object3D, x: number, y: number, z: number, seg = 32, ink: InkWeight | null = 'thin'): THREE.Mesh {
-    const g = new THREE.CylinderGeometry(r, r, len, seg);
+  function cylX(r: number, len: number, mat: THREE.Material, parent: THREE.Object3D, o: MeshOpts & { seg?: number } = {}): THREE.Mesh {
+    const g = new THREE.CylinderGeometry(r, r, len, o.seg ?? 32);
     g.rotateZ(Math.PI / 2);
-    return mesh(g, mat, parent, x, y, z, ink);
+    return add(g, mat, parent, o);
   }
   function hot(part: PartId, ...meshes: THREE.Object3D[]): void {
     const list = hotspots.get(part) ?? [];
@@ -90,20 +82,20 @@ export function createCtx(s: Setup) {
       sh.holes.push(hole);
       const fg = new THREE.ExtrudeGeometry(sh, { depth: 25, bevelEnabled: false, curveSegments: 24 });
       fg.translate(0, 0, -12.5);
-      mesh(fg, mats.fanFrame, g);
+      add(fg, mats.fanFrame, g);
     }
     const rotor = new THREE.Group();
     g.add(rotor);
     const hub = new THREE.CylinderGeometry(size * 0.16, size * 0.16, 16, 28);
     hub.rotateX(Math.PI / 2);
-    mesh(hub, mats.hub, rotor);
+    add(hub, mats.hub, rotor);
     const n = 7;
     const bladeGeo = new RoundedBoxGeometry(size * 0.3, size * 0.15, 1.8, 1, 0.8);
     for (let i = 0; i < n; i++) {
       const pivot = new THREE.Group();
       pivot.rotation.z = (i / n) * Math.PI * 2;
       rotor.add(pivot);
-      const b = mesh(bladeGeo, mats.blade, pivot, size * 0.31, 0, 0);
+      const b = add(bladeGeo, mats.blade, pivot, { at: [size * 0.31, 0, 0] });
       b.rotation.x = 0.5;
       b.rotation.z = 0.18;
     }
@@ -136,7 +128,7 @@ export function createCtx(s: Setup) {
     m2: toon(C.m2, { shine: 0.2 }),
     paste: toon(0x9aa0ab, { shine: 0.5 }),
   };
-  return { dm, W, H, D, L, loop, root, cg, hotspots, beacons, rgbMats, coolantMats, rotors, boost, mesh, rbox, cylX, hot, rgb, coolant, fan, mats, s };
+  return { dm, W, H, D, L, loop, root, cg, hotspots, rgbMats, coolantMats, rotors, boost, rbox, cylX, hot, rgb, coolant, fan, mats, s };
 }
 
 export type PcCtx = ReturnType<typeof createCtx>;

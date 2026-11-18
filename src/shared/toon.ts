@@ -80,7 +80,7 @@ const COMIC = /* glsl */ `
   // Thin rim on glancing angles.
   outgoingLight += diffuseColor.rgb * step(0.78, fres) * 0.16 * (0.4 + uShine);
 
-  // Halftone dots where the surface gets little light (relative to its own colour,
+  // Halftone dots where the surface gets little light (relative to its own color,
   // so dark paint isn't dotted all over).
   float lum = dot(outgoingLight, vec3(0.299, 0.587, 0.114));
   float baseLum = max(dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114)), 0.03);
@@ -189,32 +189,11 @@ export function glass(o: { tint?: THREE.ColorRepresentation; streak?: THREE.Colo
 }
 
 
-function hullMaterial(thickness: number, color: THREE.ColorRepresentation = INK): THREE.ShaderMaterial {
-  return new THREE.ShaderMaterial({
-    side: THREE.BackSide,
-    uniforms: { uThickness: { value: thickness }, uColor: { value: new THREE.Color(color) } },
-    vertexShader: /* glsl */ `
-      uniform float uThickness;
-      void main() {
-        vec4 mv = modelViewMatrix * vec4(position, 1.0);
-        vec3 n = normalize(normalMatrix * normal);
-        // Scale by depth so the line keeps a roughly constant pixel width.
-        mv.xyz += n * uThickness * max(-mv.z, 0.5);
-        gl_Position = projectionMatrix * mv;
-      }`,
-    fragmentShader: /* glsl */ `
-      uniform vec3 uColor;
-      void main() { gl_FragColor = vec4(uColor, 1.0); }`,
-  });
-}
-
-const HULLS = { body: hullMaterial(0.0034), thin: hullMaterial(0.002) };
-
 /**
- * Ink hull that also works on InstancedMesh and can sway with the wind, so
- * outlines stay glued to plants. Used by the garden; the PC keeps the simpler one.
+ * The ink hull: the mesh drawn again, back faces only, pushed out along its normals. Works on
+ * InstancedMesh, and sways with the wind when `wind` is set so outlines stay glued to plants.
  */
-function hullMaterialX(thickness: number, color: THREE.ColorRepresentation, wind: number): THREE.ShaderMaterial {
+function hullMaterial(thickness: number, color: THREE.ColorRepresentation, wind: number): THREE.ShaderMaterial {
   return new THREE.ShaderMaterial({
     side: THREE.BackSide,
     uniforms: { uThickness: { value: thickness }, uColor: { value: new THREE.Color(color) }, uTime: shared.uTime, uGust: shared.uGust, uWind: { value: wind } },
@@ -226,20 +205,31 @@ function hullMaterialX(thickness: number, color: THREE.ColorRepresentation, wind
         vec3 n = normal;
         #ifdef USE_INSTANCING
           lp = instanceMatrix * lp;
-          n = mat3(instanceMatrix) * n;
+          // Inverse transpose, so normals stay perpendicular on instances scaled unevenly.
+          n = inverse(transpose(mat3(instanceMatrix))) * n;
         #endif
         vec4 wp = modelMatrix * lp;
         wp.xyz += windOffset(wp.xyz);
         vec4 mv = viewMatrix * wp;
-        vec3 vn = normalize(mat3(viewMatrix) * mat3(modelMatrix) * n);
+        vec3 vn = normalize(normalMatrix * n);
+        // Scale by depth so the line keeps a roughly constant pixel width.
         mv.xyz += vn * uThickness * max(-mv.z, 0.5);
         gl_Position = projectionMatrix * mv;
       }`,
     fragmentShader: /* glsl */ `
       uniform vec3 uColor;
-      void main() { gl_FragColor = vec4(uColor, 1.0); }`,
+      void main() {
+        gl_FragColor = vec4(uColor, 1.0);
+        #include <colorspace_fragment>
+      }`,
   });
 }
+
+/** Ink line widths, as a fraction of the distance to the camera. */
+const INK_WIDTH = { body: 0.0034, thin: 0.002 };
+export type InkWeight = keyof typeof INK_WIDTH;
+/** Highlight widths, the same whatever the ink weight so a selected part reads the same everywhere. */
+const HIGHLIGHT_WIDTH = { hover: 0.0045, selected: 0.0065 };
 
 export interface HullSet {
   base: THREE.ShaderMaterial;
@@ -248,31 +238,25 @@ export interface HullSet {
 }
 const hullSets = new Map<string, HullSet>();
 /** Shared ink + highlight hulls for a given weight and wind strength. */
-export function hullSet(weight: InkWeight, wind = 0): HullSet {
+function hullSet(weight: InkWeight, wind: number): HullSet {
   const key = `${weight}|${wind}`;
   let set = hullSets.get(key);
   if (!set) {
-    const t = weight === 'body' ? 0.0034 : 0.002;
     set = {
-      base: hullMaterialX(t, INK, wind),
-      hover: hullMaterialX(t + 0.0013, hex('cyan'), wind),
-      selected: hullMaterialX(t + 0.003, hex('cyan'), wind),
+      base: hullMaterial(INK_WIDTH[weight], INK, wind),
+      hover: hullMaterial(HIGHLIGHT_WIDTH.hover, hex('cyan'), wind),
+      selected: hullMaterial(HIGHLIGHT_WIDTH.selected, hex('cyan'), wind),
     };
     hullSets.set(key, set);
   }
   return set;
 }
-export type InkWeight = keyof typeof HULLS;
-
-/** Highlight outlines: the selected part gets a thick cyan ink line, hover a thinner one. */
-export const HIGHLIGHT = { hover: hullMaterial(0.0045, hex('cyan')), selected: hullMaterial(0.0065, hex('cyan')) };
 
 export function setHighlight(mesh: THREE.Mesh, level: 'none' | 'hover' | 'selected'): void {
   const hull = mesh.children.find((c) => c.userData.ink) as THREE.Mesh | undefined;
   if (!hull) return;
-  hull.userData.base ??= hull.material;
-  const set = hull.userData.hl as HullSet | undefined;
-  hull.material = level === 'none' ? hull.userData.base : (set?.[level] ?? HIGHLIGHT[level]);
+  const set = hull.userData.hl as HullSet;
+  hull.material = level === 'none' ? set.base : set[level];
 }
 
 const smoothCache = new WeakMap<THREE.BufferGeometry, THREE.BufferGeometry>();
@@ -289,20 +273,12 @@ function smoothNormals(g: THREE.BufferGeometry): THREE.BufferGeometry {
   return s;
 }
 
-/** Adds an ink silhouette around a mesh. The hull follows the mesh's transforms. */
-export function outline(mesh: THREE.Mesh, weight: InkWeight = 'body'): void {
-  const hull = new THREE.Mesh(smoothNormals(mesh.geometry), HULLS[weight]);
-  hull.raycast = () => {};
-  hull.userData.ink = true;
-  mesh.add(hull);
-}
-
 /**
- * Like `outline`, but the hull understands instancing and wind. For an
+ * Adds an ink silhouette around a mesh; the hull follows its transforms. For an
  * InstancedMesh the hull shares its instance matrices, so call it after the
  * instances are set (or keep using the same InstancedMesh).
  */
-export function outlineX(mesh: THREE.Mesh, weight: InkWeight = 'thin', wind = 0): void {
+export function outline(mesh: THREE.Mesh, weight: InkWeight = 'thin', wind = 0): void {
   const set = hullSet(weight, wind);
   let hull: THREE.Mesh;
   if ((mesh as THREE.InstancedMesh).isInstancedMesh) {
@@ -335,18 +311,23 @@ export function inkLine(points: THREE.Vector3[], width = 2, color: THREE.ColorRe
   return line;
 }
 
+const TEXTURE_SLOTS = ['map', 'emissiveMap', 'alphaMap', 'bumpMap', 'normalMap', 'aoMap', 'lightMap'] as const;
+
 export function disposeTree(root: THREE.Object3D): void {
   root.traverse((o) => {
     if (o.userData.ink) {
       (o as THREE.Mesh).geometry.dispose(); // hull materials are shared; keep them
       return;
     }
-    if (o.userData.shared) return; // geometry/material owned by a shared kit
     const mesh = o as THREE.Mesh;
-    mesh.geometry?.dispose();
+    if (!o.userData.sharedGeometry) mesh.geometry?.dispose();
     const mats = Array.isArray(mesh.material) ? mesh.material : mesh.material ? [mesh.material] : [];
     for (const m of mats) {
       if (m instanceof LineMaterial) lineMaterials.delete(m);
+      for (const slot of TEXTURE_SLOTS) {
+        const t = (m as unknown as Record<string, unknown>)[slot];
+        if (t instanceof THREE.Texture && !t.userData.shared) t.dispose();
+      }
       m.dispose();
     }
   });

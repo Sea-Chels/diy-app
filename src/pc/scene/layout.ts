@@ -1,6 +1,6 @@
 import type { Setup } from '../data/setup';
 
-/** Millimetres to scene units. */
+/** Millimeters to scene units. */
 export const K = 0.005;
 /** Case panel thickness. */
 export const T = 6;

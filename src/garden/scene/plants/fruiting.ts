@@ -63,7 +63,7 @@ export function tomato(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3, o:
   if (o.cage && o.cageMat) {
     const ch = 0.95;
     for (const [y, r] of [[0.32, 0.17], [0.62, 0.2], [ch, 0.23]] as const) {
-      const ring = add(new THREE.TorusGeometry(r, 0.004, 5, 28), o.cageMat, g, [0, y, 0], { rot: [Math.PI / 2, 0, 0], ink: null });
+      const ring = add(new THREE.TorusGeometry(r, 0.004, 5, 28), o.cageMat, g, { at: [0, y, 0], rot: [Math.PI / 2, 0, 0], ink: null });
       ring.castShadow = false;
     }
     for (let i = 0; i < 3; i++) {
@@ -244,7 +244,7 @@ export function sunflower(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3,
   const droop = k.season === 'fall' ? 0.45 : 0.25;
   const face = V(Math.cos(facing) * Math.cos(droop), Math.sin(-droop) * 0.6 + 0.25, Math.sin(facing) * Math.cos(droop)).normalize();
   const center = top.clone().addScaledVector(face, 0.03);
-  const head = add(DISC, k.seedHead, g, [center.x, center.y, center.z], { wind: WIND });
+  const head = add(DISC, k.seedHead, g, { at: [center.x, center.y, center.z], wind: WIND });
   head.quaternion.setFromUnitVectors(UP, face);
   head.scale.set(0.11, 0.5, 0.11);
   const petals = k.season === 'fall' ? 16 : 22;

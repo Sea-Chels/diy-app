@@ -1,0 +1,8 @@
+/* Breakpoints. Lightning CSS inlines these at build time (vite.config.ts), so import this file wherever they're used. */
+@custom-media --phone (max-width: 720px);
+@custom-media --above-phone (min-width: 721px);
+@custom-media --narrow (max-width: 820px);
+/* The hub's comic layout steps down on its own scale. */
+@custom-media --hub-stack (max-width: 900px);
+@custom-media --hub-phone (max-width: 760px);
+@custom-media --tiny (max-width: 400px);

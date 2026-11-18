@@ -3,7 +3,7 @@ import { NCHFP, EXTENSION } from './common';
 
 export const PANTRY_GUIDES: Guide[] = [
   {
-    id: 'water-bath', title: 'Water-bath can tomatoes, jam and pickles', areas: ['pantry'], aliases: ['canning', 'water bath', 'jars', 'jam', 'salsa', 'tomatoes', 'high acid'],
+    id: 'water-bath', title: 'Water-bath can tomatoes, jam and pickles', spots: ['pantry'], aliases: ['canning', 'water bath', 'jars', 'jam', 'salsa', 'tomatoes', 'high acid'],
     kind: 'preserve', difficulty: 2, minutes: [120, 240],
     tools: ['Large canner or deep stockpot with a rack', 'Jar lifter, funnel, headspace tool', 'Ladle, clean towels'],
     supplies: ['Canning jars with new flat lids and bands', 'Bottled lemon juice or citric acid (for tomatoes)', 'A tested recipe'],
@@ -25,11 +25,11 @@ export const PANTRY_GUIDES: Guide[] = [
     links: [NCHFP], plants: ['tomato', 'strawberry', 'cucumber', 'blueberry'], query: 'water bath canning tomatoes beginner tested recipe', featured: true,
   },
   {
-    id: 'pressure-can', title: 'Pressure can green beans and other low-acid food', areas: ['pantry'], aliases: ['pressure canning', 'pressure canner', 'green beans', 'corn', 'low acid', 'botulism'],
+    id: 'pressure-can', title: 'Pressure can green beans and other low-acid food', spots: ['pantry'], aliases: ['pressure canning', 'pressure canner', 'green beans', 'corn', 'low acid', 'botulism'],
     kind: 'preserve', difficulty: 3, minutes: [150, 300],
     tools: ['Pressure canner (not a pressure cooker or electric multicooker)', 'Jar lifter, funnel, headspace tool'],
     supplies: ['Canning jars with new lids and bands', 'A tested recipe'],
-    summary: 'Low-acid foods can harbour Clostridium botulinum spores, which survive boiling. Only a pressure canner reaches the 240°F needed to destroy them.',
+    summary: 'Low-acid foods can harbor Clostridium botulinum spores, which survive boiling. Only a pressure canner reaches the 240°F needed to destroy them.',
     steps: [
       'Use a tested recipe from the NCHFP or USDA guide; follow its times, pressures and jar sizes exactly.',
       'Have a dial gauge tested for accuracy every year (Extension offices often do it); weighted gauges don\'t need testing.',
@@ -41,13 +41,13 @@ export const PANTRY_GUIDES: Guide[] = [
       'Wait 10 minutes after it reads zero, open the lid away from you, remove jars and let them sit 12–24 hours. Check seals.',
     ],
     cautions: [
-      'Never taste food from a jar that is bulging, leaking, spurting, cloudy, foul-smelling or mouldy. Dispose of it following NCHFP botulism guidance.',
+      'Never taste food from a jar that is bulging, leaking, spurting, cloudy, foul-smelling or moldy. Dispose of it following NCHFP botulism guidance.',
       'Electric multicookers and Instant Pots aren\'t approved for pressure canning unless the maker specifically tested and labels them for it.',
     ],
     links: [NCHFP, EXTENSION], plants: ['beans', 'corn', 'carrot', 'potato'], query: 'pressure canning green beans beginner safety',
   },
   {
-    id: 'freeze-veg', title: 'Blanch and freeze vegetables', areas: ['pantry'], aliases: ['freezing', 'blanching', 'freezer', 'green beans', 'broccoli', 'corn'],
+    id: 'freeze-veg', title: 'Blanch and freeze vegetables', spots: ['pantry'], aliases: ['freezing', 'blanching', 'freezer', 'green beans', 'broccoli', 'corn'],
     kind: 'preserve', difficulty: 1, minutes: [30, 90],
     tools: ['Big pot', 'Bowl of ice water', 'Slotted spoon', 'Baking sheet'], supplies: ['Freezer bags or containers', 'Labels'],
     summary: 'The easiest way to keep most vegetables. A quick blanch stops enzymes that would turn them dull and tough in the freezer.',
@@ -61,7 +61,7 @@ export const PANTRY_GUIDES: Guide[] = [
     links: [NCHFP], plants: ['beans', 'broccoli', 'peas', 'corn', 'kale'], query: 'how to blanch and freeze vegetables',
   },
   {
-    id: 'dehydrate', title: 'Dry fruit, vegetables and herbs', areas: ['pantry', 'herbs'], aliases: ['dehydrating', 'drying', 'dried herbs', 'dehydrator', 'oven drying', 'sun dried'],
+    id: 'dehydrate', title: 'Dry fruit, vegetables and herbs', spots: ['pantry', 'herbs'], aliases: ['dehydrating', 'drying', 'dried herbs', 'dehydrator', 'oven drying', 'sun dried'],
     kind: 'preserve', difficulty: 1, minutes: [30, 60], wait: '6–24 hours in a dehydrator; 1–2 weeks hanging for herbs',
     tools: ['Dehydrator (or oven on its lowest setting with the door propped)', 'Sharp knife or mandoline'],
     supplies: ['Lemon juice or ascorbic acid (to stop fruit browning)', 'Airtight jars'],
@@ -76,7 +76,7 @@ export const PANTRY_GUIDES: Guide[] = [
     links: [NCHFP], plants: ['basil', 'thyme', 'oregano', 'tomato', 'goji', 'hotpepper'], query: 'how to dehydrate fruit vegetables herbs',
   },
   {
-    id: 'sauerkraut', title: 'Ferment sauerkraut', areas: ['pantry'], aliases: ['fermentation', 'lacto ferment', 'kraut', 'kimchi', 'cabbage'],
+    id: 'sauerkraut', title: 'Ferment sauerkraut', spots: ['pantry'], aliases: ['fermentation', 'lacto ferment', 'kraut', 'kimchi', 'cabbage'],
     kind: 'preserve', difficulty: 1, minutes: [30, 60], wait: '3–6 weeks of fermenting',
     tools: ['Large bowl', 'Crock or wide-mouth jars', 'Weight (a water-filled bag or glass weight)', 'Kitchen scale'],
     supplies: ['5 lb fresh cabbage', '3 tablespoons canning or pickling salt (no iodine or anti-caking agents)'],
@@ -89,11 +89,11 @@ export const PANTRY_GUIDES: Guide[] = [
       'Ferment at 70–75°F for 3–4 weeks (or 60–65°F for 5–6 weeks). Skim any scum.',
       'When it tastes right, refrigerate (or can it using a tested recipe).',
     ],
-    cautions: ['Throw it out if it turns pink, slimy, soft or smells rotten, or if mould is more than a light surface film.'],
+    cautions: ['Throw it out if it turns pink, slimy, soft or smells rotten, or if mold is more than a light surface film.'],
     links: [NCHFP], plants: ['cabbage'], query: 'how to make sauerkraut crock jar',
   },
   {
-    id: 'quick-pickles', title: 'Make refrigerator pickles', areas: ['pantry'], aliases: ['quick pickles', 'fridge pickles', 'cucumber pickles', 'pickled onions'],
+    id: 'quick-pickles', title: 'Make refrigerator pickles', spots: ['pantry'], aliases: ['quick pickles', 'fridge pickles', 'cucumber pickles', 'pickled onions'],
     kind: 'preserve', difficulty: 1, minutes: [20, 40], wait: 'Ready in 24 hours',
     tools: ['Saucepan', 'Clean jars'], supplies: ['Cucumbers, onions, beans or carrots', 'Vinegar (5% acidity)', 'Water, salt, sugar', 'Dill, garlic, mustard seed, peppercorns'],
     summary: 'No canning needed: pour hot brine over vegetables and keep them in the fridge. Ready the next day and crisp for a month or two.',
@@ -107,7 +107,7 @@ export const PANTRY_GUIDES: Guide[] = [
     plants: ['cucumber', 'onion', 'bushbeans', 'carrot', 'dill'], query: 'refrigerator pickles quick easy',
   },
   {
-    id: 'root-cellar', title: 'Cure and store potatoes, onions and squash', areas: ['pantry'], aliases: ['root cellar', 'storage', 'curing', 'winter squash', 'garlic', 'cold storage'],
+    id: 'root-cellar', title: 'Cure and store potatoes, onions and squash', spots: ['pantry'], aliases: ['root cellar', 'storage', 'curing', 'winter squash', 'garlic', 'cold storage'],
     kind: 'preserve', difficulty: 1, minutes: [30, 60], wait: 'Curing takes 1–4 weeks',
     tools: ['Crates or slatted boxes', 'Thermometer'], supplies: ['Newspaper', 'Mesh bags'],
     summary: 'Many crops keep for months without canning if you cure them first and then store each one at the temperature and humidity it likes.',
@@ -122,7 +122,7 @@ export const PANTRY_GUIDES: Guide[] = [
     plants: ['potato', 'onion', 'garlic', 'pumpkin', 'sweetpotato', 'carrot'], query: 'curing and storing potatoes onions winter squash',
   },
   {
-    id: 'canning-problems', title: 'Jars didn\'t seal or look wrong', areas: ['pantry'], aliases: ['unsealed jar', 'lid popped', 'bulging lid', 'spoilage', 'cloudy jar', 'siphoning'],
+    id: 'canning-problems', title: 'Jars didn\'t seal or look wrong', spots: ['pantry'], aliases: ['unsealed jar', 'lid popped', 'bulging lid', 'spoilage', 'cloudy jar', 'siphoning'],
     kind: 'fix', difficulty: 1, minutes: [10, 30],
     tools: [], supplies: ['New lids'],
     summary: 'A lid that flexes when pressed hasn\'t sealed. Within 24 hours you can still save the food; signs of spoilage in stored jars mean it goes in the bin unopened.',
@@ -130,20 +130,20 @@ export const PANTRY_GUIDES: Guide[] = [
       'Unsealed within 24 hours: refrigerate and eat within a few days, or reprocess with a new lid for the full time.',
       'Check the rim for nicks and food, and that headspace was right.',
       'Liquid loss (siphoning): caused by temperature swings; the food is fine if the jar sealed, but use it soon.',
-      'Bulging lids, leaks, spurting liquid, foam, bad smell or mould: do not open or taste. Follow the NCHFP instructions for disposing of possible botulism-contaminated food.',
+      'Bulging lids, leaks, spurting liquid, foam, bad smell or mold: do not open or taste. Follow the NCHFP instructions for disposing of possible botulism-contaminated food.',
     ],
     cautions: ['Botulism toxin can\'t be seen, smelled or tasted. When in doubt, throw it out.'],
     links: [NCHFP], query: 'canning jars did not seal what to do',
   },
   {
-    id: 'herb-oils', title: 'Make herb and garlic oils safely', areas: ['pantry', 'herbs'], aliases: ['garlic oil', 'herb oil', 'infused oil', 'pesto', 'botulism'],
+    id: 'herb-oils', title: 'Make herb and garlic oils safely', spots: ['pantry', 'herbs'], aliases: ['garlic oil', 'herb oil', 'infused oil', 'pesto', 'botulism'],
     kind: 'preserve', difficulty: 1, minutes: [15, 30],
     tools: ['Blender', 'Ice cube trays'], supplies: ['Fresh herbs or garlic', 'Olive oil'],
     summary: 'Garlic and fresh herbs in oil, left at room temperature, are a classic botulism risk. Keep them cold, or freeze them.',
     steps: [
       'Make herb or garlic oil fresh, refrigerate it right away and use it within 4 days.',
       'For longer storage, blend herbs or pesto with oil and freeze in ice cube trays; pop the cubes into a bag.',
-      'For shelf-stable flavour, use dried herbs or a tested acidified recipe.',
+      'For shelf-stable flavor, use dried herbs or a tested acidified recipe.',
     ],
     cautions: ['Never store homemade garlic-in-oil or fresh herb oils at room temperature.'],
     links: [NCHFP], plants: ['basil', 'garlic', 'rosemary'], query: 'how to freeze pesto herb oil cubes safely',

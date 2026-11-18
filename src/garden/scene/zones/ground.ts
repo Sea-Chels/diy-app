@@ -1,12 +1,11 @@
 import * as THREE from 'three';
-import { toon } from '../../../shared/toon';
-import { add, jitter, tube } from '../../../shared/scene/kit';
-import { V, UNIT_BOX } from '../geometry';
+import { add, jitter, tube, UNIT_BOX, V } from '../../../shared/scene/kit';
 import type { GardenCtx } from '../ctx';
+import { MAT } from '../../../shared/scene/materials';
 
 export function buildGround(c: GardenCtx) {
   const { r, root, M, inst } = c;
-  const ground = add(new THREE.CircleGeometry(8.6, 72), toon(0x1d2133, { halftone: 1 }), root, [0, -0.005, 0], { rot: [-Math.PI / 2, 0, 0], ink: null });
+  const ground = add(new THREE.CircleGeometry(8.6, 72), MAT.ground(), root, { at: [0, -0.005, 0], rot: [-Math.PI / 2, 0, 0], ink: null });
   ground.castShadow = false;
   const gravelShape = new THREE.Shape();
   {
@@ -30,7 +29,7 @@ export function buildGround(c: GardenCtx) {
     const uv = gravelGeo.getAttribute('uv') as THREE.BufferAttribute;
     for (let i = 0; i < pos.count; i++) uv.setXY(i, (pos.getX(i) + 5.9) / 11.8, (pos.getY(i) + 4.9) / 9.8);
   }
-  const gravel = add(gravelGeo, M.gravel, root, [0, 0.004, 0], { rot: [-Math.PI / 2, 0, 0], ink: null });
+  const gravel = add(gravelGeo, M.gravel, root, { at: [0, 0.004, 0], rot: [-Math.PI / 2, 0, 0], ink: null });
   gravel.castShadow = false;
   tube(gravelShape.getSpacedPoints(120).map((p) => V(p.x, 0.02, -p.y)), 0.02, M.galvDark, root, { radial: 4, seg: 240 });
 

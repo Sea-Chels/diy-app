@@ -83,7 +83,7 @@ export function checkPlan(rows: PlanRow[], bedSquares: number): { issues: PlanIs
     issues.push({ level: 'warn', text: `${p.name} wants soil pH ${p.ph}, which doesn't suit ${names}. Give it its own bed or pot.` });
   }
 
-  for (const [a, b] of bad) issues.push({ level: 'error', text: `${a.name} and ${b.name} are poor neighbours. Keep them apart.` });
+  for (const [a, b] of bad) issues.push({ level: 'error', text: `${a.name} and ${b.name} are poor neighbors. Keep them apart.` });
   if (rows.length && !issues.some((i) => i.level !== 'ok')) issues.unshift({ level: 'ok', text: 'No clashes. This bed works.' });
   return { issues, good, bad };
 }

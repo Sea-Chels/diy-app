@@ -48,6 +48,10 @@ export const M = {
   rubber: (grade: 'tread' | 'matte' = 'tread') => toon(C.tire, grade === 'tread' ? { shine: 0.15 } : {}),
   casting: () => toon(C.engine, { shine: 0.5, metal: 0.4 }),
   trim: (o?: ToonOpts) => toon(C.trim, o),
+  /** Satin dark plastic and powder coat: the motorcycle frame, fuse box lids. */
+  frame: () => toon(C.darkPart, { shine: 0.3 }),
+  /** Engine covers, plenums and the derailleur cage. */
+  cover: () => toon(C.cover, { shine: 0.5 }),
   /** Self-lit: headlights, tail lights, markers, the oil window. `glow` is the emissive intensity. */
   lamp: (color: number, glow = 0.5, glowColor = color) => toon(color, { emissive: glowColor, emissiveIntensity: glow, shine: 0.85, halftone: 0 }),
 };

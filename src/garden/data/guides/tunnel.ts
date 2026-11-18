@@ -2,7 +2,7 @@ import type { Guide } from '../guides';
 
 export const TUNNEL_GUIDES: Guide[] = [
   {
-    id: 'hoop-tunnel', title: 'Build a low hoop tunnel', areas: ['tunnel'], aliases: ['row cover', 'hoops', 'mini greenhouse', 'frost cloth', 'insect netting', 'season extension'],
+    id: 'hoop-tunnel', title: 'Build a low hoop tunnel', spots: ['tunnel'], aliases: ['row cover', 'hoops', 'mini greenhouse', 'frost cloth', 'insect netting', 'season extension'],
     kind: 'build', difficulty: 1, minutes: [30, 60], savings: 'a fraction of a cold frame or greenhouse',
     tools: ['Hacksaw', 'Drill'], supplies: ['½ in PVC conduit or 9-gauge wire hoops', 'Pipe straps or rebar stakes', 'Row cover (frost cloth) and/or insect netting', 'Clips and sandbags'],
     summary: 'Hoops over a bed carry row cover in spring and fall for frost protection, or insect netting in summer to keep cabbage moths and beetles off. Roll the cover back on warm days.',
@@ -16,7 +16,7 @@ export const TUNNEL_GUIDES: Guide[] = [
     plants: ['cabbage', 'kale', 'lettuce', 'broccoli'], query: 'low tunnel hoop house raised bed row cover',
   },
   {
-    id: 'frost-protect', title: 'Frost is forecast', areas: ['tunnel', 'seedlings'], aliases: ['frost', 'freeze', 'cold snap', 'late frost', 'cover plants'],
+    id: 'frost-protect', title: 'Frost is forecast', spots: ['tunnel', 'seedlings'], aliases: ['frost', 'freeze', 'cold snap', 'late frost', 'cover plants'],
     kind: 'fix', difficulty: 1, minutes: [15, 30],
     tools: ['Hose'], supplies: ['Row cover, old sheets or buckets', 'Clothespins and stones'],
     summary: 'A light frost (around 32°F) kills tender plants like tomatoes, basil and squash, while kale and spinach shrug it off. Covers trap the ground\'s warmth overnight.',
@@ -30,7 +30,7 @@ export const TUNNEL_GUIDES: Guide[] = [
     query: 'protect garden plants from frost row cover',
   },
   {
-    id: 'cabbage-worms', title: 'Holes in cabbage and kale', areas: ['tunnel', 'bed'], aliases: ['cabbage worm', 'green caterpillar', 'white butterfly', 'brassica', 'holes in leaves', 'loopers'],
+    id: 'cabbage-worms', title: 'Holes in cabbage and kale', spots: ['tunnel', 'bed'], aliases: ['cabbage worm', 'green caterpillar', 'white butterfly', 'brassica', 'holes in leaves', 'loopers'],
     kind: 'fix', difficulty: 1, minutes: [15, 30],
     tools: ['Your eyes'], supplies: ['Fine insect netting', 'Bt (Bacillus thuringiensis)'],
     summary: 'Small white butterflies fluttering over your brassicas are laying eggs. The velvety green caterpillars chew ragged holes and leave dark green droppings.',
@@ -43,7 +43,7 @@ export const TUNNEL_GUIDES: Guide[] = [
     plants: ['cabbage', 'kale', 'broccoli', 'collards'], query: 'cabbage worms organic control netting bt',
   },
   {
-    id: 'winter-greens', title: 'Grow greens through fall and winter', areas: ['tunnel'], aliases: ['winter garden', 'cold frame', 'fall garden', 'season extension'],
+    id: 'winter-greens', title: 'Grow greens through fall and winter', spots: ['tunnel'], aliases: ['winter garden', 'cold frame', 'fall garden', 'season extension'],
     kind: 'grow', difficulty: 2, minutes: [30, 60],
     tools: ['Hoop tunnel or cold frame'], supplies: ['Cold-hardy seed: spinach, kale, mâche, arugula, lettuce \'Winter Density\''],
     summary: 'Sow hardy greens in late summer, then cover them. Growth stops in the short days of winter, but they hold in the tunnel and you keep picking.',

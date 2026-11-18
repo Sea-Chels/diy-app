@@ -19,7 +19,6 @@ export const C = {
   ramBody: 0x30333f,
   gpu: 0x2a2c36,
   blade: 0x3a3e4c,
-  label: 0xeceaf2,
   m2: 0x1d3b30,
 };
 

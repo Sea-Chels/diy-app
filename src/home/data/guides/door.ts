@@ -2,8 +2,8 @@ import type { Guide } from '../guides';
 
 export const DOOR_GUIDES: Guide[] = [
   {
-    id: 'replace-exterior-door', title: 'Replace an exterior door (prehung)', areas: ['door'], aliases: ['front door', 'prehung', 'entry door', 'new door', 'rough opening'],
-    kind: 'install', difficulty: 3, minutes: [300, 600], savings: '$300–800 in labor',
+    id: 'replace-exterior-door', title: 'Replace an exterior door (prehung)', spots: ['door'], aliases: ['front door', 'prehung', 'entry door', 'new door', 'rough opening'],
+    kind: 'install', difficulty: 3, minutes: [300, 600], savings: 'saves $300–800 in labor',
     tools: ['pry-bar', 'recip-saw', 'drill', 'level', 'tape', 'hammer', 'caulk-gun', 'knife', 'glasses', 'Low-expansion foam gun'],
     supplies: ['Prehung door sized to the rough opening', 'Sill pan or flashing tape', 'Shims', 'Exterior sealant', '3 in screws', 'Low-expansion foam', 'Finish nails for casing'],
     summary: 'A prehung door comes in its frame. Pull the old unit, flash the sill, then shim the new frame plumb and square so the door swings and seals properly.',
@@ -19,7 +19,7 @@ export const DOOR_GUIDES: Guide[] = [
     query: 'how to install a prehung exterior door step by step',
   },
   {
-    id: 'sticking-door', title: 'Fix a sticking or sagging door', areas: ['door'], aliases: ['door rubs', 'door sticks', 'sagging door', 'hinge screw', 'swollen door'],
+    id: 'sticking-door', title: 'Fix a sticking or sagging door', spots: ['door'], aliases: ['door rubs', 'door sticks', 'sagging door', 'hinge screw', 'swollen door'],
     kind: 'fix', difficulty: 1, minutes: [20, 90], savings: 'free to $10',
     tools: ['screwdriver', 'drill', 'block-plane', 'sanding-sponge', 'Pencil'],
     supplies: ['3 in screws', 'Primer or paint for any planed edge'],
@@ -34,7 +34,7 @@ export const DOOR_GUIDES: Guide[] = [
     query: 'fix a sticking door long hinge screw plane',
   },
   {
-    id: 'door-latch', title: 'Fix a door that won\'t latch', areas: ['door'], aliases: ['latch', 'strike plate', 'door won\'t close', 'misaligned strike'],
+    id: 'door-latch', title: 'Fix a door that won\'t latch', spots: ['door'], aliases: ['latch', 'strike plate', 'door won\'t close', 'misaligned strike'],
     kind: 'fix', difficulty: 1, minutes: [15, 45], savings: 'free',
     tools: ['screwdriver', 'chisel', 'Metal file', 'Lipstick or dry-erase marker'],
     supplies: [],
@@ -48,7 +48,7 @@ export const DOOR_GUIDES: Guide[] = [
     query: 'door won\'t latch adjust strike plate',
   },
   {
-    id: 'weatherstrip-door', title: 'Weatherstrip a door and adjust the threshold', areas: ['door'], aliases: ['door draft', 'weatherstripping', 'door sweep', 'threshold', 'light under door'],
+    id: 'weatherstrip-door', title: 'Weatherstrip a door and adjust the threshold', spots: ['door'], aliases: ['door draft', 'weatherstripping', 'door sweep', 'threshold', 'light under door'],
     kind: 'maintain', difficulty: 1, minutes: [30, 90], savings: 'lower heating and cooling bills',
     tools: ['screwdriver', 'knife', 'tape', 'Small saw or snips'],
     supplies: ['Kerf-in or adhesive weatherstrip to match your frame', 'Door sweep or threshold seal'],
@@ -62,8 +62,8 @@ export const DOOR_GUIDES: Guide[] = [
     query: 'how to replace door weatherstripping adjust threshold sweep',
   },
   {
-    id: 'replace-lockset', title: 'Replace a doorknob or deadbolt', areas: ['door'], aliases: ['lock', 'deadbolt', 'doorknob', 'rekey', 'smart lock', 'backset'],
-    kind: 'install', difficulty: 1, minutes: [20, 60], savings: '$75–150 for a locksmith',
+    id: 'replace-lockset', title: 'Replace a doorknob or deadbolt', spots: ['door'], aliases: ['lock', 'deadbolt', 'doorknob', 'rekey', 'smart lock', 'backset'],
+    kind: 'install', difficulty: 1, minutes: [20, 60], savings: 'saves $75–150 for a locksmith',
     tools: ['screwdriver', 'tape', 'drill', 'chisel'],
     supplies: ['Lockset or deadbolt (check the backset: 2⅜ or 2¾ in)', '3 in screws for the deadbolt strike'],
     summary: 'Measure the backset (door edge to the center of the hole) and buy a lock that fits it. Swapping takes a screwdriver and 20 minutes.',

@@ -67,7 +67,8 @@ export const PLANTS: Plant[] = [
 ];
 
 /** Plants that turn up in companion lore but don't have their own card. */
-const EXTRA_NAMES: Record<string, string> = { walnut: 'black walnut', hyssop: 'hyssop', clover: 'clover', tansy: 'tansy', horseradish: 'horseradish', rue: 'rue' };
+/** Companions that aren't in the plant guide themselves. */
+export const EXTRA_NAMES: Record<string, string> = { walnut: 'black walnut', hyssop: 'hyssop', clover: 'clover', tansy: 'tansy', horseradish: 'horseradish', rue: 'rue' };
 
 export const PLANT_BY_ID = new Map(PLANTS.map((p) => [p.id, p]));
 export const plantName = (id: string) => PLANT_BY_ID.get(id)?.name ?? EXTRA_NAMES[id] ?? id;

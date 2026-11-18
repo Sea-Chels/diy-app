@@ -122,7 +122,7 @@ export function createScreen(): Screen {
     const rows: [string, string][] = [['CPU', specs.cpu], ['Memory', specs.ram], ['Graphics', specs.gpu], ['CPU temp', `${38 + Math.round(Math.sin(e * 1.3) * 2)} °C`]];
     rows.forEach(([k, v], i) => {
       text(k, 52, 165 + i * 48, 22, P.muted, { weight: 500 });
-      text(v.length > 26 ? v.slice(0, 25) + '…' : v, 170, 165 + i * 48, 22, P.text, { weight: 700 });
+      text(v.length > 26 ? `${v.slice(0, 25)}…` : v, 170, 165 + i * 48, 22, P.text, { weight: 700 });
     });
     roundRect(28, 408, 460, 70, 18, '#1d2547', '#2f3a6b', 3);
     text('XMP / EXPO', 52, 443, 24, P.text, { weight: 700 });

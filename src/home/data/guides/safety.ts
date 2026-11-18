@@ -3,7 +3,7 @@ import { ESFI } from './common';
 
 export const SAFETY_GUIDES: Guide[] = [
   {
-    id: 'tripped-breaker', title: 'Reset a tripped breaker', areas: ['utility'], aliases: ['breaker', 'power out', 'tripped', 'panel', 'circuit breaker', 'fuse'],
+    id: 'tripped-breaker', title: 'Reset a tripped breaker', spots: ['utility'], aliases: ['breaker', 'power out', 'tripped', 'panel', 'circuit breaker', 'fuse'],
     kind: 'fix', difficulty: 1, minutes: [5, 15], savings: 'free',
     tools: ['headlamp'],
     supplies: [],
@@ -20,8 +20,8 @@ export const SAFETY_GUIDES: Guide[] = [
     query: 'how to reset a tripped circuit breaker', featured: true,
   },
   {
-    id: 'label-panel', title: 'Map and label your breaker panel', areas: ['utility'], aliases: ['panel directory', 'label breakers', 'circuit map'],
-    kind: 'maintain', difficulty: 1, minutes: [60, 120], savings: 'time in every future job',
+    id: 'label-panel', title: 'Map and label your breaker panel', spots: ['utility'], aliases: ['panel directory', 'label breakers', 'circuit map'],
+    kind: 'maintain', difficulty: 1, minutes: [60, 120], savings: 'saves time on every future job',
     tools: ['outlet-tester', 'headlamp', 'A helper with a phone, or a radio'],
     supplies: ['Panel directory card or labels', 'Painter\'s tape'],
     summary: 'An hour with a helper now means you can turn off the right circuit in seconds later. Switch breakers off one at a time and note what goes dead.',
@@ -34,8 +34,8 @@ export const SAFETY_GUIDES: Guide[] = [
     query: 'how to map and label circuit breakers',
   },
   {
-    id: 'main-water', title: 'Find and use your main water shut-off', areas: ['utility', 'toilet', 'sink'], aliases: ['main valve', 'water shut off', 'burst pipe', 'emergency', 'water leak'],
-    kind: 'maintain', difficulty: 1, minutes: [10, 30], savings: 'a flooded house',
+    id: 'main-water', title: 'Find and use your main water shut-off', spots: ['utility', 'toilet', 'sink'], aliases: ['main valve', 'water shut off', 'burst pipe', 'emergency', 'water leak'],
+    kind: 'maintain', difficulty: 1, minutes: [10, 30], savings: 'can prevent a flooded house',
     tools: ['headlamp', 'wrench'],
     supplies: ['A tag for the valve'],
     summary: 'When a pipe bursts you have minutes. Find the main valve now, make sure it turns, and tag it so anyone in the house can find it.',
@@ -49,8 +49,8 @@ export const SAFETY_GUIDES: Guide[] = [
     query: 'how to find main water shut off valve house',
   },
   {
-    id: 'frozen-pipe', title: 'Thaw a frozen pipe (and stop the next one)', areas: ['utility', 'sink'], aliases: ['frozen pipe', 'burst pipe', 'no water winter', 'insulate pipes'],
-    kind: 'fix', difficulty: 1, minutes: [30, 120], savings: 'a burst pipe and the flood after it',
+    id: 'frozen-pipe', title: 'Thaw a frozen pipe (and stop the next one)', spots: ['utility', 'sink'], aliases: ['frozen pipe', 'burst pipe', 'no water winter', 'insulate pipes'],
+    kind: 'fix', difficulty: 1, minutes: [30, 120], savings: 'prevents a burst pipe and the flood after it',
     tools: ['headlamp', 'Hair dryer or heating pad'],
     supplies: ['Foam pipe insulation'],
     summary: 'Open the faucet, warm the pipe gently from the faucet end back, and keep a hand on the main valve in case it has split.',
@@ -65,8 +65,8 @@ export const SAFETY_GUIDES: Guide[] = [
     query: 'how to thaw a frozen pipe safely',
   },
   {
-    id: 'smoke-alarms', title: 'Test and replace smoke and CO alarms', areas: ['utility'], aliases: ['smoke detector', 'carbon monoxide', 'chirping', 'alarm battery', 'co detector'],
-    kind: 'maintain', difficulty: 1, minutes: [10, 30], savings: 'lives',
+    id: 'smoke-alarms', title: 'Test and replace smoke and CO alarms', spots: ['utility'], aliases: ['smoke detector', 'carbon monoxide', 'chirping', 'alarm battery', 'co detector'],
+    kind: 'maintain', difficulty: 1, minutes: [10, 30], savings: 'saves lives',
     tools: ['screwdriver', 'voltage-tester', 'ladder'],
     supplies: ['Batteries or replacement alarms (same brand for hard-wired)'],
     summary: 'Test monthly, replace batteries yearly (or fit 10-year sealed units) and replace the alarm itself when it hits its date: about 10 years for smoke alarms, and 5–10 for CO depending on the model.',
@@ -80,8 +80,8 @@ export const SAFETY_GUIDES: Guide[] = [
     query: 'how to replace hardwired smoke detector test co alarm',
   },
   {
-    id: 'replace-thermostat', title: 'Replace a thermostat', areas: ['utility'], aliases: ['thermostat', 'smart thermostat', 'c wire', 'hvac'],
-    kind: 'install', difficulty: 2, minutes: [30, 60], savings: '$100–200',
+    id: 'replace-thermostat', title: 'Replace a thermostat', spots: ['utility'], aliases: ['thermostat', 'smart thermostat', 'c wire', 'hvac'],
+    kind: 'install', difficulty: 2, minutes: [30, 60], savings: 'saves $100–200',
     tools: ['screwdriver', 'voltage-tester', 'drill', 'level'],
     supplies: ['New thermostat (check compatibility with your system)', 'Wire labels (usually in the box)', 'C-wire adapter if needed'],
     summary: 'Most thermostats run on low voltage. Turn off the HVAC power, photograph and label each wire by its terminal letter, and move them across.',
@@ -96,7 +96,7 @@ export const SAFETY_GUIDES: Guide[] = [
     query: 'how to replace a thermostat label wires c wire',
   },
   {
-    id: 'flush-water-heater', title: 'Flush a water heater', areas: ['utility'], aliases: ['water heater', 'sediment', 'rumbling', 'drain tank', 'anode'],
+    id: 'flush-water-heater', title: 'Flush a water heater', spots: ['utility'], aliases: ['water heater', 'sediment', 'rumbling', 'drain tank', 'anode'],
     kind: 'maintain', difficulty: 2, minutes: [60, 120], savings: 'extends the heater\'s life',
     tools: ['bucket', 'screwdriver', 'gloves', 'Garden hose'],
     supplies: [],

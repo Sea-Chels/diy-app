@@ -38,7 +38,7 @@ export const FLOWERS_PLANTS: Plant[] = [
   {
     id: 'borage', name: 'Borage', latin: 'Borago officinalis', type: 'flower', life: 'annual', sun: 'full', water: 'medium', spacing: 18, height: '2–3 ft',
     sow: 'Direct sow after last frost; self-seeds forever after.', days: '50 days to flower',
-    care: ['One of the best bee plants there is.', 'Brittle stems: give it a sheltered spot.'], harvest: 'The star-shaped blue flowers are edible (cucumber flavour) in salads and ice cubes.',
+    care: ['One of the best bee plants there is.', 'Brittle stems: give it a sheltered spot.'], harvest: 'The star-shaped blue flowers are edible (cucumber flavor) in salads and ice cubes.',
     problems: ['Self-seeds widely'], friends: ['tomato', 'strawberry', 'pumpkin', 'zucchini', 'cucumber'], avoid: [],
   },
   {

@@ -11,7 +11,8 @@ import type { View } from '../../shared/scene/stage';
 import type { CarPart } from '../data/parts';
 import type { BodyKind } from '../data/paint';
 import { createCtx } from './ctx';
-import { createBeacons, createLids, view, type RideRig } from './parts3d';
+import { createPartBeacons, createPivotLids, type RideRig } from './parts3d';
+import { viewFrom } from '../../shared/scene/rigKit';
 import { buildBody } from './zones/body';
 import { buildHood } from './zones/hood';
 import { buildTrunk } from './zones/trunk';
@@ -49,12 +50,12 @@ export function buildCar(kind: BodyKind): CarRig {
   buildWheels(c);
   const R = S.wheelR;
 
-  const { setLid, canPick } = createLids({
+  const { setLid, canPick } = createPivotLids({
     hood: { pivot: hoodPivot, axis: 'x', open: -1.1 },
     trunk: { pivot: trunkPivot, axis: 'x', open: trunkOpen },
     door: { pivot: doorPivot, axis: 'y', open: -1.0 },
   }, kind);
-  const { beacons, beaconAt } = createBeacons(group, canPick);
+  const { beacons, beaconAt } = createPartBeacons(group, canPick);
   const hoodMidZ = (hoodZ0 + hoodZ1) / 2;
   beaconAt('hood', [0, hoodLine(hoodMidZ) + 0.12, hoodMidZ]);
   beaconAt('oil', [0.14, F + 0.47, bm - 0.07]);
@@ -79,26 +80,26 @@ export function buildCar(kind: BodyKind): CarRig {
 
   const bayDir: V3 = [0.5, 1.1, 0.9];
   const views: Record<CarPart, View> = {
-    hood: view([0, hoodLine(hoodMidZ), hoodMidZ], [0.55, 0.75, 1], 3.4),
-    engine: view([0.02, F + 0.25, bm], bayDir, 1.9),
-    battery: view([-0.34, F + 0.1, bz0 + 0.16], [-0.6, 1.1, 0.9], 1.7),
-    oil: view([0.14, F + 0.3, bm - 0.05], bayDir, 1.7),
-    airbox: view([0.4, F + 0.15, bz0 + 0.17], [0.45, 1.5, 0.8], 1.7),
+    hood: viewFrom([0, hoodLine(hoodMidZ), hoodMidZ], [0.55, 0.75, 1], 3.4),
+    engine: viewFrom([0.02, F + 0.25, bm], bayDir, 1.9),
+    battery: viewFrom([-0.34, F + 0.1, bz0 + 0.16], [-0.6, 1.1, 0.9], 1.7),
+    oil: viewFrom([0.14, F + 0.3, bm - 0.05], bayDir, 1.7),
+    airbox: viewFrom([0.4, F + 0.15, bz0 + 0.17], [0.45, 1.5, 0.8], 1.7),
     // Steep and from the front: the tanks sit right behind the nose, and the open hood stands up behind them.
-    coolant: view([0.43, F + 0.22, tankZ], [0.45, 1.7, 0.75], 1.6),
-    washer: view([-0.43, F + 0.22, tankZ], [-0.45, 1.7, 0.75], 1.6),
-    fusebox_engine: view([-0.38, F + 0.08, bm + 0.05], [-0.55, 1.5, 0.2], 1.6),
-    wiper: view([0.05, roofLine(wipeZ - 0.22), wipeZ - 0.22], [0.35, 0.75, 1], 2.5),
-    headlight: view([lampX - 0.1, lightY - 0.12, lampZ], [0.55, 0.45, 1], 2.2),
-    taillight: view(lampAt, [0.6, 0.25, -1], 2.3),
-    wheel: view([S.track, R, S.wheelZ[0]], [1, 0.25, 0.45], 2.4),
-    brakes: view([S.track, R, S.wheelZ[1]], [1, 0.15, -0.35], 2.0),
-    trunk: view([0, S.belt, S.deck ? (S.deck[0] + S.deck[1]) / 2 : S.tailZ], trunkView, 3.3),
-    door: view([S.halfW, S.belt - 0.2, (doorZ0 + doorZ1) / 2], [1, 0.3, 0.25], 3.2),
-    cabin: view([0.3, S.belt, S.seatZ], [1, 0.45, 0.2], 2.8),
-    fusebox_cabin: view([S.ghW[0] - 0.16, S.belt - 0.14, dashZ - 0.12], [1, 0.55, 0.3], 1.9),
-    fueldoor: view([-S.halfW, fuelY, fuelZ], [-1, 0.2, -0.45], 2.1),
-    exhaust: view([-0.5, S.bottom, S.tailZ], [-0.4, 0.2, -1], 2.2),
+    coolant: viewFrom([0.43, F + 0.22, tankZ], [0.45, 1.7, 0.75], 1.6),
+    washer: viewFrom([-0.43, F + 0.22, tankZ], [-0.45, 1.7, 0.75], 1.6),
+    fusebox_engine: viewFrom([-0.38, F + 0.08, bm + 0.05], [-0.55, 1.5, 0.2], 1.6),
+    wiper: viewFrom([0.05, roofLine(wipeZ - 0.22), wipeZ - 0.22], [0.35, 0.75, 1], 2.5),
+    headlight: viewFrom([lampX - 0.1, lightY - 0.12, lampZ], [0.55, 0.45, 1], 2.2),
+    taillight: viewFrom(lampAt, [0.6, 0.25, -1], 2.3),
+    wheel: viewFrom([S.track, R, S.wheelZ[0]], [1, 0.25, 0.45], 2.4),
+    brakes: viewFrom([S.track, R, S.wheelZ[1]], [1, 0.15, -0.35], 2.0),
+    trunk: viewFrom([0, S.belt, S.deck ? (S.deck[0] + S.deck[1]) / 2 : S.tailZ], trunkView, 3.3),
+    door: viewFrom([S.halfW, S.belt - 0.2, (doorZ0 + doorZ1) / 2], [1, 0.3, 0.25], 3.2),
+    cabin: viewFrom([0.3, S.belt, S.seatZ], [1, 0.45, 0.2], 2.8),
+    fusebox_cabin: viewFrom([S.ghW[0] - 0.16, S.belt - 0.14, dashZ - 0.12], [1, 0.55, 0.3], 1.9),
+    fueldoor: viewFrom([-S.halfW, fuelY, fuelZ], [-1, 0.2, -0.45], 2.1),
+    exhaust: viewFrom([-0.5, S.bottom, S.tailZ], [-0.4, 0.2, -1], 2.2),
   };
   // Takes in the motorcycle and bike parked off the car's left, so the garage opens on all three.
   const overview: View = S.suv ? { pos: [0.9, 3.2, 6.6], target: [-1.9, 0.6, 0.3] } : { pos: [0.9, 3.0, 6.4], target: [-1.9, 0.5, 0.3] };

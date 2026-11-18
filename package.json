@@ -5,8 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p . && tsc -p tsconfig.node.json",
+    "lint": "biome lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "vite build && playwright test",
+    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm test:e2e"
   },
   "dependencies": {
     "@fontsource/bangers": "^5.3.0",
@@ -14,9 +20,16 @@
     "three": "^0.187.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.6.8",
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^24.19.2",
     "@types/three": "^0.187.0",
     "typescript": "^7.0.2",
-    "vite": "^8.3.8"
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
   },
-  "packageManager": "pnpm@12.21.0"
+  "packageManager": "pnpm@12.21.0",
+  "engines": {
+    "node": ">=24"
+  }
 }

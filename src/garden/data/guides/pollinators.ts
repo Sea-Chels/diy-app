@@ -3,7 +3,7 @@ import { EXTENSION } from './common';
 
 export const POLLINATORS_GUIDES: Guide[] = [
   {
-    id: 'pollinator-patch', title: 'Plant a pollinator patch', areas: ['pollinators'], aliases: ['bees', 'butterflies', 'pollinators', 'native plants', 'beneficial insects'],
+    id: 'pollinator-patch', title: 'Plant a pollinator patch', spots: ['pollinators'], aliases: ['bees', 'butterflies', 'pollinators', 'native plants', 'beneficial insects'],
     kind: 'grow', difficulty: 1, minutes: [60, 120],
     tools: ['Trowel', 'Shovel'], supplies: ['A mix of flowers blooming spring to fall', 'Native perennials from a local nursery', 'A shallow dish with pebbles for water'],
     summary: 'More pollinators means more squash, cucumbers, berries and fruit. Plant clumps of different flower shapes that bloom from early spring to late fall.',
@@ -18,7 +18,7 @@ export const POLLINATORS_GUIDES: Guide[] = [
     plants: ['sunflower', 'zinnia', 'cosmos', 'borage', 'echinacea', 'beebalm'], query: 'pollinator garden plants bees butterflies vegetable garden',
   },
   {
-    id: 'bee-hotel', title: 'Build a bee hotel', areas: ['pollinators'], aliases: ['mason bee', 'solitary bees', 'insect hotel', 'bee house'],
+    id: 'bee-hotel', title: 'Build a bee hotel', spots: ['pollinators'], aliases: ['mason bee', 'solitary bees', 'insect hotel', 'bee house'],
     kind: 'build', difficulty: 1, minutes: [45, 90],
     tools: ['Drill with 5/16 in (8 mm) brad-point bit', 'Saw'],
     supplies: ['Untreated wood block or box with a roof overhang', 'Paper tubes or reeds (5/16 in, 6 in long), or drilled holes 6 in deep', 'A post or wall bracket'],
@@ -34,10 +34,10 @@ export const POLLINATORS_GUIDES: Guide[] = [
     query: 'how to build a mason bee house removable tubes',
   },
   {
-    id: 'aphids', title: 'Aphids on new growth', areas: ['pollinators', 'tunnel', 'kitchen'], aliases: ['aphids', 'sticky leaves', 'curled leaves', 'greenfly', 'ants on plants'],
+    id: 'aphids', title: 'Aphids on new growth', spots: ['pollinators', 'tunnel', 'kitchen'], aliases: ['aphids', 'sticky leaves', 'curled leaves', 'greenfly', 'ants on plants'],
     kind: 'fix', difficulty: 1, minutes: [10, 20],
     tools: ['Hose with a jet nozzle'], supplies: ['Insecticidal soap (optional)'],
-    summary: 'Clusters of soft green, black or grey insects on tips and under leaves. Natural predators usually catch up within a couple of weeks if you don\'t spray them away.',
+    summary: 'Clusters of soft green, black or gray insects on tips and under leaves. Natural predators usually catch up within a couple of weeks if you don\'t spray them away.',
     steps: [
       'Blast aphids off with a strong jet of water every couple of days.',
       'Squish small clusters by hand.',
@@ -49,7 +49,7 @@ export const POLLINATORS_GUIDES: Guide[] = [
     query: 'aphids organic control garden',
   },
   {
-    id: 'organic-pest-control', title: 'Organic pest control basics (IPM)', areas: ['pollinators', 'kitchen', 'tunnel'], aliases: ['ipm', 'pests', 'bugs', 'slugs', 'beetles', 'neem', 'organic spray'],
+    id: 'organic-pest-control', title: 'Organic pest control basics (IPM)', spots: ['pollinators', 'kitchen', 'tunnel'], aliases: ['ipm', 'pests', 'bugs', 'slugs', 'beetles', 'neem', 'organic spray'],
     kind: 'grow', difficulty: 1, minutes: [15, 30],
     tools: ['Hand lens', 'Notebook'], supplies: ['Row cover', 'Beer traps or iron phosphate slug bait', 'Insecticidal soap, Bt, neem (as last resorts)'],
     summary: 'Integrated pest management means preventing problems, identifying the pest before acting, and starting with the gentlest fix.',

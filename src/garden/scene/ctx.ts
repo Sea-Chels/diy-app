@@ -1,11 +1,12 @@
 import * as THREE from 'three';
-import { toon } from '../../shared/toon';
-import { Batches, add, canvasTex, label, mapped, rng, speckle, woodTexture, type V3 } from '../../shared/scene/kit';
-import { hex } from '../../shared/theme';
+import { toon, type InkWeight } from '../../shared/toon';
+import { add, Batches, canvasTex, label, mapped, rng, speckle, UNIT_BOX, V, woodTexture, type V3 } from '../../shared/scene/kit';
 import type { Setup } from '../data/setup';
 import type { AreaId, LidId } from '../data/areas';
 import { plantKit } from './plants/kit';
-import { K, V, UNIT_BOX } from './geometry';
+import { K } from './geometry';
+import { MAT } from '../../shared/scene/materials';
+import { createSpots } from '../../shared/scene/rigKit';
 
 export function createCtx(s: Setup) {
   const season = s.season;
@@ -55,19 +56,18 @@ export function createCtx(s: Setup) {
         }
       }
     }, [2, 1])),
-    pvc: toon(0xf2f2ee, { shine: 0.45 }),
-    hose: toon(0x3f9a4a, { shine: 0.4 }),
+    pvc: MAT.pvc(),
+    hose: MAT.hose(),
     drip: toon(0x1f2226, { shine: 0.3 }),
-    terracotta: toon(0xc8643a),
+    terracotta: MAT.terracotta(),
     tote: toon(0x2f4f7a, { shine: 0.3 }),
-    water: new THREE.MeshBasicMaterial({ color: hex('water'), transparent: true, opacity: 0.55 }),
     cloth: new THREE.MeshToonMaterial({ color: 0xf6f6f2, transparent: true, opacity: 0.62, side: THREE.DoubleSide, depthWrite: false }),
     steel: toon(0x9aa3b2, { shine: 0.7, metal: 0.7 }),
     handle: toon(0xc9a06a),
     blade: toon(0x8c95a3, { shine: 0.8, metal: 0.8 }),
-    red: toon(0xd8432f),
+    red: MAT.red(),
     barrel: toon(0x3e6b52, { shine: 0.35 }),
-    brass: toon(0xd8b04a, { shine: 0.8, metal: 0.6 }),
+    brass: MAT.brass(),
     cardboard: mapped(0xffffff, canvasTex(64, 16, (ctx) => {
       ctx.fillStyle = '#c69c64';
       ctx.fillRect(0, 0, 64, 16);
@@ -80,30 +80,18 @@ export function createCtx(s: Setup) {
     }, [8, 1])),
   };
 
-  const areas = new Map<AreaId, THREE.Group>();
-  const picks: THREE.Mesh[] = [];
-  const pickMat = new THREE.MeshBasicMaterial({ visible: false });
+  const { groups: areas, picks, spot, pick } = createSpots<AreaId>(root);
+  /** Batched instances under the area merge into one draw call per material. */
   function area(id: AreaId, x: number, z: number, rotY = 0): THREE.Group {
-    const g = new THREE.Group();
+    const g = spot(id);
     g.position.set(x, 0, z);
     g.rotation.y = rotY;
     g.userData.batchRoot = true;
-    g.userData.area = id;
-    root.add(g);
     g.updateWorldMatrix(true, false);
-    areas.set(id, g);
     return g;
   }
-  function pick(g: THREE.Group, w: number, h: number, d: number, p: V3): void {
-    const m = new THREE.Mesh(UNIT_BOX, pickMat);
-    m.scale.set(w, h, d);
-    m.position.set(...p);
-    m.userData.area = g.userData.area;
-    g.add(m);
-    picks.push(m);
-  }
   /** Instance a unit geometry (box, cylinder) with a matrix built from position, rotation and size. */
-  function inst(g: THREE.Object3D, geo: THREE.BufferGeometry, mat: THREE.Material, p: V3, size: V3, color: THREE.ColorRepresentation = 0xffffff, rot: V3 = [0, 0, 0], ink: 'thin' | 'body' | null = 'thin'): void {
+  function inst(g: THREE.Object3D, geo: THREE.BufferGeometry, mat: THREE.Material, p: V3, size: V3, color: THREE.ColorRepresentation = 0xffffff, rot: V3 = [0, 0, 0], ink: InkWeight | null = 'thin'): void {
     const m = new THREE.Matrix4().compose(V(...p), new THREE.Quaternion().setFromEuler(new THREE.Euler(...rot)), V(...size));
     let parent: THREE.Object3D = g;
     while (parent.parent && !parent.userData.batchRoot) parent = parent.parent;
@@ -122,11 +110,11 @@ export function createCtx(s: Setup) {
     t.rotation.y = rotY;
     t.rotation.x = -0.15;
     g.add(t);
-    add(UNIT_BOX, M.weathered, t, [0, 0.06, 0], { scale: [0.012, 0.16, 0.008] });
-    const face = add(new THREE.BoxGeometry(0.13, 0.05, 0.008), [M.weathered, M.weathered, M.weathered, M.weathered, mapped(0xffffff, label([{ text, size: 40, color: '#3a2a1a' }], '#e7d5b0', 256, 96)), M.weathered] as unknown as THREE.Material, t, [0, 0.15, 0.002]);
+    add(UNIT_BOX, M.weathered, t, { at: [0, 0.06, 0], scale: [0.012, 0.16, 0.008] });
+    const face = add(new THREE.BoxGeometry(0.13, 0.05, 0.008), [M.weathered, M.weathered, M.weathered, M.weathered, mapped(0xffffff, label([{ text, size: 40, color: '#3a2a1a' }], '#e7d5b0', 256, 96)), M.weathered], t, { at: [0, 0.15, 0.002] });
     face.castShadow = true;
   }
-  return { season, r, b, k, lidHooks, steam, steamBase, toolSwing, spigot, root, white, whiteShiny, M, areas, picks, pickMat, area, pick, inst, tag, s };
+  return { season, r, b, k, lidHooks, steam, steamBase, toolSwing, spigot, root, white, whiteShiny, M, areas, picks, area, pick, inst, tag, s };
 }
 
 export type GardenCtx = ReturnType<typeof createCtx>;

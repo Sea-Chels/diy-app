@@ -3,7 +3,7 @@ import { EXTENSION } from './common';
 
 export const RAISED_BEDS_GUIDES: Guide[] = [
   {
-    id: 'build-metal-bed', title: 'Build a corrugated metal raised bed', areas: ['bed', 'kitchen'], aliases: ['galvanized', 'metal bed', 'corrugated', 'roofing panel', 'stock tank'],
+    id: 'build-metal-bed', title: 'Build a corrugated metal raised bed', spots: ['bed', 'kitchen'], aliases: ['galvanized', 'metal bed', 'corrugated', 'roofing panel', 'stock tank'],
     kind: 'build', difficulty: 2, minutes: [120, 240], savings: 'about half the price of a kit of the same size',
     tools: ['Circular saw or miter saw', 'Drill/driver', 'Tin snips or angle grinder with a metal cutting disc', 'Tape measure, square', 'Gloves and eye protection'],
     supplies: ['Galvanized corrugated roofing panels (26 in tall)', '4×4 posts for corners, 2×6 or 2×4 for the top cap', 'Hex-head roofing screws with rubber washers', 'Exterior wood screws', 'Hardware cloth (optional, for gophers)'],
@@ -22,7 +22,7 @@ export const RAISED_BEDS_GUIDES: Guide[] = [
     query: 'DIY corrugated metal raised garden bed build', featured: true,
   },
   {
-    id: 'build-cedar-bed', title: 'Build a cedar raised bed', areas: ['tunnel', 'bed'], aliases: ['wood bed', 'cedar', 'planter box', 'raised garden', '2x6'],
+    id: 'build-cedar-bed', title: 'Build a cedar raised bed', spots: ['tunnel', 'bed'], aliases: ['wood bed', 'cedar', 'planter box', 'raised garden', '2x6'],
     kind: 'build', difficulty: 2, minutes: [90, 180], savings: 'around $100–200 over a store-bought kit',
     tools: ['Saw', 'Drill/driver', 'Tape measure, speed square', 'Level', 'Clamps (helpful)'],
     supplies: ['Untreated cedar 2×6 boards (three high = 16 in)', '4×4 cedar posts for corners', '3 in exterior screws or structural screws', 'Landscape fabric is optional; cardboard works under the bed'],
@@ -39,7 +39,7 @@ export const RAISED_BEDS_GUIDES: Guide[] = [
     query: 'how to build a cedar raised garden bed 4x8',
   },
   {
-    id: 'hugelkultur', title: 'Fill a raised bed hugelkultur-style', areas: ['bed'], aliases: ['hugel', 'logs', 'branches', 'cardboard', 'fill a bed cheaply', 'decompose', 'cut soil cost'],
+    id: 'hugelkultur', title: 'Fill a raised bed hugelkultur-style', spots: ['bed'], aliases: ['hugel', 'logs', 'branches', 'cardboard', 'fill a bed cheaply', 'decompose', 'cut soil cost'],
     kind: 'build', difficulty: 2, minutes: [120, 300], savings: 'cuts bagged soil by half or more in a deep bed',
     tools: ['Wheelbarrow', 'Pitchfork and shovel', 'Loppers or pruning saw', 'Hose'],
     supplies: ['Logs and stumps (rotting ones are best)', 'Branches and twigs', 'Plain brown cardboard, tape and labels removed', 'Leaves, grass clippings, straw, kitchen scraps', 'Finished compost', 'Topsoil or raised-bed mix for the top 6–8 inches'],
@@ -61,7 +61,7 @@ export const RAISED_BEDS_GUIDES: Guide[] = [
     plants: ['kale', 'chard', 'lettuce', 'carrot'], query: 'hugelkultur raised bed fill logs branches cardboard', featured: true,
   },
   {
-    id: 'lasagna-bed', title: 'Fill a bed with lasagna layers (sheet mulching)', areas: ['bed', 'compost'], aliases: ['lasagna gardening', 'sheet mulch', 'no dig', 'layering', 'kill grass'],
+    id: 'lasagna-bed', title: 'Fill a bed with lasagna layers (sheet mulching)', spots: ['bed', 'compost'], aliases: ['lasagna gardening', 'sheet mulch', 'no dig', 'layering', 'kill grass'],
     kind: 'build', difficulty: 1, minutes: [60, 180], wait: 'Ready in 4–6 months (or plant into the top soil layer right away)',
     tools: ['Wheelbarrow', 'Pitchfork', 'Hose'],
     supplies: ['Brown cardboard or 6–10 sheets of newspaper', 'Browns: straw, shredded leaves, wood chips, shredded paper', 'Greens: grass clippings, kitchen scraps, manure, coffee grounds', 'Compost and topsoil for the top layer'],
@@ -77,7 +77,7 @@ export const RAISED_BEDS_GUIDES: Guide[] = [
     query: 'lasagna gardening sheet mulching layers raised bed',
   },
   {
-    id: 'soil-mix', title: 'Mix your own raised bed soil', areas: ['bed', 'kitchen'], aliases: ['soil mix', 'potting mix', 'mel\'s mix', 'what soil', 'perlite', 'vermiculite'],
+    id: 'soil-mix', title: 'Mix your own raised bed soil', spots: ['bed', 'kitchen'], aliases: ['soil mix', 'potting mix', 'mel\'s mix', 'what soil', 'perlite', 'vermiculite'],
     kind: 'build', difficulty: 1, minutes: [45, 120], savings: 'often 40% cheaper than bagged raised-bed mix',
     tools: ['Tarp', 'Shovel or rake', 'Wheelbarrow'],
     supplies: ['Screened topsoil (60%)', 'Finished compost, ideally from several sources (30%)', 'Perlite, pumice or coarse sand (10%)', 'A balanced organic fertilizer (follow the label)'],
@@ -93,7 +93,7 @@ export const RAISED_BEDS_GUIDES: Guide[] = [
     query: 'how to mix raised bed soil topsoil compost perlite ratio',
   },
   {
-    id: 'soil-test', title: 'Test and amend your soil', areas: ['bed', 'kitchen', 'fruit'], aliases: ['ph', 'soil test', 'nutrients', 'lime', 'sulfur', 'yellow leaves'],
+    id: 'soil-test', title: 'Test and amend your soil', spots: ['bed', 'kitchen', 'fruit'], aliases: ['ph', 'soil test', 'nutrients', 'lime', 'sulfur', 'yellow leaves'],
     kind: 'grow', difficulty: 1, minutes: [20, 40], wait: 'Lab results take 1–3 weeks',
     tools: ['Clean trowel', 'Plastic bucket'], supplies: ['Soil test kit from your Cooperative Extension (cheap and accurate) or a home kit'],
     summary: 'A soil test tells you pH and nutrients so you add only what\'s missing. Most vegetables like pH 6.0–7.0; blueberries want 4.5–5.5.',
@@ -107,7 +107,7 @@ export const RAISED_BEDS_GUIDES: Guide[] = [
     links: [EXTENSION], query: 'how to take a soil sample for testing garden',
   },
   {
-    id: 'top-up-bed', title: 'Bed has sunk or soil is tired', areas: ['bed'], aliases: ['soil sinking', 'settled', 'compacted', 'poor growth', 'top up'],
+    id: 'top-up-bed', title: 'Bed has sunk or soil is tired', spots: ['bed'], aliases: ['soil sinking', 'settled', 'compacted', 'poor growth', 'top up'],
     kind: 'fix', difficulty: 1, minutes: [30, 60],
     tools: ['Wheelbarrow', 'Garden fork'], supplies: ['Compost', 'Mulch (shredded leaves or straw)'],
     summary: 'Raised beds lose a few inches every year as organic matter breaks down, and hugelkultur beds sink fastest. That\'s normal: feed the top instead of digging.',
@@ -120,7 +120,7 @@ export const RAISED_BEDS_GUIDES: Guide[] = [
     query: 'top dress raised bed compost each year no dig',
   },
   {
-    id: 'square-foot', title: 'Plan a square-foot bed', areas: ['bed', 'kitchen'], aliases: ['square foot gardening', 'spacing', 'how many plants', 'layout', 'planner'],
+    id: 'square-foot', title: 'Plan a square-foot bed', spots: ['bed', 'kitchen'], aliases: ['square foot gardening', 'spacing', 'how many plants', 'layout', 'planner'],
     kind: 'grow', difficulty: 1, minutes: [20, 45],
     tools: ['String or thin slats for a grid', 'Pencil and paper (or the bed planner here)'], supplies: [],
     summary: 'Divide the bed into 1×1 ft squares and plant each square by spacing: 16 carrots, 9 beets, 4 lettuce, 1 tomato. It packs a lot into a small bed and keeps weeds down.',
@@ -134,7 +134,7 @@ export const RAISED_BEDS_GUIDES: Guide[] = [
     query: 'square foot gardening layout spacing 4x8 bed',
   },
   {
-    id: 'mulch', title: 'Mulch beds to save water and weeding', areas: ['bed', 'kitchen', 'water'], aliases: ['mulch', 'straw', 'weeds', 'wood chips', 'moisture'],
+    id: 'mulch', title: 'Mulch beds to save water and weeding', spots: ['bed', 'kitchen', 'water'], aliases: ['mulch', 'straw', 'weeds', 'wood chips', 'moisture'],
     kind: 'grow', difficulty: 1, minutes: [20, 60],
     tools: ['Wheelbarrow', 'Rake'], supplies: ['Straw (not hay: it\'s full of seeds), shredded leaves, or grass clippings from untreated lawns'],
     summary: 'A 2–3 inch blanket of organic mulch keeps soil moist and cool, smothers weeds and feeds the soil as it breaks down.',

@@ -2,7 +2,7 @@ import type { Guide } from '../guides';
 
 export const TOOLS_GUIDES: Guide[] = [
   {
-    id: 'sharpen-tools', title: 'Sharpen pruners, hoes and shovels', areas: ['tools'], aliases: ['sharpen', 'dull pruners', 'blade', 'file', 'shovel edge', 'tool care'],
+    id: 'sharpen-tools', title: 'Sharpen pruners, hoes and shovels', spots: ['tools'], aliases: ['sharpen', 'dull pruners', 'blade', 'file', 'shovel edge', 'tool care'],
     kind: 'fix', difficulty: 1, minutes: [20, 45], savings: 'sharp tools work faster and last longer',
     tools: ['Mill bastard file (for shovels and hoes)', 'Diamond file or whetstone (for pruners)', 'Vise or clamps', 'Wire brush, steel wool', 'Gloves and eye protection'],
     supplies: ['Light machine oil or camellia oil', 'Rubbing alcohol'],
@@ -17,7 +17,7 @@ export const TOOLS_GUIDES: Guide[] = [
     query: 'how to sharpen pruners and garden shovel file', featured: true,
   },
   {
-    id: 'store-tools', title: 'Clean, store and repair tools for winter', areas: ['tools'], aliases: ['winterize', 'rust', 'broken handle', 'replace handle', 'linseed oil'],
+    id: 'store-tools', title: 'Clean, store and repair tools for winter', spots: ['tools'], aliases: ['winterize', 'rust', 'broken handle', 'replace handle', 'linseed oil'],
     kind: 'fix', difficulty: 2, minutes: [30, 90],
     tools: ['Wire brush', 'Drill and bits (for handle rivets)', 'Hammer', 'Sandpaper'],
     supplies: ['Boiled linseed oil for wooden handles', 'Machine oil', 'Replacement handle (if needed)', 'Bucket of sand mixed with a little oil (optional)'],
@@ -34,7 +34,7 @@ export const TOOLS_GUIDES: Guide[] = [
     query: 'clean and store garden tools winter replace handle',
   },
   {
-    id: 'clean-pruners', title: 'Disinfect pruners between plants', areas: ['tools', 'fruit'], aliases: ['disinfect', 'spread disease', 'fire blight', 'clean blades'],
+    id: 'clean-pruners', title: 'Disinfect pruners between plants', spots: ['tools', 'fruit'], aliases: ['disinfect', 'spread disease', 'fire blight', 'clean blades'],
     kind: 'grow', difficulty: 1, minutes: [2, 5],
     tools: ['Pruners'], supplies: ['70% rubbing alcohol in a spray bottle, or disinfecting wipes'],
     summary: 'Pruners can carry diseases like fire blight and viruses from plant to plant. A quick wipe between plants stops that.',

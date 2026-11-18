@@ -2,7 +2,7 @@ import type { Guide } from '../guides';
 
 export const THREE_SISTERS_GUIDES: Guide[] = [
   {
-    id: 'three-sisters', title: 'Plant a Three Sisters mound', areas: ['sisters'], aliases: ['corn beans squash', 'milpa', 'indigenous', 'guild', 'companion'],
+    id: 'three-sisters', title: 'Plant a Three Sisters mound', spots: ['sisters'], aliases: ['corn beans squash', 'milpa', 'indigenous', 'guild', 'companion'],
     kind: 'grow', difficulty: 2, minutes: [60, 120], wait: 'Over 3 weeks: corn first, then beans, then squash',
     tools: ['Shovel and rake', 'Measuring tape'], supplies: ['Flint, dent or tall sweet corn seed', 'Pole bean seed (runner or heirloom)', 'Winter squash or pumpkin seed', 'Compost'],
     summary: 'A planting tradition from many Indigenous nations of the Americas. Corn gives beans a pole, bean roots host bacteria that add nitrogen, and big squash leaves shade out weeds and hold moisture.',
@@ -18,7 +18,7 @@ export const THREE_SISTERS_GUIDES: Guide[] = [
     plants: ['corn', 'beans', 'pumpkin'], query: 'three sisters garden planting corn beans squash mounds', featured: true,
   },
   {
-    id: 'powdery-mildew', title: 'White powder on squash leaves', areas: ['sisters', 'kitchen'], aliases: ['powdery mildew', 'white leaves', 'fungus', 'zucchini leaves'],
+    id: 'powdery-mildew', title: 'White powder on squash leaves', spots: ['sisters', 'kitchen'], aliases: ['powdery mildew', 'white leaves', 'fungus', 'zucchini leaves'],
     kind: 'fix', difficulty: 1, minutes: [10, 20],
     tools: ['Clean pruners', 'Spray bottle'], supplies: ['Potassium bicarbonate or a sulfur-based fungicide (organic options)', 'Resistant varieties next year'],
     summary: 'Powdery mildew looks like talcum powder on leaves. It loves warm days, cool nights and crowded plants, and mostly shows up late in the season.',
@@ -31,22 +31,22 @@ export const THREE_SISTERS_GUIDES: Guide[] = [
     plants: ['zucchini', 'pumpkin', 'cucumber'], query: 'powdery mildew squash organic treatment',
   },
   {
-    id: 'hand-pollinate', title: 'Squash flowers but no fruit', areas: ['sisters', 'kitchen'], aliases: ['no fruit', 'fruit falls off', 'hand pollination', 'male female flower', 'pollinate'],
+    id: 'hand-pollinate', title: 'Squash flowers but no fruit', spots: ['sisters', 'kitchen'], aliases: ['no fruit', 'fruit falls off', 'hand pollination', 'male female flower', 'pollinate'],
     kind: 'fix', difficulty: 1, minutes: [5, 15],
     tools: ['Small paintbrush or cotton swab'], supplies: [],
     summary: 'Squash have separate male and female flowers, and males come first. If tiny fruits shrivel, they weren\'t pollinated: be the bee.',
     steps: [
       'Find a female flower: it has a mini squash at its base. Males sit on a plain thin stalk.',
       'Early in the morning, when flowers are open, pick a male flower and peel back its petals.',
-      'Dab its pollen-covered centre onto the female flower\'s stigma.',
+      'Dab its pollen-covered center onto the female flower\'s stigma.',
       'Plant flowers nearby to bring more pollinators, and avoid spraying when bees are out.',
     ],
     plants: ['zucchini', 'pumpkin', 'cucumber', 'melon'], query: 'hand pollinate squash male female flowers',
   },
   {
-    id: 'squash-borer', title: 'Squash plant suddenly wilts', areas: ['sisters'], aliases: ['squash vine borer', 'wilting', 'frass', 'squash bugs', 'collapsed'],
+    id: 'squash-borer', title: 'Squash plant suddenly wilts', spots: ['sisters'], aliases: ['squash vine borer', 'wilting', 'frass', 'squash bugs', 'collapsed'],
     kind: 'fix', difficulty: 2, minutes: [15, 30],
-    tools: ['Sharp knife', 'Soil'], supplies: ['Row cover', 'Aluminium foil'],
+    tools: ['Sharp knife', 'Soil'], supplies: ['Row cover', 'Aluminum foil'],
     summary: 'A healthy plant that wilts on a sunny day, with sawdust-like frass near the base, has a squash vine borer grub tunneling inside the stem.',
     steps: [
       'Find the hole and frass; slit the stem lengthwise above it with a knife and remove the grub.',

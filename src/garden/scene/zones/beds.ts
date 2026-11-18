@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { lerp } from '../../../shared/tween';
 import { inkLine, toon } from '../../../shared/toon';
-import { add, box, canvasTex, jitter, label, mapped, range, speckle, woodTexture } from '../../../shared/scene/kit';
+import { add, box, canvasTex, jitter, label, mapped, range, speckle, UNIT_BOX, V, woodTexture } from '../../../shared/scene/kit';
 import { PALETTE } from '../../../shared/theme';
 import { basil, corn, marigold, nasturtium, squash, tomato } from '../plants/fruiting';
 import { cabbage, carrot, chard, kale, lettuce } from '../plants/greens';
-import { V, UNIT_BOX, UNIT_CYL, LOW_SPHERE, corrugated, BW, BD, BH } from '../geometry';
+import { UNIT_CYL, LOW_SPHERE, corrugated, BW, BD, BH } from '../geometry';
 import type { GardenCtx } from '../ctx';
 
 export function buildBeds(c: GardenCtx) {
@@ -16,16 +16,16 @@ export function buildBeds(c: GardenCtx) {
       [-w / 2, 0, Math.PI / 2, d],
       [w / 2, 0, -Math.PI / 2, d],
     ];
-    for (const [x, z, ry, len] of sides) add(corrugated(len, h), M.galv, g, [x, 0, z], { rot: [0, ry, 0] });
-    add(corrugated(w, h), M.galv, front ?? g, front ? [0, 0, 0] : [0, 0, d / 2], { rot: [0, Math.PI, 0] });
-    for (const [x, z] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) box(0.07, h + 0.02, 0.07, M.galvDark, g, [(x * w) / 2, (h + 0.02) / 2, (z * d) / 2], { r: 0.012 });
+    for (const [x, z, ry, len] of sides) add(corrugated(len, h), M.galv, g, { at: [x, 0, z], rot: [0, ry, 0] });
+    add(corrugated(w, h), M.galv, front ?? g, { at: front ? [0, 0, 0] : [0, 0, d / 2], rot: [0, Math.PI, 0] });
+    for (const [x, z] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) box(0.07, h + 0.02, 0.07, M.galvDark, g, { at: [(x * w) / 2, (h + 0.02) / 2, (z * d) / 2], r: 0.012 });
     for (const [x, z, len, ry] of [[0, -d / 2, w, 0], [-w / 2, 0, d, Math.PI / 2], [w / 2, 0, d, Math.PI / 2]] as const) {
-      add(UNIT_CYL, M.galvDark, g, [x, h, z], { rot: [0, ry, Math.PI / 2], scale: [0.016, len, 0.016] });
+      add(UNIT_CYL, M.galvDark, g, { at: [x, h, z], rot: [0, ry, Math.PI / 2], scale: [0.016, len, 0.016] });
     }
-    add(UNIT_CYL, M.galvDark, front ?? g, front ? [0, h, 0] : [0, h, d / 2], { rot: [0, 0, Math.PI / 2], scale: [0.016, w, 0.016] });
+    add(UNIT_CYL, M.galvDark, front ?? g, { at: front ? [0, h, 0] : [0, h, d / 2], rot: [0, 0, Math.PI / 2], scale: [0.016, w, 0.016] });
   }
   function soilTop(g: THREE.Group, w: number, d: number, y: number): void {
-    add(UNIT_BOX, M.soil, g, [0, y - 0.03, 0], { scale: [w - 0.02, 0.06, d - 0.02], ink: null });
+    add(UNIT_BOX, M.soil, g, { at: [0, y - 0.03, 0], scale: [w - 0.02, 0.06, d - 0.02], ink: null });
   }
 
   // Bed 1: the cutaway. Its front panel swings down to show what's inside.
@@ -34,7 +34,7 @@ export function buildBeds(c: GardenCtx) {
   bedFront.position.set(0, 0, BD / 2);
   bed.add(bedFront);
   galvBed(bed, BW, BD, BH, bedFront);
-  pick(bed, BW, BH + 0.4, BD, [0, (BH + 0.4) / 2, 0]);
+  pick(bed, [BW, BH + 0.4, BD], [0, (BH + 0.4) / 2, 0]);
   {
     const iw = BW - 0.04;
     const id = BD - 0.04;
@@ -71,7 +71,7 @@ export function buildBeds(c: GardenCtx) {
     const labels = new THREE.Group();
     bed.add(labels);
     LAYERS[s.fill].forEach((L, i) => {
-      add(UNIT_BOX, L.mat, bed, [0, y + L.h / 2, 0], { scale: [iw, L.h, id], ink: null });
+      add(UNIT_BOX, L.mat, bed, { at: [0, y + L.h / 2, 0], scale: [iw, L.h, id], ink: null });
       if (s.fill === 'hugel' && i === 0) {
         // Log ends with rings face the front.
         const rings = mapped(0xffffff, canvasTex(64, 64, (ctx) => {
@@ -115,7 +115,7 @@ export function buildBeds(c: GardenCtx) {
         const tx = label([{ text: L.name, size: 30, color: PALETTE.ink }], '#fff7d6', 512, 64);
         const count = LAYERS[s.fill].length;
         const ly = count === 2 ? 0.12 + i * 0.3 : 0.06 + i * (0.62 / (count - 1));
-        const plate = add(new THREE.PlaneGeometry(0.62, 0.0775), new THREE.MeshBasicMaterial({ map: tx }), labels, [BW / 2 + 0.42, ly, BD / 2 + 0.06], { ink: 'thin' });
+        const plate = add(new THREE.PlaneGeometry(0.62, 0.0775), new THREE.MeshBasicMaterial({ map: tx }), labels, { at: [BW / 2 + 0.42, ly, BD / 2 + 0.06] });
         plate.castShadow = false;
         labels.add(inkLine([V(BW / 2 + 0.11, ly, BD / 2 + 0.06), V(BW / 2 - 0.12, y + L.h / 2, BD / 2 + 0.01)], 2));
       }
@@ -143,7 +143,7 @@ export function buildBeds(c: GardenCtx) {
   const kitchen = area('kitchen', 1.75, 0);
   galvBed(kitchen, BW, BD, BH);
   soilTop(kitchen, BW, BD, BH - 0.02);
-  pick(kitchen, BW, 1.6, BD, [0, 0.8, 0]);
+  pick(kitchen, [BW, 1.6, BD], [0, 0.8, 0]);
   {
     const top = BH - 0.03;
     for (let i = 0; i < 3; i++) tomato(k, kitchen, V(-0.75 + i * 0.75, top, -0.22), { cage: true, cageMat: M.steel });
@@ -160,19 +160,19 @@ export function buildBeds(c: GardenCtx) {
   {
     const H = 0.44;
     const plank = (x: number, z: number, len: number, ry: number) => {
-      for (let i = 0; i < 3; i++) box(len, 0.14, 0.04, M.cedar, tunnel, [x, 0.075 + i * 0.145, z], { rot: [0, ry, 0], r: 0.006 });
+      for (let i = 0; i < 3; i++) box(len, 0.14, 0.04, M.cedar, tunnel, { at: [x, 0.075 + i * 0.145, z], rot: [0, ry, 0], r: 0.006 });
     };
     plank(0, -BD / 2, BW, 0);
     plank(0, BD / 2, BW, 0);
     plank(-BW / 2, 0, BD - 0.08, Math.PI / 2);
     plank(BW / 2, 0, BD - 0.08, Math.PI / 2);
-    for (const [x, z] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) box(0.09, H + 0.12, 0.09, M.cedarDark, tunnel, [(x * BW) / 2, (H + 0.12) / 2, (z * BD) / 2], { r: 0.01 });
+    for (const [x, z] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) box(0.09, H + 0.12, 0.09, M.cedarDark, tunnel, { at: [(x * BW) / 2, (H + 0.12) / 2, (z * BD) / 2], r: 0.01 });
     soilTop(tunnel, BW, BD, H - 0.02);
     const top = H - 0.03;
     for (let i = 0; i < 4; i++) cabbage(k, tunnel, V(-0.9 + i * 0.6, top, -0.22));
     for (let i = 0; i < 5; i++) lettuce(k, tunnel, V(-0.96 + i * 0.48, top, 0.25), { red: i % 2 === 0 });
     const R = 0.56;
-    for (const x of [-1.05, -0.35, 0.35, 1.05]) add(new THREE.TorusGeometry(R, 0.012, 6, 32, Math.PI), M.pvc, tunnel, [x, H, 0], { rot: [0, Math.PI / 2, 0] });
+    for (const x of [-1.05, -0.35, 0.35, 1.05]) add(new THREE.TorusGeometry(R, 0.012, 6, 32, Math.PI), M.pvc, tunnel, { at: [x, H, 0], rot: [0, Math.PI / 2, 0] });
     const L = 2.2;
     const coverGeo = new THREE.CylinderGeometry(R + 0.02, R + 0.02, L, 28, 12, true, -Math.PI / 2, Math.PI);
     coverGeo.rotateZ(Math.PI / 2);
@@ -193,15 +193,15 @@ export function buildBeds(c: GardenCtx) {
     const cloth = new THREE.Mesh(coverGeo, M.cloth);
     cloth.renderOrder = 2;
     cover.add(cloth);
-    const roll = add(new THREE.TorusGeometry(R + 0.04, 0.045, 8, 32, Math.PI), M.cloth, tunnel, [L / 2 - L, H, 0], { rot: [0, Math.PI / 2, 0], ink: null });
+    const roll = add(new THREE.TorusGeometry(R + 0.04, 0.045, 8, 32, Math.PI), M.cloth, tunnel, { at: [L / 2 - L, H, 0], rot: [0, Math.PI / 2, 0], ink: null });
     roll.renderOrder = 2;
-    for (const x of [-0.8, 0, 0.8]) box(0.2, 0.06, 0.12, toon(0xb39a6a), tunnel, [x, H + 0.03, R + 0.06], { r: 0.03 });
+    for (const x of [-0.8, 0, 0.8]) box(0.2, 0.06, 0.12, toon(0xb39a6a), tunnel, { at: [x, H + 0.03, R + 0.06], r: 0.03 });
     lidHooks.rowCover = (t) => {
       const sx = lerp(1, 0.2, t);
       cover.scale.x = sx;
       roll.position.x = L / 2 - L * sx;
     };
-    pick(tunnel, BW, 1.1, BD, [0, 0.55, 0]);
+    pick(tunnel, [BW, 1.1, BD], [0, 0.55, 0]);
     tag(tunnel, 'CABBAGE', [1.1, top, 0.45]);
   }
 }
@@ -210,10 +210,10 @@ export function buildSisters(c: GardenCtx) {
   const { k, M, area, pick } = c;
   const sisters = area('sisters', -1.1, -2.6);
   {
-    add(new THREE.CircleGeometry(1.45, 40), M.soil, sisters, [0, 0.008, 0], { rot: [-Math.PI / 2, 0, 0], ink: null }).castShadow = false;
+    add(new THREE.CircleGeometry(1.45, 40), M.soil, sisters, { at: [0, 0.008, 0], rot: [-Math.PI / 2, 0, 0], ink: null }).castShadow = false;
     const hills: [number, number][] = [[0, -0.3], [-0.85, 0.45], [0.8, 0.5]];
     hills.forEach(([hx, hz], hi) => {
-      const mound = add(LOW_SPHERE, M.soil, sisters, [hx, 0, hz], { scale: [0.42, 0.13, 0.42], ink: 'thin' });
+      const mound = add(LOW_SPHERE, M.soil, sisters, { at: [hx, 0, hz], scale: [0.42, 0.13, 0.42] });
       mound.castShadow = false;
       for (let c = 0; c < 4; c++) {
         const a = (c / 4) * 6.28 + hi;
@@ -222,6 +222,6 @@ export function buildSisters(c: GardenCtx) {
       const out = Math.atan2(hz, hx);
       squash(k, sisters, V(hx + Math.cos(out) * 0.3, 0.06, hz + Math.sin(out) * 0.3), [out + 0.5, out - 0.9]);
     });
-    pick(sisters, 2.6, 2.0, 2.4, [0, 1.0, 0]);
+    pick(sisters, [2.6, 2.0, 2.4], [0, 1.0, 0]);
   }
 }

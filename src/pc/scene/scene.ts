@@ -1,10 +1,8 @@
-import { PARTS, type LidId, type PartId } from '../data/parts';
+import { LIDS, PARTS, type LidId, type PartId } from '../data/parts';
 import type { Setup } from '../data/setup';
 import { buildRig, rigKey, type Rig } from './rig';
 import type { Specs } from './screen';
 import { createStage } from '../../shared/scene/stage';
-
-const LIDS: LidId[] = ['glass', 'cooler', 'heatsink', 'shroud'];
 
 export function createScene(canvas: HTMLCanvasElement, initial: Setup, initialSpecs: Specs) {
   let specs = initialSpecs;

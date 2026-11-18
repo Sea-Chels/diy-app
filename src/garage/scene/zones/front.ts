@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
 import { tween, easeInOutCubic, lerp } from '../../../shared/tween';
-import { mapped } from '../../../shared/scene/kit';
+import { add, mapped } from '../../../shared/scene/kit';
 import { C, M, rbox } from '../kit';
-import { mouthTex, plateTex } from '../textures';
+import { mouthTex, plateMat } from '../textures';
 import type { CarCtx } from '../ctx';
 
 /**
@@ -11,12 +11,12 @@ import type { CarCtx } from '../ctx';
  * clear parking lamps across the bumper and a low oval mouth behind the plate.
  */
 export function buildFront(c: CarCtx) {
-  const { S, kind, group, paint, put, tag, fasciaWidth, fasciaBottom, noseTopY, onNose } = c;
+  const { S, kind, group, paint, tag, fasciaWidth, fasciaBottom, noseTopY, onNose } = c;
   const heads: THREE.Mesh[] = [];
   const along = (g: THREE.BufferGeometry) => g.rotateX(Math.PI / 2);
   const base = fasciaBottom(S.fasciaZ);
 
-  // Each pod is a black wedge under a body-colour lid, hinged where the lid's rear edge meets the hood.
+  // Each pod is a black wedge under a body-color lid, hinged where the lid's rear edge meets the hood.
   // Open (the resting pose) the lid slants up to the front and the lamp sits in the wedge's upright face;
   // closed, the lid lies flush on the nose and the wedge, which is all below the lid, goes with it.
   const lampX = 0.52;
@@ -45,15 +45,15 @@ export function buildFront(c: CarCtx) {
     pivot.rotation.x = open;
     group.add(pivot);
     pivots.push(pivot);
-    heads.push(put(pivot, rbox(lidW, 0.016, lidL + 0.01, 0.006), paint(), [0, 0, lidL / 2], 'thin'));
+    heads.push(add(rbox(lidW, 0.016, lidL + 0.01, 0.006), paint(), pivot, { at: [0, 0, lidL / 2] }));
     const upright = new THREE.Group();
     upright.rotation.x = -open;
     pivot.add(upright);
-    heads.push(put(upright, wedgeGeo, toon(C.lampBezel, { halftone: 0.4 }), [0, -0.008, 0], 'thin'));
+    heads.push(add(wedgeGeo, toon(C.lampBezel, { halftone: 0.4 }), upright, { at: [0, -0.008, 0] }));
     const lampAt = (dz: number): [number, number, number] => [0, lampY, tipZ + 0.006 + dz];
-    heads.push(put(upright, along(new THREE.CylinderGeometry(lampR, lampR, 0.016, 32)), M.lamp(C.lamp, 0.35, C.lampGlow), lampAt(0), false));
-    heads.push(put(upright, new THREE.TorusGeometry(lampR, 0.011, 8, 36), M.chrome(), lampAt(0.008), false));
-    heads.push(put(upright, new THREE.TorusGeometry(lampR * 0.5, 0.004, 6, 28), M.chrome(), lampAt(0.011), false));
+    heads.push(add(along(new THREE.CylinderGeometry(lampR, lampR, 0.016, 32)), M.lamp(C.lamp, 0.35, C.lampGlow), upright, { at: lampAt(0), ink: null }));
+    heads.push(add(new THREE.TorusGeometry(lampR, 0.011, 8, 36), M.chrome(), upright, { at: lampAt(0.008), ink: null }));
+    heads.push(add(new THREE.TorusGeometry(lampR * 0.5, 0.004, 6, 28), M.chrome(), upright, { at: lampAt(0.011), ink: null }));
   }
   const blink = () =>
     tween({
@@ -74,10 +74,10 @@ export function buildFront(c: CarCtx) {
     lamp.rotation.set(at.pitch, at.yaw, 0, 'YXZ');
     group.add(lamp);
     const capsule = new THREE.CapsuleGeometry(0.026, 0.13, 6, 14).rotateZ(Math.PI / 2).scale(1, 1, 0.45);
-    heads.push(put(lamp, capsule, M.lamp(C.reverse, 0.15, C.lampGlow), undefined, 'thin'));
-    heads.push(put(lamp, rbox(0.07, 0.03, 0.012, 0.012), M.lamp(C.marker, 0.4), [-side * 0.045, 0, 0.008], false));
+    heads.push(add(capsule, M.lamp(C.reverse, 0.15, C.lampGlow), lamp));
+    heads.push(add(rbox(0.07, 0.03, 0.012, 0.012), M.lamp(C.marker, 0.4), lamp, { at: [-side * 0.045, 0, 0.008], ink: null }));
     const markerZ = S.fasciaZ + 0.14;
-    heads.push(put(group, rbox(0.012, 0.035, 0.1, 0.006), M.lamp(C.marker, 0.5), [side * (fasciaWidth(markerZ) + 0.004), base + 0.16, markerZ], false));
+    heads.push(add(rbox(0.012, 0.035, 0.1, 0.006), M.lamp(C.marker, 0.5), group, { at: [side * (fasciaWidth(markerZ) + 0.004), base + 0.16, markerZ], ink: null }));
   }
   tag('headlight', ...heads);
 
@@ -92,12 +92,12 @@ export function buildFront(c: CarCtx) {
   mouthGeo.computeVertexNormals();
   const mouthMat = mapped(0xffffff, mouthTex(), { halftone: 0.4 });
   mouthMat.alphaTest = 0.5;
-  put(group, mouthGeo, mouthMat, undefined, false);
+  add(mouthGeo, mouthMat, group, { ink: null });
 
   const plate = onNose(0, base + 0.1, 0.012);
-  const plateMesh = put(group, rbox(0.32, 0.1, 0.012, 0.01), mapped(0xffffff, plateTex(), { shine: 0.5, halftone: 0.3 }), plate.pos, 'thin');
+  const plateMesh = add(rbox(0.32, 0.1, 0.012, 0.01), plateMat(), group, { at: plate.pos });
   plateMesh.rotation.x = plate.pitch;
-  put(group, rbox(1.4, 0.06, 0.16, 0.03), toon(C.trim, { halftone: 0.5 }), [0, S.bottom + 0.05, S.noseZ - 0.16], 'thin');
+  add(rbox(1.4, 0.06, 0.16, 0.03), toon(C.trim, { halftone: 0.5 }), group, { at: [0, S.bottom + 0.05, S.noseZ - 0.16] });
 
   const lightY = yr + lampY;
   return { lightY, lampX, lampZ: zr + tipZ, lampR, blink };

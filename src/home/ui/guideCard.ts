@@ -44,7 +44,7 @@ export function guideCard(g: Guide, open: boolean): HTMLElement {
     onToggle: () => setState({ openGuide: open ? null : g.id }),
     body: () => [
       card.summary(g),
-      g.savings && card.note('savings', 'savings', `Saves ${g.savings}.`),
+      card.savings(g),
       card.videoButton(g.query),
       card.cautions(g),
       g.pro && card.note('pro', 'alert', h('strong', {}, 'Call a pro: '), g.pro),

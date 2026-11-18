@@ -3,9 +3,10 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import { toon } from '../../../shared/toon';
 import { createScreen } from '../screen';
 import type { PcCtx } from '../ctx';
+import { add } from '../../../shared/scene/kit';
 
 export function buildDesk(c: PcCtx) {
-  const { W, D, root, mesh, rbox, hot, mats } = c;
+  const { W, D, root, rbox, hot, mats } = c;
   const mon = new THREE.Group();
   const monX = W / 2 + 330;
   const monZ = D / 2 + 60;
@@ -14,9 +15,9 @@ export function buildDesk(c: PcCtx) {
   root.add(mon);
   const screen = createScreen();
   const monParts = [
-    rbox(230, 10, 170, mats.black, mon, 0, 5, -30, 4, 'body'),
-    rbox(46, 250, 22, mats.darkMetal, mon, 0, 135, -48, 6, 'body'),
-    rbox(600, 350, 26, mats.black, mon, 0, 300, -24, 10, 'body'),
+    rbox(230, 10, 170, mats.black, mon, { at: [0, 5, -30], r: 4, ink: 'body' }),
+    rbox(46, 250, 22, mats.darkMetal, mon, { at: [0, 135, -48], r: 6, ink: 'body' }),
+    rbox(600, 350, 26, mats.black, mon, { at: [0, 300, -24], r: 10, ink: 'body' }),
   ];
   const scr = new THREE.Mesh(new THREE.PlaneGeometry(574, 323), new THREE.MeshBasicMaterial({ map: screen.texture, toneMapped: false }));
   scr.position.set(0, 300, -10.6);
@@ -39,8 +40,8 @@ export function buildDesk(c: PcCtx) {
   kb.position.set(0, 0, 200);
   kb.rotation.y = 0.08;
   mon.add(kb);
-  rbox(330, 14, 130, mats.plastic, kb, 0, 7, 0, 5, 'body');
-  mesh(mergeGeometries(keys)!, toon(0x3d4150, { shine: 0.3 }), kb, 0, 0, 0, 'thin');
+  rbox(330, 14, 130, mats.plastic, kb, { at: [0, 7, 0], r: 5, ink: 'body' });
+  add(mergeGeometries(keys)!, toon(0x3d4150, { shine: 0.3 }), kb);
   return { mon, monX, monZ, screen };
 }
 

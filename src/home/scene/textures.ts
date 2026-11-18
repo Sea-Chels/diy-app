@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import type * as THREE from 'three';
 import type { Setup } from '../data/setup';
 import { canvasTex, range, rng } from '../../shared/scene/kit';
 

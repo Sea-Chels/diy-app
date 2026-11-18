@@ -1,5 +1,17 @@
 type Listener<S> = (s: S, prev: S) => void;
 
+export interface Store<S> {
+  getState(): S;
+  setState(patch: Partial<S>): void;
+  subscribe(l: Listener<S>): () => void;
+}
+
+/** What every workshop's state has: the selected spot and the guide open in its panel. */
+export interface Selection<S extends string> {
+  selected: S | null;
+  openGuide: string | null;
+}
+
 /** How a field is saved: its localStorage key, and how to turn whatever is stored there back into a valid value. */
 export type Persist<S> = { [K in keyof S]?: { key: string; fix: (raw: unknown) => S[K] } };
 
@@ -20,7 +32,7 @@ function save(key: string, value: unknown): void {
   }
 }
 
-export function createStore<S extends object>(defaults: S, persist: Persist<S>) {
+export function createStore<S extends object>(defaults: S, persist: Persist<S>): Store<S> {
   const listeners = new Set<Listener<S>>();
   const fields = Object.keys(persist) as (keyof S)[];
   let state: S = { ...defaults };

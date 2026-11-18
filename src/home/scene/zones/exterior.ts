@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { glass, toon } from '../../../shared/toon';
-import { add, box, canvasTex, mapped, tube, type V3 } from '../../../shared/scene/kit';
-import { V, X0, X1, Z0, Z1, T, WH, WIN, DOOR } from '../room';
+import { add, box, canvasTex, mapped, tube, V, type V3 } from '../../../shared/scene/kit';
+import { X0, X1, Z0, Z1, T, WH, WIN, DOOR } from '../room';
 import type { HomeCtx } from '../ctx';
+import { MAT } from '../../../shared/scene/materials';
 
 /** Outside: trim, eaves and gutters, downspout, hose bib, porch light. */
 export function buildExterior(c: HomeCtx) {
@@ -60,7 +61,7 @@ export function buildExterior(c: HomeCtx) {
     const lg = new THREE.BoxGeometry(0.06, 0.008, 0.035);
     for (let i = 0; i < 70; i++) {
       const x = XO - OV - 0.08 + r() * (X1 - XO + OV - 0.2);
-      add(lg, leafCols[i % 4], gutA, [x, GY0 + 0.016 + r() * 0.03, ZO - OV - 0.06 + (r() - 0.5) * 0.07], { rot: [r() * 0.6, r() * 3, r() * 0.6], ink: null, shadow: false });
+      add(lg, leafCols[i % 4], gutA, { at: [x, GY0 + 0.016 + r() * 0.03, ZO - OV - 0.06 + (r() - 0.5) * 0.07], rot: [r() * 0.6, r() * 3, r() * 0.6], ink: null, shadow: false });
     }
   }
   // Gutter guard over the leafiest run; lifts on a hinge along the fascia.
@@ -80,14 +81,14 @@ export function buildExterior(c: HomeCtx) {
     const zg = ZO - OV - 0.06;
     const zw = ZO - 0.04;
     const yTop = WH - 0.44;
-    box(0.075, 0.06, 0.06, M.gutter, gutA, [DX, GY0 - 0.02, zg], { r: 0.006 });
+    box(0.075, 0.06, 0.06, M.gutter, gutA, { at: [DX, GY0 - 0.02, zg], r: 0.006 });
     const dy = GY0 - 0.03 - yTop;
     const dz = zg - zw;
-    box(0.075, Math.hypot(dy, dz), 0.06, M.gutter, gutA, [DX, (GY0 - 0.03 + yTop) / 2, (zg + zw) / 2], { rot: [Math.atan2(dz, dy), 0, 0], r: 0.006 });
-    box(0.075, yTop + 0.22, 0.06, M.gutter, gutA, [DX, (yTop - 0.22) / 2, zw], { r: 0.006 });
+    box(0.075, Math.hypot(dy, dz), 0.06, M.gutter, gutA, { at: [DX, (GY0 - 0.03 + yTop) / 2, (zg + zw) / 2], rot: [Math.atan2(dz, dy), 0, 0], r: 0.006 });
+    box(0.075, yTop + 0.22, 0.06, M.gutter, gutA, { at: [DX, (yTop - 0.22) / 2, zw], r: 0.006 });
     for (const y of [0.4, 1.4]) slab([DX - 0.05, y, zw - 0.035], [DX + 0.05, y + 0.02, zw + 0.04], M.gutter, gutA, 'thin');
-    box(0.075, 0.06, 0.12, M.gutter, gutA, [DX, -0.25, zw - 0.03], { rot: [-0.5, 0, 0], r: 0.006 });
-    box(0.075, 0.06, 0.6, M.gutter, gutA, [DX, -0.29, zw - 0.39], { rot: [-0.04, 0, 0], r: 0.006 });
+    box(0.075, 0.06, 0.12, M.gutter, gutA, { at: [DX, -0.25, zw - 0.03], rot: [-0.5, 0, 0], r: 0.006 });
+    box(0.075, 0.06, 0.6, M.gutter, gutA, { at: [DX, -0.29, zw - 0.39], rot: [-0.04, 0, 0], r: 0.006 });
     slab([DX - 0.13, -0.35, zw - 1.0], [DX + 0.13, -0.31, zw - 0.66], M.concrete, gutA, 'thin');
     pick(gutA, [DX - 0.12, -0.35, zw - 1.0], [DX + 0.12, GY0, zw + 0.05]);
   }
@@ -99,15 +100,15 @@ export function buildExterior(c: HomeCtx) {
   {
     const e = extA;
     const HB = { y: 0.42, z: -1.75 };
-    add(new THREE.CylinderGeometry(0.045, 0.045, 0.015, 16), M.copper, e, [XO - 0.008, HB.y, HB.z], { rot: [0, 0, Math.PI / 2] });
-    add(new THREE.CylinderGeometry(0.02, 0.02, 0.09, 12), M.brass, e, [XO - 0.055, HB.y, HB.z], { rot: [0, 0, Math.PI / 2] });
-    add(new THREE.CylinderGeometry(0.018, 0.016, 0.07, 12), M.brass, e, [XO - 0.1, HB.y - 0.03, HB.z]);
-    add(new THREE.CylinderGeometry(0.005, 0.005, 0.04, 6), M.brass, e, [XO - 0.07, HB.y + 0.035, HB.z]);
-    add(new THREE.TorusGeometry(0.028, 0.007, 6, 14), M.red, e, [XO - 0.07, HB.y + 0.058, HB.z], { rot: [Math.PI / 2, 0, 0] });
+    add(new THREE.CylinderGeometry(0.045, 0.045, 0.015, 16), M.copper, e, { at: [XO - 0.008, HB.y, HB.z], rot: [0, 0, Math.PI / 2] });
+    add(new THREE.CylinderGeometry(0.02, 0.02, 0.09, 12), M.brass, e, { at: [XO - 0.055, HB.y, HB.z], rot: [0, 0, Math.PI / 2] });
+    add(new THREE.CylinderGeometry(0.018, 0.016, 0.07, 12), M.brass, e, { at: [XO - 0.1, HB.y - 0.03, HB.z] });
+    add(new THREE.CylinderGeometry(0.005, 0.005, 0.04, 6), M.brass, e, { at: [XO - 0.07, HB.y + 0.035, HB.z] });
+    add(new THREE.TorusGeometry(0.028, 0.007, 6, 14), M.red, e, { at: [XO - 0.07, HB.y + 0.058, HB.z], rot: [Math.PI / 2, 0, 0] });
     slab([XO - 0.03, 0.62, -1.38], [XO, 0.72, -1.12], toon(0x3a3d44), e, 'thin');
     slab([XO - 0.16, 0.66, -1.32], [XO - 0.03, 0.7, -1.18], toon(0x3a3d44), e, 'thin');
-    const hose = toon(0x3f9a4a, { shine: 0.4 });
-    for (let i = 0; i < 4; i++) add(new THREE.TorusGeometry(0.2, 0.013, 8, 32), hose, e, [XO - 0.05 - i * 0.026, 0.5, -1.25], { rot: [0, Math.PI / 2, 0], scale: [1, 1.2, 1] });
+    const hose = MAT.hose();
+    for (let i = 0; i < 4; i++) add(new THREE.TorusGeometry(0.2, 0.013, 8, 32), hose, e, { at: [XO - 0.05 - i * 0.026, 0.5, -1.25], rot: [0, Math.PI / 2, 0], scale: [1, 1.2, 1] });
     tube([V(XO - 0.1, HB.y - 0.07, HB.z), V(XO - 0.14, HB.y - 0.2, HB.z + 0.05), V(XO - 0.16, 0.18, -1.45), V(XO - 0.1, 0.27, -1.3)], 0.013, hose, e, { seg: 20 });
     const PLZ = DOOR.z0 - 0.24;
     slab([XO - 0.02, 1.62, PLZ - 0.06], [XO, 1.86, PLZ + 0.06], M.black, e, 'thin');
@@ -127,7 +128,7 @@ export function buildExterior(c: HomeCtx) {
       ctx.fillText('HOUSE WRAP', 8, 20); ctx.fillText('HOUSE WRAP', 60, 48);
     }));
     slab([XO - 0.005, SP.y0, SP.z0], [XO - 0.001, SP.y1, SP.z1], [M.cut, wrap, M.cut, M.cut, M.cut, M.cut], e, null);
-    for (const z of [-0.45, -0.05, 0.25]) add(new THREE.CylinderGeometry(0.006, 0.006, 0.004, 8), M.steel, e, [XO - 0.007, SP.y1 - 0.03, z], { rot: [0, 0, Math.PI / 2], ink: null });
+    for (const z of [-0.45, -0.05, 0.25]) add(new THREE.CylinderGeometry(0.006, 0.006, 0.004, 8), M.steel, e, { at: [XO - 0.007, SP.y1 - 0.03, z], rot: [0, 0, Math.PI / 2], ink: null });
     const spHinge = pivot(e, [XO - 0.007, SP.y1, 0]);
     slab([-0.012, SP.y0 - SP.y1, SP.z0], [0, 0, SP.z1], [M.cut, siding(SP.y0, SP.y1), M.cut, M.cut, M.cut, M.cut], spHinge, 'body');
     // It already sags a little when closed: that's the "loose" panel.

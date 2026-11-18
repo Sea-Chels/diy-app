@@ -1,7 +1,8 @@
 import { CAT_LABEL, TOOLS, type ToolCat } from '../data/tools';
 import { GUIDES } from '../data/guides';
-import { getState, setState, subscribe } from '../store';
+import { getState, select, setState, subscribe } from '../store';
 import { h, clear } from '../../shared/dom';
+import { keepFocus } from '../../shared/focus';
 import { openModal, closeModal } from '../../shared/modal';
 import { icon } from '../../shared/icons';
 import { toggleOwned, toolCount } from './guideCard';
@@ -12,7 +13,8 @@ export function openToolbox(): void {
   const used = new Map<string, number>();
   for (const g of GUIDES) for (const t of g.tools) used.set(t, (used.get(t) ?? 0) + 1);
 
-  function render(): void {
+  const render = () => keepFocus(body, renderNow);
+  function renderNow(): void {
     clear(body);
     const owned = new Set(getState().owned);
     const ready = GUIDES.filter((g) => {
@@ -41,7 +43,7 @@ export function openToolbox(): void {
     }
     if (ready.length) {
       body.append(h('h3', { class: 'section-label' }, 'You\'re ready for'),
-        h('div', { class: 'panel-links' }, ...ready.map((g) => h('button', { class: 'link-chip', onClick: () => { closeModal(); setState({ selectedArea: g.areas[0], openGuide: g.id }); } }, g.title))));
+        h('div', { class: 'panel-links' }, ...ready.map((g) => h('button', { class: 'link-chip', onClick: () => { closeModal(); select(g.spots[0], g.id); } }, g.title))));
     }
   }
 

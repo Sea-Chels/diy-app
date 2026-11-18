@@ -1,8 +1,6 @@
-import * as THREE from 'three';
 
-/** Metres to scene units. */
+/** Meters to scene units. */
 export const K = 0.6;
-export const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 
 // Room extents. The back wall's inner face is at z = Z0, the left wall's at x = X0.
 export const X0 = -3.5;
@@ -16,8 +14,6 @@ export const PH = 1.2; // bathroom partitions are cut lower so you can see in
 export const BX = -1.9;
 export const BZ = -0.45;
 export const PT = 0.12; // partition thickness
-
-export const UNIT_BOX = new THREE.BoxGeometry(1, 1, 1);
 
 /** The finish floor's cut-out at the front, where the planks lift. */
 export const HOLE = { x0: 0.2, x1: 1.4, z0: 2.1, z1: 2.55 };

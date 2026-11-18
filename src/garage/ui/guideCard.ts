@@ -17,12 +17,12 @@ export function guideCard(g: Guide, open: boolean): HTMLElement {
     body: () => {
       const v = getState().vehicle;
       // The year, make and model describe the car; motorcycle and bike guides search generically.
-      const car = rideOf(g.parts[0]) === 'car';
+      const car = rideOf(g.spots[0]) === 'car';
       const known = car && hasVehicle(v);
       return [
         card.summary(g),
-        card.note('savings', 'savings', g.savings),
-        card.videoButton(`${known ? vehicleLabel(v) : RIDE_SEARCH[rideOf(g.parts[0])]} ${g.query}`, known ? `Videos for your ${vehicleLabel(v)}` : undefined),
+        card.savings(g),
+        card.videoButton(`${known ? vehicleLabel(v) : RIDE_SEARCH[rideOf(g.spots[0])]} ${g.query}`, known ? `Videos for your ${vehicleLabel(v)}` : undefined),
         car && !known && h('p', { class: 'hint-text' }, 'Pick your year, make and model above to get videos for your exact car.'),
         card.cautions(g),
         card.toolsAndSupplies(g, 'Parts & supplies'),

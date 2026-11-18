@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
-import { add, canvasTex, mapped, range } from '../../../shared/scene/kit';
-import { V } from '../geometry';
+import { add, canvasTex, mapped, range, V } from '../../../shared/scene/kit';
 import type { GardenCtx } from '../ctx';
 
 export function buildWildlife(c: GardenCtx) {
@@ -22,7 +21,7 @@ export function buildWildlife(c: GardenCtx) {
     const g = new THREE.Group();
     const bodyG = new THREE.CapsuleGeometry(0.018, 0.03, 3, 8);
     bodyG.rotateZ(Math.PI / 2);
-    add(bodyG, bodyMat, g, [0, 0, 0], { ink: 'thin' });
+    add(bodyG, bodyMat, g);
     const wings: THREE.Mesh[] = [];
     for (const sd of [-1, 1]) {
       const w = new THREE.Mesh(new THREE.CircleGeometry(0.022, 10).translate(0, 0, 0.022), wingMat);
@@ -37,7 +36,7 @@ export function buildWildlife(c: GardenCtx) {
   const bfly = [0xff8a1a, 0xffffff, 0x6ec8ff, 0xffd23f];
   for (let i = 0; i < 5; i++) {
     const g = new THREE.Group();
-    add(new THREE.CapsuleGeometry(0.007, 0.04, 3, 6), toon(0x1a1410), g, [0, 0, 0], { rot: [Math.PI / 2, 0, 0], ink: null });
+    add(new THREE.CapsuleGeometry(0.007, 0.04, 3, 6), toon(0x1a1410), g, { rot: [Math.PI / 2, 0, 0], ink: null });
     const shape = new THREE.Shape();
     shape.moveTo(0, 0);
     shape.bezierCurveTo(0.03, 0.05, 0.08, 0.04, 0.07, 0.0);
@@ -47,7 +46,7 @@ export function buildWildlife(c: GardenCtx) {
     const wm = toon(bfly[i % bfly.length], { side: THREE.DoubleSide });
     const wings: THREE.Mesh[] = [];
     for (const sd of [-1, 1]) {
-      const w = add(wg, wm, g, [0, 0, 0], { ink: 'thin', scale: [sd, 1, 1] });
+      const w = add(wg, wm, g, { scale: [sd, 1, 1] });
       w.userData.side = sd;
       wings.push(w);
     }

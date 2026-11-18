@@ -2,7 +2,7 @@ import type { Guide } from '../guides';
 
 export const FRUIT_GUIDES: Guide[] = [
   {
-    id: 'plant-pawpaw', title: 'Plant and pollinate pawpaws', areas: ['fruit'], aliases: ['pawpaw', 'asimina', 'native fruit', 'paw paw', 'hand pollinate'],
+    id: 'plant-pawpaw', title: 'Plant and pollinate pawpaws', spots: ['fruit'], aliases: ['pawpaw', 'asimina', 'native fruit', 'paw paw', 'hand pollinate'],
     kind: 'grow', difficulty: 2, minutes: [60, 120], wait: '3–7 years to first fruit',
     tools: ['Shovel', 'Small paintbrush (for pollinating)'], supplies: ['Two different pawpaw varieties or seedlings (container grown)', 'Tree tubes or shade cloth', 'Mulch'],
     summary: 'Pawpaws are native, pest-resistant and taste tropical. The tricks: shade them while young, never disturb the taproot, and plant two genetically different trees.',
@@ -17,7 +17,7 @@ export const FRUIT_GUIDES: Guide[] = [
     plants: ['pawpaw'], query: 'how to grow pawpaw trees pollination',
   },
   {
-    id: 'blueberries', title: 'Grow blueberries in acid soil', areas: ['fruit'], aliases: ['blueberry', 'acid soil', 'sulfur', 'ph', 'yellow leaves blueberry', 'container blueberries'],
+    id: 'blueberries', title: 'Grow blueberries in acid soil', spots: ['fruit'], aliases: ['blueberry', 'acid soil', 'sulfur', 'ph', 'yellow leaves blueberry', 'container blueberries'],
     kind: 'grow', difficulty: 2, minutes: [60, 120], wait: 'Lower pH 6–12 months ahead if planting in the ground',
     tools: ['Shovel', 'Soil test kit'], supplies: ['Two or more blueberry varieties suited to your zone', 'Elemental sulfur (for in-ground)', 'Peat moss or composted pine bark', 'Pine bark or pine needle mulch', 'Acid-loving plant fertilizer'],
     summary: 'Blueberries need acidic soil, around pH 4.5–5.5. In most gardens that means amending the soil a season ahead, or growing in a big container or half barrel of acidic mix.',
@@ -28,12 +28,12 @@ export const FRUIT_GUIDES: Guide[] = [
       'Mulch 3–4 inches deep with pine bark or needles.',
       'Water with rainwater if your tap water is hard; keep evenly moist.',
       'Pick off flowers the first year. Feed lightly with an acid fertilizer in spring.',
-      'Cover with bird netting as berries colour.',
+      'Cover with bird netting as berries color.',
     ],
     plants: ['blueberry'], query: 'how to grow blueberries acidic soil container',
   },
   {
-    id: 'prune-berries', title: 'Prune fruit bushes in late winter', areas: ['fruit', 'tools'], aliases: ['pruning', 'goji', 'blueberry', 'raspberry', 'currant', 'dormant pruning'],
+    id: 'prune-berries', title: 'Prune fruit bushes in late winter', spots: ['fruit', 'tools'], aliases: ['pruning', 'goji', 'blueberry', 'raspberry', 'currant', 'dormant pruning'],
     kind: 'grow', difficulty: 2, minutes: [20, 60],
     tools: ['Sharp bypass pruners', 'Loppers', 'Rubbing alcohol to clean blades'], supplies: [],
     summary: 'Dormant pruning in late winter keeps bushes young, open and productive. Remove the 3 Ds first: dead, damaged and diseased wood.',
@@ -48,13 +48,13 @@ export const FRUIT_GUIDES: Guide[] = [
     plants: ['blueberry', 'goji', 'raspberry', 'currant'], query: 'pruning blueberry bushes goji late winter',
   },
   {
-    id: 'birds-berries', title: 'Birds are eating all the fruit', areas: ['fruit'], aliases: ['bird netting', 'birds', 'squirrels', 'protect berries'],
+    id: 'birds-berries', title: 'Birds are eating all the fruit', spots: ['fruit'], aliases: ['bird netting', 'birds', 'squirrels', 'protect berries'],
     kind: 'fix', difficulty: 1, minutes: [20, 45],
     tools: ['Stakes or PVC hoops'], supplies: ['Bird netting with small mesh', 'Clothespins or zip ties'],
-    summary: 'Birds find berries the day they colour. Netting over a frame works far better than scare tape or owls.',
+    summary: 'Birds find berries the day they color. Netting over a frame works far better than scare tape or owls.',
     steps: [
       'Build a simple frame of stakes or hoops so the net doesn\'t lie on the plant (birds peck through).',
-      'Drape netting over it as soon as fruit starts colouring.',
+      'Drape netting over it as soon as fruit starts coloring.',
       'Close the bottom completely with pins or stakes; birds walk in under gaps.',
       'Check daily for trapped birds and remove nets after harvest.',
     ],

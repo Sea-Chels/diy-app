@@ -2,8 +2,8 @@ import type { Guide } from '../guides';
 
 export const BATH_GUIDES: Guide[] = [
   {
-    id: 'recaulk-tub', title: 'Recaulk a tub or shower', areas: ['bath'], aliases: ['caulk', 'mold', 'mildew', 'silicone', 'tub seam', 'shower caulk'],
-    kind: 'maintain', difficulty: 1, minutes: [60, 120], savings: '$150–300 for a pro, and the water damage behind the tile',
+    id: 'recaulk-tub', title: 'Recaulk a tub or shower', spots: ['bath'], aliases: ['caulk', 'mold', 'mildew', 'silicone', 'tub seam', 'shower caulk'],
+    kind: 'maintain', difficulty: 1, minutes: [60, 120], savings: 'saves $150–300 for a pro, and the water damage behind the tile',
     tools: ['knife', 'caulk-gun', 'scraper', 'gloves', 'Caulk remover tool'],
     supplies: ['100% silicone kitchen-and-bath caulk', 'Caulk softener/remover (optional)', 'Bleach or mildew cleaner', 'Rubbing alcohol', 'Painter\'s tape'],
     summary: 'Black spots in the caulk mean mildew underneath; you can\'t clean it out, you have to replace the bead. Get every bit of the old caulk out, let the joint dry, then lay new silicone.',
@@ -19,8 +19,8 @@ export const BATH_GUIDES: Guide[] = [
     featured: true,
   },
   {
-    id: 'slow-bath-drain', title: 'Clear a slow bathroom sink', areas: ['bath'], aliases: ['slow drain', 'hair clog', 'pop-up stopper', 'sink stopper', 'zip-it'],
-    kind: 'fix', difficulty: 1, minutes: [15, 30], savings: 'a $150 drain call',
+    id: 'slow-bath-drain', title: 'Clear a slow bathroom sink', spots: ['bath'], aliases: ['slow drain', 'hair clog', 'pop-up stopper', 'sink stopper', 'zip-it'],
+    kind: 'fix', difficulty: 1, minutes: [15, 30], savings: 'saves a $150 drain call',
     tools: ['channel-locks', 'drain-stick', 'headlamp', 'gloves', 'bucket'],
     supplies: ['Rag'],
     summary: 'Bathroom sinks slow down from hair wrapped around the pop-up stopper. Pull the stopper and the hair, or fish it out with a barbed strip.',
@@ -34,8 +34,8 @@ export const BATH_GUIDES: Guide[] = [
     query: 'how to clean a bathroom sink pop up stopper hair clog',
   },
   {
-    id: 'tub-drain', title: 'Unclog a tub drain', areas: ['bath'], aliases: ['tub clog', 'shower drain', 'standing water', 'trip lever'],
-    kind: 'fix', difficulty: 1, minutes: [15, 45], savings: 'a $150 drain call',
+    id: 'tub-drain', title: 'Unclog a tub drain', spots: ['bath'], aliases: ['tub clog', 'shower drain', 'standing water', 'trip lever'],
+    kind: 'fix', difficulty: 1, minutes: [15, 45], savings: 'saves a $150 drain call',
     tools: ['screwdriver', 'drain-stick', 'plunger-sink', 'snake', 'gloves'],
     supplies: ['Rag', 'Duct tape'],
     summary: 'Remove the stopper (lift-and-turn, toe-touch or trip lever), pull out the hair, then plunge or snake with the overflow covered.',
@@ -49,8 +49,8 @@ export const BATH_GUIDES: Guide[] = [
     query: 'how to unclog bathtub drain remove stopper',
   },
   {
-    id: 'bath-faucet', title: 'Replace a bathroom faucet', areas: ['bath'], aliases: ['vanity faucet', 'lavatory faucet', 'new faucet', 'centerset', 'widespread'],
-    kind: 'install', difficulty: 2, minutes: [60, 120], savings: '$150–250 in labor',
+    id: 'bath-faucet', title: 'Replace a bathroom faucet', spots: ['bath'], aliases: ['vanity faucet', 'lavatory faucet', 'new faucet', 'centerset', 'widespread'],
+    kind: 'install', difficulty: 2, minutes: [60, 120], savings: 'saves $150–250 in labor',
     tools: ['basin-wrench', 'wrench', 'channel-locks', 'headlamp', 'bucket'],
     supplies: ['New faucet with its drain assembly', 'Plumber\'s putty (or silicone on stone that putty can stain)', 'New supply lines'],
     summary: 'Measure the hole spacing first: 4 in centerset, 8 in widespread, or a single hole. Most faucets come with a matching pop-up drain.',
@@ -65,7 +65,7 @@ export const BATH_GUIDES: Guide[] = [
     query: 'how to replace a bathroom faucet and pop up drain',
   },
   {
-    id: 'showerhead', title: 'Replace or descale a showerhead', areas: ['bath'], aliases: ['shower head', 'low pressure shower', 'mineral', 'limescale', 'vinegar bag'],
+    id: 'showerhead', title: 'Replace or descale a showerhead', spots: ['bath'], aliases: ['shower head', 'low pressure shower', 'mineral', 'limescale', 'vinegar bag'],
     kind: 'maintain', difficulty: 1, minutes: [10, 30], savings: 'free with vinegar',
     tools: ['wrench', 'Rag'],
     supplies: ['Thread tape', 'White vinegar and a plastic bag with a band (to descale)'],
@@ -79,8 +79,8 @@ export const BATH_GUIDES: Guide[] = [
     query: 'how to replace a shower head thread tape descale vinegar',
   },
   {
-    id: 'regrout-shower', title: 'Regrout shower tile', areas: ['bath', 'floor'], aliases: ['grout', 'cracked grout', 'moldy grout', 'regrout', 'grout sealer'],
-    kind: 'finish', difficulty: 2, minutes: [180, 480], savings: 'hundreds compared with retiling',
+    id: 'regrout-shower', title: 'Regrout shower tile', spots: ['bath', 'floor'], aliases: ['grout', 'cracked grout', 'moldy grout', 'regrout', 'grout sealer'],
+    kind: 'finish', difficulty: 2, minutes: [180, 480], savings: 'saves hundreds compared with retiling',
     tools: ['grout-saw', 'multitool', 'grout-float', 'hepa-vac', 'glasses', 'respirator', 'gloves', 'bucket'],
     supplies: ['Grout (sanded for joints over ⅛ in, unsanded for thinner)', 'Grout sealer', 'Sponges'],
     summary: 'Cracked or crumbling grout lets water behind the tile. Rake out the old grout, pack in new, clean off the haze and seal it.',

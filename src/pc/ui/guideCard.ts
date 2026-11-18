@@ -17,7 +17,7 @@ export function guideCard(g: Guide, open: boolean): HTMLElement {
       const named = g.ctx ? pickedName(getState().build, g.ctx) : null;
       return [
         card.summary(g),
-        g.savings && card.note('savings', 'savings', g.savings),
+        card.savings(g),
         card.videoButton(named ? `${named} ${g.query}` : g.query, named ? `Videos for the ${named}` : undefined),
         g.ctx && !named && h('p', { class: 'hint-text' }, `Pick your ${CATEGORY_LABEL[g.ctx].toLowerCase()} in the parts picker to get videos for your exact part.`),
         card.cautions(g),

@@ -8,9 +8,9 @@ import { h } from '../../shared/dom';
  */
 export function mountRideSwitch(root: HTMLElement, home: () => void): void {
   const pick = (r: RideId) => {
-    const { ride, selectedPart } = getState();
-    if (r === ride && !selectedPart) home();
-    else setState({ ride: r, selectedPart: null, openGuide: null });
+    const { ride, selected } = getState();
+    if (r === ride && !selected) home();
+    else setState({ ride: r, selected: null, openGuide: null });
   };
   const btns = RIDES.map((r) => {
     const b = h('button', { 'aria-pressed': 'false', onClick: () => pick(r) }, RIDE_LABEL[r]);

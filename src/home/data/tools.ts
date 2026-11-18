@@ -2,7 +2,7 @@
  * The toolbox. Guides list tools by these ids (anything else is shown as
  * plain text), so marking a tool as owned shows which guides you're ready for.
  */
-export type ToolCat = 'starter' | 'electrical' | 'plumbing' | 'carpentry' | 'walls' | 'floors';
+export type ToolCat = 'starter' | 'electrical' | 'plumbing' | 'carpentry' | 'walls' | 'floors' | 'outside';
 export const CAT_LABEL: Record<ToolCat, string> = {
   starter: 'Starter kit',
   electrical: 'Electrical',
@@ -10,6 +10,7 @@ export const CAT_LABEL: Record<ToolCat, string> = {
   carpentry: 'Carpentry',
   walls: 'Drywall & paint',
   floors: 'Tile & floors',
+  outside: 'Outside & up high',
 };
 
 export interface Tool {
@@ -39,6 +40,7 @@ export const TOOLS: Tool[] = [
   { id: 'stud-finder', name: 'Stud finder', cat: 'starter', use: 'Find framing before you hang anything heavy or cut a wall.', cost: '$', starter: true },
   { id: 'caulk-gun', name: 'Caulk gun', cat: 'starter', use: 'Silicone and acrylic caulk, construction adhesive.', cost: '$', starter: true },
   { id: 'ladder', name: 'Step ladder (6 ft)', cat: 'starter', use: 'Ceiling lights, fans, smoke alarms. Never stand on the top step.', cost: '$$', starter: true },
+  { id: 'extension-ladder', name: 'Extension ladder', cat: 'outside', use: 'Gutters, siding and second-floor windows. Set it 1 ft out for every 4 ft of height.', cost: '$$$' },
   { id: 'bucket', name: 'Bucket and old towels', cat: 'starter', use: 'Catch water under traps and supply lines.', cost: '$', starter: true },
 
   { id: 'voltage-tester', name: 'Non-contact voltage tester', cat: 'electrical', use: 'Beeps near a live wire. Check it on a known live outlet before trusting it.', cost: '$', starter: true },
@@ -76,7 +78,7 @@ export const TOOLS: Tool[] = [
   { id: 'heat-gun', name: 'Heat gun', cat: 'walls', use: 'Softens paint for scraping (only on lead-free paint), shrink film, stubborn adhesive.', cost: '$$' },
   { id: 'scraper', name: 'Paint scrapers (carbide and plastic)', cat: 'walls', use: 'Lift softened paint and old caulk.', cost: '$' },
   { id: 'hepa-vac', name: 'Shop vac with a HEPA filter', cat: 'walls', use: 'Dust control, especially around old paint.', cost: '$$' },
-  { id: 'respirator', name: 'Respirator (P100 or N95)', cat: 'walls', use: 'Sanding dust. Organic-vapour cartridges for solvents and strippers.', cost: '$' },
+  { id: 'respirator', name: 'Respirator (P100 or N95)', cat: 'walls', use: 'Sanding dust. Organic-vapor cartridges for solvents and strippers.', cost: '$' },
 
   { id: 'trowel', name: 'Notched trowel', cat: 'floors', use: 'Spread thinset or mastic at the right thickness.', cost: '$' },
   { id: 'grout-float', name: 'Grout float and sponge', cat: 'floors', use: 'Pack grout and wipe the haze off.', cost: '$' },

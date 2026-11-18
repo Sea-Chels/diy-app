@@ -2,15 +2,15 @@ import type { Guide } from '../guides';
 
 export const TOILET_GUIDES: Guide[] = [
   {
-    id: 'running-toilet', title: 'Fix a running toilet', areas: ['toilet'], aliases: ['toilet keeps running', 'phantom flush', 'flapper', 'chain', 'float', 'hissing', 'refill'],
-    kind: 'fix', difficulty: 1, minutes: [15, 45], savings: 'a $5–20 part, and up to hundreds of gallons a day of water',
+    id: 'running-toilet', title: 'Fix a running toilet', spots: ['toilet'], aliases: ['toilet keeps running', 'phantom flush', 'flapper', 'chain', 'float', 'hissing', 'refill'],
+    kind: 'fix', difficulty: 1, minutes: [15, 45], savings: 'a $5–20 part, and saves up to hundreds of gallons of water a day',
     tools: ['screwdriver', 'pliers', 'gloves'],
-    supplies: ['Food colouring', 'Replacement flapper (2 in or 3 in to match your flush valve)', 'Fill valve kit if it hisses or won\'t shut off'],
+    supplies: ['Food coloring', 'Replacement flapper (2 in or 3 in to match your flush valve)', 'Fill valve kit if it hisses or won\'t shut off'],
     summary: 'A running toilet is one of three things: the flapper leaks, the chain is wrong, or the water level is set above the overflow tube. Lift the lid and you can see which.',
     steps: [
       'Lift the tank lid. If water is spilling into the overflow tube, the level is too high: turn the fill valve\'s adjustment screw or slide the float clip down until the water stops about an inch below the top of the tube (or at the line marked in the tank).',
       'Check the chain: it should have about ½ in of slack with the flapper closed. Too tight holds the flapper open; too loose can get trapped under it.',
-      'Dye test the flapper: put a few drops of food colouring in the tank and wait 20 minutes without flushing. Colour in the bowl means the flapper leaks.',
+      'Dye test the flapper: put a few drops of food coloring in the tank and wait 20 minutes without flushing. Color in the bowl means the flapper leaks.',
       'To replace it, shut the supply valve, flush to empty the tank, unhook the old flapper from the ears of the overflow tube and fit the same size (2 or 3 in).',
       'If the fill valve hisses or won\'t shut off, replace the whole fill valve (see the fill valve guide).',
       'Make sure the refill tube is clipped above the overflow tube, not pushed down inside it.',
@@ -18,8 +18,8 @@ export const TOILET_GUIDES: Guide[] = [
     query: 'how to fix a running toilet flapper chain float adjustment', featured: true,
   },
   {
-    id: 'fill-valve', title: 'Replace a toilet fill valve', areas: ['toilet'], aliases: ['fill valve', 'ballcock', 'fluidmaster', 'toilet hissing', 'slow refill'],
-    kind: 'install', difficulty: 2, minutes: [30, 60], savings: '$15 part vs a $150 call',
+    id: 'fill-valve', title: 'Replace a toilet fill valve', spots: ['toilet'], aliases: ['fill valve', 'ballcock', 'fluidmaster', 'toilet hissing', 'slow refill'],
+    kind: 'install', difficulty: 2, minutes: [30, 60], savings: 'a $15 part instead of a $150 call',
     tools: ['wrench', 'channel-locks', 'bucket', 'Sponge'],
     supplies: ['Universal fill valve kit', 'New supply line if it\'s old'],
     summary: 'The tall valve on one side of the tank refills it. When it hisses, drips or refills slowly, a universal replacement fixes it in half an hour.',
@@ -34,8 +34,8 @@ export const TOILET_GUIDES: Guide[] = [
     query: 'how to replace a toilet fill valve fluidmaster',
   },
   {
-    id: 'clogged-toilet', title: 'Unclog a toilet', areas: ['toilet'], aliases: ['toilet clog', 'overflowing', 'plunge', 'blocked toilet', 'closet auger'],
-    kind: 'fix', difficulty: 1, minutes: [10, 30], savings: '$150–300 for an emergency plumber',
+    id: 'clogged-toilet', title: 'Unclog a toilet', spots: ['toilet'], aliases: ['toilet clog', 'overflowing', 'plunge', 'blocked toilet', 'closet auger'],
+    kind: 'fix', difficulty: 1, minutes: [10, 30], savings: 'saves $150–300 for an emergency plumber',
     tools: ['plunger-toilet', 'closet-auger', 'gloves', 'bucket'],
     supplies: ['Old towels'],
     summary: 'Use a flange plunger, and if that fails a closet auger. Don\'t flush again to test: if the bowl is near the rim, close the supply valve at the wall first.',
@@ -51,8 +51,8 @@ export const TOILET_GUIDES: Guide[] = [
     query: 'how to unclog a toilet flange plunger closet auger',
   },
   {
-    id: 'replace-toilet', title: 'Replace a toilet (and the wax ring)', areas: ['toilet'], aliases: ['wax ring', 'rocking toilet', 'leak at base', 'new toilet', 'toilet flange'],
-    kind: 'install', difficulty: 2, minutes: [90, 180], savings: '$200–350 in labor',
+    id: 'replace-toilet', title: 'Replace a toilet (and the wax ring)', spots: ['toilet'], aliases: ['wax ring', 'rocking toilet', 'leak at base', 'new toilet', 'toilet flange'],
+    kind: 'install', difficulty: 2, minutes: [90, 180], savings: 'saves $200–350 in labor',
     tools: ['wrench', 'channel-locks', 'putty-knife', 'level', 'bucket', 'gloves', 'Sponge', 'Hacksaw (mini)'],
     supplies: ['New toilet, or a new wax ring (or a wax-free seal) to reset the old one', 'New closet bolts', 'New supply line', 'Plastic toilet shims'],
     summary: 'Water around the base or a toilet that rocks means the wax seal has failed. Pull the toilet, scrape the flange, fit a new seal and set it straight down.',
@@ -69,7 +69,7 @@ export const TOILET_GUIDES: Guide[] = [
     query: 'how to replace a toilet wax ring step by step',
   },
   {
-    id: 'weak-flush', title: 'Fix a weak or incomplete flush', areas: ['toilet'], aliases: ['weak flush', 'double flush', 'rim jets', 'slow flush'],
+    id: 'weak-flush', title: 'Fix a weak or incomplete flush', spots: ['toilet'], aliases: ['weak flush', 'double flush', 'rim jets', 'slow flush'],
     kind: 'fix', difficulty: 1, minutes: [20, 60], savings: 'free',
     tools: ['screwdriver', 'Small mirror', 'Wire or Allen key'],
     supplies: ['White vinegar', 'Plumber\'s putty or tape (to plug holes while soaking)'],

@@ -2,7 +2,7 @@ import type { Guide } from '../guides';
 
 export const ARBOR_GUIDES: Guide[] = [
   {
-    id: 'build-arbor', title: 'Build a garden arbor', areas: ['arbor'], aliases: ['arbor', 'pergola', 'trellis', 'archway', 'climbing'],
+    id: 'build-arbor', title: 'Build a garden arbor', spots: ['arbor'], aliases: ['arbor', 'pergola', 'trellis', 'archway', 'climbing'],
     kind: 'build', difficulty: 3, minutes: [300, 600],
     tools: ['Post-hole digger', 'Circular saw and jigsaw', 'Drill/driver', 'Level, square, clamps', 'Ladder'],
     supplies: ['Four 4×4 cedar posts (8 ft)', '2×6 beams and 2×2 rafters', 'Lattice or cattle panel for the sides', 'Gravel and concrete or post bases', 'Exterior screws or carriage bolts'],
@@ -19,7 +19,7 @@ export const ARBOR_GUIDES: Guide[] = [
     plants: ['rose', 'grape', 'kiwi', 'hops', 'luffa'], query: 'DIY garden arbor build cedar',
   },
   {
-    id: 'prune-roses', title: 'Prune and train climbing roses', areas: ['arbor'], aliases: ['roses', 'climbing rose', 'pruning roses', 'no flowers'],
+    id: 'prune-roses', title: 'Prune and train climbing roses', spots: ['arbor'], aliases: ['roses', 'climbing rose', 'pruning roses', 'no flowers'],
     kind: 'grow', difficulty: 2, minutes: [30, 60],
     tools: ['Bypass pruners', 'Loppers', 'Thick gloves'], supplies: ['Soft ties'],
     summary: 'Climbers bloom on side shoots growing off long main canes. Tie canes as close to horizontal as you can and you\'ll get flowers all along them.',
@@ -33,7 +33,7 @@ export const ARBOR_GUIDES: Guide[] = [
     plants: ['rose', 'clematis'], query: 'how to prune climbing roses arbor',
   },
   {
-    id: 'grow-vertical', title: 'Grow cucumbers, beans and squash up', areas: ['arbor', 'kitchen'], aliases: ['vertical gardening', 'trellis', 'cattle panel', 'climbing vegetables', 'save space'],
+    id: 'grow-vertical', title: 'Grow cucumbers, beans and squash up', spots: ['arbor', 'kitchen'], aliases: ['vertical gardening', 'trellis', 'cattle panel', 'climbing vegetables', 'save space'],
     kind: 'grow', difficulty: 1, minutes: [30, 60],
     tools: ['Zip ties', 'Fence pliers'], supplies: ['Cattle panel (16 ft) or sturdy netting', 'T-posts', 'Soft ties'],
     summary: 'Growing up saves space, keeps fruit clean and makes picking easy. A bent cattle panel makes an arch tunnel you can walk under.',

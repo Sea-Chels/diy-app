@@ -2,7 +2,7 @@ import type { Guide } from '../guides';
 
 export const WATER_GUIDES: Guide[] = [
   {
-    id: 'rain-barrel', title: 'Install a rain barrel', areas: ['water'], aliases: ['rain water', 'downspout', 'water butt', 'harvest rainwater'],
+    id: 'rain-barrel', title: 'Install a rain barrel', spots: ['water'], aliases: ['rain water', 'downspout', 'water butt', 'harvest rainwater'],
     kind: 'build', difficulty: 2, minutes: [60, 120], savings: 'one inch of rain on a 10×10 roof fills a 55-gallon barrel',
     tools: ['Drill with hole saw', 'Hacksaw', 'Level', 'Screwdriver'],
     supplies: ['Food-grade barrel with lid (or a kit)', 'Spigot and bulkhead fitting', 'Overflow fitting and hose', 'Downspout diverter or flexible elbow', 'Fine mesh screen', 'Cinder blocks or a sturdy stand'],
@@ -20,7 +20,7 @@ export const WATER_GUIDES: Guide[] = [
     query: 'how to install a rain barrel downspout diverter',
   },
   {
-    id: 'drip-irrigation', title: 'Lay a drip line with a timer', areas: ['water', 'bed', 'kitchen'], aliases: ['drip irrigation', 'soaker hose', 'watering system', 'timer', 'emitters', 'automatic watering'],
+    id: 'drip-irrigation', title: 'Lay a drip line with a timer', spots: ['water', 'bed', 'kitchen'], aliases: ['drip irrigation', 'soaker hose', 'watering system', 'timer', 'emitters', 'automatic watering'],
     kind: 'build', difficulty: 2, minutes: [60, 180], savings: 'uses 30–50% less water than a sprinkler',
     tools: ['Hole punch for drip tubing', 'Pruners to cut tubing'],
     supplies: ['Faucet timer', 'Backflow preventer, filter and pressure regulator (25 psi)', '½ in mainline tubing', '¼ in emitter line or inline drip tubing with emitters every 6–12 in', 'Fittings, end caps, stakes'],
@@ -36,7 +36,7 @@ export const WATER_GUIDES: Guide[] = [
     query: 'drip irrigation raised beds install timer', featured: true,
   },
   {
-    id: 'watering', title: 'How much and when to water', areas: ['water'], aliases: ['watering', 'wilting', 'overwatering', 'how often', 'dry soil'],
+    id: 'watering', title: 'How much and when to water', spots: ['water'], aliases: ['watering', 'wilting', 'overwatering', 'how often', 'dry soil'],
     kind: 'grow', difficulty: 1, minutes: [5, 20],
     tools: ['Rain gauge or tuna can', 'Your finger'], supplies: ['Mulch'],
     summary: 'Most vegetables need about 1 inch of water a week (rain included), given deeply and less often so roots grow down.',

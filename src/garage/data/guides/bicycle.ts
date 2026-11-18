@@ -6,7 +6,7 @@ export const BICYCLE_GUIDES: Guide[] = [
   {
     id: 'bike-pump',
     title: 'Pump up the tires',
-    parts: ['bike_tire'],
+    spots: ['bike_tire'],
     aliases: ['flat', 'soft tire', 'psi', 'presta', 'schrader', 'valve', 'floor pump'],
     difficulty: 1,
     minutes: [5, 10],
@@ -26,7 +26,7 @@ export const BICYCLE_GUIDES: Guide[] = [
   {
     id: 'bike-flat',
     title: 'Fix a flat tire',
-    parts: ['bike_tire'],
+    spots: ['bike_tire'],
     aliases: ['puncture', 'inner tube', 'patch', 'tire levers', 'flat tyre', 'pinch flat'],
     difficulty: 2,
     minutes: [15, 30],
@@ -53,7 +53,7 @@ export const BICYCLE_GUIDES: Guide[] = [
   {
     id: 'bike-chain-lube',
     title: 'Clean and oil the chain',
-    parts: ['bike_chain'],
+    spots: ['bike_chain'],
     aliases: ['chain lube', 'squeaky chain', 'rusty chain', 'degrease', 'drivetrain'],
     difficulty: 1,
     minutes: [10, 15],
@@ -77,7 +77,7 @@ export const BICYCLE_GUIDES: Guide[] = [
   {
     id: 'bike-chain-wear',
     title: 'Check chain wear',
-    parts: ['bike_chain'],
+    spots: ['bike_chain'],
     aliases: ['chain stretch', 'chain checker', 'worn chain', 'skipping', 'new chain', 'cassette'],
     difficulty: 1,
     minutes: [5, 5],
@@ -96,7 +96,7 @@ export const BICYCLE_GUIDES: Guide[] = [
   {
     id: 'bike-brake-cable',
     title: 'Fix a squishy brake lever',
-    parts: ['bike_brakes'],
+    spots: ['bike_brakes'],
     aliases: ['brake lever pulls to bar', 'loose brake', 'barrel adjuster', 'brake cable', 'weak brakes'],
     difficulty: 1,
     minutes: [5, 10],
@@ -117,7 +117,7 @@ export const BICYCLE_GUIDES: Guide[] = [
   {
     id: 'bike-brake-pads',
     title: 'Replace rim brake pads',
-    parts: ['bike_brakes'],
+    spots: ['bike_brakes'],
     aliases: ['v brake', 'caliper brake', 'squealing brakes', 'brake shoes', 'worn pads'],
     difficulty: 2,
     minutes: [15, 30],
@@ -141,7 +141,7 @@ export const BICYCLE_GUIDES: Guide[] = [
   {
     id: 'bike-gears',
     title: 'Stop the gears skipping',
-    parts: ['bike_gears'],
+    spots: ['bike_gears'],
     aliases: ['derailleur', 'skipping gears', 'noisy gears', 'indexing', 'barrel adjuster', 'shifting', 'won\'t shift'],
     difficulty: 1,
     minutes: [10, 15],
@@ -161,7 +161,7 @@ export const BICYCLE_GUIDES: Guide[] = [
   {
     id: 'bike-saddle-height',
     title: 'Set the saddle height',
-    parts: ['bike_saddle'],
+    spots: ['bike_saddle'],
     aliases: ['seat height', 'seatpost', 'knee pain', 'saddle too low', 'seat clamp'],
     difficulty: 1,
     minutes: [5, 15],

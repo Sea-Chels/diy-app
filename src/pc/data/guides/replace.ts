@@ -5,7 +5,7 @@ export const REPLACE_GUIDES: Guide[] = [
   {
     id: 'ram-install',
     title: 'Install or upgrade RAM',
-    parts: ['ram'],
+    spots: ['ram'],
     aliases: ['ram', 'memory', 'upgrade', 'ddr4', 'ddr5', 'dimm', 'slots', 'a2 b2'],
     kind: 'swap',
     difficulty: 1,
@@ -30,7 +30,7 @@ export const REPLACE_GUIDES: Guide[] = [
   {
     id: 'gpu-install',
     title: 'Install or swap a graphics card',
-    parts: ['gpu'],
+    spots: ['gpu'],
     aliases: ['gpu', 'graphics card', 'video card', 'pcie', 'upgrade gpu', 'anti-sag', 'ddu'],
     kind: 'swap',
     difficulty: 2,
@@ -57,7 +57,7 @@ export const REPLACE_GUIDES: Guide[] = [
   {
     id: 'm2-install',
     title: 'Install an M.2 NVMe SSD',
-    parts: ['m2'],
+    spots: ['m2'],
     aliases: ['m.2', 'nvme', 'ssd', 'gen4', 'gen5', 'heatsink', '2280'],
     kind: 'swap',
     difficulty: 1,
@@ -82,7 +82,7 @@ export const REPLACE_GUIDES: Guide[] = [
   {
     id: 'sata-install',
     title: 'Add a 2.5″ SSD or hard drive',
-    parts: ['storage'],
+    spots: ['storage'],
     aliases: ['sata', 'hdd', 'hard drive', '2.5 ssd', '3.5', 'drive cage', 'clone'],
     kind: 'swap',
     difficulty: 1,
@@ -103,7 +103,7 @@ export const REPLACE_GUIDES: Guide[] = [
   {
     id: 'psu-replace',
     title: 'Replace the power supply',
-    parts: ['psu'],
+    spots: ['psu'],
     aliases: ['psu', 'power supply', 'modular cables', 'wattage', 'atx 3.1', 'sfx'],
     kind: 'swap',
     difficulty: 2,
@@ -127,7 +127,7 @@ export const REPLACE_GUIDES: Guide[] = [
   {
     id: 'repaste',
     title: 'Replace thermal paste',
-    parts: ['cpu', 'cooler'],
+    spots: ['cpu', 'cooler'],
     aliases: ['thermal paste', 'repaste', 'thermal compound', 'isopropyl'],
     kind: 'swap',
     difficulty: 2,
@@ -153,7 +153,7 @@ export const REPLACE_GUIDES: Guide[] = [
   {
     id: 'cpu-upgrade',
     title: 'Upgrade the CPU',
-    parts: ['cpu'],
+    spots: ['cpu'],
     aliases: ['cpu', 'processor', 'socket', 'am5', 'am4', 'lga1700', 'lga1851', 'bent pins'],
     kind: 'swap',
     difficulty: 2,
@@ -178,7 +178,7 @@ export const REPLACE_GUIDES: Guide[] = [
   {
     id: 'cooler-install',
     title: 'Install an air cooler or AIO',
-    parts: ['cooler'],
+    spots: ['cooler'],
     aliases: ['cooler', 'heatsink', 'aio', 'radiator', 'tower cooler', 'mounting bracket'],
     kind: 'swap',
     difficulty: 2,
@@ -201,7 +201,7 @@ export const REPLACE_GUIDES: Guide[] = [
   {
     id: 'loop-drain',
     title: 'Drain and refill a custom loop',
-    parts: ['cooler'],
+    spots: ['cooler'],
     aliases: ['custom loop', 'water cooling', 'coolant', 'drain', 'reservoir', 'leak test', '24-pin jumper'],
     kind: 'swap',
     difficulty: 3,
@@ -224,7 +224,7 @@ export const REPLACE_GUIDES: Guide[] = [
   {
     id: 'fan-replace',
     title: 'Replace or add a case fan',
-    parts: ['fans'],
+    spots: ['fans'],
     aliases: ['fan', 'case fan', 'pwm', 'argb', '120mm', '140mm', 'intake', 'exhaust'],
     kind: 'swap',
     difficulty: 1,
@@ -246,7 +246,7 @@ export const REPLACE_GUIDES: Guide[] = [
   {
     id: 'board-replace',
     title: 'Replace the motherboard',
-    parts: ['motherboard'],
+    spots: ['motherboard'],
     aliases: ['motherboard', 'mobo', 'standoffs', 'io shield', 'swap motherboard'],
     kind: 'swap',
     difficulty: 3,
@@ -272,7 +272,7 @@ export const REPLACE_GUIDES: Guide[] = [
   {
     id: 'cmos-battery',
     title: 'Replace the CMOS battery',
-    parts: ['cmos'],
+    spots: ['cmos'],
     aliases: ['cr2032', 'coin cell', 'clock resets', 'time wrong', 'bios battery'],
     kind: 'swap',
     difficulty: 1,
@@ -294,7 +294,7 @@ export const REPLACE_GUIDES: Guide[] = [
   {
     id: 'rgb',
     title: 'Control or turn off RGB',
-    parts: ['fans', 'ram'],
+    spots: ['fans', 'ram'],
     aliases: ['rgb', 'argb', 'lights', 'leds', 'signalrgb', 'openrgb', 'armoury crate'],
     kind: 'setup',
     difficulty: 1,

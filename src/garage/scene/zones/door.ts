@@ -3,9 +3,10 @@ import { glass, inkLine, toon } from '../../../shared/toon';
 import { ringLine, ringPoint, sheet, shell, surfaceLine, tAtY, type Section } from '../loft';
 import { C, M, rbox } from '../kit';
 import type { CarCtx } from '../ctx';
+import { add } from '../../../shared/scene/kit';
 
 export function buildDoors(c: CarCtx) {
-  const { S, group, paint, put, tag, LOWER_N, lower, front, sideX, gh, GH_N, GH_CORNER_T, beltTrim } = c;
+  const { S, group, paint, tag, LOWER_N, lower, front, sideX, gh, GH_N, GH_CORNER_T, beltTrim } = c;
   const [doorZ0, doorZ1] = S.door;
   const doorMid = lower((doorZ0 + doorZ1) / 2);
   const tLow = tAtY(doorMid, S.doorY[0], LOWER_N);
@@ -16,8 +17,8 @@ export function buildDoors(c: CarCtx) {
   group.add(doorPivot);
   const doorGeom = shell(lower, LOWER_N, doorZ0, doorZ1, tLow, tHigh, 0.006, 0.026, 24, 14);
   doorGeom.translate(-doorHinge.x, -doorHinge.y, -doorHinge.z);
-  const door = put(doorPivot, doorGeom, paint());
-  put(group, shell(lower, LOWER_N, doorZ0 + 0.02, doorZ1 - 0.02, tLow + 0.01, tHigh - 0.01, 0.002, 0.002, 10, 8), toon(C.bay, { halftone: 0.5, side: THREE.DoubleSide }), undefined, false);
+  const door = add(doorGeom, paint(), doorPivot, { ink: 'body' });
+  add(shell(lower, LOWER_N, doorZ0 + 0.02, doorZ1 - 0.02, tLow + 0.01, tHigh - 0.01, 0.002, 0.002, 10, 8), toon(C.bay, { halftone: 0.5, side: THREE.DoubleSide }), group, { ink: null });
   // The door's own pane of the glasshouse, so the window swings out with it.
   const toDoor = (g: THREE.BufferGeometry) => g.translate(-doorHinge.x, -doorHinge.y, -doorHinge.z);
   const doorGlass = new THREE.Mesh(toDoor(sheet(gh, GH_N, doorZ0, doorZ1, -0.015, GH_CORNER_T, 40, 8)), glass());
@@ -28,12 +29,12 @@ export function buildDoors(c: CarCtx) {
   // The frame stays just under the pillar and roof panels, which cover it while the door is shut.
   const frameMat = () => M.trim();
   const frame = [
-    put(doorPivot, toDoor(beltTrim(1, doorZ0, doorZ1)), frameMat(), undefined, 'thin'),
-    put(doorPivot, toDoor(shell(gh, GH_N, doorZ0, doorZ1, GH_CORNER_T - 0.016, GH_CORNER_T, 0.004, 0.008, 40, 3)), frameMat(), undefined, 'thin'),
-    put(doorPivot, toDoor(shell(gh, GH_N, doorZ0, doorZ0 + 0.04, -0.015, GH_CORNER_T, 0.004, 0.008, 3, 10)), frameMat(), undefined, 'thin'),
+    add(toDoor(beltTrim(1, doorZ0, doorZ1)), frameMat(), doorPivot),
+    add(toDoor(shell(gh, GH_N, doorZ0, doorZ1, GH_CORNER_T - 0.016, GH_CORNER_T, 0.004, 0.008, 40, 3)), frameMat(), doorPivot),
+    add(toDoor(shell(gh, GH_N, doorZ0, doorZ0 + 0.04, -0.015, GH_CORNER_T, 0.004, 0.008, 3, 10)), frameMat(), doorPivot),
   ];
   const handleY = S.doorY[1] - 0.12;
-  const doorHandle = put(doorPivot, rbox(0.035, 0.04, 0.16, 0.012), M.chrome(), [sideX(doorZ0 + 0.2, handleY, 1, 0.045) - doorHinge.x, handleY - doorHinge.y, doorZ0 + 0.2 - doorHinge.z], 'thin');
+  const doorHandle = add(rbox(0.035, 0.04, 0.16, 0.012), M.chrome(), doorPivot, { at: [sideX(doorZ0 + 0.2, handleY, 1, 0.045) - doorHinge.x, handleY - doorHinge.y, doorZ0 + 0.2 - doorHinge.z] });
   const charY = S.belt - 0.17;
   const doorLine = inkLine(surfaceLine(lower, LOWER_N, doorZ0 + 0.01, doorZ1 - 0.01, (s) => tAtY(s, charY, LOWER_N), 0.034, 20));
   doorLine.position.set(-doorHinge.x, -doorHinge.y, -doorHinge.z);
@@ -46,10 +47,10 @@ export function buildDoors(c: CarCtx) {
     const mx = side * (S.ghW[0] + 0.12);
     const my = S.belt + 0.1;
     const mz = S.cowlZ - 0.16;
-    put(parent, rbox(0.14, 0.04, 0.05, 0.015), M.trim(), [side * (S.ghW[0] + 0.04) - off.x, my - 0.03 - off.y, mz - off.z], 'thin');
-    const m = put(parent, rbox(0.12, 0.11, 0.19, 0.045), paint(), [mx - off.x, my - off.y, mz - off.z]);
+    add(rbox(0.14, 0.04, 0.05, 0.015), M.trim(), parent, { at: [side * (S.ghW[0] + 0.04) - off.x, my - 0.03 - off.y, mz - off.z] });
+    const m = add(rbox(0.12, 0.11, 0.19, 0.045), paint(), parent, { at: [mx - off.x, my - off.y, mz - off.z], ink: 'body' });
     m.rotation.y = side * 0.12;
-    const glassFace = put(m, rbox(0.09, 0.08, 0.01, 0.004), toon(C.mirror, { shine: 1, halftone: 0 }), [0, 0, -0.094], false);
+    const glassFace = add(rbox(0.09, 0.08, 0.01, 0.004), toon(C.mirror, { shine: 1, halftone: 0 }), m, { at: [0, 0, -0.094], ink: null });
     mirrorMeshes.push(m, glassFace);
   }
   tag('door', door, doorHandle, ...frame, ...mirrorMeshes);
@@ -67,7 +68,7 @@ export function buildDoors(c: CarCtx) {
       ...ringLine(lower, LOWER_N, z0, t1, t0, 0.004, 10),
     ];
     group.add(inkLine(pts, 1.6));
-    put(group, rbox(0.035, 0.04, 0.16, 0.012), M.chrome(), [sideX(z0 + 0.2, handleY, side, 0.02), handleY, z0 + 0.2], 'thin');
+    add(rbox(0.035, 0.04, 0.16, 0.012), M.chrome(), group, { at: [sideX(z0 + 0.2, handleY, side, 0.02), handleY, z0 + 0.2] });
   };
   seam(-1, doorZ0, doorZ1);
   seam(1, S.rearDoor[0], S.rearDoor[1]);
