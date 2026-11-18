@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { canvasTex as kitTex, label as kitLabel } from '../../shared/scene/kit';
+import { canvasTex as kitTex, label as kitLabel, stripes as kitStripes } from '../../shared/scene/kit';
 
 // PC textures have never used anisotropic filtering; turning it on visibly sharpens the angled front mesh and labels.
 export const canvasTex: typeof kitTex = (w, h, draw, repeat) => kitTex(w, h, draw, repeat, 1);
@@ -23,14 +23,7 @@ export const C = {
   m2: 0x1d3b30,
 };
 
-/** Light/dark bands: radiator and heatsink fins. */
-export const stripes = (repeat: [number, number], light = '#c9cfdc', dark = '#5b6274') =>
-  canvasTex(16, 4, (ctx) => {
-    ctx.fillStyle = light;
-    ctx.fillRect(0, 0, 16, 4);
-    ctx.fillStyle = dark;
-    ctx.fillRect(0, 0, 5, 4);
-  }, repeat);
+export const stripes: typeof kitStripes = (repeat, light, dark) => kitStripes(repeat, light, dark, 1);
 
 /** Front mesh: dark sheet with transparent holes so the fans' glow shows through. */
 export const perforated = (repeat: [number, number]) =>

@@ -1,4 +1,6 @@
+import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { mapped, type V3 } from '../../shared/scene/kit';
 
 /** Everything on the car that isn't body paint. */
 export const C = {
@@ -24,10 +26,31 @@ export const C = {
   lampBezel: 0x14121a,
   lamp: 0xffe7a8,
   lampGlow: 0xffd77a,
-  lampEye: 0xffffff,
   taillight: 0xff3049,
   seat: 0x3d3a48,
   plate: 0xa8d4ff,
+  hose: 0x1d1c22,
+  belt: 0x2a2730,
+  marker: 0xffa53a,
+  reverse: 0xf4f1ff,
+  mirror: 0xbfe3ff,
 };
 
 export const rbox = (w: number, h: number, d: number, r = 0.02) => new RoundedBoxGeometry(w, h, d, 3, Math.min(r, w / 2 - 1e-3, h / 2 - 1e-3, d / 2 - 1e-3));
+
+/**
+ * A printed label or screen laid flat just off a surface; it faces +z until `rot` turns it.
+ * Pass `glow` for backlit faces (gauges, screens) that shouldn't take shading.
+ */
+export function decal(parent: THREE.Object3D, map: THREE.Texture, w: number, h: number, pos: V3, rot: V3 = [0, 0, 0], o: { glow?: boolean; round?: boolean } = {}): THREE.Mesh {
+  const geo = o.round ? new THREE.CircleGeometry(w / 2, 28) : new THREE.PlaneGeometry(w, h);
+  const mat = o.glow ? new THREE.MeshBasicMaterial({ map }) : mapped(0xffffff, map, { halftone: 0.4 });
+  mat.polygonOffset = true;
+  mat.polygonOffsetFactor = -2;
+  const m = new THREE.Mesh(geo, mat);
+  m.position.set(...pos);
+  m.rotation.set(...rot);
+  m.receiveShadow = true;
+  parent.add(m);
+  return m;
+}

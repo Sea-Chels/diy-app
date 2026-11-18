@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { glass, toon } from '../../../shared/toon';
-import type { V3 } from '../../../shared/scene/kit';
+import { mapped, type V3 } from '../../../shared/scene/kit';
 import { ringPoint, shell, type Section, type SectionFn } from '../loft';
 import { C, rbox } from '../kit';
+import { plateTex } from '../textures';
 import type { CarCtx } from '../ctx';
 
 export function buildTrunk(c: CarCtx) {
@@ -98,7 +99,7 @@ export function buildTrunk(c: CarCtx) {
     spoiler.rotation.x = -0.12;
     const local = (x: number, y: number, z: number): V3 => [x, y - hy, z + Math.max(0, y - yk) * RAKE - hz];
     const handle = put(trunkPivot, rbox(0.3, 0.04, 0.03, 0.01), toon(C.chrome, { shine: 1, metal: 0.9 }), local(0, yk - 0.05, S.tailZ - 0.014), 'thin');
-    put(trunkPivot, rbox(0.34, 0.12, 0.012, 0.01), toon(C.plate, { shine: 0.5 }), local(0, yk - 0.2, S.tailZ - 0.008), 'thin');
+    put(trunkPivot, rbox(0.34, 0.1, 0.012, 0.01), mapped(0xffffff, plateTex(), { shine: 0.5, halftone: 0.3 }), local(0, yk - 0.2, S.tailZ - 0.008), 'thin');
 
     // split taillights: one half wraps the body corner, the other rides on the gate
     const lampMat = () => toon(C.taillight, { emissive: C.taillight, emissiveIntensity: 0.6, shine: 0.8, halftone: 0 });

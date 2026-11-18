@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
+import { mapped } from '../../../shared/scene/kit';
 import { C, rbox } from '../kit';
+import { plateTex } from '../textures';
 import type { CarCtx } from '../ctx';
 import type { Trunk } from './trunk';
 
@@ -13,10 +15,17 @@ export function buildRear(c: CarCtx, trunk: Trunk) {
     if (S.suv) continue; // built with the liftgate
     const mat = toon(C.taillight, { emissive: C.taillight, emissiveIntensity: 0.6, shine: 0.8, halftone: 0 });
     tails.push(put(group, rbox(0.42, 0.11, 0.06, 0.03), mat, [side * 0.56, tailTop - 0.1, S.tailZ + 0.0]));
+    tails.push(put(group, rbox(0.1, 0.07, 0.02, 0.01), toon(C.reverse, { shine: 0.8, halftone: 0 }), [side * 0.42, tailTop - 0.1, S.tailZ - 0.03], false));
+    tails.push(put(group, rbox(0.3, 0.012, 0.02, 0.004), toon(C.lampBezel), [side * 0.6, tailTop - 0.1, S.tailZ - 0.03], false));
+  }
+  for (const side of [1, -1]) {
+    const z = S.tailZ + 0.2;
+    const y = tailTop - 0.1;
+    tails.push(put(group, rbox(0.012, 0.04, 0.12, 0.006), toon(C.taillight, { emissive: C.taillight, emissiveIntensity: 0.5, halftone: 0 }), [sideX(z, y, side, 0.004), y, z], false));
   }
   tails.push(...suvTails);
   tag('taillight', ...tails);
-  if (!S.suv) put(group, rbox(0.32, 0.1, 0.012, 0.01), toon(C.plate, { shine: 0.5 }), [0, lowerBottom(S.tailZ) + 0.12, S.tailZ - 0.005], 'thin');
+  if (!S.suv) put(group, rbox(0.32, 0.1, 0.012, 0.01), mapped(0xffffff, plateTex(), { shine: 0.5, halftone: 0.3 }), [0, lowerBottom(S.tailZ) + 0.12, S.tailZ - 0.005], 'thin');
   put(group, rbox(1.5, 0.08, 0.14, 0.03), toon(C.trim, { halftone: 0.5 }), [0, S.bottom + 0.06, S.tailZ + 0.08], 'thin');
 
   const tipZ = S.tailZ - 0.04;

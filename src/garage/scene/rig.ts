@@ -45,8 +45,8 @@ export function buildRig(kind: BodyKind): Rig {
   const { trunkPivot, trunkOpen, trunkBeacon, trunkView, suvLampPos } = trunk;
   const { doorPivot, doorZ0, doorZ1 } = buildDoors(c);
   const { dashZ } = buildCabin(c);
-  const { F, bz0, bz1, bm } = buildEngineBay(c);
-  const { lightY } = buildFront(c);
+  const { F, bz0, bm, tankZ } = buildEngineBay(c);
+  const { lightY, lampX, lampZ, lampR, blink } = buildFront(c);
   const { tailTop, tipZ, fuelY, fuelZ } = buildRear(c, trunk);
   const { wipeZ, wipe } = buildWipers(c);
   buildWheels(c);
@@ -95,14 +95,14 @@ export function buildRig(kind: BodyKind): Rig {
   const hoodMidZ = (hoodZ0 + hoodZ1) / 2;
   beaconAt('hood', [0, hoodLine(hoodMidZ) + 0.12, hoodMidZ]);
   beaconAt('oil', [0.14, F + 0.47, bm - 0.07]);
-  beaconAt('battery', [-0.34, F + 0.31, bz0 + 0.16]);
-  beaconAt('airbox', [0.36, F + 0.29, bz0 + 0.18]);
-  beaconAt('coolant', [0.37, F + 0.33, bz1 - 0.12]);
-  beaconAt('washer', [-0.37, F + 0.31, bz1 - 0.12]);
-  beaconAt('fusebox_engine', [-0.36, F + 0.19, bm + 0.05]);
+  beaconAt('battery', [-0.34, F + 0.33, bz0 + 0.16]);
+  beaconAt('airbox', [0.42, F + 0.3, bz0 + 0.12]);
+  beaconAt('coolant', [0.43, F + 0.42, tankZ]);
+  beaconAt('washer', [-0.43, F + 0.42, tankZ]);
+  beaconAt('fusebox_engine', [-0.38, F + 0.2, bm + 0.05]);
   beaconAt('engine', [0.02, F + 0.47, bm + 0.16]);
   beaconAt('wiper', [0, S.belt + 0.12, S.cowlZ - 0.06]);
-  beaconAt('headlight', [0.6, lightY + 0.16, S.noseZ + 0.02]);
+  beaconAt('headlight', [lampX, lightY + lampR + 0.08, lampZ - 0.08]);
   const lampAt: V3 = suvLampPos ? [suvLampPos.x, suvLampPos.y, suvLampPos.z] : [0.56, tailTop - 0.1, S.tailZ];
   beaconAt('taillight', suvLampPos ? [lampAt[0] + 0.06, lampAt[1] + 0.14, lampAt[2] - 0.1] : [0.56, tailTop + 0.05, S.tailZ - 0.08]);
   beaconAt('wheel', [S.halfW + 0.12, R + 0.32, S.wheelZ[0]]);
@@ -124,12 +124,13 @@ export function buildRig(kind: BodyKind): Rig {
     engine: view([0.02, F + 0.25, bm], bayDir, 1.9),
     battery: view([-0.34, F + 0.1, bz0 + 0.16], [-0.6, 1.1, 0.9], 1.7),
     oil: view([0.14, F + 0.3, bm - 0.05], bayDir, 1.7),
-    airbox: view([0.36, F + 0.1, bz0 + 0.18], [0.7, 1.1, 0.9], 1.7),
-    coolant: view([0.37, F + 0.1, bz1 - 0.12], [0.6, 1.0, 1.0], 1.7),
-    washer: view([-0.37, F + 0.1, bz1 - 0.12], [-0.6, 1.0, 1.0], 1.7),
-    fusebox_engine: view([-0.36, F + 0.06, bm + 0.05], [-0.6, 1.1, 0.9], 1.6),
+    airbox: view([0.4, F + 0.15, bz0 + 0.17], [0.45, 1.5, 0.8], 1.7),
+    // Steep and from the front: the tanks sit right behind the nose, and the open hood stands up behind them.
+    coolant: view([0.43, F + 0.22, tankZ], [0.45, 1.7, 0.75], 1.6),
+    washer: view([-0.43, F + 0.22, tankZ], [-0.45, 1.7, 0.75], 1.6),
+    fusebox_engine: view([-0.38, F + 0.08, bm + 0.05], [-0.55, 1.5, 0.2], 1.6),
     wiper: view([0.05, roofLine(wipeZ - 0.22), wipeZ - 0.22], [0.35, 0.75, 1], 2.5),
-    headlight: view([0.56, lightY, S.noseZ - 0.05], [0.6, 0.25, 1], 2.1),
+    headlight: view([lampX - 0.1, lightY - 0.12, lampZ], [0.55, 0.45, 1], 2.2),
     taillight: view(lampAt, [0.6, 0.25, -1], 2.3),
     wheel: view([S.track, R, S.wheelZ[0]], [1, 0.25, 0.45], 2.4),
     brakes: view([S.track, R, S.wheelZ[1]], [1, 0.15, -0.35], 2.0),
@@ -140,7 +141,7 @@ export function buildRig(kind: BodyKind): Rig {
     fueldoor: view([-S.halfW, fuelY, fuelZ], [-1, 0.2, -0.45], 2.1),
     exhaust: view([-0.5, S.bottom, S.tailZ], [-0.4, 0.2, -1], 2.2),
   };
-  const overview: View = S.suv ? { pos: [5.9, 3.2, 6.9], target: [0, 0.85, 0] } : { pos: [5.4, 2.9, 6.4], target: [0, 0.65, 0] };
+  const overview: View = S.suv ? { pos: [4.6, 2.68, 5.38], target: [0, 0.85, 0] } : { pos: [4.21, 2.41, 4.99], target: [0, 0.65, 0] };
 
   let current: Paint | null = null;
   function paintTo(p: Paint, instant: boolean): void {
@@ -205,6 +206,7 @@ export function buildRig(kind: BodyKind): Rig {
     update: () => {},
     poke: (part) => {
       if (part === 'wiper') wipe();
+      if (part === 'headlight') blink();
     },
     dispose: () => disposeTree(group),
   };

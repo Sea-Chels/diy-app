@@ -1,36 +1,104 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
+import { tween, easeInOutCubic, lerp } from '../../../shared/tween';
+import { mapped } from '../../../shared/scene/kit';
 import { C, rbox } from '../kit';
+import { mouthTex, plateTex } from '../textures';
 import type { CarCtx } from '../ctx';
 
+/**
+ * An NA MX-5 face: slanted pop-up headlamps that blink shut when clicked,
+ * clear parking lamps across the bumper and a low oval mouth behind the plate.
+ */
 export function buildFront(c: CarCtx) {
-  const { S, group, put, tag, chromeMat, fasciaTop, fasciaBottom } = c;
-  // Lamps sit on the flat part of the nose, not on its rounded top edge.
-  const lightY = (fasciaTop(S.noseZ) + fasciaBottom(S.noseZ)) / 2 + 0.06;
-  const headMat = () => toon(C.lamp, { emissive: C.lampGlow, emissiveIntensity: 0.35, shine: 0.9, halftone: 0 });
+  const { S, kind, group, paint, put, tag, chromeMat, fasciaWidth, fasciaBottom, noseTopY, onNose } = c;
   const heads: THREE.Mesh[] = [];
-  const lampW = 0.42;
-  const lampH = S.suv ? 0.19 : 0.16;
-  const glow = () => toon(C.lampEye, { emissive: C.lampEye, emissiveIntensity: 1, halftone: 0 });
+  const along = (g: THREE.BufferGeometry) => g.rotateX(Math.PI / 2);
+  const base = fasciaBottom(S.fasciaZ);
+
+  // Each pod is a black wedge under a body-colour lid, hinged where the lid's rear edge meets the hood.
+  // Open (the resting pose) the lid slants up to the front and the lamp sits in the wedge's upright face;
+  // closed, the lid lies flush on the nose and the wedge, which is all below the lid, goes with it.
+  const lampX = 0.52;
+  const lidL = 0.32;
+  const lidW = 0.25;
+  const zr = S.fasciaZ + 0.04;
+  const yr = noseTopY(lampX, zr);
+  const closed = Math.atan2(yr - noseTopY(lampX, zr + lidL), lidL);
+  const skinBelow = (a: number) => noseTopY(lampX, zr + lidL * Math.cos(a)) - yr;
+  // A fixed slant like the NA's; the lamp then fills the face that stands clear of the nose, less its rim.
+  const rise = 0.6;
+  const open = -rise;
+  const tipZ = lidL * Math.cos(rise);
+  const tipY = lidL * Math.sin(rise);
+  const skinY = skinBelow(rise);
+  const lampR = Math.min(0.1, (tipY - skinY) / 2 - 0.018);
+  // In the open pose's upright frame, pivot at the origin; the bottom edge runs below the skin so no gap shows.
+  const wedge = new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(tipZ, tipY), new THREE.Vector2(tipZ, skinY - 0.04), new THREE.Vector2(0, -0.03)]);
+  const wedgeGeo = new THREE.ExtrudeGeometry(wedge, { depth: lidW - 0.012, bevelEnabled: true, bevelThickness: 0.005, bevelSize: 0.005, bevelSegments: 2 });
+  wedgeGeo.rotateY(-Math.PI / 2).translate((lidW - 0.012) / 2, 0, 0);
+  const lampY = (tipY + skinY) / 2;
+  const pivots: THREE.Group[] = [];
   for (const side of [1, -1]) {
+    const pivot = new THREE.Group();
+    pivot.position.set(side * lampX, yr + 0.003, zr);
+    pivot.rotation.x = open;
+    group.add(pivot);
+    pivots.push(pivot);
+    heads.push(put(pivot, rbox(lidW, 0.016, lidL + 0.01, 0.006), paint(), [0, 0, lidL / 2], 'thin'));
+    const upright = new THREE.Group();
+    upright.rotation.x = -open;
+    pivot.add(upright);
+    heads.push(put(upright, wedgeGeo, toon(C.lampBezel, { halftone: 0.4 }), [0, -0.008, 0], 'thin'));
+    const lampAt = (dz: number): [number, number, number] => [0, lampY, tipZ + 0.006 + dz];
+    heads.push(put(upright, along(new THREE.CylinderGeometry(lampR, lampR, 0.016, 32)), toon(C.lamp, { emissive: C.lampGlow, emissiveIntensity: 0.35, shine: 0.9, halftone: 0 }), lampAt(0), false));
+    heads.push(put(upright, new THREE.TorusGeometry(lampR, 0.011, 8, 36), chromeMat(), lampAt(0.008), false));
+    heads.push(put(upright, new THREE.TorusGeometry(lampR * 0.5, 0.004, 6, 28), chromeMat(), lampAt(0.011), false));
+  }
+  const blink = () =>
+    tween({
+      duration: 1800,
+      ease: (k) => k,
+      tag: `blink:${kind}`,
+      update: (k) => {
+        const shut = k < 0.35 ? easeInOutCubic(k / 0.35) : k < 0.65 ? 1 : 1 - easeInOutCubic((k - 0.65) / 0.35);
+        for (const p of pivots) p.rotation.x = lerp(open, closed, shut);
+      },
+    });
+
+  const parkY = base + 0.25;
+  for (const side of [1, -1]) {
+    const at = onNose(side * 0.45, parkY, 0.006);
     const lamp = new THREE.Group();
-    lamp.position.set(side * 0.53, lightY, S.noseZ - 0.04);
-    lamp.rotation.y = side * 0.22;
+    lamp.position.set(...at.pos);
+    lamp.rotation.set(at.pitch, at.yaw, 0, 'YXZ');
     group.add(lamp);
-    heads.push(put(lamp, rbox(lampW + 0.03, lampH + 0.03, 0.06, 0.07), toon(C.lampBezel, { halftone: 0 }), [0, 0, -0.005], 'thin'));
-    heads.push(put(lamp, rbox(lampW, lampH, 0.08, 0.075), headMat(), [0, 0, 0.022]));
-    const eye = put(lamp, new THREE.CylinderGeometry(lampH * 0.34, lampH * 0.34, 0.02, 28), glow(), [side * 0.075, 0.005, 0.066], 'thin');
-    eye.rotation.x = Math.PI / 2;
-    heads.push(eye);
-    heads.push(put(lamp, rbox(lampW * 0.42, 0.022, 0.012, 0.009), glow(), [-side * 0.08, -lampH * 0.28, 0.064], false));
+    const capsule = new THREE.CapsuleGeometry(0.026, 0.13, 6, 14).rotateZ(Math.PI / 2).scale(1, 1, 0.45);
+    heads.push(put(lamp, capsule, toon(C.reverse, { emissive: C.lampGlow, emissiveIntensity: 0.15, shine: 0.9, halftone: 0 }), undefined, 'thin'));
+    heads.push(put(lamp, rbox(0.07, 0.03, 0.012, 0.012), toon(C.marker, { emissive: C.marker, emissiveIntensity: 0.4, halftone: 0 }), [-side * 0.045, 0, 0.008], false));
+    const markerZ = S.fasciaZ + 0.14;
+    heads.push(put(group, rbox(0.012, 0.035, 0.1, 0.006), toon(C.marker, { emissive: C.marker, emissiveIntensity: 0.5, halftone: 0 }), [side * (fasciaWidth(markerZ) + 0.004), base + 0.16, markerZ], false));
   }
   tag('headlight', ...heads);
-  const grilleH = Math.min(0.2, lightY - fasciaBottom(S.noseZ) - 0.06);
-  put(group, rbox(0.56, grilleH, 0.06, 0.05), toon(C.trim, { halftone: 0.5 }), [0, lightY - 0.02, S.noseZ - 0.01]);
-  for (let i = 0; i < 3; i++) {
-    put(group, rbox(0.5, 0.018, 0.02, 0.008), chromeMat(), [0, lightY - 0.02 - grilleH / 2 + (grilleH * (i + 1)) / 4, S.noseZ + 0.02], false);
+
+  // The mouth is a strip of the nose's own skin, so it wraps the curve; its texture cuts the oval.
+  const mouthY = base + 0.11;
+  const mouthGeo = new THREE.PlaneGeometry(0.9, 0.11, 30, 4);
+  const mp = mouthGeo.getAttribute('position') as THREE.BufferAttribute;
+  for (let i = 0; i < mp.count; i++) {
+    const at = onNose(mp.getX(i), mouthY + mp.getY(i), 0.004);
+    mp.setXYZ(i, ...at.pos);
   }
-  put(group, rbox(0.32, 0.1, 0.012, 0.01), toon(C.plate, { shine: 0.5 }), [0, fasciaBottom(S.noseZ) + 0.1, S.noseZ + 0.005], 'thin');
-  put(group, rbox(1.5, 0.07, 0.16, 0.03), toon(C.trim, { halftone: 0.5 }), [0, S.bottom + 0.05, S.noseZ - 0.12], 'thin');
-  return { lightY };
+  mouthGeo.computeVertexNormals();
+  const mouthMat = mapped(0xffffff, mouthTex(), { halftone: 0.4 });
+  mouthMat.alphaTest = 0.5;
+  put(group, mouthGeo, mouthMat, undefined, false);
+
+  const plate = onNose(0, base + 0.1, 0.012);
+  const plateMesh = put(group, rbox(0.32, 0.1, 0.012, 0.01), mapped(0xffffff, plateTex(), { shine: 0.5, halftone: 0.3 }), plate.pos, 'thin');
+  plateMesh.rotation.x = plate.pitch;
+  put(group, rbox(1.4, 0.06, 0.16, 0.03), toon(C.trim, { halftone: 0.5 }), [0, S.bottom + 0.05, S.noseZ - 0.16], 'thin');
+
+  const lightY = yr + lampY;
+  return { lightY, lampX, lampZ: zr + tipZ, lampR, blink };
 }

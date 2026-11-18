@@ -94,6 +94,15 @@ export function woodTexture(base = '#b9844f', grain = '#8a5a32', repeat: [number
   }, repeat);
 }
 
+/** Light/dark bands: radiator and heatsink fins, seat pleats. */
+export const stripes = (repeat: [number, number], light = '#c9cfdc', dark = '#5b6274', anisotropy = 4) =>
+  canvasTex(16, 4, (ctx) => {
+    ctx.fillStyle = light;
+    ctx.fillRect(0, 0, 16, 4);
+    ctx.fillStyle = dark;
+    ctx.fillRect(0, 0, 5, 4);
+  }, repeat, anisotropy);
+
 /** Speckled ground: soil, mulch, gravel. */
 export function speckle(base: string, flecks: string[], n: number, size: [number, number], repeat: [number, number], seed = 3): THREE.CanvasTexture {
   return canvasTex(128, 128, (ctx) => {

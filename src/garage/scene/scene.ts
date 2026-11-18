@@ -28,7 +28,7 @@ export function createScene(canvas: HTMLCanvasElement, initial: Appearance) {
     rims: { pink: { pos: [-6, 3, -4], intensity: 0.9 }, cyan: { pos: [6, 2.5, -5], intensity: 0.8 } },
     front: { pos: [-2, 3, 7], intensity: 0.3 },
     ground: { center: [0, 0, 0], disc: 7, ring: [6.2, 7], ringY: 0.001, segments: 64 },
-    fit: { base: 1, min: 1, max: 1, raiseLimit: false },
+    fit: { base: 1.6, min: 1, max: 1.9, raiseLimit: false },
     flight: { ms: 950, lift: 0 },
     framing: { desktop: { pullback: 1.3, shift: 0.18 }, phone: { pullback: 1.3, drop: 0 } },
     beaconPulse: { amp: 0.18, speed: 2.4 },
