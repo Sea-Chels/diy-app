@@ -351,6 +351,13 @@ a.ws:hover { transform: translate(-3px, -3px) rotate(-0.4deg); box-shadow: 10px 
   .how, .workshops-wrap { padding: 52px 16px 0; }
 }
 
+/* Small phones: five dots and three buttons have to fit in about 328px. */
+@media (max-width: 400px) {
+  .car-btn { width: 36px; height: 36px; }
+  .dots { gap: 4px; }
+  .dot-bar { width: 22px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html:has(body.hub) { scroll-behavior: auto; }
   .rays, .float, .slide, .slide *, .logo, .carousel { animation: none !important; transition: none !important; }

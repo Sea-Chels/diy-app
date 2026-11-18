@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>DIY · Home Workshop</title>
+    <meta name="description" content="Click around a comic cutaway house: fix toilets, faucets and drains, swap outlets, switches, lights and fans, patch drywall, replace counters, windows and doors, and strip paint from wood." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <a class="brand" href="../"><span class="brand-mark"><i data-icon="wrench" data-size="20"></i></span> DIY <span class="crumb">/ Home</span></a>
+        <span class="spacer"></span>
+        <div class="topbar-actions">
+          <button id="toolbox-btn" class="ghost-btn"><i data-icon="toolbox" data-size="16"></i><span class="lbl-long">Toolbox</span><span class="lbl-short">Tools</span></button>
+          <button id="calc-btn" class="ghost-btn"><i data-icon="calc" data-size="16"></i><span class="lbl-long">Calculators</span><span class="lbl-short">Calc</span></button>
+          <button id="guides-btn" class="ghost-btn"><i data-icon="book" data-size="16"></i>Guides</button>
+        </div>
+      </header>
+      <main>
+        <div class="stage">
+          <canvas id="scene" aria-label="Interactive cutaway house. Click a fixture to see how to fix, replace or install it."></canvas>
+          <div class="garden-menu" id="home-menu"></div>
+          <div class="hint" id="hint">Drag to look around. Click a glowing dot.</div>
+          <nav class="quick-fixes" id="quick-fixes" aria-label="Popular guides"></nav>
+        </div>
+        <aside class="panel" id="panel" aria-live="polite"></aside>
+      </main>
+      <div id="modal-root"></div>
+    </div>
+    <script type="module" src="/src/home/main.ts"></script>
+  </body>
+</html>

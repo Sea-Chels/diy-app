@@ -6,7 +6,7 @@ Fix it yourself. Interactive, comic-styled 3D workshops: click the part that's g
 |---|---|
 | PC | Live in this repo (`/pc/`) |
 | Garage | Lives at [diy-garage](https://github.com/Sea-Chels/diy-garage) for now, moving here |
-| Home | Planned |
+| Home | Live in this repo (`/home/`) |
 | Garden | Live in this repo (`/garden/`) |
 
 Purely client-side: Vite + TypeScript + Three.js + Lucide, no backend, no database.
@@ -44,11 +44,26 @@ A lush comic garden: raised beds, a Three Sisters patch, a hoop tunnel, compost 
 - **Plant guide:** care cards for over 100 plants, from tomatoes and kale to pawpaw, goji, haskap, marshmallow root, wasabi and saffron. Each card covers sun, water, zones, spacing, planting, care, harvest, problems and companions.
 - **Bed planner:** pick plants for a 4×4, 3×6 or 4×8 ft bed and see them laid out square-foot style. It flags poor neighbours and sun, water and soil-pH clashes, and suggests good companions. The plan is saved in the browser.
 
+## Home workshop
+
+An open cutaway room, like a dollhouse with the front and right walls removed: a kitchen along the back wall, a small bathroom behind half-height walls, a living area, and a front door and breaker panel on the left wall. It turns all the way round, so the outside is part of it too: siding, gutters and a downspout, a hose bib, a porch light and an outdoor outlet. Click a glowing dot and the camera flies in. The sink cabinet opens on the P-trap and shut-off valves, the toilet tank lid comes off, the outlet cover plates drop to show the wiring, the fan's canopy drops to show the fan-rated box, floor planks lift and a loose siding panel swings out to show the house wrap.
+
+![The cutaway room with a kitchen, a bathroom behind half walls, a red front door, a half-stripped dresser and lifted floor planks](docs/home.jpg)
+
+| Outside | A guide | Toolbox |
+|---|---|---|
+| ![The back of the house with lap siding, eaves, gutters, a downspout, a coiled hose and a porch light](docs/home-outside.jpg) | ![The toilet tank open beside the running-toilet guide](docs/home-guide.jpg) | ![The toolbox with the starter kit ticked and the guides it unlocks](docs/home-toolbox.jpg) |
+
+- **Your home:** countertop (laminate, butcher block or quartz), ceiling (fan or light fixture), floor (hardwood, vinyl plank or tile) and wall colour. The guide that matches what's on the model goes to the top of its list.
+- **Guides:** troubleshooting (dripping faucets, clogs, running toilets, tripped breakers, dead outlets, sticking doors), installing and replacing (faucets, disposals, countertops, dishwashers, outlets, GFCIs, switches, light fixtures, ceiling fans, windows, doors, locks, vinyl plank floors, siding panels), patching and finishing (drywall holes, painting, stripping paint, refinishing wood and floors, tile and grout) and upkeep (caulking, shut-off valves, smoke and CO alarms, water heaters, gutters and drainage, winterizing). Electrical guides start with turning the breaker off and testing; paint jobs on older homes cover lead-safe work; each guide says when to call a pro.
+- **Toolbox:** what each tool is for and roughly what it costs. Tick what you own and each guide shows which tools you're missing, and the toolbox lists the guides you're ready for. Saved in the browser.
+- **Calculators:** paint for a room, flooring boxes with waste, and which wire gauge goes with which breaker.
+
 ## Run
 
 ```sh
 pnpm install
-pnpm dev        # http://localhost:5173, workshops at /pc/ and /garden/
+pnpm dev        # http://localhost:5173, workshops at /pc/, /garden/ and /home/
 pnpm build      # outputs dist/
 ```
 
@@ -61,6 +76,7 @@ pnpm build      # outputs dist/
 | Prices and full specs | Links to PCPartPicker search, opened in a new tab | Free |
 | Videos | A YouTube search for the job (plus your picked part's name), opened in a new tab | Free |
 | Garden guides and plant care | `src/garden/data/guides.ts` and `plants.ts`, hand-written; canning follows [NCHFP](https://nchfp.uga.edu/) tested methods | Free |
+| Home repair guides and tools | `src/home/data/guides.ts` and `tools.ts`, hand-written; safety links to the [EPA](https://www.epa.gov/lead), [ESFI](https://www.esfi.org/) and [NFPA](https://www.nfpa.org/) | Free |
 
 ## Project layout
 
@@ -68,6 +84,7 @@ pnpm build      # outputs dist/
 index.html               hub page
 pc/index.html            PC workshop page
 garden/index.html        Garden workshop page
+home/index.html          Home workshop page
 src/
   shared/                toon shading + ink outlines, tweens, DOM helpers, icons, modal, base styles
   hub/                   hub script and styles
@@ -92,9 +109,17 @@ src/
     scene/rig.ts         the garden layout
     scene/scene.ts       renderer, lights, picking, camera fly-to
     ui/*                 side panel, guide index, plant guide, bed planner
+  home/
+    data/areas.ts        clickable areas (AreaId) and what opens for each
+    data/guides.ts       home repair guides
+    data/tools.ts        the toolbox catalog
+    data/setup.ts        countertop, ceiling, floor and wall colour options
+    scene/rig.ts         the cutaway room, its outside and the crease lines
+    scene/scene.ts       renderer, lights, picking, camera fly-to
+    ui/*                 side panel, guide index, home menu, toolbox, calculators
 ```
 
-Each workshop is its own Vite page (see `vite.config.ts`), so adding Home means a new folder with an `index.html` plus its `src/<name>/` code, reusing `src/shared/`.
+Each workshop is its own Vite page (see `vite.config.ts`), so adding one means a new folder with an `index.html` plus its `src/<name>/` code, reusing `src/shared/`.
 
 ### Adding a guide
 
@@ -103,6 +128,10 @@ Add an entry to `GUIDES` in `src/pc/data/guides.ts`. List the parts it belongs t
 ### Adding a garden guide or plant
 
 Add a guide to `GUIDES` in `src/garden/data/guides.ts`, with its areas in `areas` (the first is where it opens) and plant ids in `plants`. Add a plant to `PLANTS` in `src/garden/data/plants.ts`; `friends` and `avoid` take other plant ids, and setting `area` gives the card a "Show in garden" button.
+
+### Adding a home guide or tool
+
+Add a guide to `GUIDES` in `src/home/data/guides.ts` with its areas in `areas` (the first is where it opens). `tools` takes ids from `src/home/data/tools.ts`, which feed the "you have X of Y" count and the toolbox; plain text works for one-off tools. Add `cautions` for safety notes and `pro` for when it stops being a DIY job.
 
 ### Adding a part to the picker
 
