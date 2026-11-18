@@ -2,14 +2,21 @@
 
 Fix it yourself. Interactive, comic-styled 3D workshops: click the part that's giving you trouble, follow the steps, and open how-to videos on YouTube.
 
-**Try it: [sea-chels.github.io/diy-app](https://sea-chels.github.io/diy-app/)**
+**Try it: [sea-chels.github.io/diy-app][site]**
 
-| Workshop | Open it |
+| Workshop | Live site |
 |---|---|
-| PC | [/pc/](https://sea-chels.github.io/diy-app/pc/) |
-| Garage | [/garage/](https://sea-chels.github.io/diy-app/garage/) |
-| Home | [/home/](https://sea-chels.github.io/diy-app/home/) |
-| Garden | [/garden/](https://sea-chels.github.io/diy-app/garden/) |
+| PC | [/pc/][site-pc] |
+| Garage | [/garage/][site-garage] |
+| Home | [/home/][site-home] |
+| Garden | [/garden/][site-garden] |
+
+<!-- The deploy publishes to /<repo name>/ on the owner's Pages domain; update these if the repo moves. -->
+[site]: https://sea-chels.github.io/diy-app/
+[site-pc]: https://sea-chels.github.io/diy-app/pc/
+[site-garage]: https://sea-chels.github.io/diy-app/garage/
+[site-home]: https://sea-chels.github.io/diy-app/home/
+[site-garden]: https://sea-chels.github.io/diy-app/garden/
 
 Purely client-side: Vite + TypeScript + Three.js + Lucide, no backend, no database.
 

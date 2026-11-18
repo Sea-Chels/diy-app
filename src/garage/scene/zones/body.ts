@@ -57,7 +57,7 @@ export function buildBody(c: CarCtx) {
     for (const [a, b] of S.cornerPillars) band(a, b, GH_CORNER_T - 0.03, GH_CORNER_T + 0.03, side);
     for (const z of S.vertPillars) band(z - 0.035, z + 0.035, -0.015, GH_CORNER_T, side);
     if (!S.suv) band(S.ghRearZ, S.ghRearZ + 0.26, -0.015, GH_CORNER_T, side);
-    const trim = toon(C.trim, { shine: 0.4 });
+    const trim = toon(C.trim);
     const runs: [number, number][] = side > 0 ? [[S.ghRearZ + 0.02, dz0], [dz1, S.cowlZ - 0.02]] : [[S.ghRearZ + 0.02, S.cowlZ - 0.02]];
     for (const [z0, z1] of runs) put(group, beltTrim(side, z0, z1), trim, undefined, 'thin');
   }

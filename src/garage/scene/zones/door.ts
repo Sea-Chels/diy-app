@@ -26,10 +26,12 @@ export function buildDoors(c: CarCtx) {
   // A black frame around the pane (top edge under the roof line and A-pillar, rear edge at the B-pillar)
   // and the belt strip capping the door top, so pane and door read as one piece once it swings open.
   // The frame stays just under the pillar and roof panels, which cover it while the door is shut.
-  const frameMat = () => toon(C.trim, { shine: 0.4 });
-  put(doorPivot, toDoor(beltTrim(1, doorZ0, doorZ1)), frameMat(), undefined, 'thin');
-  put(doorPivot, toDoor(shell(gh, GH_N, doorZ0, doorZ1, GH_CORNER_T - 0.016, GH_CORNER_T, 0.004, 0.008, 40, 3)), frameMat(), undefined, 'thin');
-  put(doorPivot, toDoor(shell(gh, GH_N, doorZ0, doorZ0 + 0.04, -0.015, GH_CORNER_T, 0.004, 0.008, 3, 10)), frameMat(), undefined, 'thin');
+  const frameMat = () => toon(C.trim);
+  const frame = [
+    put(doorPivot, toDoor(beltTrim(1, doorZ0, doorZ1)), frameMat(), undefined, 'thin'),
+    put(doorPivot, toDoor(shell(gh, GH_N, doorZ0, doorZ1, GH_CORNER_T - 0.016, GH_CORNER_T, 0.004, 0.008, 40, 3)), frameMat(), undefined, 'thin'),
+    put(doorPivot, toDoor(shell(gh, GH_N, doorZ0, doorZ0 + 0.04, -0.015, GH_CORNER_T, 0.004, 0.008, 3, 10)), frameMat(), undefined, 'thin'),
+  ];
   const handleY = S.doorY[1] - 0.12;
   const doorHandle = put(doorPivot, rbox(0.035, 0.04, 0.16, 0.012), chromeMat(), [sideX(doorZ0 + 0.2, handleY, 1, 0.045) - doorHinge.x, handleY - doorHinge.y, doorZ0 + 0.2 - doorHinge.z], 'thin');
   const charY = S.belt - 0.17;
@@ -50,7 +52,7 @@ export function buildDoors(c: CarCtx) {
     const glassFace = put(m, rbox(0.09, 0.08, 0.01, 0.004), toon(C.mirror, { shine: 1, halftone: 0 }), [0, 0, -0.094], false);
     mirrorMeshes.push(m, glassFace);
   }
-  tag('door', door, doorHandle, ...mirrorMeshes);
+  tag('door', door, doorHandle, ...frame, ...mirrorMeshes);
 
   const seam = (side: number, z0: number, z1: number) => {
     const s = lower((z0 + z1) / 2);

@@ -44,12 +44,13 @@ export function buildTrunk(c: CarCtx) {
       return g;
     };
     const W = sill.x + 0.005; // pillar width at the window line = the body's shoulder
+    const RIM = 0.05;
+    // The shell stands RIM proud of this section, so its outer top lands flush with the roof panel (0.016 up).
     const rearSec: SectionFn = (z) => {
-      const yt = roofLine(Math.max(z, S.ghRearZ)) + 0.056;
+      const yt = roofLine(Math.max(z, S.ghRearZ)) + 0.016 - RIM;
       const wt = S.ghW[1] + 0.03;
       return { z, yb: 2 * yk - yt, yt, wb: 2 * W - wt, wt };
     };
-    const RIM = 0.05;
     const pillarZ0 = S.ghRearZ + 0.04;
     const pillars = shear(shell(rearSec, GH_N, S.tailZ, pillarZ0, -0.02, 0.52, -RIM, RIM, 30, 48));
     put(group, pillars, paint());

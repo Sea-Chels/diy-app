@@ -27,8 +27,6 @@ export const C = {
   lamp: 0xffe7a8,
   lampGlow: 0xffd77a,
   taillight: 0xff3049,
-  seat: 0x3d3a48,
-  plate: 0xa8d4ff,
   hose: 0x1d1c22,
   belt: 0x2a2730,
   marker: 0xffa53a,

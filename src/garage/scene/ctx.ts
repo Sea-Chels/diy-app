@@ -3,10 +3,9 @@ import { outline, toon, type InkWeight } from '../../shared/toon';
 import type { V3 } from '../../shared/scene/kit';
 import type { PartId } from '../data/parts';
 import type { BodyKind } from '../data/paint';
-import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { curve, ringPoint, tAtY, type SectionFn } from './loft';
 import { SPECS } from './specs';
-import { C } from './kit';
+import { C, rbox } from './kit';
 
 /** Everything the car's zones share: the body's spec, its profile curves and the mesh helpers. */
 export function createCtx(kind: BodyKind) {
@@ -133,10 +132,8 @@ export function createCtx(kind: BodyKind) {
 
   /** Ring t of the glasshouse's upper corner on the +x side; the side glass is t below it, the roof above. */
   const GH_CORNER_T = 0.125;
-  /** Black trim along the foot of the side glass, between z0 and z1. */
-  // Wide enough to cap the door top and reach in to the glass, which sits inboard of the skin.
-  const beltTrim = (side: number, z0: number, z1: number) =>
-    new RoundedBoxGeometry(0.064, 0.022, z1 - z0, 2, 0.008).translate(side * (sill.x + 0.003), ghBaseY + 0.008, (z0 + z1) / 2);
+  /** Black trim along the foot of the side glass, between z0 and z1, wide enough to cap the door top and reach in to the glass. */
+  const beltTrim = (side: number, z0: number, z1: number) => rbox(0.064, 0.022, z1 - z0, 0.008).translate(side * (sill.x + 0.003), ghBaseY + 0.008, (z0 + z1) / 2);
 
   /** Height of the glasshouse (roof) surface at (x, z); it falls away from the centre line toward the edges. */
   const roofY = (x: number, z: number) => {
@@ -155,8 +152,8 @@ export function createCtx(kind: BodyKind) {
 
   return {
     S, kind, group, hotspots, paintMats, paint, chromeMat, put, tag,
-    lowerTop, lowerBottom, lowerWidth, hoodLine, fasciaTop, fasciaBottom, fasciaWidth, roofLine,
-    archR, arch, LOWER_N, lower, fenderW, hoodW, hoodZ1, fender, front, hoodEdgeT, noseTopY, onNose, GH_N, TUB_T, sill, ghBaseY, ghBaseW, gh, GH_CORNER_T, beltTrim, roofY, sideX,
+    lowerTop, lowerBottom, lowerWidth, hoodLine, fasciaBottom, fasciaWidth, roofLine,
+    archR, LOWER_N, lower, fenderW, hoodW, hoodZ1, fender, front, hoodEdgeT, noseTopY, onNose, GH_N, TUB_T, sill, ghBaseY, gh, GH_CORNER_T, beltTrim, roofY, sideX,
   };
 }
 
