@@ -4,7 +4,7 @@
  */
 import {
   createElement, ArrowLeft, ArrowRight, Bath, BookOpen, Calculator, Car, Check, CircleAlert, CircleCheck, CircleX, Copy, Cpu, DoorOpen, Droplet, ExternalLink,
-  Fan, Flower2, Hammer, House, Lightbulb, ListChecks, Menu, Minus, MousePointerClick, PaintRoller, Pause, PiggyBank, Play, PlugZap, Plus, Power, Scissors, Shovel,
+  Fan, Flower2, Hammer, House, Lightbulb, ListChecks, Menu, Minus, MousePointerClick, PaintRoller, Palette, Pause, PiggyBank, Play, PlugZap, Plus, Power, Scissors, Shovel,
   SlidersHorizontal, Sprout, Square, SquareCheck, Sun, Toolbox, Trash2, TriangleAlert, Wrench, X, Zap, type IconNode,
 } from 'lucide';
 
@@ -34,6 +34,7 @@ const ICONS = {
   minus: Minus,
   click: MousePointerClick,
   paint: PaintRoller,
+  palette: Palette,
   pause: Pause,
   savings: PiggyBank,
   play: Play,

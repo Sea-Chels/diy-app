@@ -6,7 +6,7 @@ import { searchUrl } from '../youtube';
 
 type Child = Node | string | null | undefined | false;
 
-export function guideChips(g: GuideBase, kindLabel: string, time = fmtTime): HTMLElement {
+export function guideChips(g: GuideBase & { kind: string }, kindLabel: string, time = fmtTime): HTMLElement {
   return h('span', { class: 'chips' },
     h('span', { class: `chip kind kind-${g.kind}` }, kindLabel),
     h('span', { class: 'chip diff' }, DIFFICULTY_LABEL[g.difficulty]),

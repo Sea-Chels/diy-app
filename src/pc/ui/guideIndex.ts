@@ -1,14 +1,14 @@
 import { PARTS, PART_ORDER } from '../data/parts';
 import { GUIDES, KIND_LABEL, appliesTo } from '../data/guides';
 import { getState, setState } from '../store';
-import { openGuideIndex as open } from '../../shared/ui/guideIndex';
+import { kindFilters, openGuideIndex as open } from '../../shared/ui/guideIndex';
 import { guideChips } from './guideCard';
 
 export function openGuideIndex(): void {
   const guides = GUIDES.filter((g) => appliesTo(g, getState().setup.cooling));
   open({
     guides,
-    kinds: KIND_LABEL,
+    filters: kindFilters(KIND_LABEL),
     zones: PART_ORDER,
     zoneLabel: (p) => PARTS[p].label,
     zoneOf: (g) => g.parts[0],

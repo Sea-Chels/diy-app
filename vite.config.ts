@@ -8,6 +8,7 @@ const LOADER: Record<string, { verb: string; what: string }> = {
   pc: { verb: 'Booting', what: 'the PC' },
   garden: { verb: 'Growing', what: 'the garden' },
   home: { verb: 'Unlocking', what: 'the house' },
+  garage: { verb: 'Starting', what: 'the car' },
   hub: { verb: 'Opening', what: 'the workshop' },
 };
 function loaderPlugin(): Plugin {
@@ -15,7 +16,7 @@ function loaderPlugin(): Plugin {
   return {
     name: 'diy-loader',
     transformIndexHtml(html, ctx) {
-      const page = ['pc', 'garden', 'home'].find((p) => ctx.path.includes(`/${p}/`)) ?? 'hub';
+      const page = ['pc', 'garden', 'home', 'garage'].find((p) => ctx.path.includes(`/${p}/`)) ?? 'hub';
       const l = LOADER[page];
       const markup = readFileSync(file, 'utf8').replace('__VERB__', l.verb).replace('__WHAT__', l.what).replace('__PAGE__', page);
       return html.replace('<head>', `<head>\n<style>${paletteCss()}</style>`).replace(/<body([^>]*)>/, `<body$1>\n${markup}`);
@@ -39,6 +40,7 @@ export default defineConfig({
         pc: resolve(import.meta.dirname, 'pc/index.html'),
         garden: resolve(import.meta.dirname, 'garden/index.html'),
         home: resolve(import.meta.dirname, 'home/index.html'),
+        garage: resolve(import.meta.dirname, 'garage/index.html'),
       },
     },
   },

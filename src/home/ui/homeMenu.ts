@@ -1,13 +1,12 @@
 import { CEILING_LABEL, COUNTER_LABEL, FLOOR_LABEL, WALL_HEX, WALL_LABEL, type Setup, type WallColor } from '../data/setup';
 import { getState, setSetup, setState, subscribe } from '../store';
 import { h } from '../../shared/dom';
-import { icon } from '../../shared/icons';
+import { sceneMenu } from '../../shared/ui/sceneMenu';
 import type { AreaId } from '../data/areas';
 
 /** Floating "Your home" menu: countertop, ceiling fixture, flooring and wall colour. */
 export function mountHomeMenu(root: HTMLElement): void {
-  const toggle = h('button', { class: 'paint-toggle', 'aria-expanded': 'false', 'aria-controls': 'home-card' }, icon('sliders', 16), h('span', {}, 'Your home'), h('span', { class: 'paint-dot' }));
-  const card = h('div', { class: 'paint-card', id: 'home-card', role: 'dialog', 'aria-label': 'Home setup' });
+  const { toggle, card } = sceneMenu(root, { id: 'home-card', icon: 'sliders', label: 'Your home', title: 'Home setup' });
 
   type SegKey = 'counter' | 'ceiling' | 'floor';
   const segs = new Map<SegKey, Map<string, HTMLButtonElement>>();
@@ -37,7 +36,6 @@ export function mountHomeMenu(root: HTMLElement): void {
     h('p', { class: 'paint-label' }, 'Floor'), seg('floor', FLOOR_LABEL, 'floor'),
     h('p', { class: 'paint-label' }, 'Wall colour'), swatches,
   );
-  root.append(toggle, card);
 
   function sync(): void {
     const s = getState().setup;
@@ -45,18 +43,6 @@ export function mountHomeMenu(root: HTMLElement): void {
     swatchBtns.forEach((b, c) => b.classList.toggle('active', s.wall === c));
     toggle.style.setProperty('--c', `#${WALL_HEX[s.wall].toString(16).padStart(6, '0')}`);
   }
-
-  function setOpen(open: boolean): void {
-    root.classList.toggle('open', open);
-    toggle.setAttribute('aria-expanded', String(open));
-  }
-  toggle.addEventListener('click', () => setOpen(!root.classList.contains('open')));
-  document.addEventListener('pointerdown', (e) => {
-    if (!root.contains(e.target as Node)) setOpen(false);
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') setOpen(false);
-  });
 
   subscribe((s, prev) => {
     if (s.setup !== prev.setup) sync();

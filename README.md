@@ -5,7 +5,7 @@ Fix it yourself. Interactive, comic-styled 3D workshops: click the part that's g
 | Workshop | Status |
 |---|---|
 | PC | Live in this repo (`/pc/`) |
-| Garage | Lives at [diy-garage](https://github.com/Sea-Chels/diy-garage) for now, moving here |
+| Garage | Live in this repo (`/garage/`) |
 | Home | Live in this repo (`/home/`) |
 | Garden | Live in this repo (`/garden/`) |
 
@@ -28,6 +28,20 @@ A glass-sided PC on a desk beside a monitor. Click a glowing dot and the camera 
 - **Parts picker:** pick a CPU, board, RAM, GPU, cooler, case, PSU and drives from a curated list and get compatibility checks (socket, memory type, form factor, GPU length, cooler height, radiator size, PSU form factor and wattage, M.2 slots, missing graphics output). Every part links to PCPartPicker for prices; "Show this build in 3D" updates the model.
 
 ![Parts picker flagging a DDR4 kit on a DDR5 board, a GPU too long for the case and an undersized PSU](docs/parts-picker.jpg)
+
+## Garage workshop
+
+A comic sedan or SUV on a turntable. Pick your year, make and model (models come from NHTSA's vPIC list) and the videos search for your exact car. Click a glowing dot and the camera flies in: the hood lifts on the engine bay, the trunk or liftgate swings up on the spare, the driver's door opens on the cabin, and the wipers sweep.
+
+![Red sedan with glowing dots on each clickable part and the Paint menu open](docs/garage.jpg)
+
+| A guide | Every fix |
+|---|---|
+| ![Oil change steps, tools and cautions beside a blue SUV's open engine bay](docs/garage-guide.jpg) | ![The fix index searched for fuses](docs/garage-index.jpg) |
+
+- **Your car:** year, make, model and powertrain (gas, diesel, hybrid or electric, guessed from the model). Jobs that don't apply, like oil changes on an EV, drop out.
+- **Paint:** body (auto from the model, sedan or SUV), colour and finish (matte, satin, gloss or metallic).
+- **Guides:** 37 driveway jobs: oil and filters, wipers and fluids, bulbs and cloudy headlights, fuses, the 12V battery and jump starts, spark plugs, belts and sensors, tires, flats and brake pads, key fobs, check-engine codes, struts, mirrors and touch-up paint. Each one says what a shop would charge and lists jack and hot-engine cautions where they matter.
 
 ## Garden workshop
 
@@ -63,7 +77,7 @@ An open cutaway room, like a dollhouse with the front and right walls removed: a
 
 ```sh
 pnpm install
-pnpm dev        # http://localhost:5173, workshops at /pc/, /garden/ and /home/
+pnpm dev        # http://localhost:5173, workshops at /pc/, /garage/, /garden/ and /home/
 pnpm build      # outputs dist/
 ```
 
@@ -75,6 +89,8 @@ pnpm build      # outputs dist/
 | Parts list and specs for the picker | `src/pc/data/catalog.ts`, hand-curated and rounded | Free |
 | Prices and full specs | Links to PCPartPicker search, opened in a new tab | Free |
 | Videos | A YouTube search for the job (plus your picked part's name), opened in a new tab | Free |
+| Garage guides | `src/garage/data/guides.ts`, hand-written | Free |
+| Car models by make and year | [NHTSA vPIC](https://vpic.nhtsa.dot.gov/api/), no key needed | Free |
 | Garden guides and plant care | `src/garden/data/guides.ts` and `plants.ts`, hand-written; canning follows [NCHFP](https://nchfp.uga.edu/) tested methods | Free |
 | Home repair guides and tools | `src/home/data/guides.ts` and `tools.ts`, hand-written; safety links to the [EPA](https://www.epa.gov/lead), [ESFI](https://www.esfi.org/) and [NFPA](https://www.nfpa.org/) | Free |
 
@@ -83,13 +99,14 @@ pnpm build      # outputs dist/
 ```
 index.html               hub page
 pc/index.html            PC workshop page
+garage/index.html        Garage workshop page
 garden/index.html        Garden workshop page
 home/index.html          Home workshop page
 src/
   shared/
     theme.ts             the colour palette; injected into every page as CSS variables
     base.css             page shell, top bar, buttons, side panel, modals
-    workshop.css         styles shared by the three workshop pages
+    workshop.css         styles shared by the workshop pages
     store.ts             small state store that saves to localStorage
     guides.ts            fields every workshop's guides share
     format.ts            time and number formatting
@@ -102,6 +119,7 @@ src/
     scene/kit.ts         instancing, leaf shapes, canvas textures, simple meshes
     ui/guideCard.ts      guide card pieces (chips, steps, cautions, video button)
     ui/guideIndex.ts     the searchable guide index
+    ui/sceneMenu.ts      the floating setup menu in each workshop's corner
   hub/                   hub script and styles
   pc/
     data/parts.ts        clickable parts (PartId) and which lids open for each
@@ -114,6 +132,17 @@ src/
     scene/layout.ts      case sizes and motherboard layouts
     scene/screen.ts      what the monitor shows (POST, BIOS, installer, desktop)
     ui/*                 side panel, guide index, rig menu, parts picker
+  garage/
+    data/parts.ts        clickable parts (PartId) and which lid each sits behind
+    data/guides.ts       guide types and lookups; the guides themselves are in data/guides/
+    data/makes.ts        makes, years, and powertrain and body guesses from the model name
+    data/paint.ts        body, finish and colour options
+    api/vpic.ts          model lists from NHTSA vPIC
+    scene/scene.ts       stage settings
+    scene/rig.ts         builds the car from scene/zones/ (body, hood, trunk, doors, cabin, engine bay, front, rear, wipers, wheels), then beacons, lids, views and paint
+    scene/specs.ts       sedan and SUV dimensions and profile curves
+    scene/loft.ts        lofts body panels from profile curves
+    ui/*                 side panel, guide index, paint menu, car picker
   garden/
     data/areas.ts        clickable areas (AreaId) and what opens for each
     data/guides.ts       guide types and lookups; the guides themselves are in data/guides/
@@ -140,6 +169,10 @@ Each workshop is its own Vite page (see `vite.config.ts`), so adding one means a
 ### Adding a guide
 
 Add an entry to the matching section file in `src/pc/data/guides/` (first boot, troubleshooting or replace). List the parts it belongs to in `parts`, add search words to `aliases`, set `cooling` if it only applies to AIOs or custom loops, and set `ctx` to a picker category so the video search names the user's part. Set `featured: true` to put it in the bar along the bottom.
+
+### Adding a garage guide
+
+Add an entry to the matching section file in `src/garage/data/guides/`. List the parts it belongs to in `parts` (the first is where it opens), set `powertrains` if it doesn't apply to every car, and write `query` as the words that follow the year, make and model in the video search. Set `featured: true` to put it in the bar along the bottom.
 
 ### Adding a garden guide or plant
 

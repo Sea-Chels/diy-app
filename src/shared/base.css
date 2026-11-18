@@ -109,7 +109,6 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
   radial-gradient(60% 50% at 18% 30%, color-mix(in srgb, var(--pink) 10%, transparent), transparent 70%),
   radial-gradient(55% 45% at 85% 25%, rgba(69,224,255,0.10), transparent 70%); }
 
-.paint-shop { position: absolute; top: 14px; left: 16px; z-index: 3; }
 .paint-toggle {
   display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px;
   background: rgba(21,25,33,0.85); border: 1px solid var(--line); backdrop-filter: blur(8px); color: var(--text);
@@ -121,7 +120,6 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
   background: var(--sheet); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.45);
   display: none; flex-direction: column; gap: 8px; animation: pop 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.paint-shop.open .paint-card { display: flex; }
 .paint-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-top: 4px; }
 .seg { display: flex; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 3px; }
 .seg button { flex: 1; background: none; border: 0; border-radius: 7px; padding: 6px 4px; font-size: 0.82rem; color: var(--muted); white-space: nowrap; }

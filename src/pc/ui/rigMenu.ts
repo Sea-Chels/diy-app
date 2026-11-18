@@ -1,12 +1,11 @@
 import { CASE_SWATCHES, COOLING_LABEL, GPU_LABEL, RGB_LABEL, RGB_SWATCHES, SIZE_LABEL, type Setup } from '../data/setup';
 import { getState, setSetup, subscribe } from '../store';
 import { h } from '../../shared/dom';
-import { icon } from '../../shared/icons';
+import { sceneMenu } from '../../shared/ui/sceneMenu';
 
 /** Floating "Rig" menu: case size, cooling, GPU, RGB and colours. Built once, then kept in sync. */
 export function mountRigMenu(root: HTMLElement): void {
-  const toggle = h('button', { class: 'paint-toggle', 'aria-expanded': 'false', 'aria-controls': 'rig-card' }, icon('sliders', 16), h('span', {}, 'Your rig'), h('span', { class: 'paint-dot' }));
-  const card = h('div', { class: 'paint-card', id: 'rig-card', role: 'dialog', 'aria-label': 'Rig setup' });
+  const { toggle, card } = sceneMenu(root, { id: 'rig-card', icon: 'sliders', label: 'Your rig', title: 'Rig setup' });
 
   type SegKey = 'size' | 'cooling' | 'gpu' | 'rgb';
   const segs = new Map<SegKey, Map<string, HTMLButtonElement>>();
@@ -46,7 +45,6 @@ export function mountRigMenu(root: HTMLElement): void {
     rgbLabel, seg('rgb', RGB_LABEL), rgbSw.el,
     h('p', { class: 'paint-label' }, 'Case colour'), caseSw.el,
   );
-  root.append(toggle, card);
 
   function sync(): void {
     const s = getState().setup;
@@ -59,18 +57,6 @@ export function mountRigMenu(root: HTMLElement): void {
     caseSw.btns.forEach((b) => b.classList.toggle('active', b.dataset.hex === s.caseColor));
     toggle.style.setProperty('--c', s.rgb === 'off' ? s.caseColor : s.rgbColor);
   }
-
-  function setOpen(open: boolean): void {
-    root.classList.toggle('open', open);
-    toggle.setAttribute('aria-expanded', String(open));
-  }
-  toggle.addEventListener('click', () => setOpen(!root.classList.contains('open')));
-  document.addEventListener('pointerdown', (e) => {
-    if (!root.contains(e.target as Node)) setOpen(false);
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') setOpen(false);
-  });
 
   subscribe((s, prev) => {
     if (s.setup !== prev.setup) sync();

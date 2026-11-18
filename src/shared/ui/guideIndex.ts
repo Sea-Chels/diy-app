@@ -2,9 +2,23 @@ import type { GuideBase } from '../guides';
 import { h, clear } from '../dom';
 import { openModal, closeModal } from '../modal';
 
-export interface GuideIndexOpts<K extends string, Z extends string, G extends GuideBase<K>> {
+export interface GuideFilter<G> {
+  label: string;
+  keep: (g: G) => boolean;
+}
+
+/** "Everything", then one chip per guide kind. */
+export function kindFilters<K extends string, G extends GuideBase & { kind: K }>(kinds: Record<K, string>): GuideFilter<G>[] {
+  return [{ label: 'Everything', keep: () => true }, ...(Object.keys(kinds) as K[]).map((k) => ({ label: kinds[k], keep: (g: G) => g.kind === k }))];
+}
+
+export interface GuideIndexOpts<Z extends string, G extends GuideBase> {
   guides: G[];
-  kinds: Record<K, string>;
+  /** Chips that narrow the list, one active at a time; the first is active on open. */
+  filters: GuideFilter<G>[];
+  /** An on/off chip at the end of the row, on when the index opens; `keep` applies while it's on. */
+  toggle?: { label: (on: boolean) => string; keep: (g: G) => boolean };
+  title?: string;
   /** The sections, in order, and each guide's section. */
   zones: readonly Z[];
   zoneLabel: (z: Z) => string;
@@ -18,10 +32,11 @@ export interface GuideIndexOpts<K extends string, Z extends string, G extends Gu
   sub: string;
 }
 
-/** Every guide, searchable and filterable by kind. */
-export function openGuideIndex<K extends string, Z extends string, G extends GuideBase<K>>(o: GuideIndexOpts<K, Z, G>): void {
+/** Every guide, searchable and filterable. */
+export function openGuideIndex<Z extends string, G extends GuideBase>(o: GuideIndexOpts<Z, G>): void {
   let query = '';
-  let kind: K | null = null;
+  let filter = o.filters[0];
+  let toggled = true;
 
   const input = h('input', { type: 'search', placeholder: o.placeholder, 'aria-label': 'Search guides', autocomplete: 'off' });
   const results = h('div', { class: 'glossary-results' });
@@ -31,9 +46,9 @@ export function openGuideIndex<K extends string, Z extends string, G extends Gui
     clear(chips);
     const mk = (label: string, active: boolean, onClick: () => void) => h('button', { class: `chip-btn${active ? ' active' : ''}`, onClick }, label);
     chips.append(
-      mk('Everything', kind === null, () => { kind = null; renderAll(); }),
-      ...(Object.keys(o.kinds) as K[]).map((k) => mk(o.kinds[k], kind === k, () => { kind = k; renderAll(); })),
+      ...o.filters.map((f) => mk(f.label, filter === f, () => { filter = f; renderAll(); })),
     );
+    if (o.toggle) chips.append(h('span', { class: 'spacer' }), mk(o.toggle.label(toggled), toggled, () => { toggled = !toggled; renderAll(); }));
   }
 
   function matches(g: G, q: string): boolean {
@@ -48,7 +63,7 @@ export function openGuideIndex<K extends string, Z extends string, G extends Gui
     const byZone = new Map<Z, G[]>();
     let count = 0;
     for (const g of o.guides) {
-      if (kind && g.kind !== kind) continue;
+      if (!filter.keep(g) || (o.toggle && toggled && !o.toggle.keep(g))) continue;
       if (!matches(g, q)) continue;
       const z = o.zoneOf(g);
       byZone.set(z, [...(byZone.get(z) ?? []), g]);
@@ -77,7 +92,7 @@ export function openGuideIndex<K extends string, Z extends string, G extends Gui
   }
 
   input.addEventListener('input', () => { query = input.value; renderResults(); });
-  openModal({ title: 'Every guide', sub: o.sub, className: 'glossary-modal', body: h('div', { class: 'modal-body' }, input, chips, results) });
+  openModal({ title: o.title ?? 'Every guide', sub: o.sub, className: 'glossary-modal', body: h('div', { class: 'modal-body' }, input, chips, results) });
   renderAll();
   input.focus();
 }

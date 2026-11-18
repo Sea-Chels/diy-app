@@ -20,7 +20,8 @@ import { OUTSIDE_GUIDES } from './guides/outside';
 export type GuideKind = 'fix' | 'install' | 'finish' | 'maintain';
 export const KIND_LABEL: Record<GuideKind, string> = { fix: 'Troubleshoot', install: 'Install & replace', finish: 'Patch & finish', maintain: 'Maintain' };
 
-export interface Guide extends GuideBase<GuideKind> {
+export interface Guide extends GuideBase {
+  kind: GuideKind;
   /** Areas this guide is listed under. First one is the primary. */
   areas: AreaId[];
   /** When it stops being a DIY job. */

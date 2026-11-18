@@ -3,12 +3,11 @@ export type Difficulty = 1 | 2 | 3;
 export const DIFFICULTY_LABEL: Record<Difficulty, string> = { 1: 'Easy', 2: 'Moderate', 3: 'Involved' };
 
 /** What every workshop's guides have in common. */
-export interface GuideBase<K extends string = string> {
+export interface GuideBase {
   id: string;
   title: string;
   /** Extra search words for the guide index. */
   aliases: string[];
-  kind: K;
   difficulty: Difficulty;
   /** Hands-on time range. */
   minutes: [number, number];

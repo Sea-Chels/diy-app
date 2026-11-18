@@ -303,7 +303,6 @@ a.ws:hover { transform: translate(-3px, -3px) rotate(-0.4deg); box-shadow: 10px 
   padding: 3px 9px; border-radius: 999px; background: rgba(255,255,255,0.08); color: var(--muted);
 }
 .ws-status.live { background: var(--ws); color: var(--on-accent); }
-.ws-status.moving { background: color-mix(in srgb, var(--coral) 18%, transparent); color: var(--peach); }
 .ws-go { position: absolute; right: 16px; bottom: 16px; color: var(--ws); }
 .ws.soon { opacity: 0.6; }
 .ws.soon .ws-art { filter: saturate(0.5); }

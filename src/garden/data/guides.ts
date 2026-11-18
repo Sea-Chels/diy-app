@@ -19,7 +19,8 @@ import { TOOLS_GUIDES } from './guides/tools';
 export type GuideKind = 'build' | 'grow' | 'fix' | 'preserve';
 export const KIND_LABEL: Record<GuideKind, string> = { build: 'Build', grow: 'Grow', fix: 'Troubleshoot', preserve: 'Preserve' };
 
-export interface Guide extends GuideBase<GuideKind> {
+export interface Guide extends GuideBase {
+  kind: GuideKind;
   /** Areas this guide is listed under. First one is the primary. */
   areas: AreaId[];
   /** Waiting time on top of the hands-on work, if any. */

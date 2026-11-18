@@ -28,6 +28,8 @@ export interface StageRig<Id extends string, Lid extends string> {
   overview: View;
   setLid(lid: Lid, open: boolean): void;
   focus?(id: Id | null): void;
+  /** False while an area can't be clicked, e.g. it's behind a closed lid; picks pass through it. */
+  canPick?(id: Id): boolean;
   /** Play an area's small animation, if it has one. */
   poke(id: Id): void;
   update(t: number): void;
@@ -46,11 +48,13 @@ export interface StageConfig<S, Id extends string, Lid extends string, R extends
   highlight: 'hull' | 'outline';
   /** Fly back to the current view once a rebuilt rig is in. */
   reflyOnSwap?: boolean;
+  /** Camera near plane; as large as close-ups allow, for depth precision. */
+  near: number;
   controls: { minDistance: number; maxDistance: number; polarMargin: number; pan: boolean; rotateSpeed: number };
   sky: { color: number; intensity: number };
   key: { pos: V3; intensity: number; shadowMap: number; shadowExtent: number; shadowFar: number; bias: number };
   rims: { pink: { pos: V3; intensity: number }; cyan: { pos: V3; intensity: number } };
-  frontPos: V3;
+  front: { pos: V3; intensity: number };
   ground: { center: V3; disc?: number; ring: [number, number]; ringY: number; segments: number };
   /**
    * Overview distance multiplier: clamp(base / aspect, min, max), so portrait screens back off.
@@ -58,10 +62,15 @@ export interface StageConfig<S, Id extends string, Lid extends string, R extends
    */
   fit: { base: number; min: number; max: number; raiseLimit: boolean };
   flight: { ms: number; lift: number };
-  /** How much further back area views sit on phones, where the panel covers the bottom of the screen. */
-  phoneBackoff: number;
-  /** Beacons shrink as the camera closes in: scale = clamp(distance / near, 0.3, max). */
-  beaconScale: { near: number; max: number };
+  /**
+   * How area views make room for the side panel: pulled back by `pullback`, then shifted
+   * left by `shift` × distance on desktop, or dropped by `drop` × distance on phones,
+   * where the panel covers the bottom of the screen.
+   */
+  framing: { desktop: { pullback: number; shift: number }; phone: { pullback: number; drop: number } };
+  beaconPulse: { amp: number; speed: number };
+  /** Beacons shrink as the camera closes in: scale = clamp(distance / near, 0.3, max). Null keeps them one size. */
+  beaconScale: { near: number; max: number } | null;
   debugName: string;
 }
 
@@ -89,7 +98,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   renderer.toneMapping = THREE.NoToneMapping;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(36, 1, 0.05, 100);
+  const camera = new THREE.PerspectiveCamera(36, 1, cfg.near, 100);
 
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = true;
@@ -118,8 +127,8 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     l.position.set(...rim.pos);
     scene.add(l);
   }
-  const front = new THREE.DirectionalLight(LIGHT.front, 0.35);
-  front.position.set(...cfg.frontPos);
+  const front = new THREE.DirectionalLight(LIGHT.front, cfg.front.intensity);
+  front.position.set(...cfg.front.pos);
   scene.add(front);
 
   const g = cfg.ground;
@@ -181,12 +190,13 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     pointer.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
+    const live = (o: THREE.Object3D) => shown(o) && (!rig.canPick || o.userData.blocker || rig.canPick(o.userData.area as Id));
     const hits = raycaster.intersectObjects(rig.picks, false);
     // Beacons draw on top of everything, so they win when hit.
-    const beacon = hits.find((h) => h.object.userData.beacon && shown(h.object));
+    const beacon = hits.find((h) => h.object.userData.beacon && live(h.object));
     if (beacon) return beacon.object.userData.area as Id;
     // Pick boxes overlap: the nearest wins, unless a blocker is in front of it.
-    const first = hits.find((h) => !h.object.userData.beacon && shown(h.object));
+    const first = hits.find((h) => !h.object.userData.beacon && live(h.object));
     if (!first || first.object.userData.blocker) return null;
     return first.object.userData.area as Id;
   }
@@ -260,14 +270,16 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     const v = rig.views[id];
     const t = new THREE.Vector3(...v.target);
     const p = new THREE.Vector3(...v.pos);
+    const { desktop, phone } = cfg.framing;
     if (window.innerWidth <= 720) {
-      p.sub(t).multiplyScalar(cfg.phoneBackoff).add(t);
-      const down = new THREE.Vector3(0, -1, 0).multiplyScalar(p.distanceTo(t) * 0.2);
+      p.sub(t).multiplyScalar(phone.pullback).add(t);
+      const down = new THREE.Vector3(0, -1, 0).multiplyScalar(p.distanceTo(t) * phone.drop);
       t.add(down);
       p.add(down);
     } else {
+      p.sub(t).multiplyScalar(desktop.pullback).add(t);
       const right = new THREE.Vector3().subVectors(t, p).cross(new THREE.Vector3(0, 1, 0)).normalize();
-      const shift = right.multiplyScalar(p.distanceTo(t) * 0.2);
+      const shift = right.multiplyScalar(p.distanceTo(t) * desktop.shift);
       t.add(shift);
       p.add(shift);
     }
@@ -361,7 +373,8 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     outline?.setSize(w, h, pr);
     syncLineResolution();
   }
-  window.addEventListener('resize', resize);
+  // Watch the container, not the window: the page around it can still be settling (a top bar filling in) after the first measure.
+  new ResizeObserver(resize).observe(canvas.parentElement ?? canvas);
   resize();
   const start = overviewFit();
   camera.position.set(...start.pos);
@@ -374,13 +387,15 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     const t = clock.getElapsedTime();
     updateTweens(performance.now());
     rig.update(t);
-    const pulse = 1 + Math.sin(t * 3.2) * 0.12;
+    const pulse = 1 + Math.sin(t * cfg.beaconPulse.speed) * cfg.beaconPulse.amp;
+    const bs = cfg.beaconScale;
     rig.beacons.forEach((b, id) => {
       // Beacons draw without depth testing, so ones on the far side of an outer wall have to hide themselves.
       const seen = b.userData.seen as ((cam: THREE.Vector3) => boolean) | undefined;
       b.visible = id !== selected && (!seen || seen(camera.position));
+      if (!bs) return b.scale.setScalar(pulse);
       b.getWorldPosition(tmpV);
-      b.scale.setScalar(pulse * Math.min(cfg.beaconScale.max, Math.max(0.3, tmpV.distanceTo(camera.position) / cfg.beaconScale.near)));
+      b.scale.setScalar(pulse * Math.min(bs.max, Math.max(0.3, tmpV.distanceTo(camera.position) / bs.near)));
     });
     controls.update();
     camera.updateMatrixWorld();

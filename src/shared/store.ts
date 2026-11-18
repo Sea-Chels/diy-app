@@ -50,5 +50,5 @@ export const asRecord = (v: unknown): Record<string, unknown> => (v && typeof v 
 export const stringList = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []);
 
 /** `v` if it's one of the keys of `labels`, else `fallback`. */
-export const oneOf = <K extends string>(v: unknown, labels: Record<K, string>, fallback: K): K =>
+export const oneOf = <K extends string>(v: unknown, labels: Record<K, unknown>, fallback: K): K =>
   typeof v === 'string' && Object.hasOwn(labels, v) ? (v as K) : fallback;

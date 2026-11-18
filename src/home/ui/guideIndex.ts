@@ -1,13 +1,13 @@
 import { AREAS, AREA_ORDER } from '../data/areas';
 import { GUIDES, KIND_LABEL } from '../data/guides';
 import { setState } from '../store';
-import { openGuideIndex as open } from '../../shared/ui/guideIndex';
+import { kindFilters, openGuideIndex as open } from '../../shared/ui/guideIndex';
 import { guideChips } from './guideCard';
 
 export function openGuideIndex(): void {
   open({
     guides: GUIDES,
-    kinds: KIND_LABEL,
+    filters: kindFilters(KIND_LABEL),
     zones: AREA_ORDER,
     zoneLabel: (a) => AREAS[a].label,
     zoneOf: (g) => g.areas[0],

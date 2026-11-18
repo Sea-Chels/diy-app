@@ -10,7 +10,8 @@ import { REPLACE_GUIDES } from './guides/replace';
 export type GuideKind = 'fix' | 'swap' | 'setup';
 export const KIND_LABEL: Record<GuideKind, string> = { fix: 'Troubleshoot', swap: 'Replace', setup: 'Set up' };
 
-export interface Guide extends GuideBase<GuideKind> {
+export interface Guide extends GuideBase {
+  kind: GuideKind;
   /** Hotspots this guide is listed under. First one is the primary. */
   parts: PartId[];
   /** Only shown for these cooling setups. Omit for all. */
