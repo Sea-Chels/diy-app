@@ -2,12 +2,14 @@
 
 Fix it yourself. Interactive, comic-styled 3D workshops: click the part that's giving you trouble, follow the steps, and open how-to videos on YouTube.
 
-| Workshop | Status |
+**Try it: [sea-chels.github.io/diy-app](https://sea-chels.github.io/diy-app/)**
+
+| Workshop | Open it |
 |---|---|
-| PC | Live in this repo (`/pc/`) |
-| Garage | Live in this repo (`/garage/`) |
-| Home | Live in this repo (`/home/`) |
-| Garden | Live in this repo (`/garden/`) |
+| PC | [/pc/](https://sea-chels.github.io/diy-app/pc/) |
+| Garage | [/garage/](https://sea-chels.github.io/diy-app/garage/) |
+| Home | [/home/](https://sea-chels.github.io/diy-app/home/) |
+| Garden | [/garden/](https://sea-chels.github.io/diy-app/garden/) |
 
 Purely client-side: Vite + TypeScript + Three.js + Lucide, no backend, no database.
 
