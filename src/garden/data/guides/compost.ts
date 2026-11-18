@@ -1,0 +1,65 @@
+import type { Guide } from '../guides';
+
+export const COMPOST_GUIDES: Guide[] = [
+  {
+    id: 'build-compost-bays', title: 'Build a three-bay compost bin', areas: ['compost'], aliases: ['compost bin', 'pallets', 'three bin', 'compost bay'],
+    kind: 'build', difficulty: 2, minutes: [180, 360], savings: 'free with reclaimed pallets',
+    tools: ['Drill/driver', 'Saw', 'Level', 'Post-hole digger (optional)'],
+    supplies: ['7 pallets marked HT (heat-treated), or untreated lumber', '1×6 boards for removable front slats', '2×2 cleats for slat slots', 'Exterior screws, hardware cloth (to stop rats)'],
+    summary: 'Three bays let compost move along: new scraps in bay one, a cooking pile in bay two, finished compost in bay three. Each bay is about 3×3×3 ft, the size a pile needs to heat up.',
+    steps: [
+      'Pick a level, shaded spot with good drainage and easy wheelbarrow access.',
+      'Staple hardware cloth to the ground under the bays if rodents are a concern.',
+      'Stand 4 pallets in a row for the back wall and screw them together.',
+      'Screw pallets on at right angles to make 3 side walls and 2 dividers.',
+      'Screw 2×2 cleats to the front of each divider to make slots, then cut 1×6 front slats that drop in and lift out.',
+      'Add a lid or tarp to keep rain off in wet climates.',
+    ],
+    cautions: ['Only use pallets stamped HT. Avoid MB (methyl bromide fumigated) or unstamped pallets.'],
+    query: 'build three bin compost system pallets', featured: true,
+  },
+  {
+    id: 'hot-compost', title: 'Make hot compost', areas: ['compost'], aliases: ['how to compost', 'browns greens', 'carbon nitrogen', 'compost ratio', 'turning compost'],
+    kind: 'grow', difficulty: 2, minutes: [60, 120], wait: 'Finished in 2–4 months if turned; 6–12 months if left',
+    tools: ['Pitchfork', 'Compost thermometer', 'Hose'], supplies: ['Browns: dry leaves, straw, shredded cardboard, wood chips', 'Greens: grass clippings, kitchen scraps, coffee grounds, manure (herbivores only)'],
+    summary: 'Mix roughly 2–3 parts browns to 1 part greens by volume, keep it as damp as a wrung-out sponge and turn it. A good pile reaches 130–160°F in days and breaks down fast.',
+    steps: [
+      'Collect enough to build a pile at least 3×3×3 ft at once; smaller piles stay cold.',
+      'Layer browns and greens, chopping big things small. Water each layer.',
+      'Within 3–5 days the middle should be hot. Check with a thermometer.',
+      'When the temperature drops (about weekly), turn the pile into the next bay, moving outside material to the middle.',
+      'Repeat 3–4 times. It\'s ready when it\'s dark, crumbly, smells like forest floor and doesn\'t heat up again.',
+      'Let it cure 2–4 weeks, then sift and use.',
+    ],
+    cautions: ['Keep out meat, fish, dairy, oils, pet waste, diseased plants and weeds gone to seed (unless the pile stays hot).', 'Wear a dust mask when turning dry compost.'],
+    query: 'hot composting method browns greens ratio turning', featured: true,
+  },
+  {
+    id: 'compost-problems', title: 'Compost smells or won\'t heat up', areas: ['compost'], aliases: ['smelly compost', 'ammonia', 'slimy', 'cold pile', 'flies', 'rats'],
+    kind: 'fix', difficulty: 1, minutes: [20, 45],
+    tools: ['Pitchfork'], supplies: ['Dry leaves or shredded cardboard', 'Fresh grass clippings or coffee grounds'],
+    summary: 'Compost problems come down to the mix, moisture or air. Use your nose and hand to diagnose.',
+    steps: [
+      'Smells of ammonia or rotten eggs, slimy: too many greens or too wet. Mix in dry browns and turn it.',
+      'Dry and nothing happens: water while turning until it feels like a wrung-out sponge.',
+      'Damp but cold: needs nitrogen. Add greens (fresh clippings, coffee grounds) and turn.',
+      'Pile too small: build it up to at least 3 ft each way.',
+      'Fruit flies or rodents: bury scraps in the middle under 8 inches of browns, and line bins with hardware cloth.',
+    ],
+    query: 'compost troubleshooting smell not heating',
+  },
+  {
+    id: 'worm-bin', title: 'Start a worm bin', areas: ['compost', 'pantry'], aliases: ['vermicompost', 'worm castings', 'red wigglers', 'indoor compost'],
+    kind: 'build', difficulty: 1, minutes: [30, 60], wait: 'First castings in 2–3 months',
+    tools: ['Drill'], supplies: ['Two stackable plastic totes', 'Shredded newspaper or cardboard for bedding', '1 lb red wiggler worms (Eisenia fetida)', 'A handful of soil'],
+    summary: 'Red wigglers turn kitchen scraps into rich worm castings in a bin small enough for a garage or under the sink.',
+    steps: [
+      'Drill ¼ inch holes in the bottom and upper sides of one tote; nest it in the other to catch drips.',
+      'Fill with moist shredded paper bedding and a handful of soil.',
+      'Add worms and let them settle a few days before feeding.',
+      'Bury small amounts of chopped scraps in a different corner each time. No citrus, onions, meat or dairy.',
+      'Keep between 55 and 80°F. To harvest, push castings to one side and feed the other so worms migrate.',
+    ],
+    query: 'how to start a worm bin red wigglers tote',
+  },
+];

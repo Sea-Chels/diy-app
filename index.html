@@ -12,10 +12,10 @@
     <header class="nav">
       <a class="logo" href="./" aria-label="DIY home"><span class="logo-burst"><span>DIY</span></span></a>
       <nav class="nav-links" id="nav-links" aria-label="Workshops">
-        <a class="nav-link" href="./pc/" style="--ws: #6ee7ff"><i data-icon="cpu" data-size="18"></i> PC</a>
-        <a class="nav-link" href="https://sea-chels.github.io/diy-garage/" target="_blank" rel="noopener noreferrer" style="--ws: #f2694c"><i data-icon="car" data-size="18"></i> Garage <i data-icon="external" data-size="13"></i></a>
-        <a class="nav-link" href="./home/" style="--ws: #ffd23f"><i data-icon="house" data-size="18"></i> Home</a>
-        <a class="nav-link" href="./garden/" style="--ws: #4ade80"><i data-icon="sprout" data-size="18"></i> Garden</a>
+        <a class="nav-link" href="./pc/" style="--ws: var(--ws-pc)"><i data-icon="cpu" data-size="18"></i> PC</a>
+        <a class="nav-link" href="https://sea-chels.github.io/diy-garage/" target="_blank" rel="noopener noreferrer" style="--ws: var(--ws-garage)"><i data-icon="car" data-size="18"></i> Garage <i data-icon="external" data-size="13"></i></a>
+        <a class="nav-link" href="./home/" style="--ws: var(--ws-home)"><i data-icon="house" data-size="18"></i> Home</a>
+        <a class="nav-link" href="./garden/" style="--ws: var(--ws-garden)"><i data-icon="sprout" data-size="18"></i> Garden</a>
         <a class="nav-link" href="#how"><i data-icon="book" data-size="18"></i> How it works</a>
       </nav>
       <a class="nav-cta" href="./pc/">Start fixing <i data-icon="next" data-size="16"></i></a>
@@ -26,7 +26,7 @@
       <section class="carousel" id="carousel" aria-roledescription="carousel" aria-label="Workshops">
         <div class="rays" aria-hidden="true"></div>
         <div class="slides">
-          <article class="slide slide-intro" data-id="intro" data-label="Start" style="--ws: #b46cff">
+          <article class="slide slide-intro" data-id="intro" data-label="Start" style="--ws: var(--violet)">
             <div class="page">
               <div class="cpanel cpanel-hero">
                 <span class="caption">Issue #1</span>
@@ -42,14 +42,14 @@
                 </div>
               </div>
               <div class="cover" aria-hidden="true">
-                <span class="mini mini-1" style="--ws: #6ee7ff"><img src="hub/pc.webp" alt="" /></span>
-                <span class="mini mini-2" style="--ws: #f2694c"><img src="hub/garage.webp" alt="" /></span>
-                <span class="mini mini-3" style="--ws: #4ade80"><img src="hub/garden-mini.webp" alt="" /></span>
+                <span class="mini mini-1" style="--ws: var(--ws-pc)"><img src="hub/pc.webp" alt="" /></span>
+                <span class="mini mini-2" style="--ws: var(--ws-garage)"><img src="hub/garage.webp" alt="" /></span>
+                <span class="mini mini-3" style="--ws: var(--ws-garden)"><img src="hub/garden-mini.webp" alt="" /></span>
               </div>
             </div>
           </article>
 
-          <article class="slide" data-id="pc" data-label="PC" style="--ws: #6ee7ff">
+          <article class="slide" data-id="pc" data-label="PC" style="--ws: var(--ws-pc)">
             <div class="page">
               <div class="copy">
                 <span class="caption">Workshop 01 · Open now</span>
@@ -70,7 +70,7 @@
             </div>
           </article>
 
-          <article class="slide" data-id="garage" data-label="Garage" style="--ws: #f2694c">
+          <article class="slide" data-id="garage" data-label="Garage" style="--ws: var(--ws-garage)">
             <div class="page">
               <div class="copy">
                 <span class="caption">Workshop 02 · Moving in soon</span>
@@ -90,7 +90,7 @@
             </div>
           </article>
 
-          <article class="slide" data-id="home" data-label="Home" style="--ws: #ffd23f">
+          <article class="slide" data-id="home" data-label="Home" style="--ws: var(--ws-home)">
             <div class="page">
               <div class="copy">
                 <span class="caption">Workshop 03 · Open now</span>
@@ -111,7 +111,7 @@
             </div>
           </article>
 
-          <article class="slide" data-id="garden" data-label="Garden" style="--ws: #4ade80">
+          <article class="slide" data-id="garden" data-label="Garden" style="--ws: var(--ws-garden)">
             <div class="page">
               <div class="copy">
                 <span class="caption">Workshop 04 · Open now</span>
@@ -144,19 +144,19 @@
       <section class="how" id="how" aria-labelledby="how-title">
         <h2 class="section-title" id="how-title">How it works</h2>
         <ol class="strip">
-          <li class="strip-panel" style="--ws: #6ee7ff">
+          <li class="strip-panel" style="--ws: var(--ws-pc)">
             <span class="num">1</span>
             <i data-icon="cpu" data-size="40"></i>
             <h3>Pick a workshop</h3>
             <p>Set it up like yours: the case size, the cooling, the car you drive.</p>
           </li>
-          <li class="strip-panel" style="--ws: #ff4fd8">
+          <li class="strip-panel" style="--ws: var(--pink)">
             <span class="num">2</span>
             <i data-icon="click" data-size="40"></i>
             <h3>Click the part</h3>
             <p>The camera flies in and panels swing open so you can see what you’re working on.</p>
           </li>
-          <li class="strip-panel" style="--ws: #ffd23f">
+          <li class="strip-panel" style="--ws: var(--ws-home)">
             <span class="num">3</span>
             <i data-icon="wrench" data-size="40"></i>
             <h3>Follow along</h3>

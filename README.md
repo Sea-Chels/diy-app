@@ -86,36 +86,52 @@ pc/index.html            PC workshop page
 garden/index.html        Garden workshop page
 home/index.html          Home workshop page
 src/
-  shared/                toon shading + ink outlines, tweens, DOM helpers, icons, modal, base styles
+  shared/
+    theme.ts             the colour palette; injected into every page as CSS variables
+    base.css             page shell, top bar, buttons, side panel, modals
+    workshop.css         styles shared by the three workshop pages
+    store.ts             small state store that saves to localStorage
+    guides.ts            fields every workshop's guides share
+    format.ts            time and number formatting
+    toon.ts, tween.ts    toon shading and ink outlines, animation tweens
+    dom.ts, icons.ts     the h() DOM helper and Lucide icons
+    modal.ts, youtube.ts modals and video search links
+    loader.*             the loading screen each page shows while its scene builds
+    scene/stage.ts       renderer, lights, picking, highlights and camera flights for a workshop
+    scene/outline.ts     the silhouette highlight pass
+    scene/kit.ts         instancing, leaf shapes, canvas textures, simple meshes
+    ui/guideCard.ts      guide card pieces (chips, steps, cautions, video button)
+    ui/guideIndex.ts     the searchable guide index
   hub/                   hub script and styles
   pc/
     data/parts.ts        clickable parts (PartId) and which lids open for each
-    data/guides.ts       the guide catalog; add guides here
+    data/guides.ts       guide types and lookups; the guides themselves are in data/guides/
     data/catalog.ts      parts for the picker
     data/compat.ts       compatibility checks and power estimate
     data/setup.ts        case size, cooling, GPU, RGB options
-    scene/rig.ts         the stylized PC, monitor and keyboard
+    scene/scene.ts       stage settings: lights, camera limits, what each part opens
+    scene/rig.ts         builds the PC from scene/zones/ (case, board, cooling, PSU, desk), then beacons, views and animation
+    scene/layout.ts      case sizes and motherboard layouts
     scene/screen.ts      what the monitor shows (POST, BIOS, installer, desktop)
-    scene/scene.ts       renderer, lights, picking, camera fly-to
     ui/*                 side panel, guide index, rig menu, parts picker
   garden/
     data/areas.ts        clickable areas (AreaId) and what opens for each
-    data/guides.ts       garden guides
-    data/plants.ts       plant care cards and companion pairs
+    data/guides.ts       guide types and lookups; the guides themselves are in data/guides/
+    data/plants.ts       plant card types and lookups; the cards are in data/plants/
     data/plan.ts         bed planner checks
     data/setup.ts        season, bed fill and hydroponics options
-    scene/kit.ts         instancing, leaf shapes and canvas textures
-    scene/plants.ts      the plant builders (tomato, corn, pawpaw, …)
-    scene/rig.ts         the garden layout
-    scene/scene.ts       renderer, lights, picking, camera fly-to
+    scene/scene.ts       stage settings
+    scene/rig.ts         builds the garden from scene/zones/ (beds, compost, shed, water, herbs, …)
+    scene/plants/        the plant builders (tomato, corn, pawpaw, …)
     ui/*                 side panel, guide index, plant guide, bed planner
   home/
     data/areas.ts        clickable areas (AreaId) and what opens for each
-    data/guides.ts       home repair guides
+    data/guides.ts       guide types and lookups; the guides themselves are in data/guides/
     data/tools.ts        the toolbox catalog
     data/setup.ts        countertop, ceiling, floor and wall colour options
-    scene/rig.ts         the cutaway room, its outside and the crease lines
-    scene/scene.ts       renderer, lights, picking, camera fly-to
+    scene/scene.ts       stage settings
+    scene/rig.ts         builds the room from scene/zones/ (kitchen, bathroom, left wall, living, outside)
+    scene/creases.ts     the ink crease lines on hard edges
     ui/*                 side panel, guide index, home menu, toolbox, calculators
 ```
 
@@ -123,15 +139,15 @@ Each workshop is its own Vite page (see `vite.config.ts`), so adding one means a
 
 ### Adding a guide
 
-Add an entry to `GUIDES` in `src/pc/data/guides.ts`. List the parts it belongs to in `parts`, add search words to `aliases`, set `cooling` if it only applies to AIOs or custom loops, and set `ctx` to a picker category so the video search names the user's part. Set `featured: true` to put it in the bar along the bottom.
+Add an entry to the matching section file in `src/pc/data/guides/` (first boot, troubleshooting or replace). List the parts it belongs to in `parts`, add search words to `aliases`, set `cooling` if it only applies to AIOs or custom loops, and set `ctx` to a picker category so the video search names the user's part. Set `featured: true` to put it in the bar along the bottom.
 
 ### Adding a garden guide or plant
 
-Add a guide to `GUIDES` in `src/garden/data/guides.ts`, with its areas in `areas` (the first is where it opens) and plant ids in `plants`. Add a plant to `PLANTS` in `src/garden/data/plants.ts`; `friends` and `avoid` take other plant ids, and setting `area` gives the card a "Show in garden" button.
+Add a guide to the matching section file in `src/garden/data/guides/`, with its areas in `areas` (the first is where it opens) and plant ids in `plants`. Add a plant to the matching file in `src/garden/data/plants/`; `friends` and `avoid` take other plant ids, and setting `area` gives the card a "Show in garden" button.
 
 ### Adding a home guide or tool
 
-Add a guide to `GUIDES` in `src/home/data/guides.ts` with its areas in `areas` (the first is where it opens). `tools` takes ids from `src/home/data/tools.ts`, which feed the "you have X of Y" count and the toolbox; plain text works for one-off tools. Add `cautions` for safety notes and `pro` for when it stops being a DIY job.
+Add a guide to the matching section file in `src/home/data/guides/` with its areas in `areas` (the first is where it opens). `tools` takes ids from `src/home/data/tools.ts`, which feed the "you have X of Y" count and the toolbox; plain text works for one-off tools. Add `cautions` for safety notes and `pro` for when it stops being a DIY job.
 
 ### Adding a part to the picker
 

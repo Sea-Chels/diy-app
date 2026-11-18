@@ -1,18 +1,14 @@
-/**
- * Building blocks for the garden: seeded randomness, canvas textures, leaf
- * geometry, and instance batches so hundreds of leaves cost a handful of draw
- * calls. Everything is modelled in metres.
- */
+/** Modelling helpers shared by the rigs. Instance batches let hundreds of leaves cost a handful of draw calls. */
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
-import { outlineX, toon, type InkWeight, type ToonOpts } from '../../shared/toon';
+import { outlineX, toon, type InkWeight, type ToonOpts } from '../toon';
+import { PALETTE } from '../theme';
 
 export type V3 = [number, number, number];
 
 /** Sway strength shared by every plant material, so stems, leaves and fruit move together. */
 export const WIND = 0.008;
 
-// ---------- randomness ----------
 
 /** Small seeded PRNG (mulberry32) so the garden looks the same on every load. */
 export function rng(seed: number): () => number {
@@ -28,16 +24,15 @@ export function rng(seed: number): () => number {
 export const range = (r: () => number, a: number, b: number) => a + (b - a) * r();
 export const jitter = (r: () => number, amt: number) => (r() * 2 - 1) * amt;
 
-// ---------- textures ----------
 
-export function canvasTex(w: number, h: number, draw: (ctx: CanvasRenderingContext2D) => void, repeat?: [number, number]): THREE.CanvasTexture {
+export function canvasTex(w: number, h: number, draw: (ctx: CanvasRenderingContext2D) => void, repeat?: [number, number], anisotropy = 4): THREE.CanvasTexture {
   const c = document.createElement('canvas');
   c.width = w;
   c.height = h;
   draw(c.getContext('2d')!);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
-  t.anisotropy = 4;
+  t.anisotropy = anisotropy;
   if (repeat) {
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
     t.repeat.set(...repeat);
@@ -117,7 +112,7 @@ export function speckle(base: string, flecks: string[], n: number, size: [number
   }, repeat);
 }
 
-export function label(lines: { text: string; size: number; color?: string; weight?: number }[], bg: string, w = 256, h = 128): THREE.CanvasTexture {
+export function label(lines: { text: string; size: number; color?: string; weight?: number }[], bg: string, w = 256, h = 128, anisotropy = 4): THREE.CanvasTexture {
   return canvasTex(w, h, (ctx) => {
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, w, h);
@@ -127,11 +122,11 @@ export function label(lines: { text: string; size: number; color?: string; weigh
       ctx.font = `${l.weight ?? 800} ${l.size}px ui-rounded, "SF Pro Rounded", system-ui, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
-      ctx.fillStyle = l.color ?? '#16111f';
+      ctx.fillStyle = l.color ?? PALETTE.ink;
       ctx.fillText(l.text, w / 2, y);
       y += l.size * 1.15;
     }
-  });
+  }, undefined, anisotropy);
 }
 
 export function mapped(color: THREE.ColorRepresentation, map: THREE.Texture, o: ToonOpts = {}): THREE.MeshToonMaterial {
@@ -140,7 +135,6 @@ export function mapped(color: THREE.ColorRepresentation, map: THREE.Texture, o: 
   return m;
 }
 
-// ---------- leaf geometry ----------
 
 export type LeafShape = 'ovate' | 'obovate' | 'lance' | 'round' | 'heart' | 'strap' | 'pinnate' | 'palmate' | 'petal' | 'blade';
 
@@ -259,7 +253,6 @@ export function leafMatrix(pos: THREE.Vector3, dir: THREE.Vector3, face: THREE.V
   return m;
 }
 
-// ---------- instance batches ----------
 
 interface Batch {
   parent: THREE.Object3D;
@@ -309,7 +302,6 @@ export class Batches {
   }
 }
 
-// ---------- simple meshes ----------
 
 /** Adds a mesh with optional ink outline. Plant parts pass `wind` so the outline sways with them. */
 export function add(geo: THREE.BufferGeometry, mat: THREE.Material, parent: THREE.Object3D, p: V3 = [0, 0, 0], o: { ink?: InkWeight | null; wind?: number; rot?: V3; scale?: V3 | number; shadow?: boolean } = {}): THREE.Mesh {

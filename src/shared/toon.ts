@@ -8,8 +8,9 @@ import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
+import { hex } from './theme';
 
-export const INK = 0x16111f;
+export const INK = hex('ink');
 
 /** Uniforms shared by every toon material; the scene updates them each frame. */
 export const shared = {
@@ -187,7 +188,6 @@ export function glass(o: { tint?: THREE.ColorRepresentation; streak?: THREE.Colo
   });
 }
 
-// ---------- ink outlines ----------
 
 function hullMaterial(thickness: number, color: THREE.ColorRepresentation = INK): THREE.ShaderMaterial {
   return new THREE.ShaderMaterial({
@@ -255,8 +255,8 @@ export function hullSet(weight: InkWeight, wind = 0): HullSet {
     const t = weight === 'body' ? 0.0034 : 0.002;
     set = {
       base: hullMaterialX(t, INK, wind),
-      hover: hullMaterialX(t + 0.0013, 0x6ee7ff, wind),
-      selected: hullMaterialX(t + 0.003, 0x6ee7ff, wind),
+      hover: hullMaterialX(t + 0.0013, hex('cyan'), wind),
+      selected: hullMaterialX(t + 0.003, hex('cyan'), wind),
     };
     hullSets.set(key, set);
   }
@@ -265,7 +265,7 @@ export function hullSet(weight: InkWeight, wind = 0): HullSet {
 export type InkWeight = keyof typeof HULLS;
 
 /** Highlight outlines: the selected part gets a thick cyan ink line, hover a thinner one. */
-export const HIGHLIGHT = { hover: hullMaterial(0.0045, 0x6ee7ff), selected: hullMaterial(0.0065, 0x6ee7ff) };
+export const HIGHLIGHT = { hover: hullMaterial(0.0045, hex('cyan')), selected: hullMaterial(0.0065, hex('cyan')) };
 
 export function setHighlight(mesh: THREE.Mesh, level: 'none' | 'hover' | 'selected'): void {
   const hull = mesh.children.find((c) => c.userData.ink) as THREE.Mesh | undefined;

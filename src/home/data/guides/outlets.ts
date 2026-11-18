@@ -1,0 +1,73 @@
+import type { Guide } from '../guides';
+import { ESFI, POWER_OFF } from './common';
+
+export const OUTLETS_GUIDES: Guide[] = [
+  {
+    id: 'replace-outlet', title: 'Replace an outlet', areas: ['outlets'], aliases: ['receptacle', 'plug', 'socket', 'usb outlet', 'loose outlet', 'tamper resistant'],
+    kind: 'install', difficulty: 2, minutes: [20, 45], savings: '$100–200 per outlet',
+    tools: ['screwdriver', 'voltage-tester', 'outlet-tester', 'strippers', 'pliers'],
+    supplies: ['Outlet matching the circuit (15 A or 20 A; tamper-resistant in homes)', 'Wire connectors'],
+    summary: 'Power off, photograph the wiring, then move each wire to the same spot on the new outlet: black (hot) to brass, white (neutral) to silver, bare or green (ground) to the green screw.',
+    steps: [
+      'Plug a lamp or tester in, turn off breakers until it goes dead, then check every wire in the box with a non-contact tester.',
+      'Remove the plate and the two mounting screws and pull the outlet out. Photograph how it\'s wired.',
+      'Check the breaker size: a 15 A breaker takes 15 A outlets; a 20 A circuit (12-gauge wire) can take 15 or 20 A.',
+      'Move each wire to the new outlet: black to brass, white to silver, ground to green. Bend a hook in the stripped end and wrap it clockwise under the screw.',
+      'Use the screw terminals or the clamp-style back wire holes, not the push-in "backstab" holes: they loosen and overheat.',
+      'Fold the wires back, screw the outlet in straight, fit the plate, restore power and check it with the tester.',
+    ],
+    cautions: [POWER_OFF, 'Aluminium wiring (silver-coloured wire, common in the late 1960s–70s) needs special connectors: call an electrician.'],
+    pro: 'Scorch marks, melted insulation, aluminium wire, or no ground where the outlet needs one.',
+    links: [ESFI],
+    query: 'how to replace an electrical outlet safely', featured: true,
+  },
+  {
+    id: 'install-gfci', title: 'Install a GFCI outlet', areas: ['outlets', 'bath', 'counters'], aliases: ['gfci', 'gfi', 'ground fault', 'bathroom outlet', 'kitchen outlet', 'line load'],
+    kind: 'install', difficulty: 2, minutes: [30, 60], savings: '$100–200',
+    tools: ['screwdriver', 'voltage-tester', 'outlet-tester', 'strippers'],
+    supplies: ['GFCI outlet (15 or 20 A to match the circuit)', 'Wire connectors'],
+    summary: 'GFCIs cut power in milliseconds when current leaks, the kind of fault that shocks people near water. Kitchens, bathrooms, laundries, garages and outdoors need them.',
+    steps: [
+      'Turn off the breaker and test every wire in the box dead.',
+      'If the box has two sets of cables, find which one brings power: separate them, turn the breaker back on briefly and test which pair is live. Mark it and turn the breaker off again.',
+      'Connect the incoming pair to the LINE terminals (black to brass, white to silver) and the ground to green.',
+      'Connect the other pair to the LOAD terminals to protect the outlets downstream, or cap it off to protect only this one.',
+      'Fold it in, fit the plate, restore power and press TEST: it should click off. Press RESET.',
+    ],
+    cautions: [POWER_OFF, 'Line and load swapped means it won\'t reset or protect properly.'],
+    links: [ESFI],
+    query: 'how to install a GFCI outlet line and load terminals',
+  },
+  {
+    id: 'replace-switch', title: 'Replace a light switch or add a dimmer', areas: ['outlets', 'lights'], aliases: ['switch', 'dimmer', 'three way', '3-way', 'toggle', 'smart switch'],
+    kind: 'install', difficulty: 2, minutes: [20, 45], savings: '$100–150',
+    tools: ['screwdriver', 'voltage-tester', 'strippers', 'pliers'],
+    supplies: ['Switch or LED-compatible dimmer', 'Wire connectors', 'Masking tape for labels'],
+    summary: 'Power off, photograph and label the wires, move them across. Three-way switches have a "common" terminal (the dark screw) that must stay common.',
+    steps: [
+      'Turn the breaker off and test every wire in the box dead (switch boxes often have more than one circuit).',
+      'Unscrew the switch and pull it out. Photograph it and tape-label the wire on the darker common screw if it\'s a three-way.',
+      'Single-pole: connect the two hot wires to the two brass screws (either way) and the ground to green.',
+      'Three-way: the labelled wire goes to the new common screw, the other two to the brass travellers.',
+      'For a dimmer, choose one rated for LED and the bulbs\' total wattage. Smart switches often need a neutral (white) wire in the box.',
+      'Fold, mount, restore power and test.',
+    ],
+    cautions: [POWER_OFF],
+    query: 'how to replace a light switch three way dimmer wiring',
+  },
+  {
+    id: 'dead-outlet', title: 'Find out why an outlet is dead', areas: ['outlets', 'utility'], aliases: ['outlet not working', 'no power', 'dead plug', 'tripped gfci'],
+    kind: 'fix', difficulty: 1, minutes: [10, 45], savings: 'often a free fix',
+    tools: ['outlet-tester', 'voltage-tester', 'screwdriver', 'headlamp'],
+    supplies: [],
+    summary: 'Most dead outlets are downstream of a tripped GFCI somewhere else, or on a tripped breaker. Check those before you open anything.',
+    steps: [
+      'Check the breaker panel for a breaker in the middle position. Reset it (fully off, then on).',
+      'Press RESET on every GFCI outlet: bathrooms, kitchen, garage, outside and basement. One GFCI can protect outlets in other rooms.',
+      'Test the outlet with a plug-in tester. Check whether it\'s half of a switched outlet controlled by a wall switch.',
+      'If it\'s still dead, turn the breaker off and check the outlet for a loose wire, especially in the push-in backstab holes. Move wires to the screws.',
+    ],
+    cautions: ['Warm outlets, buzzing or a burnt smell: turn that breaker off and call an electrician.'],
+    query: 'outlet not working check gfci breaker backstab',
+  },
+];

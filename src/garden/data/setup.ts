@@ -1,4 +1,5 @@
 /** How the garden model is shown. Every field rebuilds the model. */
+import { asRecord, oneOf } from '../../shared/store';
 export type Season = 'spring' | 'summer' | 'fall';
 export type BedFill = 'hugel' | 'lasagna' | 'mix';
 export type HydroKind = 'tower' | 'nft' | 'dwc';
@@ -15,10 +16,11 @@ export const SEASON_LABEL: Record<Season, string> = { spring: 'Spring', summer: 
 export const FILL_LABEL: Record<BedFill, string> = { hugel: 'Hugelkultur', lasagna: 'Lasagna', mix: 'Soil mix' };
 export const HYDRO_LABEL: Record<HydroKind, string> = { tower: 'PVC tower', nft: 'NFT rack', dwc: 'Deep water' };
 
-export function fixSetup(s: Setup): Setup {
+export function fixSetup(raw: unknown): Setup {
+  const s = asRecord(raw);
   return {
-    season: s.season in SEASON_LABEL ? s.season : DEFAULT_SETUP.season,
-    fill: s.fill in FILL_LABEL ? s.fill : DEFAULT_SETUP.fill,
-    hydro: s.hydro in HYDRO_LABEL ? s.hydro : DEFAULT_SETUP.hydro,
+    season: oneOf(s.season, SEASON_LABEL, DEFAULT_SETUP.season),
+    fill: oneOf(s.fill, FILL_LABEL, DEFAULT_SETUP.fill),
+    hydro: oneOf(s.hydro, HYDRO_LABEL, DEFAULT_SETUP.hydro),
   };
 }

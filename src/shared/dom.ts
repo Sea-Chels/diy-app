@@ -22,7 +22,3 @@ export function h<K extends keyof HTMLElementTagNameMap>(
 export function clear(el: HTMLElement): void {
   while (el.firstChild) el.removeChild(el.firstChild);
 }
-
-export function fmtMinutes([a, b]: [number, number]): string {
-  return a === b ? `${a} min` : `${a}–${b} min`;
-}

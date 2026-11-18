@@ -1,13 +1,14 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
+import { paletteCss } from './src/shared/theme';
 
-// The loading screen is inlined into every page so it shows before any JS or CSS arrives.
-const LOADER: Record<string, { verb: string; what: string; color: string }> = {
-  pc: { verb: 'Booting', what: 'the PC', color: '#6ee7ff' },
-  garden: { verb: 'Growing', what: 'the garden', color: '#4ade80' },
-  home: { verb: 'Unlocking', what: 'the house', color: '#ffd23f' },
-  hub: { verb: 'Opening', what: 'the workshop', color: '#ff4fd8' },
+// The palette and loading screen are inlined into every page so they apply before any JS or CSS arrives.
+const LOADER: Record<string, { verb: string; what: string }> = {
+  pc: { verb: 'Booting', what: 'the PC' },
+  garden: { verb: 'Growing', what: 'the garden' },
+  home: { verb: 'Unlocking', what: 'the house' },
+  hub: { verb: 'Opening', what: 'the workshop' },
 };
 function loaderPlugin(): Plugin {
   const file = resolve(import.meta.dirname, 'src/shared/loader.html');
@@ -16,8 +17,8 @@ function loaderPlugin(): Plugin {
     transformIndexHtml(html, ctx) {
       const page = ['pc', 'garden', 'home'].find((p) => ctx.path.includes(`/${p}/`)) ?? 'hub';
       const l = LOADER[page];
-      const markup = readFileSync(file, 'utf8').replace('__VERB__', l.verb).replace('__WHAT__', l.what).replace('__COLOR__', l.color);
-      return html.replace(/<body([^>]*)>/, `<body$1>\n${markup}`);
+      const markup = readFileSync(file, 'utf8').replace('__VERB__', l.verb).replace('__WHAT__', l.what).replace('__PAGE__', page);
+      return html.replace('<head>', `<head>\n<style>${paletteCss()}</style>`).replace(/<body([^>]*)>/, `<body$1>\n${markup}`);
     },
   };
 }

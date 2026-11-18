@@ -1,37 +1,16 @@
-/* Home workshop additions on top of shared/base.css */
-.topbar .spacer { flex: 1; }
-.garden-menu { position: absolute; top: 14px; left: 16px; z-index: 3; }
-.garden-menu.open .paint-card { display: flex; }
+/* Home workshop additions on top of shared/workshop.css */
 .home-swatches { grid-template-columns: repeat(4, 32px); }
-.fine-print { font-size: 0.76rem; color: var(--muted); line-height: 1.4; }
 
-.chip.kind { font-weight: 600; }
-.chip.kind-install { color: var(--accent); background: rgba(110,231,255,0.12); }
-.chip.kind-fix { color: #ff9f7a; background: rgba(242,105,76,0.14); }
-.chip.kind-finish { color: #ffd23f; background: rgba(255,210,63,0.13); }
-.chip.kind-maintain { color: #86efac; background: rgba(74,222,128,0.13); }
-
-.panel-links { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 14px; }
-.link-chip {
-  display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; font-size: 0.8rem;
-  background: rgba(255,255,255,0.04); border: 1px solid var(--line); color: var(--muted); text-decoration: none;
-}
-.link-chip:hover { color: var(--text); border-color: rgba(255,255,255,0.22); }
-button.link-chip { cursor: pointer; }
-.repair-body .panel-links { margin: 0; }
-
-.pro { display: flex; gap: 8px; align-items: flex-start; font-size: 0.9rem; color: #c9a2ff; background: rgba(155,92,255,0.1); border-radius: 10px; padding: 8px 10px; }
+.pro { display: flex; gap: 8px; align-items: flex-start; font-size: 0.9rem; color: var(--lilac); background: rgba(155,92,255,0.1); border-radius: 10px; padding: 8px 10px; }
 .pro .icon { margin-top: 2px; flex-shrink: 0; }
 
-/* tools in a guide card */
 .have-count { background: none; border: 0; padding: 0; margin-left: 4px; color: var(--accent); font-size: 0.72rem; text-transform: none; letter-spacing: 0; cursor: pointer; }
 .tool-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 3px; }
 .tool-list .tool-free { padding-left: 21px; color: var(--muted); }
 .tool-check { display: inline-flex; gap: 6px; align-items: flex-start; background: none; border: 0; padding: 0; color: var(--text); text-align: left; font-size: inherit; cursor: pointer; }
 .tool-check .icon { margin-top: 2px; flex-shrink: 0; color: var(--muted); }
-.tool-check.has .icon { color: #4ade80; }
+.tool-check.has .icon { color: var(--green); }
 
-/* toolbox */
 .toolbox-modal { width: min(920px, 100%); }
 .tool-stats { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
 .tool-stats strong { font-size: 1.2rem; color: var(--accent); }
@@ -41,15 +20,14 @@ button.link-chip { cursor: pointer; }
   background: rgba(255,255,255,0.025); border: 1px solid var(--line); color: var(--text); cursor: pointer;
 }
 .tool-tile:hover { border-color: rgba(255,255,255,0.22); }
-.tool-tile.has { border-color: rgba(74,222,128,0.5); background: rgba(74,222,128,0.06); }
-.tool-tile.has .tool-name .icon { color: #4ade80; }
+.tool-tile.has { border-color: color-mix(in srgb, var(--green) 50%, transparent); background: color-mix(in srgb, var(--green) 6%, transparent); }
+.tool-tile.has .tool-name .icon { color: var(--green); }
 .tool-name { font-weight: 650; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .tool-name .icon { color: var(--muted); }
 .tool-meta { display: flex; gap: 10px; font-size: 0.75rem; color: var(--muted); }
-.badge { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 6px; border-radius: 6px; background: rgba(255,210,63,0.16); color: #ffd23f; font-weight: 700; }
+.badge { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 6px; border-radius: 6px; background: color-mix(in srgb, var(--yellow) 16%, transparent); color: var(--yellow); font-weight: 700; }
 .small { font-size: 0.82rem; }
 
-/* calculators */
 .calc-modal { width: min(640px, 100%); }
 .calc { display: flex; flex-direction: column; gap: 14px; }
 .calc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
@@ -58,16 +36,14 @@ button.link-chip { cursor: pointer; }
   background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; color: var(--text); font-size: 1rem;
 }
 .calc-check { display: flex; gap: 8px; align-items: center; font-size: 0.85rem; color: var(--muted); }
-.calc-result { border-left: 3px solid #ffd23f; padding: 4px 0 4px 14px; display: flex; flex-direction: column; gap: 4px; }
-.calc-result .big { font-size: 1.8rem; font-weight: 800; color: #ffd23f; }
+.calc-result { border-left: 3px solid var(--yellow); padding: 4px 0 4px 14px; display: flex; flex-direction: column; gap: 4px; }
+.calc-result .big { font-size: 1.8rem; font-weight: 800; color: var(--yellow); }
 .wire-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 .wire-table th, .wire-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
 .wire-table th { color: var(--muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
-.wire-table td:nth-child(2) { color: #ffd23f; font-weight: 700; white-space: nowrap; }
+.wire-table td:nth-child(2) { color: var(--yellow); font-weight: 700; white-space: nowrap; }
 
 @media (max-width: 720px) {
-  .hint { top: 64px; }
-  .topbar .spacer { display: none; }
   .two-col { grid-template-columns: 1fr; }
   .topbar-actions .ghost-btn { padding: 7px 10px; white-space: nowrap; }
   .lbl-long { display: none; }

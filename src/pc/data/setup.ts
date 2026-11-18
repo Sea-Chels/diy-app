@@ -1,4 +1,5 @@
 /** The rig the 3D model shows. Independent from the parts picker, which can push into it. */
+import { asRecord, oneOf } from '../../shared/store';
 export type CaseSize = 'itx' | 'mid' | 'full';
 export type Cooling = 'air' | 'aio' | 'loop';
 export type GpuSize = 'none' | 'dual' | 'triple';
@@ -29,7 +30,19 @@ export const CASE_SWATCHES = [
   { name: 'Mint', hex: '#8fe3c4' },
 ];
 
-/** A custom loop needs room for a reservoir, so it isn't offered in a Mini-ITX case. */
-export function fixSetup(s: Setup): Setup {
-  return s.size === 'itx' && s.cooling === 'loop' ? { ...s, cooling: 'aio' } : s;
+const color = (v: unknown, fallback: string) => (typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v) ? v : fallback);
+
+export function fixSetup(raw: unknown): Setup {
+  const s = asRecord(raw);
+  const size = oneOf(s.size, SIZE_LABEL, DEFAULT_SETUP.size);
+  const cooling = oneOf(s.cooling, COOLING_LABEL, DEFAULT_SETUP.cooling);
+  return {
+    size,
+    // A custom loop needs room for a reservoir, so it isn't offered in a Mini-ITX case.
+    cooling: size === 'itx' && cooling === 'loop' ? 'aio' : cooling,
+    gpu: oneOf(s.gpu, GPU_LABEL, DEFAULT_SETUP.gpu),
+    rgb: oneOf(s.rgb, RGB_LABEL, DEFAULT_SETUP.rgb),
+    rgbColor: color(s.rgbColor, DEFAULT_SETUP.rgbColor),
+    caseColor: color(s.caseColor, DEFAULT_SETUP.caseColor),
+  };
 }

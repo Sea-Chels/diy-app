@@ -1,0 +1,42 @@
+/* Shared by the 3D workshop pages, on top of base.css. */
+.topbar .spacer { flex: 1; }
+.scene-menu { position: absolute; top: 14px; left: 16px; z-index: 3; }
+.scene-menu.open .paint-card { display: flex; }
+.paint-card .seg button:disabled { opacity: 0.35; cursor: not-allowed; }
+.swatches.dim { opacity: 0.35; }
+.fine-print { font-size: 0.76rem; color: var(--muted); line-height: 1.4; }
+.paint-card .fine-print { margin-top: -2px; }
+
+.chip.kind { font-weight: 600; }
+.chip.kind-fix { color: var(--peach); background: color-mix(in srgb, var(--coral) 14%, transparent); }
+.chip:is(.kind-swap, .kind-build, .kind-install) { color: var(--accent); background: color-mix(in srgb, var(--cyan) 12%, transparent); }
+.chip:is(.kind-setup, .kind-preserve) { color: var(--lilac); background: rgba(155,92,255,0.16); }
+.chip:is(.kind-grow, .kind-maintain) { color: var(--mint); background: color-mix(in srgb, var(--green) 13%, transparent); }
+.chip.kind-finish { color: var(--yellow); background: color-mix(in srgb, var(--yellow) 13%, transparent); }
+
+.panel-links { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 14px; }
+.link-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; font-size: 0.8rem;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--line); color: var(--muted); text-decoration: none;
+}
+.link-chip:hover { color: var(--text); border-color: rgba(255,255,255,0.22); }
+button.link-chip { cursor: pointer; }
+.repair-body .panel-links { margin: 0; }
+
+/* Compatibility and planner results in the PC parts picker and the garden bed planner. */
+.issues { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 7px; font-size: 0.86rem; line-height: 1.4; }
+.issues li { display: flex; gap: 8px; align-items: flex-start; }
+.issues .icon { margin-top: 2px; flex-shrink: 0; }
+.lvl-error .icon { color: var(--diff-3); }
+.lvl-warn .icon { color: var(--diff-2); }
+.lvl-ok .icon { color: var(--diff-1); }
+.lvl-ok { color: var(--muted); }
+.side-actions { display: flex; flex-direction: column; gap: 8px; }
+.side-actions > * { justify-content: center; }
+.ghost-btn.danger:hover { color: var(--diff-3); border-color: color-mix(in srgb, var(--red) 40%, transparent); }
+.opt-name { font-weight: 650; line-height: 1.25; }
+
+@media (max-width: 720px) {
+  .hint { top: 64px; }
+  .topbar .spacer { display: none; }
+}

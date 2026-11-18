@@ -1,0 +1,70 @@
+import type { Guide } from '../guides';
+import { ESFI, POWER_OFF } from './common';
+
+export const LIGHTS_GUIDES: Guide[] = [
+  {
+    id: 'replace-light-fixture', title: 'Replace a ceiling light fixture', areas: ['lights'], aliases: ['light fixture', 'flush mount', 'chandelier', 'pendant', 'ceiling light'],
+    kind: 'install', difficulty: 2, minutes: [30, 90], savings: '$100–200',
+    tools: ['screwdriver', 'voltage-tester', 'strippers', 'pliers', 'glasses', 'ladder'],
+    supplies: ['New fixture', 'Wire connectors'],
+    summary: 'Turn the breaker off (not just the switch), take the old fixture down, attach the new crossbar and connect black to black, white to white, ground to ground.',
+    steps: [
+      'Turn off the breaker and check the fixture wires are dead.',
+      'Remove the shade and bulbs, unscrew the canopy and support the fixture while you untwist the connectors.',
+      'Remove the old crossbar and screw the new fixture\'s crossbar to the box.',
+      'Hold the fixture (or hang it on the hook many provide) and connect black to black, white to white, and both grounds to the green screw or bare wire.',
+      'Tuck the wires in, screw the canopy up, fit bulbs and shade, and restore power.',
+    ],
+    cautions: [POWER_OFF, 'Fixtures over 50 lb need support independent of the box.', 'Old homes may have brittle wire insulation in the box, and some fixtures require 90°C-rated supply wire: check the label.'],
+    links: [ESFI],
+    query: 'how to replace a ceiling light fixture safely',
+  },
+  {
+    id: 'install-ceiling-fan', title: 'Install a ceiling fan', areas: ['lights'], aliases: ['ceiling fan', 'fan install', 'fan rated box', 'downrod', 'replace light with fan'],
+    kind: 'install', difficulty: 3, minutes: [120, 240], savings: '$150–300',
+    tools: ['screwdriver', 'drill', 'voltage-tester', 'strippers', 'pliers', 'glasses', 'ladder'],
+    supplies: ['Ceiling fan', 'Fan-rated ceiling box and brace (if the box isn\'t marked for fans)', 'Wire connectors'],
+    summary: 'A fan must hang from a box marked "acceptable for fan support", because a light box can pull loose as the fan wobbles. Swap the box first if you need to, then follow the fan\'s mounting kit.',
+    steps: [
+      'Turn off the breaker and remove the old fixture. Check the wires are dead.',
+      'Look inside the box for "acceptable for fan support" and a weight rating. If it isn\'t there, install a fan-rated box with an expanding brace between the joists.',
+      'Pick a downrod so the blades sit at least 7 ft above the floor (8–9 ft is ideal).',
+      'Screw the mounting bracket to the box, assemble the downrod and motor on the ground, and hang the motor on the bracket hook.',
+      'Connect the wires: black (fan) and blue (light) to the supply hot (or to separate switched wires), white to white, grounds together. Fit the canopy.',
+      'Attach the blades and light kit, restore power and test both speeds and the light.',
+    ],
+    cautions: [POWER_OFF, 'Never hang a fan from a plastic box or one meant only for lights.'],
+    links: [ESFI],
+    query: 'how to install a ceiling fan fan rated box brace', featured: true,
+  },
+  {
+    id: 'wobbly-fan', title: 'Fix a wobbly or noisy ceiling fan', areas: ['lights'], aliases: ['wobble', 'fan balance', 'noisy fan', 'clicking fan', 'fan direction'],
+    kind: 'fix', difficulty: 1, minutes: [20, 60], savings: 'free with the balancing kit',
+    tools: ['screwdriver', 'tape', 'ladder'],
+    supplies: ['Fan balancing kit (clip and weights)'],
+    summary: 'Wobble comes from loose screws, a bent blade arm or uneven blade weight. Tighten everything, check the blades line up, then balance with a clip.',
+    steps: [
+      'Turn the fan off. Tighten the blade screws, the blade arm screws and the canopy and downrod screws.',
+      'Measure from the ceiling to each blade tip: if one is off, gently bend that arm or swap it.',
+      'Clip the balancing clip mid-way along one blade and run the fan. Move it blade to blade to find where wobble drops most.',
+      'Slide the clip in and out on that blade to fine-tune, then stick a weight on the blade\'s centreline at that spot.',
+      'Clicking? Check the light kit glass and the switch housing screws. Use the direction switch: counter-clockwise (seen from below) for summer breeze, clockwise on low to push warm air down in winter.',
+    ],
+    query: 'how to balance a wobbly ceiling fan',
+  },
+  {
+    id: 'flickering-lights', title: 'Track down flickering lights', areas: ['lights', 'utility'], aliases: ['flicker', 'dimming lights', 'lights dim', 'buzzing'],
+    kind: 'fix', difficulty: 1, minutes: [10, 30], savings: 'free when it\'s the bulb or dimmer',
+    tools: ['voltage-tester', 'screwdriver'],
+    supplies: ['A known-good bulb', 'LED-compatible dimmer, if needed'],
+    summary: 'One light flickering is usually a loose bulb or an LED on an old dimmer. Lights all over the house flickering is a wiring or utility problem.',
+    steps: [
+      'Tighten the bulb (with the light off) and try a different bulb.',
+      'If it\'s on a dimmer, check the bulbs are dimmable and the dimmer is rated for LEDs.',
+      'Turn the breaker off and check for a loose connection at the switch or fixture.',
+      'Do lights dim or flicker across several rooms, especially when big appliances start? Call an electrician or your power company: a loose neutral or service connection can be dangerous.',
+    ],
+    cautions: [POWER_OFF],
+    query: 'why are my lights flickering led dimmer loose neutral',
+  },
+];

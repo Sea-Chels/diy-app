@@ -1,0 +1,126 @@
+import type { Plant } from '../plants';
+import { BRASSICAS } from './common';
+
+export const GREENS_PLANTS: Plant[] = [
+  {
+    id: 'lettuce', name: 'Lettuce', latin: 'Lactuca sativa', type: 'veg', life: 'annual', sun: 'part', water: 'medium', spacing: 6, height: '6–12 in',
+    sow: 'Direct sow ¼ inch deep from 4 weeks before last frost; sow a short row every 2 weeks. Seed needs light to germinate, so barely cover it.', days: '30–60 days',
+    care: ['Afternoon shade and steady water slow bolting in summer.', 'Thrives in hydroponics.'],
+    harvest: 'Cut outer leaves as needed, or the whole head in the morning while crisp.',
+    problems: ['Bolting and bitterness in heat', 'Slugs', 'Aphids'], friends: ['carrot', 'radish', 'strawberry', 'onion', 'chives', 'cucumber', 'beet'], avoid: [], area: 'bed',
+  },
+  {
+    id: 'spinach', name: 'Spinach', latin: 'Spinacia oleracea', type: 'veg', life: 'annual', sun: 'part', water: 'medium', spacing: 4, height: '6–12 in',
+    sow: 'Direct sow 4–6 weeks before last frost and again in early fall. Bolts as days lengthen.', days: '40–50 days',
+    care: ['Loves cool weather and nitrogen-rich soil.', 'Fall-sown spinach can overwinter under a row cover.'],
+    harvest: 'Pick outer leaves, or cut the whole plant an inch above the crown for regrowth.',
+    problems: ['Bolting', 'Leaf miners', 'Downy mildew'], friends: ['strawberry', 'peas', 'radish'], avoid: [],
+  },
+  {
+    id: 'kale', name: 'Kale', latin: 'Brassica oleracea var. sabellica', type: 'veg', life: 'biennial', sun: 'full', water: 'medium', spacing: 18, height: '1.5–3 ft',
+    sow: 'Start indoors 6 weeks before last frost or direct sow in spring; sow again midsummer for the sweetest fall crop.', days: '55–75 days',
+    care: ['Frost turns starch to sugar, so fall kale is best.', 'Insect netting over hoops stops cabbage worms.'],
+    harvest: 'Pick lower leaves, leaving the top rosette to keep growing.', problems: ['Cabbage worms', 'Aphids', 'Flea beetles'],
+    friends: ['dill', 'onion', 'garlic', 'chamomile', 'nasturtium', 'rosemary', 'sage', 'thyme', 'beet', 'celery'], avoid: ['strawberry', 'tomato', 'beans'], area: 'bed',
+  },
+  {
+    id: 'chard', name: 'Swiss chard', latin: 'Beta vulgaris var. cicla', type: 'veg', life: 'biennial', sun: 'part', water: 'medium', spacing: 12, height: '1.5–2 ft',
+    sow: 'Direct sow from 2 weeks before last frost through midsummer.', days: '50–60 days',
+    care: ['Shrugs off both heat and light frost; one planting lasts all season.'], harvest: 'Cut outer stalks an inch above the soil; it keeps coming.',
+    problems: ['Leaf miners', 'Slugs'], friends: ['onion', ...BRASSICAS, 'lettuce'], avoid: ['beans'], area: 'bed',
+  },
+  {
+    id: 'cabbage', name: 'Cabbage', latin: 'Brassica oleracea var. capitata', type: 'veg', life: 'biennial', sun: 'full', water: 'medium', spacing: 18, height: '1–1.5 ft',
+    sow: 'Start indoors 6–8 weeks before last frost; transplant 2–4 weeks before last frost. Fall crops: start in midsummer.', days: '70–100 days from transplant',
+    care: ['Heavy feeder; side-dress with compost.', 'Even watering prevents split heads.', 'Grow under insect netting to stop cabbage white butterflies laying eggs.'],
+    harvest: 'Cut when heads are firm. Leave the stump and small side heads often follow.',
+    problems: ['Cabbage worms and loopers', 'Split heads', 'Clubroot in acid soil'], friends: ['dill', 'onion', 'garlic', 'chamomile', 'nasturtium', 'rosemary', 'sage', 'thyme', 'beet', 'celery', 'potato'], avoid: ['strawberry', 'tomato', 'pepper', 'beans'], area: 'tunnel',
+  },
+  {
+    id: 'broccoli', name: 'Broccoli', latin: 'Brassica oleracea var. italica', type: 'veg', life: 'annual', sun: 'full', water: 'medium', spacing: 18, height: '2–3 ft',
+    sow: 'Start indoors 6–8 weeks before last frost, or midsummer for fall (fall broccoli is better).', days: '60–90 days from transplant',
+    care: ['Heads bolt to yellow flowers in heat, so time it for cool weather.'], harvest: 'Cut the main head while buds are tight; side shoots follow for weeks.',
+    problems: ['Cabbage worms', 'Aphids', 'Buttoning (tiny heads from transplant stress)'], friends: ['dill', 'onion', 'chamomile', 'nasturtium', 'rosemary', 'beet', 'celery'], avoid: ['strawberry', 'tomato', 'beans'],
+  },
+  {
+    id: 'cauliflower', name: 'Cauliflower', latin: 'Brassica oleracea var. botrytis', type: 'veg', life: 'annual', sun: 'full', water: 'medium', spacing: 18, height: '1.5–2 ft',
+    sow: 'Start indoors 6–8 weeks before last frost or midsummer for fall. The fussiest brassica: needs steady cool weather.', days: '55–80 days from transplant',
+    care: ['When the curd is egg-sized, fold leaves over it to keep it white (or grow self-blanching or purple types).'], harvest: 'Cut when curds are full and tight, before they go grainy.',
+    problems: ['Buttoning', 'Ricey or purple-tinged curds in heat', 'Cabbage worms'], friends: ['dill', 'onion', 'celery', 'nasturtium', 'beet'], avoid: ['strawberry', 'tomato', 'beans'],
+  },
+  {
+    id: 'brussels', name: 'Brussels sprouts', latin: 'Brassica oleracea var. gemmifera', type: 'veg', life: 'annual', sun: 'full', water: 'medium', spacing: 24, height: '2–3 ft',
+    sow: 'Start indoors in late spring for a fall harvest; they need a long season.', days: '90–110 days from transplant',
+    care: ['Stake tall plants in windy spots.', 'Snap off the top a month before harvest so sprouts size up together.'], harvest: 'Twist off sprouts from the bottom up after a few frosts.',
+    problems: ['Aphids', 'Cabbage worms', 'Loose sprouts in heat'], friends: ['dill', 'onion', 'nasturtium', 'sage', 'thyme'], avoid: ['strawberry', 'tomato', 'beans'],
+  },
+  {
+    id: 'bokchoy', name: 'Bok choy', latin: 'Brassica rapa subsp. chinensis', type: 'veg', life: 'annual', sun: 'part', water: 'medium', spacing: 8, height: '1 ft',
+    sow: 'Direct sow in early spring or late summer. Bolts fast in long hot days.', days: '30–50 days',
+    care: ['Great for hydroponics and the hoop tunnel.'], harvest: 'Cut whole heads, or baby leaves at 3 weeks.', problems: ['Flea beetles', 'Bolting'],
+    friends: ['onion', 'dill', 'celery'], avoid: ['strawberry', 'tomato'],
+  },
+  {
+    id: 'kohlrabi', name: 'Kohlrabi', latin: 'Brassica oleracea var. gongylodes', type: 'veg', life: 'biennial', sun: 'full', water: 'medium', spacing: 6, height: '1 ft',
+    sow: 'Direct sow in spring and late summer.', days: '45–60 days',
+    care: ['Quick and easy; the swollen stem tastes like sweet broccoli stalk.'], harvest: 'Pick when the bulb is 2–3 inches across, before it turns woody.',
+    problems: ['Cabbage worms', 'Woody bulbs if left too long'], friends: ['onion', 'beet', 'cucumber'], avoid: ['pepper', 'tomato', 'strawberry'],
+  },
+  {
+    id: 'collards', name: 'Collard greens', latin: 'Brassica oleracea var. viridis', type: 'veg', life: 'biennial', sun: 'full', water: 'medium', spacing: 18, height: '2–3 ft',
+    sow: 'Direct sow in spring or, for the sweetest leaves, midsummer for fall.', days: '60–80 days',
+    care: ['The most heat-tolerant of the cabbage family, and frost sweetens it.'], harvest: 'Pick lower leaves as needed; plants produce for months.',
+    problems: ['Cabbage worms', 'Aphids'], friends: ['dill', 'onion', 'tomato'], avoid: ['strawberry'],
+  },
+  {
+    id: 'arugula', name: 'Arugula', latin: 'Eruca vesicaria', type: 'veg', life: 'annual', sun: 'part', water: 'medium', spacing: 4, height: '8 in',
+    sow: 'Direct sow from early spring every 2–3 weeks; again in fall.', days: '21–40 days',
+    care: ['Grows like a weed in cool weather; heat makes it fiery and bolty.'], harvest: 'Cut young leaves; the white flowers are edible too.',
+    problems: ['Flea beetles', 'Bolting'], friends: ['lettuce', 'spinach', 'onion'], avoid: ['strawberry'],
+  },
+  {
+    id: 'celery', name: 'Celery', latin: 'Apium graveolens', type: 'veg', life: 'biennial', sun: 'full', water: 'high', spacing: 10, height: '1.5–2 ft',
+    sow: 'Start indoors 10–12 weeks before last frost; seed is tiny and slow.', days: '100–120 days from transplant',
+    care: ['Constant moisture or stalks turn stringy and bitter.', 'Rich soil and regular feeding.'], harvest: 'Cut individual outer stalks or the whole plant at the base.',
+    problems: ['Bolting from cold snaps', 'Stringy stalks'], friends: [...BRASSICAS, 'leek', 'tomato', 'beans'], avoid: ['carrot', 'parsnip'],
+  },
+  {
+    id: 'malabar', name: 'Malabar spinach', latin: 'Basella alba', type: 'veg', life: 'annual', sun: 'full', water: 'high', spacing: 12, height: 'Vines 6–10 ft',
+    sow: 'Start indoors 6 weeks before last frost or direct sow in warm soil. Nick the seed coat to speed germination.', days: '70 days',
+    care: ['A climbing summer "spinach" that loves the heat that makes real spinach bolt.', 'Give it a trellis or the arbor.'],
+    harvest: 'Pinch tips and leaves all summer; slightly mucilaginous, great in stir-fries.', problems: ['Few; frost kills it'], friends: ['beans', 'cucumber'], avoid: [], unusual: true,
+  },
+  {
+    id: 'ginger', name: 'Ginger', latin: 'Zingiber officinale', type: 'veg', life: 'perennial', zones: [9, 12], sun: 'part', water: 'medium', spacing: 8, height: '2–3 ft',
+    sow: 'Pre-sprout organic grocery or seed ginger with visible buds in a warm spot in late winter; plant out (or in a big pot) after nights stay above 55°F.', days: '8–10 months',
+    care: ['Grow in containers outside zone 9 and bring indoors before frost.', 'Dappled shade and rich, moist but well-drained soil.'],
+    harvest: 'Dig young "baby ginger" from 4 months; mature rhizomes when leaves yellow in fall.', problems: ['Rot in cold wet soil'],
+    friends: ['turmeric'], avoid: [], unusual: true,
+  },
+  {
+    id: 'turmeric', name: 'Turmeric', latin: 'Curcuma longa', type: 'herb', life: 'perennial', zones: [8, 12], sun: 'part', water: 'medium', spacing: 12, height: '3 ft',
+    sow: 'Pre-sprout rhizome pieces indoors in late winter; plant out after frost or keep in a large pot.', days: '8–10 months',
+    care: ['Same care as ginger: warmth, part shade, steady moisture.'], harvest: 'Dig when leaves die back in fall. Wear gloves: it stains everything orange.',
+    problems: ['Rot in cold soil'], friends: ['ginger'], avoid: [], unusual: true,
+  },
+  {
+    id: 'yacon', name: 'Yacon', latin: 'Smallanthus sonchifolius', type: 'veg', life: 'perennial', zones: [8, 11], sun: 'full', water: 'medium', spacing: 36, height: '5–7 ft',
+    sow: 'Plant crown divisions after last frost.', days: '6–7 months',
+    care: ['Andean relative of the sunflower. Huge, handsome plants.', 'Save the knobbly crown in a cool place over winter to replant.'],
+    harvest: 'Dig after the first frost blackens the tops. Sun the tubers a few days to sweeten; crisp like apple-jicama.', problems: ['Few'],
+    friends: ['beans', 'pumpkin'], avoid: [], unusual: true,
+  },
+  {
+    id: 'cucamelon', name: 'Cucamelon (mouse melon)', latin: 'Melothria scabra', type: 'veg', life: 'annual', sun: 'full', water: 'medium', spacing: 12, height: 'Vines to 10 ft',
+    sow: 'Start indoors 4–6 weeks before last frost; slow to start, then vigorous.', days: '65–75 days',
+    care: ['Grape-sized fruit that look like tiny watermelons and taste like cucumber with lime.', 'Grow up a trellis; more drought tolerant than cucumbers.'],
+    harvest: 'Pick when firm and grape-sized; soft ones are seedy.', problems: ['Few'], friends: ['beans', 'peas', 'nasturtium'], avoid: ['potato'], unusual: true,
+  },
+  {
+    id: 'luffa', name: 'Luffa sponge gourd', latin: 'Luffa aegyptiaca', type: 'veg', life: 'annual', sun: 'full', water: 'medium', spacing: 24, height: 'Vines 15–30 ft',
+    sow: 'Soak seed, then start indoors 4 weeks before last frost. Needs a long, hot season.', days: '150–200 days (sponges)',
+    care: ['Give it a strong trellis or arbor.', 'Young fruit under 6 inches is edible like zucchini.'],
+    harvest: 'For sponges, leave fruit until brown, light and rattling; peel, shake out seeds and dry.', problems: ['Too short a season', 'Cucumber beetles'],
+    friends: ['beans', 'corn'], avoid: ['potato'], unusual: true,
+  },
+];

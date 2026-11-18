@@ -1,4 +1,5 @@
 import '../shared/base.css';
+import '../shared/workshop.css';
 import './pc.css';
 import { createScene } from './scene/scene';
 import { PARTS, type PartId } from './data/parts';
@@ -22,7 +23,6 @@ mountPanel(document.getElementById('panel')!);
 document.getElementById('guides-btn')!.addEventListener('click', openGuideIndex);
 document.getElementById('builder-btn')!.addEventListener('click', () => openBuilder());
 
-// 3D → state
 scene.onSelect((part) => {
   if (part === getState().selectedPart) return;
   setState({ selectedPart: part, openGuide: null });
@@ -35,7 +35,6 @@ scene.onHover((part) => {
   hint.classList.toggle('active', Boolean(part));
 });
 
-// state → 3D + URL hash
 subscribe((s, prev) => {
   if (s.selectedPart !== prev.selectedPart) scene.focus(s.selectedPart);
   if (s.selectedPart !== prev.selectedPart || s.openGuide !== prev.openGuide) {
@@ -47,7 +46,6 @@ subscribe((s, prev) => {
   if (s.setup.cooling !== prev.setup.cooling) renderQuickFixes();
 });
 
-// Popular guides bar.
 const quick = document.getElementById('quick-fixes')!;
 function renderQuickFixes(): void {
   clear(quick);
@@ -66,7 +64,7 @@ function applyHash(): void {
   if (!id) return setState({ selectedPart: null, openGuide: null });
   const guide = GUIDE_BY_ID.get(id);
   if (guide) setState({ selectedPart: guide.parts[0], openGuide: guide.id });
-  else if (id in PARTS) setState({ selectedPart: id as PartId, openGuide: null });
+  else if (Object.hasOwn(PARTS, id)) setState({ selectedPart: id as PartId, openGuide: null });
 }
 window.addEventListener('hashchange', applyHash);
 if (location.hash) applyHash();

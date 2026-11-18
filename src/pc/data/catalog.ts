@@ -63,7 +63,7 @@ export type Part = Cpu | Board | Ram | Gpu | Cooler | Case | Psu | Storage;
 const ALL_SOCKETS: Socket[] = ['AM5', 'AM4', 'LGA1700', 'LGA1851'];
 
 export const CATALOG: Part[] = [
-  // CPUs. watts = the most the chip will pull at stock (AMD PPT, Intel max turbo power).
+  // watts = the most the chip will pull at stock (AMD PPT, Intel max turbo power).
   { cat: 'cpu', id: 'r5-7600', name: 'AMD Ryzen 5 7600', blurb: '6 cores · AM5 · 65 W · has graphics', socket: 'AM5', gen: 'ryzen7000', watts: 88, igpu: true },
   { cat: 'cpu', id: 'r5-9600x', name: 'AMD Ryzen 5 9600X', blurb: '6 cores · AM5 · 65 W · has graphics', socket: 'AM5', gen: 'ryzen9000', watts: 88, igpu: true },
   { cat: 'cpu', id: 'r7-9800x3d', name: 'AMD Ryzen 7 9800X3D', blurb: '8 cores · AM5 · 120 W · gaming favourite', socket: 'AM5', gen: 'ryzen9000', watts: 162, igpu: true },
@@ -74,7 +74,7 @@ export const CATALOG: Part[] = [
   { cat: 'cpu', id: 'i5-14600k', name: 'Intel Core i5-14600K', blurb: '14 cores · LGA1700 · has graphics', socket: 'LGA1700', gen: 'intel14', watts: 181, igpu: true },
   { cat: 'cpu', id: 'u7-265k', name: 'Intel Core Ultra 7 265K', blurb: '20 cores · LGA1851 · has graphics', socket: 'LGA1851', gen: 'arrow', watts: 250, igpu: true },
 
-  // Motherboards. gens = CPU generations that boot on the BIOS it shipped with.
+  // gens = CPU generations that boot on the BIOS it shipped with.
   { cat: 'board', id: 'b650-tomahawk', name: 'MSI MAG B650 Tomahawk WiFi', blurb: 'ATX · AM5 · DDR5 · 4 RAM slots · 3 M.2', socket: 'AM5', form: 'ATX', mem: 'DDR5', slots: 4, m2: 3, gens: ['ryzen7000'] },
   { cat: 'board', id: 'b650m-elite', name: 'Gigabyte B650M Aorus Elite AX', blurb: 'Micro-ATX · AM5 · DDR5 · 4 RAM slots · 2 M.2', socket: 'AM5', form: 'mATX', mem: 'DDR5', slots: 4, m2: 2, gens: ['ryzen7000'] },
   { cat: 'board', id: 'b650i-strix', name: 'ASUS ROG Strix B650E-I Gaming WiFi', blurb: 'Mini-ITX · AM5 · DDR5 · 2 RAM slots · 2 M.2', socket: 'AM5', form: 'ITX', mem: 'DDR5', slots: 2, m2: 2, gens: ['ryzen7000'] },
@@ -83,7 +83,6 @@ export const CATALOG: Part[] = [
   { cat: 'board', id: 'b760m-mortar', name: 'MSI MAG B760M Mortar WiFi', blurb: 'Micro-ATX · LGA1700 · DDR5 · 4 RAM slots · 2 M.2', socket: 'LGA1700', form: 'mATX', mem: 'DDR5', slots: 4, m2: 2, gens: ['intel13'] },
   { cat: 'board', id: 'z890-tomahawk', name: 'MSI MAG Z890 Tomahawk WiFi', blurb: 'ATX · LGA1851 · DDR5 · 4 RAM slots · 4 M.2', socket: 'LGA1851', form: 'ATX', mem: 'DDR5', slots: 4, m2: 4, gens: ['arrow'] },
 
-  // Memory
   { cat: 'ram', id: 'veng-ddr5-32', name: 'Corsair Vengeance 32 GB (2×16) DDR5-6000 CL30', blurb: 'DDR5 · 2 sticks', mem: 'DDR5', sticks: 2, rgb: false },
   { cat: 'ram', id: 'flare-x5-32', name: 'G.Skill Flare X5 32 GB (2×16) DDR5-6000 CL30', blurb: 'DDR5 · 2 sticks · low profile', mem: 'DDR5', sticks: 2, rgb: false },
   { cat: 'ram', id: 'tz5-rgb-32', name: 'G.Skill Trident Z5 RGB 32 GB (2×16) DDR5-6400', blurb: 'DDR5 · 2 sticks · RGB', mem: 'DDR5', sticks: 2, rgb: true },
@@ -92,7 +91,7 @@ export const CATALOG: Part[] = [
   { cat: 'ram', id: 'lpx-ddr4-32', name: 'Corsair Vengeance LPX 32 GB (2×16) DDR4-3200', blurb: 'DDR4 · 2 sticks', mem: 'DDR4', sticks: 2, rgb: false },
   { cat: 'ram', id: 'ripjaws-ddr4-32', name: 'G.Skill Ripjaws V 32 GB (2×16) DDR4-3600', blurb: 'DDR4 · 2 sticks', mem: 'DDR4', sticks: 2, rgb: false },
 
-  // Graphics cards: typical partner-card length; the exact length depends on the brand.
+  // Lengths are a typical partner card's; the exact length depends on the brand.
   { cat: 'gpu', id: 'rtx5060', name: 'GeForce RTX 5060', blurb: '~145 W · dual-fan cards ~240 mm', length: 240, watts: 145 },
   { cat: 'gpu', id: 'rtx5060ti', name: 'GeForce RTX 5060 Ti 16 GB', blurb: '~180 W · dual-fan cards ~250 mm', length: 250, watts: 180 },
   { cat: 'gpu', id: 'rtx5070', name: 'GeForce RTX 5070', blurb: '~250 W · partner cards ~300 mm', length: 300, watts: 250 },
@@ -103,7 +102,6 @@ export const CATALOG: Part[] = [
   { cat: 'gpu', id: 'rx9070xt', name: 'Radeon RX 9070 XT', blurb: '~305 W · triple-fan cards ~320 mm', length: 320, watts: 305 },
   { cat: 'gpu', id: 'arc-b580', name: 'Intel Arc B580', blurb: '~190 W · dual-fan cards ~270 mm', length: 270, watts: 190 },
 
-  // Coolers
   { cat: 'cooler', id: 'pa120se', name: 'Thermalright Peerless Assassin 120 SE', blurb: 'Dual-tower air · 155 mm tall', type: 'air', height: 155, rad: 0, sockets: ALL_SOCKETS },
   { cat: 'cooler', id: 'ak400', name: 'DeepCool AK400', blurb: 'Single-tower air · 155 mm tall', type: 'air', height: 155, rad: 0, sockets: ALL_SOCKETS },
   { cat: 'cooler', id: 'nhd15g2', name: 'Noctua NH-D15 G2', blurb: 'Dual-tower air · 168 mm tall', type: 'air', height: 168, rad: 0, sockets: ALL_SOCKETS },
@@ -112,7 +110,6 @@ export const CATALOG: Part[] = [
   { cat: 'cooler', id: 'kraken-280', name: 'NZXT Kraken 280', blurb: '280 mm AIO', type: 'aio', height: 0, rad: 280, sockets: ALL_SOCKETS },
   { cat: 'cooler', id: 'lf3-360', name: 'Arctic Liquid Freezer III 360', blurb: '360 mm AIO', type: 'aio', height: 0, rad: 360, sockets: ALL_SOCKETS },
 
-  // Cases
   { cat: 'case', id: 'nr200p', name: 'Cooler Master NR200P', blurb: 'Mini-ITX · GPU ≤ 330 mm · cooler ≤ 155 mm · SFX', size: 'itx', forms: ['ITX'], gpuMax: 330, coolerMax: 155, radMax: 280, psu: ['SFX'] },
   { cat: 'case', id: 'a3-matx', name: 'Lian Li A3-mATX', blurb: 'Micro-ATX · GPU ≤ 415 mm · cooler ≤ 165 mm', size: 'mid', forms: ['mATX', 'ITX'], gpuMax: 415, coolerMax: 165, radMax: 360, psu: ['ATX', 'SFX'] },
   { cat: 'case', id: 'north', name: 'Fractal Design North', blurb: 'ATX mid tower · GPU ≤ 355 mm · cooler ≤ 170 mm', size: 'mid', forms: ['ATX', 'mATX', 'ITX'], gpuMax: 355, coolerMax: 170, radMax: 360, psu: ['ATX'] },
@@ -120,7 +117,6 @@ export const CATALOG: Part[] = [
   { cat: 'case', id: 'o11-evo', name: 'Lian Li O11 Dynamic EVO', blurb: 'ATX mid tower · GPU ≤ 420 mm · cooler ≤ 167 mm', size: 'mid', forms: ['EATX', 'ATX', 'mATX', 'ITX'], gpuMax: 420, coolerMax: 167, radMax: 360, psu: ['ATX'] },
   { cat: 'case', id: 'enthoo-pro2', name: 'Phanteks Enthoo Pro 2', blurb: 'Full tower · GPU ≤ 500 mm · cooler ≤ 195 mm', size: 'full', forms: ['EATX', 'ATX', 'mATX', 'ITX'], gpuMax: 500, coolerMax: 195, radMax: 480, psu: ['ATX'] },
 
-  // Power supplies
   { cat: 'psu', id: 'mag-a650', name: 'MSI MAG A650BN 650 W', blurb: 'ATX · 650 W · 80+ Bronze', watts: 650, form: 'ATX' },
   { cat: 'psu', id: 'rm750e', name: 'Corsair RM750e 750 W', blurb: 'ATX · 750 W · 80+ Gold · modular', watts: 750, form: 'ATX' },
   { cat: 'psu', id: 'rm850x', name: 'Corsair RM850x 850 W', blurb: 'ATX · 850 W · 80+ Gold · modular', watts: 850, form: 'ATX' },
@@ -128,7 +124,6 @@ export const CATALOG: Part[] = [
   { cat: 'psu', id: 'sf750', name: 'Corsair SF750', blurb: 'SFX · 750 W · 80+ Platinum · modular', watts: 750, form: 'SFX' },
   { cat: 'psu', id: 'sf1000', name: 'Corsair SF1000', blurb: 'SFX · 1000 W · 80+ Platinum · modular', watts: 1000, form: 'SFX' },
 
-  // Storage
   { cat: 'storage', id: '990pro-2', name: 'Samsung 990 Pro 2 TB', blurb: 'M.2 NVMe · PCIe 4.0', type: 'm2' },
   { cat: 'storage', id: 'sn850x-1', name: 'WD Black SN850X 1 TB', blurb: 'M.2 NVMe · PCIe 4.0', type: 'm2' },
   { cat: 'storage', id: 'p3plus-2', name: 'Crucial P3 Plus 2 TB', blurb: 'M.2 NVMe · PCIe 4.0 · budget', type: 'm2' },
