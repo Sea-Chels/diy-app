@@ -6,6 +6,9 @@ export default defineConfig({
   testDir: 'e2e',
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
+  // CI has no GPU: SwiftShader draws a garden frame in seconds, and every click waits for one.
+  timeout: process.env.CI ? 180_000 : 30_000,
+  expect: { timeout: process.env.CI ? 60_000 : 10_000 },
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     baseURL: `http://localhost:${PORT}`,
