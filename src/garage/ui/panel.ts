@@ -1,6 +1,6 @@
 import { PARTS } from '../data/parts';
 import { guidesForPart, type Guide } from '../data/guides';
-import { getState, setState, subscribe } from '../store';
+import { getState, select, subscribe } from '../store';
 import { h, clear } from '../../shared/dom';
 import { icon } from '../../shared/icons';
 import { guideCard } from './guideCard';
@@ -28,7 +28,7 @@ export function mountPanel(root: HTMLElement): void {
     root.append(
       h('header', { class: 'panel-head' },
         h('div', {}, h('h2', {}, info.label), h('p', { class: 'muted' }, info.blurb)),
-        h('button', { class: 'icon-btn', 'aria-label': 'Close', onClick: () => setState({ selectedPart: null, openGuide: null }) }, icon('close'))),
+        h('button', { class: 'icon-btn', 'aria-label': 'Close', onClick: () => select(null) }, icon('close'))),
     );
 
     const list = h('div', { class: 'repair-list' });

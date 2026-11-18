@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { glass, toon } from '../../../shared/toon';
 import { mapped, type V3 } from '../../../shared/scene/kit';
 import { ringPoint, shell, type Section, type SectionFn } from '../loft';
-import { C, rbox } from '../kit';
+import { C, M, rbox } from '../kit';
 import { plateTex } from '../textures';
 import type { CarCtx } from '../ctx';
 
@@ -24,7 +24,7 @@ export function buildTrunk(c: CarCtx) {
     lidGeom.translate(-hinge.x, -hinge.y, -hinge.z);
     const lid = put(trunkPivot, lidGeom, paint());
     put(group, shell(lower, LOWER_N, dz0 + 0.04, dz1 - 0.03, 0.09, 0.41, 0.002, 0.002, 12, 10), toon(C.bay, { halftone: 0.5, side: THREE.DoubleSide }), undefined, false);
-    const spare = put(group, new THREE.CylinderGeometry(0.24, 0.24, 0.02, 32), toon(C.tire), [0.1, lowerTop((dz0 + dz1) / 2) + 0.004, (dz0 + dz1) / 2], 'thin');
+    const spare = put(group, new THREE.CylinderGeometry(0.24, 0.24, 0.02, 32), M.rubber('matte'), [0.1, lowerTop((dz0 + dz1) / 2) + 0.004, (dz0 + dz1) / 2], 'thin');
     tag('trunk', lid, spare);
     trunkOpen = 1.15;
     trunkBeacon = [0, lowerTop(dz0) + 0.12, (dz0 + dz1) / 2];
@@ -99,11 +99,11 @@ export function buildTrunk(c: CarCtx) {
     const spoiler = put(group, rbox(2 * (S.ghW[1] - 0.06), 0.035, 0.16, 0.017), paint(), [0, hy + RIM + 0.004, hz - 0.03]);
     spoiler.rotation.x = -0.12;
     const local = (x: number, y: number, z: number): V3 => [x, y - hy, z + Math.max(0, y - yk) * RAKE - hz];
-    const handle = put(trunkPivot, rbox(0.3, 0.04, 0.03, 0.01), toon(C.chrome, { shine: 1, metal: 0.9 }), local(0, yk - 0.05, S.tailZ - 0.014), 'thin');
+    const handle = put(trunkPivot, rbox(0.3, 0.04, 0.03, 0.01), M.chrome(), local(0, yk - 0.05, S.tailZ - 0.014), 'thin');
     put(trunkPivot, rbox(0.34, 0.1, 0.012, 0.01), mapped(0xffffff, plateTex(), { shine: 0.5, halftone: 0.3 }), local(0, yk - 0.2, S.tailZ - 0.008), 'thin');
 
     // split taillights: one half wraps the body corner, the other rides on the gate
-    const lampMat = () => toon(C.taillight, { emissive: C.taillight, emissiveIntensity: 0.6, shine: 0.8, halftone: 0 });
+    const lampMat = () => M.lamp(C.taillight, 0.6);
     const lampY = yk + 0.035;
     for (const side of [1, -1]) {
       const body = put(group, rbox(0.03, 0.09, 0.3, 0.014), lampMat(), [side * (W + 0.01), lampY, S.tailZ + 0.17]);
@@ -144,8 +144,8 @@ export function buildTrunk(c: CarCtx) {
     const cargoZ0 = S.tailZ + 0.05;
     const cargoZ1 = (S.rearSeatZ ?? S.seatZ) - 0.2;
     put(group, rbox((S.halfW - 0.1) * 2, 0.03, cargoZ1 - cargoZ0, 0.01), toon(C.bay, { halftone: 0.6 }), [0, cargoY, (cargoZ0 + cargoZ1) / 2], false);
-    const spare = put(group, new THREE.CylinderGeometry(0.27, 0.27, 0.1, 32), toon(C.tire), [0.15, cargoY + 0.065, (cargoZ0 + cargoZ1) / 2 - 0.1], 'thin');
-    const spareHub = put(group, new THREE.CylinderGeometry(0.15, 0.15, 0.104, 24), toon(C.rim, { shine: 0.7, metal: 0.6 }), [0.15, cargoY + 0.066, (cargoZ0 + cargoZ1) / 2 - 0.1], 'thin');
+    const spare = put(group, new THREE.CylinderGeometry(0.27, 0.27, 0.1, 32), M.rubber('matte'), [0.15, cargoY + 0.065, (cargoZ0 + cargoZ1) / 2 - 0.1], 'thin');
+    const spareHub = put(group, new THREE.CylinderGeometry(0.15, 0.15, 0.104, 24), M.metal(), [0.15, cargoY + 0.066, (cargoZ0 + cargoZ1) / 2 - 0.1], 'thin');
     tag('trunk', panel, handle, spare, spareHub);
     trunkOpen = 1.35;
     trunkBeacon = [0, yk - 0.05, S.tailZ - 0.14];

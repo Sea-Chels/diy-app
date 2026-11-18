@@ -1,6 +1,6 @@
 /* Shared by the 3D workshop pages, on top of base.css. */
 .topbar .spacer { flex: 1; }
-.scene-menu { position: absolute; top: 14px; left: 16px; z-index: 3; }
+.scene-menu { position: absolute; top: var(--overlay-gap); left: 16px; z-index: 3; }
 .scene-menu.open .paint-card { display: flex; }
 .paint-card .seg button:disabled { opacity: 0.35; cursor: not-allowed; }
 .swatches.dim { opacity: 0.35; }
@@ -16,7 +16,7 @@
 
 .panel-links { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 14px; }
 .link-chip {
-  display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; font-size: 0.8rem;
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: var(--pill); font-size: 0.8rem;
   background: rgba(255,255,255,0.04); border: 1px solid var(--line); color: var(--muted); text-decoration: none;
 }
 .link-chip:hover { color: var(--text); border-color: rgba(255,255,255,0.22); }
@@ -37,6 +37,6 @@ button.link-chip { cursor: pointer; }
 .opt-name { font-weight: 650; line-height: 1.25; }
 
 @media (max-width: 720px) {
-  .hint { top: 64px; }
+  .hint { top: var(--overlay-row); }
   .topbar .spacer { display: none; }
 }

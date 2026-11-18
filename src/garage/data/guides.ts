@@ -7,6 +7,8 @@ import { ENGINE_GUIDES } from './guides/engine';
 import { WHEEL_GUIDES } from './guides/wheels';
 import { BODY_GUIDES } from './guides/body';
 import { UNDER_HOOD_GUIDES } from './guides/underHood';
+import { MOTORCYCLE_GUIDES } from './guides/motorcycle';
+import { BICYCLE_GUIDES } from './guides/bicycle';
 
 export type Powertrain = 'gas' | 'diesel' | 'hybrid' | 'ev';
 export const POWERTRAIN_LABEL: Record<Powertrain, string> = { gas: 'Gas', diesel: 'Diesel', hybrid: 'Hybrid', ev: 'Electric' };
@@ -19,7 +21,7 @@ export interface Guide extends GuideBase {
   parts: PartId[];
   /** What a shop would charge vs. doing it yourself, as a sentence fragment. */
   savings: string;
-  /** Only shown for these powertrains. Omit for all. */
+  /** Only shown for these car powertrains. Omit for all (and for the motorcycle and bike). */
   powertrains?: Powertrain[];
 }
 
@@ -31,6 +33,8 @@ export const GUIDES: Guide[] = [
   ...WHEEL_GUIDES,
   ...BODY_GUIDES,
   ...UNDER_HOOD_GUIDES,
+  ...MOTORCYCLE_GUIDES,
+  ...BICYCLE_GUIDES,
 ];
 
 export const GUIDE_BY_ID = new Map(GUIDES.map((g) => [g.id, g]));

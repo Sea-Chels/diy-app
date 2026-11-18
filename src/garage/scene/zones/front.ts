@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
 import { tween, easeInOutCubic, lerp } from '../../../shared/tween';
 import { mapped } from '../../../shared/scene/kit';
-import { C, rbox } from '../kit';
+import { C, M, rbox } from '../kit';
 import { mouthTex, plateTex } from '../textures';
 import type { CarCtx } from '../ctx';
 
@@ -11,7 +11,7 @@ import type { CarCtx } from '../ctx';
  * clear parking lamps across the bumper and a low oval mouth behind the plate.
  */
 export function buildFront(c: CarCtx) {
-  const { S, kind, group, paint, put, tag, chromeMat, fasciaWidth, fasciaBottom, noseTopY, onNose } = c;
+  const { S, kind, group, paint, put, tag, fasciaWidth, fasciaBottom, noseTopY, onNose } = c;
   const heads: THREE.Mesh[] = [];
   const along = (g: THREE.BufferGeometry) => g.rotateX(Math.PI / 2);
   const base = fasciaBottom(S.fasciaZ);
@@ -51,9 +51,9 @@ export function buildFront(c: CarCtx) {
     pivot.add(upright);
     heads.push(put(upright, wedgeGeo, toon(C.lampBezel, { halftone: 0.4 }), [0, -0.008, 0], 'thin'));
     const lampAt = (dz: number): [number, number, number] => [0, lampY, tipZ + 0.006 + dz];
-    heads.push(put(upright, along(new THREE.CylinderGeometry(lampR, lampR, 0.016, 32)), toon(C.lamp, { emissive: C.lampGlow, emissiveIntensity: 0.35, shine: 0.9, halftone: 0 }), lampAt(0), false));
-    heads.push(put(upright, new THREE.TorusGeometry(lampR, 0.011, 8, 36), chromeMat(), lampAt(0.008), false));
-    heads.push(put(upright, new THREE.TorusGeometry(lampR * 0.5, 0.004, 6, 28), chromeMat(), lampAt(0.011), false));
+    heads.push(put(upright, along(new THREE.CylinderGeometry(lampR, lampR, 0.016, 32)), M.lamp(C.lamp, 0.35, C.lampGlow), lampAt(0), false));
+    heads.push(put(upright, new THREE.TorusGeometry(lampR, 0.011, 8, 36), M.chrome(), lampAt(0.008), false));
+    heads.push(put(upright, new THREE.TorusGeometry(lampR * 0.5, 0.004, 6, 28), M.chrome(), lampAt(0.011), false));
   }
   const blink = () =>
     tween({
@@ -74,10 +74,10 @@ export function buildFront(c: CarCtx) {
     lamp.rotation.set(at.pitch, at.yaw, 0, 'YXZ');
     group.add(lamp);
     const capsule = new THREE.CapsuleGeometry(0.026, 0.13, 6, 14).rotateZ(Math.PI / 2).scale(1, 1, 0.45);
-    heads.push(put(lamp, capsule, toon(C.reverse, { emissive: C.lampGlow, emissiveIntensity: 0.15, shine: 0.9, halftone: 0 }), undefined, 'thin'));
-    heads.push(put(lamp, rbox(0.07, 0.03, 0.012, 0.012), toon(C.marker, { emissive: C.marker, emissiveIntensity: 0.4, halftone: 0 }), [-side * 0.045, 0, 0.008], false));
+    heads.push(put(lamp, capsule, M.lamp(C.reverse, 0.15, C.lampGlow), undefined, 'thin'));
+    heads.push(put(lamp, rbox(0.07, 0.03, 0.012, 0.012), M.lamp(C.marker, 0.4), [-side * 0.045, 0, 0.008], false));
     const markerZ = S.fasciaZ + 0.14;
-    heads.push(put(group, rbox(0.012, 0.035, 0.1, 0.006), toon(C.marker, { emissive: C.marker, emissiveIntensity: 0.5, halftone: 0 }), [side * (fasciaWidth(markerZ) + 0.004), base + 0.16, markerZ], false));
+    heads.push(put(group, rbox(0.012, 0.035, 0.1, 0.006), M.lamp(C.marker, 0.5), [side * (fasciaWidth(markerZ) + 0.004), base + 0.16, markerZ], false));
   }
   tag('headlight', ...heads);
 

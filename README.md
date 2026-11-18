@@ -40,7 +40,7 @@ A glass-sided PC on a desk beside a monitor. Click a glowing dot and the camera 
 
 ## Garage workshop
 
-A comic sedan or SUV on a turntable. Pick your year, make and model (models come from NHTSA's vPIC list) and the videos search for your exact car. Click a glowing dot and the camera flies in: the hood lifts on the engine bay, the trunk or liftgate swings up on the spare, the driver's door opens on the cabin, and the wipers sweep.
+A comic sedan or SUV, a motorcycle and a bike parked together. The Car / Motorcycle / Bike switch at the top flies the camera to each one. Pick your year, make and model (models come from NHTSA's vPIC list) and the car videos search for your exact car. Click a glowing dot and the camera flies in: the hood lifts on the engine bay, the trunk or liftgate swings up on the spare, the driver's door opens on the cabin, the wipers sweep, and the motorcycle seat lifts on its battery.
 
 ![Red sedan with glowing dots on each clickable part and the Paint menu open](docs/garage.jpg)
 
@@ -50,7 +50,7 @@ A comic sedan or SUV on a turntable. Pick your year, make and model (models come
 
 - **Your car:** year, make, model and powertrain (gas, diesel, hybrid or electric, guessed from the model). Jobs that don't apply, like oil changes on an EV, drop out.
 - **Paint:** body (auto from the model, sedan or SUV), colour and finish (matte, satin, gloss or metallic).
-- **Guides:** 37 driveway jobs: oil and filters, wipers and fluids, bulbs and cloudy headlights, fuses, the 12V battery and jump starts, spark plugs, belts and sensors, tires, flats and brake pads, key fobs, check-engine codes, struts, mirrors and touch-up paint. Each one says what a shop would charge and lists jack and hot-engine cautions where they matter.
+- **Guides:** 54 jobs. 37 for the car: oil and filters, wipers and fluids, bulbs and cloudy headlights, fuses, the 12V battery and jump starts, spark plugs, belts and sensors, tires, flats and brake pads, key fobs, check-engine codes, struts, mirrors and touch-up paint. 9 for the motorcycle: tires, chain lube and slack, oil level and changes, the battery, brakes, bulbs and clutch play. 8 for the bike: pumping up, flats, chain cleaning and wear, brake cables and pads, gear indexing and saddle height. Each one says what a shop would charge and lists jack, hot-engine and brake-test cautions where they matter.
 
 ## Garden workshop
 
@@ -148,10 +148,14 @@ src/
     data/paint.ts        body, finish and colour options
     api/vpic.ts          model lists from NHTSA vPIC
     scene/scene.ts       stage settings
+    data/rides.ts        car, motorcycle and bike: the vehicles you can switch between
+    scene/garage.ts      parks the three vehicles together and merges their parts, dots and views
     scene/rig.ts         builds the car from scene/zones/ (body, hood, trunk, doors, cabin, engine bay, front, rear, wipers, wheels), then beacons, lids, views and paint
+    scene/moto.ts        the motorcycle; scene/bike.ts the bike; scene/cycle.ts the leaning frame, wheel, chain and tube geometry they share
+    scene/parts3d.ts     hotspots, beacons, lids and views shared by all three
     scene/specs.ts       sedan and SUV dimensions and profile curves
     scene/loft.ts        lofts body panels from profile curves
-    ui/*                 side panel, guide index, paint menu, car picker
+    ui/*                 side panel, guide index, paint menu, car picker, vehicle switch
   garden/
     data/areas.ts        clickable areas (AreaId) and what opens for each
     data/guides.ts       guide types and lookups; the guides themselves are in data/guides/

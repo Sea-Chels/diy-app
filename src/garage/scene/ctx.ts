@@ -1,17 +1,16 @@
 import * as THREE from 'three';
-import { outline, toon, type InkWeight } from '../../shared/toon';
-import type { V3 } from '../../shared/scene/kit';
-import type { PartId } from '../data/parts';
+import { toon } from '../../shared/toon';
 import type { BodyKind } from '../data/paint';
 import { curve, ringPoint, tAtY, type SectionFn } from './loft';
 import { SPECS } from './specs';
-import { C, rbox } from './kit';
+import { rbox } from './kit';
+import { createParts } from './parts3d';
 
 /** Everything the car's zones share: the body's spec, its profile curves and the mesh helpers. */
 export function createCtx(kind: BodyKind) {
   const S = SPECS[kind];
   const group = new THREE.Group();
-  const hotspots = new Map<PartId, THREE.Mesh[]>();
+  const { hotspots, put, tag } = createParts();
   const paintMats: THREE.MeshToonMaterial[] = [];
 
   // The rig paints every body panel before the first frame, so the starting colour never shows.
@@ -19,27 +18,6 @@ export function createCtx(kind: BodyKind) {
     const m = toon(0xffffff);
     paintMats.push(m);
     return m;
-  };
-  const chromeMat = () => toon(C.chrome, { shine: 1, metal: 0.9 });
-
-  /** Create a mesh, add it to `parent`, ink it. Each mesh gets its own material so highlights stay local. */
-  const put = (parent: THREE.Object3D, geom: THREE.BufferGeometry, mat: THREE.Material, pos?: V3, ink: InkWeight | false = 'body'): THREE.Mesh => {
-    const m = new THREE.Mesh(geom, mat);
-    if (pos) m.position.set(...pos);
-    m.castShadow = true;
-    m.receiveShadow = true;
-    if (ink) outline(m, ink);
-    parent.add(m);
-    return m;
-  };
-
-  const tag = (part: PartId, ...meshes: THREE.Mesh[]) => {
-    const list = hotspots.get(part) ?? [];
-    for (const m of meshes) {
-      m.userData.area = part;
-      list.push(m);
-    }
-    hotspots.set(part, list);
   };
 
   const lowerTop = curve(S.lowerTop);
@@ -151,7 +129,7 @@ export function createCtx(kind: BodyKind) {
   };
 
   return {
-    S, kind, group, hotspots, paintMats, paint, chromeMat, put, tag,
+    S, kind, group, hotspots, paintMats, paint, put, tag,
     lowerTop, lowerBottom, lowerWidth, hoodLine, fasciaBottom, fasciaWidth, roofLine,
     archR, LOWER_N, lower, fenderW, hoodW, hoodZ1, fender, front, hoodEdgeT, noseTopY, onNose, GH_N, TUB_T, sill, ghBaseY, gh, GH_CORNER_T, beltTrim, roofY, sideX,
   };

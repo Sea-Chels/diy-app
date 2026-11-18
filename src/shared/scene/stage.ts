@@ -42,6 +42,8 @@ export interface StageConfig<S, Id extends string, Lid extends string, R extends
   rigKey(s: S): string;
   /** A setup change that keeps the same rig. */
   restyle?(rig: R, s: S): void;
+  /** What shrinks and pops back during a rebuild; the whole rig by default. */
+  swapTarget?(rig: R): THREE.Object3D;
   lids: readonly Lid[];
   opens(id: Id): readonly Lid[] | undefined;
   /** 'hull' recolours each mesh's ink; 'outline' draws one rim round the whole area. */
@@ -314,16 +316,17 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   function swap(s: S): void {
     swapping = true;
     const old = rig;
+    const target = (r: R) => cfg.swapTarget?.(r) ?? r.group;
     tween({
       duration: 220,
       ease: (t) => t * t,
       tag: 'swap-out',
-      update: (k) => old.group.scale.setScalar(Math.max(0.001, lerp(1, 0, k))),
+      update: (k) => target(old).scale.setScalar(Math.max(0.001, lerp(1, 0, k))),
       done: () => {
         scene.remove(old.group);
         old.dispose();
         rig = cfg.build(s);
-        rig.group.scale.setScalar(0.001);
+        target(rig).scale.setScalar(0.001);
         scene.add(rig.group);
         syncLineResolution();
         applyLids(selected);
@@ -334,7 +337,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
           duration: 560,
           ease: easeOutBack,
           tag: 'swap-in',
-          update: (k) => rig.group.scale.setScalar(Math.max(0.001, k)),
+          update: (k) => target(rig).scale.setScalar(Math.max(0.001, k)),
           done: () => {
             swapping = false;
             if (pending) {

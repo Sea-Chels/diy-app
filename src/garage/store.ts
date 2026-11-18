@@ -1,4 +1,5 @@
-import type { PartId } from './data/parts';
+import { rideOf, type PartId } from './data/parts';
+import type { RideId } from './data/rides';
 import { POWERTRAIN_LABEL, type Powertrain } from './data/guides';
 import { BODY_LABEL, FINISHES, SWATCHES, type BodyChoice, type Finish } from './data/paint';
 import { YEARS } from './data/makes';
@@ -20,6 +21,8 @@ export interface Appearance {
 export interface State {
   vehicle: Vehicle;
   appearance: Appearance;
+  /** The vehicle the camera is on; picking a part moves it to that part's vehicle. */
+  ride: RideId;
   selectedPart: PartId | null;
   openGuide: string | null;
 }
@@ -46,10 +49,15 @@ function fixAppearance(raw: unknown): Appearance {
 }
 
 export const { getState, setState, subscribe } = createStore<State>(
-  { vehicle: fixVehicle(null), appearance: fixAppearance(null), selectedPart: null, openGuide: null },
+  { vehicle: fixVehicle(null), appearance: fixAppearance(null), ride: 'car', selectedPart: null, openGuide: null },
   { vehicle: { key: 'diy-garage:vehicle', fix: fixVehicle }, appearance: { key: 'diy-garage:appearance', fix: fixAppearance } },
 );
 
 export const vehicleLabel = (v: Vehicle) => [v.year, v.make, v.model].filter(Boolean).join(' ');
 
 export const hasVehicle = (v: Vehicle) => Boolean(v.year && v.make && v.model);
+
+/** Select a part (and optionally open one of its guides), moving to the part's vehicle; null clears the selection. */
+export function select(part: PartId | null, openGuide: string | null = null): void {
+  setState({ selectedPart: part, openGuide, ...(part ? { ride: rideOf(part) } : {}) });
+}

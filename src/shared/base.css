@@ -1,6 +1,9 @@
 :root {
   --bg-2: #171b23;
-  --panel: rgba(21, 25, 33, 0.92);
+  /* The dark glass behind panels and floating controls, as RGB channels so each can set its own alpha. */
+  --surface: 21 25 33;
+  --panel: rgb(var(--surface) / 0.92);
+  --float: rgb(var(--surface) / 0.85);
   --line: rgba(255, 255, 255, 0.08);
   --accent: var(--cyan);
   --accent-2: var(--coral);
@@ -8,6 +11,10 @@
   --diff-2: var(--amber);
   --diff-3: var(--red);
   --radius: 14px;
+  --pill: 999px;
+  /* Scene overlays sit this far in from the edges; a second row of them starts one row-height lower. */
+  --overlay-gap: 14px;
+  --overlay-row: calc(var(--overlay-gap) + 46px);
   --font: ui-rounded, "SF Pro Rounded", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
@@ -77,22 +84,21 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
 #scene:active { cursor: grabbing; }
 
 .hint {
-  position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
-  padding: 6px 12px; border-radius: 999px; font-size: 0.85rem;
+  position: absolute; top: var(--overlay-gap); left: 50%; transform: translateX(-50%);
+  padding: 6px 12px; border-radius: var(--pill); font-size: 0.85rem;
   background: color-mix(in srgb, var(--bg-deep) 60%, transparent); color: var(--muted); border: 1px solid var(--line);
   pointer-events: none; transition: all 0.2s ease; white-space: nowrap;
 }
 .hint.active { color: var(--on-accent); background: var(--accent); border-color: transparent; font-weight: 600; }
 
 .quick-fixes {
-  position: absolute; left: 0; right: 0; bottom: 14px;
+  position: absolute; left: 0; right: 0; bottom: var(--overlay-gap);
   display: flex; gap: 8px; padding: 0 16px; overflow-x: auto; scrollbar-width: none;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
 }
 .quick-fixes::-webkit-scrollbar { display: none; }
 .quick-chip {
-  flex: 0 0 auto; padding: 9px 14px; border-radius: 999px;
-  background: rgba(21,25,33,0.85); border: 1px solid var(--line); backdrop-filter: blur(8px);
+  flex: 0 0 auto; padding: 9px 14px; border-radius: var(--pill);
   color: var(--text); font-size: 0.9rem; transition: transform 0.15s ease, border-color 0.15s ease;
 }
 .quick-chip:hover { transform: translateY(-2px); border-color: var(--accent); }
@@ -110,8 +116,7 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
   radial-gradient(55% 45% at 85% 25%, rgba(69,224,255,0.10), transparent 70%); }
 
 .paint-toggle {
-  display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px;
-  background: rgba(21,25,33,0.85); border: 1px solid var(--line); backdrop-filter: blur(8px); color: var(--text);
+  display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: var(--pill); color: var(--text);
 }
 .paint-toggle:hover { border-color: rgba(255,255,255,0.25); }
 .paint-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--c, #d7263d); box-shadow: 0 0 0 2px rgba(255,255,255,0.15); }
@@ -125,6 +130,8 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
 .seg button { flex: 1; background: none; border: 0; border-radius: 7px; padding: 6px 4px; font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
 .seg button:hover { color: var(--text); }
 .seg button.active { background: var(--accent); color: var(--on-accent); font-weight: 600; }
+/* Controls floating over a 3D scene. */
+.quick-chip, .paint-toggle, .ride-switch { background: var(--float); border: 1px solid var(--line); backdrop-filter: blur(8px); }
 .swatches { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; }
 .swatch {
   aspect-ratio: 1; border-radius: 50%; border: 2px solid rgba(255,255,255,0.12); background: var(--c);
@@ -163,7 +170,7 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
 .repair-head:hover { background: rgba(255,255,255,0.03); }
 .repair-title { font-weight: 600; }
 .chips { display: flex; gap: 6px; flex-wrap: wrap; }
-.chip { font-size: 0.72rem; padding: 2px 8px; border-radius: 999px; background: rgba(255,255,255,0.07); color: var(--muted); }
+.chip { font-size: 0.72rem; padding: 2px 8px; border-radius: var(--pill); background: rgba(255,255,255,0.07); color: var(--muted); }
 .diff-1 .chip.diff { color: var(--diff-1); }
 .diff-2 .chip.diff { color: var(--diff-2); }
 .diff-3 .chip.diff { color: var(--diff-3); }
@@ -207,7 +214,7 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
 .glossary-modal input[type="search"] { font-size: 1rem; }
 .filter-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 .filter-row .spacer { flex: 1; }
-.chip-btn { background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 5px 11px; font-size: 0.82rem; color: var(--muted); }
+.chip-btn { background: transparent; border: 1px solid var(--line); border-radius: var(--pill); padding: 5px 11px; font-size: 0.82rem; color: var(--muted); }
 .chip-btn.active { background: var(--accent); color: var(--on-accent); border-color: transparent; font-weight: 600; }
 .glossary-results { display: flex; flex-direction: column; gap: 6px; }
 .glossary-item {

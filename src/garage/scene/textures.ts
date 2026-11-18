@@ -56,7 +56,7 @@ export const radiatorTex = once(() => stripes([60, 1], '#8a91a2', '#2b2f3a'));
 export const seatTex = once(() => stripes([1, 5], '#47434f', '#34313d'));
 export const engineLabel = once(() => label([{ text: 'DIY', size: 64, color: '#e6ecf5' }, { text: '2.0 · 16V', size: 22, color: PALETTE.cyan }], css(C.cover), 256, 128));
 export const batteryLabel = once(() => label([{ text: '12V', size: 52, color: PALETTE.ink }, { text: 'DIY POWER', size: 20, color: PALETTE.ink }], PALETTE.yellow, 256, 128));
-export const fuseLabel = once(() => label([{ text: 'FUSE', size: 44, color: '#e6ecf5' }, { text: '· RELAY ·', size: 20, color: PALETTE.muted }], css(C.fuse), 256, 128));
+export const fuseLabel = once(() => label([{ text: 'FUSE', size: 44, color: '#e6ecf5' }, { text: '· RELAY ·', size: 20, color: PALETTE.muted }], css(C.darkPart), 256, 128));
 
 /** The washer cap's windshield-and-spray symbol, the one every car uses. */
 export const washerIcon = once(() =>

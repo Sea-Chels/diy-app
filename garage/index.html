@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark" />
     <title>DIY · Garage</title>
-    <meta name="description" content="Click a part of the car, see what you can fix yourself, and watch how-to videos for your exact make, model and year." />
+    <meta name="description" content="Click a part of the car, motorcycle or bike, see what you can fix yourself, and watch how-to videos for your exact make, model and year." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
@@ -19,8 +19,9 @@
       </header>
       <main>
         <div class="stage">
-          <canvas id="scene" aria-label="Interactive car. Click a part to see what you can fix."></canvas>
+          <canvas id="scene" aria-label="Interactive garage with a car, a motorcycle and a bike. Click a part to see what you can fix."></canvas>
           <div class="scene-menu" id="paint-shop"></div>
+          <div class="scene-menu seg ride-switch" id="ride-switch" role="group" aria-label="Vehicle"></div>
           <div class="hint" id="hint">Drag to look around. Click a glowing dot.</div>
           <nav class="quick-fixes" id="quick-fixes" aria-label="Quick fixes"></nav>
         </div>

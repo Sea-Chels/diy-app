@@ -1,17 +1,17 @@
 /**
  * Stylized comic-book car. Two generic bodies (sedan, SUV) are lofted from
- * profile curves, cel-shaded and inked. The contract with the scene is `Rig`;
- * every PartId in data/parts.ts gets hotspot meshes, a beacon and a camera view.
+ * profile curves, cel-shaded and inked. Every car PartId in data/parts.ts gets
+ * hotspot meshes, a beacon and a camera view.
  */
 import * as THREE from 'three';
 import { tween, easeInOutCubic, lerp } from '../../shared/tween';
-import { disposeTree, type ToonUniforms } from '../../shared/toon';
+import type { ToonUniforms } from '../../shared/toon';
 import type { V3 } from '../../shared/scene/kit';
-import { hex } from '../../shared/theme';
-import type { StageRig, View } from '../../shared/scene/stage';
-import { PARTS, type LidId, type PartId } from '../data/parts';
+import type { View } from '../../shared/scene/stage';
+import type { CarPart } from '../data/parts';
 import type { BodyKind } from '../data/paint';
 import { createCtx } from './ctx';
+import { createBeacons, createLids, view, type RideRig } from './parts3d';
 import { buildBody } from './zones/body';
 import { buildHood } from './zones/hood';
 import { buildTrunk } from './zones/trunk';
@@ -29,14 +29,11 @@ export interface Paint {
   metal: number;
 }
 
-export interface Rig extends StageRig<PartId, LidId> {
+export interface CarRig extends RideRig<CarPart> {
   setPaint(p: Paint, instant?: boolean): void;
-  /** Tints the selected part's own glow, so small dark parts read as selected too. */
-  focus(part: PartId | null): void;
-  canPick(part: PartId): boolean;
 }
 
-export function buildRig(kind: BodyKind): Rig {
+export function buildCar(kind: BodyKind): CarRig {
   const c = createCtx(kind);
   const { S, group, hotspots, paintMats, roofLine, hoodLine } = c;
   buildBody(c);
@@ -52,46 +49,12 @@ export function buildRig(kind: BodyKind): Rig {
   buildWheels(c);
   const R = S.wheelR;
 
-  const lidState: Record<LidId, boolean> = { hood: false, trunk: false, door: false };
-  const lids: Record<LidId, { pivot: THREE.Group; axis: 'x' | 'y'; open: number }> = {
+  const { setLid, canPick } = createLids({
     hood: { pivot: hoodPivot, axis: 'x', open: -1.1 },
     trunk: { pivot: trunkPivot, axis: 'x', open: trunkOpen },
     door: { pivot: doorPivot, axis: 'y', open: -1.0 },
-  };
-
-  function setLid(lid: LidId, open: boolean): void {
-    if (lidState[lid] === open) return;
-    lidState[lid] = open;
-    const { pivot, axis, open: angle } = lids[lid];
-    const from = pivot.rotation[axis];
-    const to = open ? angle : 0;
-    tween({
-      duration: 750,
-      ease: easeInOutCubic,
-      tag: `lid:${kind}:${lid}`,
-      update: (k) => {
-        pivot.rotation[axis] = lerp(from, to, k);
-      },
-    });
-  }
-
-  const canPick = (part: PartId) => {
-    const { behind, seeThrough } = PARTS[part];
-    return !behind || seeThrough === true || lidState[behind];
-  };
-
-  // Unlike the other workshops' beacons these are depth-tested, so the car hides them and they pick like any other part.
-  const beacons = new Map<PartId, THREE.Mesh>();
-  const beaconGeom = new THREE.SphereGeometry(0.045, 16, 16);
-  const beaconAt = (part: PartId, p: V3) => {
-    const b = new THREE.Mesh(beaconGeom, new THREE.MeshBasicMaterial({ color: hex('cyan'), transparent: true, opacity: 0.92 }));
-    b.position.set(...p);
-    b.renderOrder = 3;
-    b.userData.area = part;
-    b.userData.seen = () => canPick(part);
-    group.add(b);
-    beacons.set(part, b);
-  };
+  }, kind);
+  const { beacons, beaconAt } = createBeacons(group, canPick);
   const hoodMidZ = (hoodZ0 + hoodZ1) / 2;
   beaconAt('hood', [0, hoodLine(hoodMidZ) + 0.12, hoodMidZ]);
   beaconAt('oil', [0.14, F + 0.47, bm - 0.07]);
@@ -114,12 +77,8 @@ export function buildRig(kind: BodyKind): Rig {
   beaconAt('fueldoor', [-(S.halfW + 0.12), fuelY, fuelZ]);
   beaconAt('exhaust', [-0.5, S.bottom - 0.12, tipZ - 0.08]);
 
-  const view = (target: V3, dir: V3, dist: number): View => {
-    const d = new THREE.Vector3(...dir).normalize().multiplyScalar(dist);
-    return { target, pos: [target[0] + d.x, target[1] + d.y, target[2] + d.z] };
-  };
   const bayDir: V3 = [0.5, 1.1, 0.9];
-  const views: Record<PartId, View> = {
+  const views: Record<CarPart, View> = {
     hood: view([0, hoodLine(hoodMidZ), hoodMidZ], [0.55, 0.75, 1], 3.4),
     engine: view([0.02, F + 0.25, bm], bayDir, 1.9),
     battery: view([-0.34, F + 0.1, bz0 + 0.16], [-0.6, 1.1, 0.9], 1.7),
@@ -141,7 +100,8 @@ export function buildRig(kind: BodyKind): Rig {
     fueldoor: view([-S.halfW, fuelY, fuelZ], [-1, 0.2, -0.45], 2.1),
     exhaust: view([-0.5, S.bottom, S.tailZ], [-0.4, 0.2, -1], 2.2),
   };
-  const overview: View = S.suv ? { pos: [4.6, 2.68, 5.38], target: [0, 0.85, 0] } : { pos: [4.21, 2.41, 4.99], target: [0, 0.65, 0] };
+  // Takes in the motorcycle and bike parked off the car's left, so the garage opens on all three.
+  const overview: View = S.suv ? { pos: [0.9, 3.2, 6.6], target: [-1.9, 0.6, 0.3] } : { pos: [0.9, 3.0, 6.4], target: [-1.9, 0.5, 0.3] };
 
   let current: Paint | null = null;
   function paintTo(p: Paint, instant: boolean): void {
@@ -171,28 +131,9 @@ export function buildRig(kind: BodyKind): Rig {
     }
   }
 
-  const lift = new THREE.Color(hex('cyan'));
-  const baseGlow = new Map<THREE.MeshToonMaterial, { color: THREE.Color; intensity: number }>();
-  function focus(part: PartId | null): void {
-    for (const [mat, base] of baseGlow) {
-      mat.emissive.copy(base.color);
-      mat.emissiveIntensity = base.intensity;
-    }
-    baseGlow.clear();
-    for (const m of part ? hotspots.get(part) ?? [] : []) {
-      const mat = m.material as THREE.MeshToonMaterial;
-      if (!mat.emissive || baseGlow.has(mat)) continue;
-      baseGlow.set(mat, { color: mat.emissive.clone(), intensity: mat.emissiveIntensity });
-      mat.emissive.lerp(lift, 0.1);
-      mat.emissiveIntensity = Math.max(mat.emissiveIntensity, 1);
-    }
-  }
-
   return {
-    key: kind,
     group,
-    picks: [...[...hotspots.values()].flat(), ...beacons.values()],
-    glow: hotspots,
+    hotspots,
     beacons,
     views,
     overview,
@@ -201,13 +142,10 @@ export function buildRig(kind: BodyKind): Rig {
       if (current && p.color === current.color && p.shine === current.shine && p.metal === current.metal) return;
       paintTo(p, instant);
     },
-    focus,
     canPick,
-    update: () => {},
     poke: (part) => {
       if (part === 'wiper') wipe();
       if (part === 'headlight') blink();
     },
-    dispose: () => disposeTree(group),
   };
 }

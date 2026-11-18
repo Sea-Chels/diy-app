@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
 import { mapped } from '../../../shared/scene/kit';
-import { C, decal, rbox } from '../kit';
+import { C, M, decal, rbox } from '../kit';
 import { gaugeTex, screenTex, seatTex } from '../textures';
 import type { CarCtx } from '../ctx';
 
 export function buildCabin(c: CarCtx) {
-  const { S, group, put, tag, chromeMat } = c;
+  const { S, group, put, tag } = c;
   const seatMat = () => mapped(0xffffff, seatTex(), { halftone: 0.7 });
   const seatParts: THREE.Mesh[] = [];
   const cushionY = S.floorY + 0.14;
@@ -36,20 +36,20 @@ export function buildCabin(c: CarCtx) {
   wheel.position.set(0.36, S.belt + 0.06, dashZ - 0.2);
   wheel.rotation.x = -1.15;
   group.add(wheel);
-  const rim = put(wheel, new THREE.TorusGeometry(0.15, 0.022, 10, 32), toon(C.trim), undefined, 'thin');
+  const rim = put(wheel, new THREE.TorusGeometry(0.15, 0.022, 10, 32), M.trim(), undefined, 'thin');
   const hubGeo = new THREE.CylinderGeometry(0.045, 0.045, 0.035, 18);
   hubGeo.rotateX(Math.PI / 2);
   const hub = put(wheel, hubGeo, toon(C.trim, { shine: 0.4 }), undefined, 'thin');
   const spokes = [0, Math.PI / 2, Math.PI].map((a) => {
-    const sp = put(wheel, rbox(0.12, 0.028, 0.014, 0.006), toon(C.trim), [Math.cos(a) * 0.08, -Math.sin(a) * 0.08, 0], false);
+    const sp = put(wheel, rbox(0.12, 0.028, 0.014, 0.006), M.trim(), [Math.cos(a) * 0.08, -Math.sin(a) * 0.08, 0], false);
     sp.rotation.z = -a;
     return sp;
   });
   const consoleLen = dashBack - S.seatZ;
   const centre = put(group, rbox(0.2, 0.17, consoleLen, 0.04), toon(C.trim, { halftone: 0.7 }), [0, S.floorY + 0.1, S.seatZ + consoleLen / 2], 'thin');
-  const shifter = put(group, new THREE.CylinderGeometry(0.012, 0.012, 0.08, 10), chromeMat(), [0, S.floorY + 0.22, dashBack - 0.16], false);
+  const shifter = put(group, new THREE.CylinderGeometry(0.012, 0.012, 0.08, 10), M.chrome(), [0, S.floorY + 0.22, dashBack - 0.16], false);
   const knob = put(group, new THREE.SphereGeometry(0.026, 14, 10), toon(C.trim, { shine: 0.6 }), [0, S.floorY + 0.27, dashBack - 0.16], 'thin');
-  const fuseCabin = put(group, rbox(0.15, 0.1, 0.05, 0.01), toon(C.fuse), [S.ghW[0] - 0.16, S.belt - 0.16, dashZ - 0.12], 'thin');
+  const fuseCabin = put(group, rbox(0.15, 0.1, 0.05, 0.01), toon(C.darkPart), [S.ghW[0] - 0.16, S.belt - 0.16, dashZ - 0.12], 'thin');
   tag('cabin', ...seatParts, dash, binnacle, gauges, screen, rim, hub, ...spokes, centre, shifter, knob);
   tag('fusebox_cabin', fuseCabin);
   return { dashZ };

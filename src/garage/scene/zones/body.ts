@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { glass, toon } from '../../../shared/toon';
 import { loft, sheet, shell } from '../loft';
-import { C, rbox } from '../kit';
+import { C, M, rbox } from '../kit';
 import type { CarCtx } from '../ctx';
 
 export function buildBody(c: CarCtx) {
@@ -45,7 +45,7 @@ export function buildBody(c: CarCtx) {
 
   // Pillars and roof are thin panels laid on the glasshouse itself, so they follow its curve.
   // The SUV's are black, for the floating-roof look; the sedan's are body colour.
-  const pillarMat = () => (S.suv ? toon(C.trim) : paint());
+  const pillarMat = () => (S.suv ? M.trim() : paint());
   const band = (z0: number, z1: number, t0: number, t1: number, side: number, mat = pillarMat()) => {
     const [a, b] = side > 0 ? [t0, t1] : [0.5 - t1, 0.5 - t0];
     return put(group, shell(gh, GH_N, z0, z1, a, b, 0.002, 0.014, 30, 8), mat, undefined, 'thin');
@@ -57,7 +57,7 @@ export function buildBody(c: CarCtx) {
     for (const [a, b] of S.cornerPillars) band(a, b, GH_CORNER_T - 0.03, GH_CORNER_T + 0.03, side);
     for (const z of S.vertPillars) band(z - 0.035, z + 0.035, -0.015, GH_CORNER_T, side);
     if (!S.suv) band(S.ghRearZ, S.ghRearZ + 0.26, -0.015, GH_CORNER_T, side);
-    const trim = toon(C.trim);
+    const trim = M.trim();
     const runs: [number, number][] = side > 0 ? [[S.ghRearZ + 0.02, dz0], [dz1, S.cowlZ - 0.02]] : [[S.ghRearZ + 0.02, S.cowlZ - 0.02]];
     for (const [z0, z1] of runs) put(group, beltTrim(side, z0, z1), trim, undefined, 'thin');
   }
@@ -72,9 +72,9 @@ export function buildBody(c: CarCtx) {
       const skin = (z: number) => roofY(x, z) + 0.016;
       const RISE = 0.06;
       const pts = [-1.85, -1.4, -0.9, -0.4, -0.1].map((z) => new THREE.Vector3(x, skin(z) + RISE, z));
-      put(group, new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 30, 0.02, 8, false), toon(C.trim), undefined, 'thin');
-      for (const z of [-1.85, -0.1]) put(group, rbox(0.05, RISE + 0.02, 0.1, 0.015), toon(C.trim), [x, skin(z) + RISE / 2, z], 'thin');
-      if (side > 0) for (const z of [-0.45, -1.45]) put(group, rbox(2 * x, 0.02, 0.05, 0.008), toon(C.trim), [0, skin(z) + RISE + 0.012, z], 'thin');
+      put(group, new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 30, 0.02, 8, false), M.trim(), undefined, 'thin');
+      for (const z of [-1.85, -0.1]) put(group, rbox(0.05, RISE + 0.02, 0.1, 0.015), M.trim(), [x, skin(z) + RISE / 2, z], 'thin');
+      if (side > 0) for (const z of [-0.45, -1.45]) put(group, rbox(2 * x, 0.02, 0.05, 0.008), M.trim(), [0, skin(z) + RISE + 0.012, z], 'thin');
       const len = S.wheelZ[0] - S.wheelZ[1] - 2 * archR - 0.05;
       put(group, rbox(0.05, 0.13, len, 0.02), toon(C.trim, { halftone: 0.6 }), [side * (S.halfW - 0.01), S.bottom + 0.07, (S.wheelZ[0] + S.wheelZ[1]) / 2 - 0.25], 'thin');
     }

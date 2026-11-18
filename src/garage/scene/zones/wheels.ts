@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
 import { mapped } from '../../../shared/scene/kit';
-import { C, rbox } from '../kit';
+import { C, M, rbox } from '../kit';
 import { tireTex } from '../textures';
 import type { CarCtx } from '../ctx';
 
 export function buildWheels(c: CarCtx) {
-  const { S, group, put, tag, chromeMat } = c;
+  const { S, group, put, tag } = c;
   const R = S.wheelR;
   const W = S.wheelW;
   const tireGeom = (() => {
@@ -38,17 +38,17 @@ export function buildWheels(c: CarCtx) {
     put(wg, barrel, toon(C.barrel, { side: THREE.DoubleSide, halftone: 0.6 }), undefined, false);
     const lip = new THREE.TorusGeometry(0.62 * R, 0.022, 8, 36);
     lip.rotateY(Math.PI / 2);
-    wheelMeshes.push(put(wg, lip, toon(C.rim, { shine: 0.9, metal: 0.7 }), [face, 0, 0], 'thin'));
+    wheelMeshes.push(put(wg, lip, M.metal('bright'), [face, 0, 0], 'thin'));
     for (let k = 0; k < 5; k++) {
       const g = rbox(0.035, 0.52 * R, 0.085, 0.015);
       g.translate(0, 0.3 * R, 0);
-      const spoke = put(wg, g, toon(C.rim, { shine: 0.9, metal: 0.7 }), [face, 0, 0], 'thin');
+      const spoke = put(wg, g, M.metal('bright'), [face, 0, 0], 'thin');
       spoke.rotation.x = (k * Math.PI * 2) / 5;
       wheelMeshes.push(spoke);
     }
     const hub = new THREE.CylinderGeometry(0.15 * R, 0.15 * R, 0.05, 20);
     hub.rotateZ(Math.PI / 2);
-    wheelMeshes.push(put(wg, hub, chromeMat(), [face, 0, 0], 'thin'));
+    wheelMeshes.push(put(wg, hub, M.chrome(), [face, 0, 0], 'thin'));
     for (let k = 0; k < 5; k++) {
       const a = ((k + 0.5) * Math.PI * 2) / 5;
       const lug = new THREE.CylinderGeometry(0.016, 0.016, 0.03, 6);

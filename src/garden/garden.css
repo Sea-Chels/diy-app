@@ -32,7 +32,7 @@
 .problems { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 5px; font-size: 0.9rem; }
 .problems li { display: flex; gap: 8px; align-items: flex-start; }
 .problems .icon { color: var(--diff-2); margin-top: 3px; flex-shrink: 0; }
-.rel-chip { font-size: 0.8rem; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.03); color: var(--text); }
+.rel-chip { font-size: 0.8rem; padding: 4px 10px; border-radius: var(--pill); border: 1px solid var(--line); background: rgba(255,255,255,0.03); color: var(--text); }
 button.rel-chip:hover { border-color: rgba(255,255,255,0.3); }
 .rel-chip.good { border-color: color-mix(in srgb, var(--green) 35%, transparent); color: #bbf7d0; }
 .rel-chip.bad { border-color: color-mix(in srgb, var(--red) 35%, transparent); color: #fecaca; }

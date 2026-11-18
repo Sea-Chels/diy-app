@@ -1,7 +1,6 @@
 import * as THREE from 'three';
-import { toon } from '../../../shared/toon';
 import { tween } from '../../../shared/tween';
-import { C, rbox } from '../kit';
+import { M, rbox } from '../kit';
 import type { CarCtx } from '../ctx';
 
 export function buildWipers(c: CarCtx) {
@@ -21,8 +20,8 @@ export function buildWipers(c: CarCtx) {
     const arm = new THREE.Group();
     arm.rotation.y = WIPER_REST;
     base.add(arm);
-    wipers.push(put(arm, rbox(bladeLen, 0.016, 0.028, 0.007), toon(C.trim), [-bladeLen / 2, 0.006, 0], 'thin'));
-    const hub = put(arm, new THREE.CylinderGeometry(0.022, 0.022, 0.03, 12), toon(C.trim), [0, 0.006, 0], 'thin');
+    wipers.push(put(arm, rbox(bladeLen, 0.016, 0.028, 0.007), M.trim(), [-bladeLen / 2, 0.006, 0], 'thin'));
+    const hub = put(arm, new THREE.CylinderGeometry(0.022, 0.022, 0.03, 12), M.trim(), [0, 0.006, 0], 'thin');
     wipers.push(hub);
     wipeArms.push(arm);
   }

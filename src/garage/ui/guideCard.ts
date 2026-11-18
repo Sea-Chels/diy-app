@@ -1,4 +1,6 @@
 import { DIFFICULTY_LABEL, type Guide } from '../data/guides';
+import { rideOf } from '../data/parts';
+import { RIDE_SEARCH } from '../data/rides';
 import { getState, hasVehicle, setState, vehicleLabel } from '../store';
 import { h } from '../../shared/dom';
 import { fmtMinutes } from '../../shared/format';
@@ -14,12 +16,14 @@ export function guideCard(g: Guide, open: boolean): HTMLElement {
     onToggle: () => setState({ openGuide: open ? null : g.id }),
     body: () => {
       const v = getState().vehicle;
-      const known = hasVehicle(v);
+      // The year, make and model describe the car; motorcycle and bike guides search generically.
+      const car = rideOf(g.parts[0]) === 'car';
+      const known = car && hasVehicle(v);
       return [
         card.summary(g),
         card.note('savings', 'savings', g.savings),
-        card.videoButton(`${known ? vehicleLabel(v) : 'car'} ${g.query}`, known ? `Videos for your ${vehicleLabel(v)}` : undefined),
-        !known && h('p', { class: 'hint-text' }, 'Pick your year, make and model above to get videos for your exact car.'),
+        card.videoButton(`${known ? vehicleLabel(v) : RIDE_SEARCH[rideOf(g.parts[0])]} ${g.query}`, known ? `Videos for your ${vehicleLabel(v)}` : undefined),
+        car && !known && h('p', { class: 'hint-text' }, 'Pick your year, make and model above to get videos for your exact car.'),
         card.cautions(g),
         card.toolsAndSupplies(g, 'Parts & supplies'),
         ...card.steps(g),

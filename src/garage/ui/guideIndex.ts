@@ -1,7 +1,7 @@
 import { PARTS, PART_ORDER } from '../data/parts';
 import { DIFFICULTY_LABEL, GUIDES, appliesTo, type Guide } from '../data/guides';
 import type { Difficulty } from '../../shared/guides';
-import { getState, setState } from '../store';
+import { getState, select } from '../store';
 import { openGuideIndex as open } from '../../shared/ui/guideIndex';
 import { guideChips } from './guideCard';
 
@@ -20,9 +20,9 @@ export function openGuideIndex(): void {
     zoneOf: (g) => g.parts[0],
     searchWords: (g) => g.parts.map((p) => PARTS[p].label),
     chips: guideChips,
-    onPick: (g) => setState({ selectedPart: g.parts[0], openGuide: g.id }),
-    placeholder: 'Search fixes: oil, fuse, brake light, P0455…',
+    onPick: (g) => select(g.parts[0], g.id),
+    placeholder: 'Search fixes: oil, fuse, flat tire, chain…',
     empty: 'No fixes match. Try a broader word, or switch on all powertrains.',
-    sub: `${GUIDES.length} jobs, all doable in a driveway.`,
+    sub: `${GUIDES.length} jobs for the car, motorcycle and bike, all doable in a driveway.`,
   });
 }
