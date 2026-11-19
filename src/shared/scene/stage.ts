@@ -158,6 +158,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
 
   let rig = cfg.build(cfg.initial);
   scene.add(rig.group);
+  const swapped = (r: R) => cfg.swapTarget?.(r) ?? r.group;
 
   function overviewFit(): View {
     const { pos, target } = rig.overview;
@@ -301,8 +302,13 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
    * The ray runs back from the far end, so it only meets faces turned toward that camera: a
    * one-sided cutaway wall seen from behind doesn't count, but the inside of a closed object's
    * ink hull (which would fill the screen) does. Glass, pick boxes and beacons never block.
+   * It tests the rig at full size: a view can be framed before the first render or mid swap-in.
    */
   function clearance(from: THREE.Vector3, dir: THREE.Vector3, far: number): number {
+    const grow = swapped(rig).scale;
+    const scale = grow.x;
+    grow.setScalar(1);
+    scene.updateMatrixWorld();
     sight.set(new THREE.Vector3().copy(from).addScaledVector(dir, far), new THREE.Vector3().copy(dir).negate());
     sight.far = far;
     const hits = sight.intersectObject(scene, true);
@@ -318,6 +324,8 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
       const mat = (Array.isArray(m.material) ? m.material[0] : m.material) as THREE.Material | undefined;
       if (m.isMesh && mat?.visible && !(mat.transparent && mat.opacity < 0.9) && !o.userData.beacon && shown(o)) nearest = Math.min(nearest, far - distance);
     }
+    grow.setScalar(scale);
+    scene.updateMatrixWorld();
     return nearest;
   }
 
@@ -335,9 +343,12 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
       // until the target sits mid-strip between the floating top controls and the panel, `covered` half-heights above screen center.
       const authored = p.distanceTo(t);
       const back = new THREE.Vector3().subVectors(p, t).normalize();
-      const up = new THREE.Vector3().crossVectors(new THREE.Vector3().crossVectors(back, UP).negate(), back.clone().negate()).normalize();
-      const top = overlayEl ? (overlayEl.getBoundingClientRect().bottom - canvas.getBoundingClientRect().top) / canvas.clientHeight : 0;
-      const covered = (panelEl ? panelEl.offsetHeight / canvas.clientHeight : 0) - top;
+      const side = new THREE.Vector3().crossVectors(back, UP).negate();
+      // Straight down (or up) has no side; three's lookAt then turns screen-up to ∓z.
+      const up = side.lengthSq() < 1e-12 ? new THREE.Vector3(0, 0, -Math.sign(back.y)) : new THREE.Vector3().crossVectors(side, back.clone().negate()).normalize();
+      const h = canvas.clientHeight;
+      const top = overlayEl && h ? (overlayEl.getBoundingClientRect().bottom - canvas.getBoundingClientRect().top) / h : 0;
+      const covered = h ? (panelEl ? panelEl.offsetHeight / h : 0) - top : 0;
       const slide = up.multiplyScalar(-Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * covered);
       // Both moves grow with distance, so the camera sits on one line, target + (back + slide) × distance. Pull back along it
       // to fit the short strip, stopping short of anything in the way (the car beside a motorcycle view).
@@ -390,17 +401,16 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   function swap(s: S): void {
     swapping = true;
     const old = rig;
-    const target = (r: R) => cfg.swapTarget?.(r) ?? r.group;
     tween({
       duration: 220,
       ease: (t) => t * t,
       tag: 'swap-out',
-      update: (k) => target(old).scale.setScalar(Math.max(0.001, lerp(1, 0, k))),
+      update: (k) => swapped(old).scale.setScalar(Math.max(0.001, lerp(1, 0, k))),
       done: () => {
         scene.remove(old.group);
         old.dispose();
         rig = cfg.build(s);
-        target(rig).scale.setScalar(0.001);
+        swapped(rig).scale.setScalar(0.001);
         scene.add(rig.group);
         syncLineResolution();
         applyLids(selected);
@@ -411,7 +421,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
           duration: 560,
           ease: easeOutBack,
           tag: 'swap-in',
-          update: (k) => target(rig).scale.setScalar(Math.max(0.001, k)),
+          update: (k) => swapped(rig).scale.setScalar(Math.max(0.001, k)),
           done: () => {
             swapping = false;
             if (pending) {
