@@ -103,7 +103,8 @@ export function buildEngineBay(c: CarCtx) {
   const radZ = bz1 - 0.035;
   add(rbox(0.9, 0.3, 0.05, 0.01), mapped(0xffffff, radiatorTex(), { shine: 0.3, metal: 0.3 }), group, { at: [0, F + 0.17, radZ] });
   add(rbox(1.0, 0.04, 0.08, 0.012), toon(C.trim, { halftone: 0.5 }), group, { at: [0, F + 0.34, radZ] });
-  add(rbox(0.06, 0.02, 0.04, 0.006), M.chrome(), group, { at: [0, F + 0.35, radZ + 0.01], ink: null });
+  // Sits a hair proud of the bar so its top face never z-fights the bar's, whatever order the two draw in.
+  add(rbox(0.06, 0.02, 0.04, 0.006), M.chrome(), group, { at: [0, F + 0.351, radZ + 0.01], ink: null });
   tube([v(0.22, F + 0.26, radZ - 0.03), v(0.2, F + 0.31, (radZ + bm) / 2 + 0.05), v(0.16, F + 0.24, bm + 0.21)], 0.022, hose(), group, { radial: 10 });
   for (const x of [-0.02, 0.08]) tube([v(x, F + 0.16, bm - 0.2), v(x, F + 0.2, bm - 0.3), v(x + 0.02, F + 0.24, bz0 + 0.005)], 0.017, hose(), group, { radial: 8 });
   return { F, bz0, bz1, bm, tankZ };

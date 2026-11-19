@@ -6,7 +6,7 @@ import { createBeacons, createLids } from '../../shared/scene/rigKit';
 import { moves } from '../../shared/scene/ink';
 import { PARTS, type LidId, type PartId } from '../data/parts';
 
-/** `tag` makes meshes a part's hotspots. Each mesh needs its own material, so a part's glow stays on that part. */
+/** `tag` makes meshes a part's hotspots. Give each its own material: `shareMaterials` keeps a part's glow on that part. */
 export function createParts() {
   const hotspots = new Map<PartId, THREE.Mesh[]>();
 
@@ -48,6 +48,45 @@ export function glowFocus(hotspots: Map<PartId, THREE.Mesh[]>) {
       mat.emissiveIntensity = Math.max(mat.emissiveIntensity, 1);
     }
   };
+}
+
+/** A material's look, for spotting copies: every setting and uniform value, but not its identity. */
+function look(m: THREE.Material): string {
+  const out: unknown[] = [m.type, m.customProgramCacheKey()];
+  for (const [k, v] of Object.entries(m)) {
+    if (k === 'uuid' || k === 'id' || k === 'version' || typeof v === 'function') continue;
+    if (v?.isColor) out.push(k, (v as THREE.Color).getHex());
+    else if (v?.isTexture) out.push(k, (v as THREE.Texture).uuid);
+    else if (typeof v?.toArray === 'function') out.push(k, v.toArray());
+    else out.push(k, v);
+  }
+  return JSON.stringify(out);
+}
+
+/**
+ * Lets meshes whose materials look the same share one, so the garage holds a few dozen materials instead of
+ * hundreds. Materials a part's glow tints share only with ones it tints alike, and paint only with paint, which
+ * is recolored later. Returns each replaced material's stand-in.
+ */
+export function shareMaterials(root: THREE.Object3D, hotspots: Map<PartId, THREE.Mesh[]>, paint: THREE.Material[] = []): Map<THREE.Material, THREE.Material> {
+  // Keyed by material, not mesh: a part's glow also tints any other mesh that was built with its material.
+  const parts = new Map<THREE.Material, string>();
+  for (const [p, ms] of hotspots) for (const m of ms) if (!Array.isArray(m.material)) parts.set(m.material, `${parts.get(m.material) ?? ''}|${p}`);
+  const painted = new Set(paint);
+  const kept = new Map<string, THREE.Material>();
+  const swapped = new Map<THREE.Material, THREE.Material>();
+  root.traverse((o) => {
+    const mesh = o as THREE.Mesh;
+    if (!mesh.isMesh || o.userData.ink || Array.isArray(mesh.material)) return;
+    const m = mesh.material;
+    const key = `${parts.get(m) ?? ''}|${painted.has(m)}|${look(m)}`;
+    const keep = kept.get(key) ?? m;
+    kept.set(key, keep);
+    if (keep === m) return;
+    swapped.set(m, keep);
+    mesh.material = keep;
+  });
+  return swapped;
 }
 
 /** What the garage needs from each vehicle, whatever its parts. The overview is in the vehicle's own frame. */

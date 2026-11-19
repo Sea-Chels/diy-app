@@ -296,6 +296,26 @@ export function outline(mesh: THREE.Mesh, weight: InkWeight = 'thin', wind = 0):
   mesh.add(hull);
 }
 
+function copyShape(dst: THREE.BufferGeometry, src: THREE.BufferGeometry): void {
+  for (const [name, a] of Object.entries(src.attributes)) {
+    const d = dst.getAttribute(name) as THREE.BufferAttribute;
+    (d.array as Float32Array).set(a.array as Float32Array);
+    d.needsUpdate = true;
+  }
+  dst.computeBoundingSphere();
+}
+
+/**
+ * Moves a mesh's vertices, and its ink hull's, to those of `g` (then disposed), reusing their buffers.
+ * `g` must have the same layout, as the same generator with new inputs gives.
+ */
+export function reshape(mesh: THREE.Mesh, g: THREE.BufferGeometry): void {
+  copyShape(mesh.geometry, g);
+  const hull = mesh.children.find((c) => c.userData.ink) as THREE.Mesh | undefined;
+  if (hull) copyShape(hull.geometry, smoothNormals(g));
+  g.dispose();
+}
+
 /** Every live LineMaterial, so the scene can keep their resolution in sync. */
 export const lineMaterials = new Set<LineMaterial>();
 

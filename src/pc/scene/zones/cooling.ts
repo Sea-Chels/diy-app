@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { lerp } from '../../../shared/tween';
-import { outline } from '../../../shared/toon';
+import { outline, reshape } from '../../../shared/toon';
 import { add, mapped } from '../../../shared/scene/kit';
 import { PALETTE } from '../../../shared/theme';
 import { T } from '../layout';
@@ -8,6 +8,14 @@ import { label, stripes, bentPath } from '../kit';
 import type { PcCtx } from '../ctx';
 import type { CaseShell } from '../zones/case';
 import type { Board, Gpu } from '../zones/board';
+
+/** A soft AIO hose from the pump (`from`, raised by `lift` as the cooler lifts away) to the radiator (`to`). */
+interface AioTube {
+  mesh: THREE.Mesh;
+  from: THREE.Vector3;
+  to: THREE.Vector3;
+  lift: THREE.Vector3 | null;
+}
 
 export function buildCooling(c: PcCtx, shell: CaseShell, board: Board, gpu: Gpu) {
   const { dm, H, D, L, cg, rbox, cylX, rgb, coolant, fan, mats, s } = c;
@@ -22,7 +30,7 @@ export function buildCooling(c: PcCtx, shell: CaseShell, board: Board, gpu: Gpu)
   const radY = H - T - 16;
   const radZ0 = s.size === 'itx' ? boardRear : -D / 2 + T + 8;
   const radZ1 = radZ0 + radL;
-  let aioTubes: { mesh: THREE.Mesh; from: THREE.Vector3; to: THREE.Vector3 }[] = [];
+  let aioTubes: AioTube[] = [];
   const loopCpuTubes: THREE.Mesh[] = [];
 
   function radiator(): void {
@@ -69,6 +77,7 @@ export function buildCooling(c: PcCtx, shell: CaseShell, board: Board, gpu: Gpu)
         mesh: m,
         from: new THREE.Vector3(sk.x - 22, sk.y + 33, sk.z + side * 12),
         to: new THREE.Vector3(radX + side * 24, radY - 15, radZ0 + 7),
+        lift: null,
       };
     });
     coolerTop.x = sk.x - 42;
@@ -144,19 +153,20 @@ export function buildLoop(c: PcCtx, shell: CaseShell, board: Board, gpu: Gpu, co
     hot('cooler', ...loopParts);
   }
 
-  function setTube(t: { mesh: THREE.Mesh; from: THREE.Vector3; to: THREE.Vector3 }, lift: THREE.Vector3): void {
+  // Runs every frame of the cooler's lift, so the hose and its ink reshape in place rather than rebuild.
+  function setTube(t: AioTube, lift: THREE.Vector3): void {
+    if (t.lift?.equals(lift)) return;
     const a = t.from.clone().add(lift);
     const b = t.to;
     const curve = new THREE.CatmullRomCurve3([a, a.clone().add(new THREE.Vector3(-8, 34, 0)), new THREE.Vector3(lerp(a.x, b.x, 0.6), b.y - 40, lerp(a.z, b.z, 0.5)), b.clone().add(new THREE.Vector3(0, -18, 0)), b]);
-    const old = t.mesh.geometry;
-    t.mesh.geometry = new THREE.TubeGeometry(curve, 48, 6, 12);
-    old.dispose();
-    const hull = t.mesh.children.find((c) => c.userData.ink) as THREE.Mesh | undefined;
-    if (hull) {
-      t.mesh.remove(hull);
-      hull.geometry.dispose();
+    const g = new THREE.TubeGeometry(curve, 48, 6, 12);
+    if (t.lift) reshape(t.mesh, g);
+    else {
+      t.mesh.geometry.dispose();
+      t.mesh.geometry = g;
+      outline(t.mesh, 'thin');
     }
-    outline(t.mesh, 'thin');
+    t.lift = lift.clone();
   }
   aioTubes.forEach((t) => setTube(t, new THREE.Vector3()));
   return { setTube };

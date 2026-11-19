@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { toon } from '../../shared/toon';
 import { add, type MeshOpts } from '../../shared/scene/kit';
 import type { Setup } from '../data/setup';
@@ -84,21 +85,16 @@ export function createCtx(s: Setup) {
       fg.translate(0, 0, -12.5);
       add(fg, mats.fanFrame, g);
     }
+    // Hub and blades as one mesh (one draw per material, one ink hull), which spins as the rotor.
     const rotor = new THREE.Group();
     g.add(rotor);
     const hub = new THREE.CylinderGeometry(size * 0.16, size * 0.16, 16, 28);
     hub.rotateX(Math.PI / 2);
-    add(hub, mats.hub, rotor);
     const n = 7;
     const bladeGeo = new RoundedBoxGeometry(size * 0.3, size * 0.15, 1.8, 1, 0.8);
-    for (let i = 0; i < n; i++) {
-      const pivot = new THREE.Group();
-      pivot.rotation.z = (i / n) * Math.PI * 2;
-      rotor.add(pivot);
-      const b = add(bladeGeo, mats.blade, pivot, { at: [size * 0.31, 0, 0] });
-      b.rotation.x = 0.5;
-      b.rotation.z = 0.18;
-    }
+    const pitch = new THREE.Matrix4().compose(new THREE.Vector3(size * 0.31, 0, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0.5, 0, 0.18)), new THREE.Vector3(1, 1, 1));
+    const blades = Array.from({ length: n }, (_, i) => bladeGeo.clone().applyMatrix4(new THREE.Matrix4().makeRotationZ((i / n) * Math.PI * 2).multiply(pitch)));
+    add(mergeGeometries([hub.toNonIndexed(), mergeGeometries(blades)], true), [mats.hub, mats.blade], rotor);
     if (o.ring) {
       const ring = new THREE.Mesh(new THREE.TorusGeometry(size * 0.47, 2.4, 8, 64), rgb(o.phase ?? 0));
       ring.position.z = 12.6;

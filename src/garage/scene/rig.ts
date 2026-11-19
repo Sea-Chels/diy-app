@@ -11,7 +11,7 @@ import type { View } from '../../shared/scene/stage';
 import type { CarPart } from '../data/parts';
 import type { BodyKind } from '../data/paint';
 import { createCtx } from './ctx';
-import { createPartBeacons, createPivotLids, type RideRig } from './parts3d';
+import { createPartBeacons, createPivotLids, shareMaterials, type RideRig } from './parts3d';
 import { viewFrom } from '../../shared/scene/rigKit';
 import { buildBody } from './zones/body';
 import { buildHood } from './zones/hood';
@@ -103,6 +103,9 @@ export function buildCar(kind: BodyKind): CarRig {
   };
   // Takes in the motorcycle and bike parked off the car's left, so the garage opens on all three.
   const overview: View = S.suv ? { pos: [0.9, 3.2, 6.6], target: [-1.9, 0.6, 0.3] } : { pos: [0.9, 3.0, 6.4], target: [-1.9, 0.5, 0.3] };
+
+  const stand = shareMaterials(group, hotspots, paintMats);
+  paintMats.splice(0, paintMats.length, ...new Set(paintMats.map((m) => (stand.get(m) ?? m) as THREE.MeshToonMaterial)));
 
   let current: Paint | null = null;
   function paintTo(p: Paint, instant: boolean): void {

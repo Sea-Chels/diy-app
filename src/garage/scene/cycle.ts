@@ -3,7 +3,7 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import type { V3 } from '../../shared/scene/kit';
 import type { View } from '../../shared/scene/stage';
 import type { LidId, PartId } from '../data/parts';
-import { createPartBeacons, createPivotLids, createParts, viewInParent, viewsInParent, type LidSpec, type RideRig } from './parts3d';
+import { createPartBeacons, createPivotLids, createParts, shareMaterials, viewInParent, viewsInParent, type LidSpec, type RideRig } from './parts3d';
 
 /**
  * Geometry the motorcycle and bike share. Both are built facing +z with the wheels on the
@@ -144,6 +144,7 @@ export function createCycle(lean: number) {
     spec: { lids?: Partial<Record<LidId, LidSpec>>; dots: Record<P, V3>; views: Record<P, View>; overview: View },
   ): RideRig<P> => {
     const { setLid, canPick } = createPivotLids(spec.lids ?? {}, key);
+    shareMaterials(group, hotspots);
     const { beacons, beaconAt } = createPartBeacons(body, canPick);
     for (const p of Object.keys(spec.dots) as P[]) beaconAt(p, spec.dots[p]);
     return {
