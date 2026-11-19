@@ -1,6 +1,9 @@
 /* Shared by the 3D workshop pages, on top of base.css. */
 @import './media.css';
 .topbar .spacer { flex: 1; }
+/* The model's dots for keyboards: a row over the quick fixes that shows while focus is in it. */
+.spot-nav { bottom: var(--overlay-row); }
+.spot-nav:not(:focus-within) { opacity: 0; pointer-events: none; }
 .scene-menu { position: absolute; top: var(--overlay-gap); left: 16px; z-index: var(--z-overlay); }
 .scene-menu.open .paint-card { display: flex; }
 .paint-card .seg button:disabled { opacity: 0.35; cursor: not-allowed; }

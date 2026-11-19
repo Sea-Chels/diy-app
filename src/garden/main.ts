@@ -18,6 +18,8 @@ import { wireWorkshop } from '../shared/workshop';
 
 hydrateIcons();
 
+const ALL = Object.keys(AREAS) as AreaId[];
+
 const canvas = document.getElementById('scene') as HTMLCanvasElement;
 const scene = sceneOr(canvas, () => createScene(canvas, getState().setup));
 mountGardenMenu(document.getElementById('garden-menu')!);
@@ -40,6 +42,7 @@ wireWorkshop({
   book: BOOK,
   label: (area) => AREAS[area].label,
   isSpot: (id): id is AreaId => Object.hasOwn(AREAS, id),
+  spots: { label: 'Areas', ids: () => ALL },
   quick: { featured: () => FEATURED, more: 'All guides…', openIndex: openGuideIndex },
   hash: (id) => {
     const plant = id.startsWith('plant=') ? id.slice(6) : '';

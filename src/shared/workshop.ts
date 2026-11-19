@@ -1,5 +1,7 @@
 import type { GuideBase, GuideBook } from './guides';
 import { h, clear } from './dom';
+import { keepFocus } from './focus';
+import { press } from './ui/choices';
 import type { Selection, Store } from './store';
 
 export interface WorkshopScene<S extends string> {
@@ -16,6 +18,11 @@ export interface WorkshopOpts<S extends string, G extends GuideBase<S>, St exten
   book: GuideBook<S, G>;
   label: (spot: S) => string;
   isSpot: (id: string) => id is S;
+  /** The spots a keyboard can pick from, since the model can't take focus. */
+  spots: {
+    label: string;
+    ids: (s: St) => readonly S[];
+  };
   quick: {
     /** The quick-fix bar's guides for the current state. */
     featured: (s: St) => G[];
@@ -55,7 +62,23 @@ export function wireWorkshop<S extends string, G extends GuideBase<S>, St extend
     quick.append(h('button', { class: 'quick-chip more', onClick: o.quick.openIndex }, o.quick.more));
   }
 
+  const spotNav = h('nav', { class: 'quick-fixes spot-nav', 'aria-label': o.spots.label });
+  quick.before(spotNav);
+  let listed = '';
+  function syncSpots(s: St): void {
+    const ids = o.spots.ids(s);
+    if (ids.join() !== listed) {
+      listed = ids.join();
+      keepFocus(spotNav, () => {
+        clear(spotNav);
+        for (const id of ids) spotNav.append(h('button', { class: 'quick-chip', 'data-key': id, onClick: () => select(id === store.getState().selected ? null : id) }, o.label(id)));
+      });
+    }
+    for (const b of spotNav.querySelectorAll<HTMLButtonElement>('button')) press(b, b.dataset.key === s.selected);
+  }
+
   store.subscribe((s, prev) => {
+    syncSpots(s);
     if (s.selected !== prev.selected || o.refocus?.(s, prev)) scene.focus(s.selected);
     if (s.selected !== prev.selected || s.openGuide !== prev.openGuide) {
       const hash = s.openGuide ?? s.selected;
@@ -64,6 +87,7 @@ export function wireWorkshop<S extends string, G extends GuideBase<S>, St extend
     if (o.quick.refresh?.(s, prev)) renderQuickFixes();
   });
   renderQuickFixes();
+  syncSpots(store.getState());
 
   function applyHash(): void {
     const id = location.hash.slice(1);

@@ -19,6 +19,8 @@ import { wireWorkshop } from '../shared/workshop';
 
 hydrateIcons();
 
+const ALL_PARTS = Object.keys(PARTS) as PartId[];
+
 function appearance(): Appearance {
   const { appearance: a, vehicle: v, ride } = getState();
   const f = FINISHES[a.finish];
@@ -46,6 +48,7 @@ wireWorkshop({
   book: BOOK,
   label: (part) => PARTS[part].label,
   isSpot: (id): id is PartId => Object.hasOwn(PARTS, id),
+  spots: { label: 'Parts', ids: (s) => ALL_PARTS.filter((p) => rideOf(p) === s.ride) },
   quick: {
     featured: (s) => BOOK.all.filter((g) => g.featured && rideOf(g.spots[0]) === s.ride && appliesTo(g, s.vehicle.powertrain)),
     more: 'All fixes…',

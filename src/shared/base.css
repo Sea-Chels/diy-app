@@ -233,7 +233,7 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
 .filter-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 .filter-row .spacer { flex: 1; }
 .chip-btn { background: transparent; border: 1px solid var(--line); border-radius: var(--pill); padding: 5px 11px; font-size: 0.82rem; color: var(--muted); }
-.chip-btn.active { background: var(--accent); color: var(--on-accent); border-color: transparent; font-weight: 600; }
+:is(.chip-btn, .quick-chip).active { background: var(--accent); color: var(--on-accent); border-color: transparent; font-weight: 600; }
 .glossary-results { display: flex; flex-direction: column; gap: 6px; }
 .glossary-item {
   background: rgb(var(--hi) / 0.025); border: 1px solid var(--line); border-left: 3px solid var(--diff-2); border-radius: var(--r-lg);

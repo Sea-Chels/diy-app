@@ -17,6 +17,8 @@ import { wireWorkshop } from '../shared/workshop';
 
 hydrateIcons();
 
+const ALL = Object.keys(PARTS) as PartId[];
+
 const canvas = document.getElementById('scene') as HTMLCanvasElement;
 const scene = sceneOr(canvas, () => createScene(canvas, getState().setup, specsFor(getState().build)));
 mountRigMenu(document.getElementById('rig-menu')!);
@@ -37,6 +39,7 @@ wireWorkshop({
   book: BOOK,
   label: (part) => PARTS[part].label,
   isSpot: (id): id is PartId => Object.hasOwn(PARTS, id),
+  spots: { label: 'Parts', ids: () => ALL },
   quick: {
     featured: (s) => BOOK.all.filter((g) => g.featured && appliesTo(g, s.setup.cooling)),
     more: 'All guides…',
