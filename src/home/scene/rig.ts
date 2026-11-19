@@ -24,6 +24,7 @@ import { buildLeftWall } from './zones/leftWall';
 import { buildLiving, buildLights, buildPaintCorner, buildFloorCutaway } from './zones/living';
 import { buildExterior } from './zones/exterior';
 import { addCreases } from './creases';
+import { findMovers, mergeInk, moves } from '../../shared/scene/ink';
 import { K, X0, Z0, WH } from './room';
 
 export type Rig = StageRig<AreaId, LidId>;
@@ -43,9 +44,12 @@ export function buildRig(s: Setup): Rig {
   buildPaintCorner(c);
   buildFloorCutaway(c);
   const { XO, ZO, OV, porchBulb } = buildExterior(c);
-  addCreases(c, fanBlades);
+  moves(fanBlades, handleArm, flapper, tripped.children[1], ...tankWater, ...knobs, ...lightSwitch.map((p) => (p.userData.device as THREE.Group).children[0]));
+  const movers = findMovers(root, Object.values(lidHooks));
+  addCreases(c, movers);
 
   const glow = glowMeshes(areas);
+  mergeInk(root, movers, glow);
 
   const { beacons, beaconAt } = createBeacons<AreaId>(root, { radius: 0.09, segments: [16, 12], onTop: true, picks });
   beaconAt('counters', [1.15, 1.15, Z0 + 0.45]);

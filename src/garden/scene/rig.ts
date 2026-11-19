@@ -24,6 +24,7 @@ import { buildHerbSpiral, buildPollinators } from './zones/herbs';
 import { buildFruit, buildArbor } from './zones/fruit';
 import { buildPottingBench } from './zones/bench';
 import { buildWildlife } from './zones/wildlife';
+import { findMovers, mergeInk, moves } from '../../shared/scene/ink';
 import { K, LOW_SPHERE } from './geometry';
 
 export type Rig = StageRig<AreaId, LidId>;
@@ -49,6 +50,8 @@ export function buildRig(s: Setup): Rig {
   const { bugs } = buildWildlife(c);
 
   const glow = glowMeshes(areas);
+  moves(...toolSwing, ...steam, ...bugs.flatMap((b) => [b.g, ...b.wings]));
+  mergeInk(root, findMovers(root, Object.values(lidHooks)), glow);
 
   const { beacons, beaconAt } = createBeacons<AreaId>(root, { radius: 0.11, segments: [16, 12], onTop: true, picks });
   const pos = (id: AreaId) => areas.get(id)!.position;

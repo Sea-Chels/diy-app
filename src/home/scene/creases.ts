@@ -6,9 +6,10 @@ import { INK, lineMaterials } from '../../shared/toon';
 import type { V3 } from '../../shared/scene/kit';
 import { K, X0, X1, Z0, Z1, T, WH } from './room';
 import type { HomeCtx } from './ctx';
+import { rides } from '../../shared/scene/ink';
 
-export function addCreases(c: HomeCtx, fanBlades: THREE.Group) {
-  const { lidHooks, root } = c;
+export function addCreases(c: HomeCtx, movers: Set<THREE.Object3D>) {
+  const { root } = c;
   // Ink hulls only trace silhouettes; these add the hard edges (wall tops, cabinet corners, rims) in the same ink.
   {
     const mat = new LineMaterial({ color: INK, linewidth: 1.5, worldUnits: false });
@@ -39,21 +40,6 @@ export function addCreases(c: HomeCtx, fanBlades: THREE.Group) {
       cache.set(g, out);
       return out;
     };
-    // Anything a lid or the fan moves keeps its own lines; the rest merge into one draw call.
-    const moving = new Set<THREE.Object3D>();
-    {
-      root.updateMatrixWorld(true);
-      const snap = new Map<THREE.Object3D, THREE.Matrix4>();
-      root.traverse((o) => snap.set(o, o.matrixWorld.clone()));
-      for (const hook of Object.values(lidHooks)) hook?.(1);
-      root.updateMatrixWorld(true);
-      root.traverse((o) => {
-        if (!snap.get(o)!.equals(o.matrixWorld)) moving.add(o);
-      });
-      for (const hook of Object.values(lidHooks)) hook?.(0);
-      root.updateMatrixWorld(true);
-      fanBlades.traverse((o) => moving.add(o));
-    }
     const targets: THREE.Mesh[] = [];
     root.traverse((o) => {
       const m = o as THREE.Mesh;
@@ -93,7 +79,8 @@ export function addCreases(c: HomeCtx, fanBlades: THREE.Group) {
     for (const m of targets) {
       const arr = edgesFor(m.geometry, Boolean(m.userData.crease));
       if (!arr) continue;
-      if (moving.has(m)) {
+      // Anything that moves keeps its own lines; the rest merge into one draw call.
+      if (rides(m, movers, root)) {
         if (!own.has(arr)) own.set(arr, new LineSegmentsGeometry().setPositions(arr));
         ink(own.get(arr)!, m);
         continue;

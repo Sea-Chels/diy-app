@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
 import { tween, easeInOutCubic, lerp } from '../../../shared/tween';
 import { add, mapped } from '../../../shared/scene/kit';
+import { moves } from '../../../shared/scene/ink';
 import { C, M, rbox } from '../kit';
 import { mouthTex, plateMat } from '../textures';
 import type { CarCtx } from '../ctx';
@@ -45,6 +46,7 @@ export function buildFront(c: CarCtx) {
     pivot.rotation.x = open;
     group.add(pivot);
     pivots.push(pivot);
+    moves(pivot);
     heads.push(add(rbox(lidW, 0.016, lidL + 0.01, 0.006), paint(), pivot, { at: [0, 0, lidL / 2] }));
     const upright = new THREE.Group();
     upright.rotation.x = -open;

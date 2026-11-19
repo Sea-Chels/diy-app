@@ -3,6 +3,7 @@ import { tween } from '../../../shared/tween';
 import { M, rbox } from '../kit';
 import type { CarCtx } from '../ctx';
 import { add } from '../../../shared/scene/kit';
+import { moves } from '../../../shared/scene/ink';
 
 export function buildWipers(c: CarCtx) {
   const { S, kind, group, tag, roofLine } = c;
@@ -25,6 +26,7 @@ export function buildWipers(c: CarCtx) {
     const hub = add(new THREE.CylinderGeometry(0.022, 0.022, 0.03, 12), M.trim(), arm, { at: [0, 0.006, 0] });
     wipers.push(hub);
     wipeArms.push(arm);
+    moves(arm);
   }
   tag('wiper', ...wipers);
   const wipe = () =>

@@ -253,7 +253,7 @@ function hullSet(weight: InkWeight, wind: number): HullSet {
 }
 
 export function setHighlight(mesh: THREE.Mesh, level: 'none' | 'hover' | 'selected'): void {
-  const hull = mesh.children.find((c) => c.userData.ink) as THREE.Mesh | undefined;
+  const hull = (mesh.userData.hull ?? mesh.children.find((c) => c.userData.ink)) as THREE.Mesh | undefined;
   if (!hull) return;
   const set = hull.userData.hl as HullSet;
   hull.material = level === 'none' ? set.base : set[level];

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { disposeTree } from '../../shared/toon';
+import { findMovers, mergeInk } from '../../shared/scene/ink';
 import type { StageRig, View } from '../../shared/scene/stage';
 import { rideOf, type LidId, type PartId } from '../data/parts';
 import type { BodyKind } from '../data/paint';
@@ -46,6 +47,7 @@ export function buildGarage(kind: BodyKind, ride: RideId): GarageRig {
     overviews[id] = viewInParent(r.overview, r.group);
     r.hotspots.forEach((m, p) => hotspots.set(p, m));
     r.beacons.forEach((b, p) => beacons.set(p, b));
+    mergeInk(r.group, findMovers(r.group, []), r.hotspots);
   }
   const views: Record<PartId, View> = {
     ...viewsInParent(car.views, car.group),

@@ -12,6 +12,7 @@ import { idleClock, reducedMotion } from '../../shared/motion';
 import type { V3 } from '../../shared/scene/kit';
 import type { StageRig, View } from '../../shared/scene/stage';
 import { createBeacons, createLids, viewFrom } from '../../shared/scene/rigKit';
+import { findMovers, mergeInk, moves } from '../../shared/scene/ink';
 import type { LidId, PartId } from '../data/parts';
 import type { Setup } from '../data/setup';
 import { createCtx } from './ctx';
@@ -54,7 +55,7 @@ export function buildRig(s: Setup): Rig {
   const desk = buildDesk(c);
   const { mon, monX, monZ, screen } = desk;
 
-  const { setLid } = createLids<LidId>({
+  const lidPoses: Record<LidId, (k: number) => void> = {
     glass: (k) => (glassPivot.rotation.y = -1.3 * k),
     cooler: (k) => {
       coolerG.position.set(-150 * k, 34 * Math.sin(k * Math.PI * 0.5), 0);
@@ -66,7 +67,10 @@ export function buildRig(s: Setup): Rig {
       sinkG.rotation.y = 0.25 * k;
     },
     shroud: (k) => (shroudG.rotation.z = 1.45 * k),
-  }, { tag: 'pc-lid', ms: (lid) => (lid === 'glass' ? 850 : 750) });
+  };
+  const { setLid } = createLids<LidId>(lidPoses, { tag: 'pc-lid', ms: (lid) => (lid === 'glass' ? 850 : 750) });
+  moves(...rotors.map((r) => r.obj), gpuG, cmosG, usb, ...ramSticks, ...aioTubes.map((t) => t.mesh));
+  mergeInk(root, findMovers(root, Object.values(lidPoses)), hotspots);
 
   const toRoot = (v: THREE.Vector3) => v.clone().add(new THREE.Vector3(0, FEET, 0));
   const { beacons, beaconAt: dot } = createBeacons<PartId>(root, { radius: 9, segments: [16, 16], onTop: true });

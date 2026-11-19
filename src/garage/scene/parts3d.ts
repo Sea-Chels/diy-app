@@ -3,6 +3,7 @@ import type { V3 } from '../../shared/scene/kit';
 import type { View } from '../../shared/scene/stage';
 import { hex } from '../../shared/theme';
 import { createBeacons, createLids } from '../../shared/scene/rigKit';
+import { moves } from '../../shared/scene/ink';
 import { PARTS, type LidId, type PartId } from '../data/parts';
 
 /** `tag` makes meshes a part's hotspots. Each mesh needs its own material, so a part's glow stays on that part. */
@@ -89,7 +90,10 @@ export interface LidSpec {
 /** Hinged panels that swing open for the parts behind them. `key` keeps two vehicles' tweens apart. */
 export function createPivotLids(lids: Partial<Record<LidId, LidSpec>>, key: string) {
   const apply: Partial<Record<LidId, (k: number) => void>> = {};
-  for (const [id, { pivot, axis, open }] of Object.entries(lids) as [LidId, LidSpec][]) apply[id] = (k) => (pivot.rotation[axis] = open * k);
+  for (const [id, { pivot, axis, open }] of Object.entries(lids) as [LidId, LidSpec][]) {
+    moves(pivot);
+    apply[id] = (k) => (pivot.rotation[axis] = open * k);
+  }
   const { setLid, isOpen } = createLids<LidId>(apply, { tag: `lid:${key}`, ms: 750 });
   const canPick = (part: PartId) => {
     const { behind, seeThrough } = PARTS[part];
