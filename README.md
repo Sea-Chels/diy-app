@@ -130,7 +130,8 @@ src/
     media.css, media.ts  the breakpoints, for stylesheets and scripts alike
     workshop.css         styles shared by the workshop pages
     workshop.html        the workshop page shell; each page's title, buttons and labels are in PAGES in vite.config.ts
-    workshop.ts          wiring every workshop page shares: selection, hover hints, URL hash, quick-fix bar
+    workshop.ts          mounts a workshop page from its definition (each main.ts): scene, menus, panel, guide index,
+                         and the wiring every page shares: selection, hover hints, URL hash, quick-fix bar
     store.ts             small state store that saves to localStorage
     guides.ts            fields every workshop's guides share, and the guide book (lookups by id and spot)
     focus.ts, motion.ts  focus handling and the reduced-motion setting
@@ -139,9 +140,14 @@ src/
     dom.ts, icons.ts     the h() DOM helper and Lucide icons
     modal.ts, youtube.ts modals and video search links
     loader.*             the loading screen each page shows while its scene builds
-    scene/stage.ts       renderer, lights, picking, highlights and camera flights for a workshop
+    scene/stage.ts       a workshop's stage: puts the pieces below together around its rig
+    scene/lights.ts, loop.ts, picking.ts, camera.ts, swap.ts
+                         lights and ground, on-demand render loop, picking and highlights, camera flights, rig swaps
+    scene/framing.ts     how a spot's view is framed clear of the side panel
+    scene/presets.ts     stage settings shared between workshops
+    scene/sceneTags.ts   the typed tags scene code keeps in userData
     scene/outline.ts     the silhouette highlight pass
-    scene/kit.ts         instancing, leaf shapes, canvas textures, the add() and box() mesh helpers
+    scene/kit.ts         leaf shapes, canvas textures, the add() and box() mesh helpers
     scene/rigKit.ts      clickable spots, beacons, lids and camera views every rig uses
     scene/materials.ts   material recipes shared between workshops
     ui/guidePanel.ts     the side panel for a selected part or area
@@ -161,7 +167,7 @@ src/
     scene/rig.ts         builds the PC from scene/zones/ (case, board, cooling, PSU, desk), then beacons, views and animation
     scene/layout.ts      case sizes and motherboard layouts
     scene/screen.ts      what the monitor shows (POST, BIOS, installer, desktop)
-    ui/*                 side panel, guide index, rig menu, parts picker
+    ui/*                 guide cards, rig menu, parts picker
   garage/
     data/parts.ts        clickable parts (PartId) and which lid each sits behind
     data/guides.ts       guide types and lookups; the guides themselves are in data/guides/
@@ -176,7 +182,7 @@ src/
     scene/parts3d.ts     hotspots, beacons, lids and views shared by all three
     scene/specs.ts       sedan and SUV dimensions and profile curves
     scene/loft.ts        lofts body panels from profile curves
-    ui/*                 side panel, guide index, paint menu, car picker, vehicle switch
+    ui/*                 guide cards, paint menu, car picker, vehicle switch
   garden/
     data/areas.ts        clickable areas (AreaId) and what opens for each
     data/guides.ts       guide types and lookups; the guides themselves are in data/guides/
@@ -186,7 +192,8 @@ src/
     scene/scene.ts       stage settings
     scene/rig.ts         builds the garden from scene/zones/ (beds, compost, shed, water, herbs, …)
     scene/plants/        the plant builders (tomato, corn, pawpaw, …)
-    ui/*                 side panel, guide index, plant guide, bed planner
+    scene/batches.ts     instance batches: one draw call per leaf, petal or berry kind
+    ui/*                 guide cards, plant guide, bed planner
   home/
     data/areas.ts        clickable areas (AreaId) and what opens for each
     data/guides.ts       guide types and lookups; the guides themselves are in data/guides/
@@ -195,7 +202,7 @@ src/
     scene/scene.ts       stage settings
     scene/rig.ts         builds the room from scene/zones/ (kitchen, bathroom, left wall, living, outside)
     scene/creases.ts     the ink crease lines on hard edges
-    ui/*                 side panel, guide index, home menu, toolbox, calculators
+    ui/*                 guide cards, home menu, toolbox, calculators
 e2e/                     Playwright smoke tests
 ```
 
