@@ -39,6 +39,7 @@ export function createScene(canvas: HTMLCanvasElement, initial: Setup, initialSp
     setSpecs(sp: Specs): void {
       specs = sp;
       stage.rig().setSpecs(sp);
+      stage.invalidate();
     },
   };
 }

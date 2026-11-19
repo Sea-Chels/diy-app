@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { tween, updateTweens, cancelTweens, easeInOutCubic, easeOutBack, lerp } from '../tween';
-import { reducedMotion } from '../motion';
+import { tween, onTweenStart, updateTweens, cancelTweens, easeInOutCubic, easeOutBack, lerp } from '../tween';
+import { onReducedMotionChange, reducedMotion } from '../motion';
 import { media } from '../media';
 import { lineMaterials, setHighlight, shared } from '../toon';
 import { hex, LIGHT } from '../theme';
@@ -10,6 +10,8 @@ import type { V3 } from './kit';
 import { MAT } from './materials';
 
 const UP = new THREE.Vector3(0, 1, 0);
+/** The longest step the animation clock takes in one frame, in seconds: time spent idle or in a background tab counts as one short step, so whatever starts next starts on time. */
+const MAX_STEP = 0.1;
 /** World units a pulled-back camera keeps from the surface it backed up to. */
 const CLEAR_MARGIN = 0.15;
 
@@ -39,7 +41,8 @@ export interface StageRig<Id extends string, Lid extends string> {
   canPick?(id: Id): boolean;
   /** Play an area's small animation, if it has one. */
   poke(id: Id): void;
-  update(t: number): void;
+  /** Advances ambient animation to `t` seconds. True while something is still moving, so the stage keeps drawing frames. */
+  update(t: number): boolean;
   dispose(): void;
 }
 
@@ -89,6 +92,8 @@ export interface Stage<S, Id extends string, R> {
   onHover(cb: (id: Id | null) => void): void;
   setSetup(s: S): void;
   rig(): R;
+  /** Draw a fresh frame after changing the rig from outside the stage. */
+  invalidate(): void;
 }
 
 const shown = (o: THREE.Object3D | null): boolean => {
@@ -156,6 +161,16 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   ring.position.set(g.center[0], g.ringY, g.center[2]);
   scene.add(ring);
 
+  // Frames are drawn on demand: whatever changes the picture asks for one, and the frame asks for the next while anything still moves.
+  let queued = false;
+  function invalidate(): void {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(frame);
+  }
+  onTweenStart(invalidate);
+  onReducedMotionChange(invalidate);
+
   let rig = cfg.build(cfg.initial);
   scene.add(rig.group);
   const swapped = (r: R) => cfg.swapTarget?.(r) ?? r.group;
@@ -190,6 +205,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     }
   }
   function refreshGlow(): void {
+    invalidate();
     for (const id of rig.glow.keys()) setGlow(id, 'none');
     if (hovered && hovered !== selected) setGlow(hovered, 'hover');
     if (selected) setGlow(selected, 'selected');
@@ -240,7 +256,10 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     if (moved > 6) return;
     const hit = pick(e);
     // Tapping the selected area again lets go of it (its model can fill a phone screen); its beacon plays its animation instead.
-    if (hit?.id === selected && hit?.beacon) return rig.poke(hit.id);
+    if (hit?.id === selected && hit?.beacon) {
+      rig.poke(hit.id);
+      return invalidate();
+    }
     const id = hit && hit.id !== selected ? hit.id : null;
     selectCbs.forEach((cb) => cb(id));
   });
@@ -265,6 +284,11 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   });
 
   let idleTimer: number | undefined;
+  const resumeSpin = () => {
+    controls.autoRotate = !reducedMotion();
+    invalidate();
+  };
+  controls.addEventListener('change', invalidate);
   controls.addEventListener('start', () => {
     controls.autoRotate = false;
     cancelTweens('camera');
@@ -273,7 +297,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   controls.addEventListener('end', () => {
     window.clearTimeout(idleTimer);
     idleTimer = window.setTimeout(() => {
-      if (!selected) controls.autoRotate = !reducedMotion();
+      if (!selected) resumeSpin();
     }, 9000);
   });
 
@@ -376,7 +400,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
       return;
     }
     flyTo(overviewFit());
-    idleTimer = window.setTimeout(() => (controls.autoRotate = !reducedMotion()), 4000);
+    idleTimer = window.setTimeout(resumeSpin, 4000);
   }
 
   function applyLids(id: Id | null): void {
@@ -435,6 +459,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   // A change that keeps the current rig applies at once, even mid-swap, so a camera move that follows sees it.
   function setSetup(s: S): void {
     latest = s;
+    invalidate();
     if (cfg.rigKey(s) === rig.key) cfg.restyle?.(rig, s);
     else if (!swapping) swap();
   }
@@ -456,6 +481,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     shared.uDotSize.value = 5.5 * pr;
     outline?.setSize(w, h, pr);
     syncLineResolution();
+    invalidate();
   }
   // Watch the container, not the window: the page around it can still be settling (a top bar filling in) after the first measure.
   new ResizeObserver(resize).observe(canvas.parentElement ?? canvas);
@@ -467,18 +493,23 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   const keyDir = new THREE.Vector3();
   const tmpV = new THREE.Vector3();
   let timer: THREE.Timer | null = null;
-  renderer.setAnimationLoop(() => {
+  let skipped = 0;
+  function frame(): void {
+    queued = false;
     // Started on the first frame, as THREE.Clock did, so animations begin at t = 0 however long the build took.
     timer ??= new THREE.Timer();
-    const t = timer.update().getElapsed();
-    updateTweens(performance.now());
-    rig.update(t);
-    const pulse = reducedMotion() ? 1 : 1 + Math.sin(t * cfg.beaconPulse.speed) * cfg.beaconPulse.amp;
+    skipped += Math.max(0, timer.update().getDelta() - MAX_STEP);
+    const t = timer.getElapsed() - skipped;
+    let moving = updateTweens(performance.now());
+    if (rig.update(t)) moving = true;
+    const still = reducedMotion() || !cfg.beaconPulse.amp;
+    const pulse = still ? 1 : 1 + Math.sin(t * cfg.beaconPulse.speed) * cfg.beaconPulse.amp;
     const bs = cfg.beaconScale;
     rig.beacons.forEach((b, id) => {
       // Beacons draw without depth testing, so ones on the far side of an outer wall have to hide themselves.
       const seen = b.userData.seen as ((cam: THREE.Vector3) => boolean) | undefined;
       b.visible = id !== selected && (!seen || seen(camera.position));
+      if (b.visible && !still) moving = true;
       if (!bs) {
         b.scale.setScalar(pulse);
         return;
@@ -493,7 +524,9 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     shared.uUpView.value.set(0, 1, 0).transformDirection(camera.matrixWorldInverse);
     renderer.render(scene, camera);
     if (outline && (hovered || selected)) outline.render(scene, camera);
-  });
+    if (moving) invalidate();
+  }
+  invalidate();
   if (import.meta.env.DEV) (window as unknown as Record<string, unknown>)[`__${cfg.debugName}`] = { renderer, camera, controls, scene };
 
   return {
@@ -502,5 +535,6 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     onHover: (cb) => hoverCbs.push(cb),
     setSetup,
     rig: () => rig,
+    invalidate,
   };
 }

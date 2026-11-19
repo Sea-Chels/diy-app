@@ -71,7 +71,7 @@ export function buildGarage(kind: BodyKind, ride: RideId): GarageRig {
     focus: glowFocus(hotspots),
     canPick: (p) => rides[rideOf(p)].canPick(p),
     poke: (p) => rides[rideOf(p)].poke(p),
-    update: () => {},
+    update: () => false,
     dispose: () => disposeTree(group),
   };
 }

@@ -267,6 +267,7 @@ export function buildRig(s: Setup): Rig {
       glow.intensity = on ? 1.2 * power : 0;
       for (const m of coolantMats) m.emissiveIntensity = 0.12 + 0.3 * power;
       ledMat.emissiveIntensity = power;
+      return !reducedMotion() || boot !== null;
     },
     dispose() {
       disposeTree(root);

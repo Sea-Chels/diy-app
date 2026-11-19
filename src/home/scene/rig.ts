@@ -98,6 +98,8 @@ export function buildRig(s: Setup): Rig {
   const dropMat = new THREE.MeshBasicMaterial({ color: hex('water') });
   const dropGeo = new THREE.SphereGeometry(0.008, 8, 6);
   let nextDrip = 1.5;
+  let pokedDrips = 0;
+  const dripsDue: number[] = [];
   let spin = 1.6;
   let lightOn = true;
   let flushAt = -10;
@@ -130,7 +132,7 @@ export function buildRig(s: Setup): Rig {
     overview,
     setLid,
     poke(id) {
-      if (id === 'sink') for (let i = 0; i < 5; i++) setTimeout(drip, i * 160);
+      if (id === 'sink') pokedDrips = 5;
       else if (id === 'lights') {
         if (s.ceiling === 'fan') spin = 9;
         else setLight(!lightOn);
@@ -155,6 +157,12 @@ export function buildRig(s: Setup): Rig {
       if (it > nextDrip) {
         drip();
         nextDrip = it + 2.4;
+      }
+      for (; pokedDrips; pokedDrips--) dripsDue.push(t + (5 - pokedDrips) * 0.16);
+      for (let i = dripsDue.length - 1; i >= 0; i--) {
+        if (t < dripsDue[i]) continue;
+        dripsDue.splice(i, 1);
+        drip();
       }
       for (let i = drops.length - 1; i >= 0; i--) {
         const d = drops[i];
@@ -187,6 +195,7 @@ export function buildRig(s: Setup): Rig {
       for (const b of burners) b.material = hot ? burnerHot : burnerCold;
       const jg = t - jiggleAt;
       knobs.forEach((k) => (k.rotation.x = jg < 0.8 ? Math.sin(jg * 30) * 0.3 * (1 - jg / 0.8) : 0));
+      return !reducedMotion() || drops.length > 0 || dripsDue.length > 0 || fl < 6 || hot || jg < 0.8;
     },
     dispose() {
       disposeTree(root);

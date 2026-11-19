@@ -7,7 +7,7 @@
  */
 import * as THREE from 'three';
 import { disposeTree, shared } from '../../shared/toon';
-import { idleClock } from '../../shared/motion';
+import { idleClock, reducedMotion } from '../../shared/motion';
 import { jitter, V, type V3 } from '../../shared/scene/kit';
 import { hex } from '../../shared/theme';
 import type { StageRig, View } from '../../shared/scene/stage';
@@ -161,6 +161,7 @@ export function buildRig(s: Setup): Rig {
           drops.splice(i, 1);
         }
       }
+      return !reducedMotion() || drops.length > 0 || sw < 3 || swarm > 0 || Math.abs(target - shared.uGust.value) > 1e-3;
     },
     dispose() {
       disposeTree(root);

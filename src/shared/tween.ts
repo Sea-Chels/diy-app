@@ -15,19 +15,27 @@ interface Tween {
 }
 
 const active: Tween[] = [];
+let wake = (): void => {};
+
+/** Called whenever a tween starts, so an idle scene can start drawing frames again. */
+export function onTweenStart(cb: () => void): void {
+  wake = cb;
+}
 
 export function tween(opts: { duration: number; ease?: Ease; update: (k: number) => void; done?: () => void; tag?: string }): void {
   if (opts.tag) cancelTweens(opts.tag);
   // Still frame-driven when instant: callers start tweens before the canvas has a size.
   const duration = reducedMotion() ? 1e-3 : Math.max(opts.duration, 1e-3);
   active.push({ ...opts, start: performance.now(), duration, ease: opts.ease ?? easeInOutCubic });
+  wake();
 }
 
 export function cancelTweens(tag: string): void {
   for (let i = active.length - 1; i >= 0; i--) if (active[i].tag === tag) active.splice(i, 1);
 }
 
-export function updateTweens(now: number): void {
+/** Advances every tween to `now`; true while any are still running. */
+export function updateTweens(now: number): boolean {
   for (let i = active.length - 1; i >= 0; i--) {
     const t = active[i];
     const k = Math.min(1, (now - t.start) / t.duration);
@@ -37,6 +45,7 @@ export function updateTweens(now: number): void {
       t.done?.();
     }
   }
+  return active.length > 0;
 }
 
 export const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
