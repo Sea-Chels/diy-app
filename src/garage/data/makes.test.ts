@@ -150,19 +150,20 @@ const BODIES: [string, string, BodyKind][] = [
   ['Kia', 'Soul', 'suv'],
   ['Kia', 'Forte', 'sedan'],
   ['Hyundai', 'Elantra', 'sedan'],
+  ['Buick', 'Enclave', 'suv'],
+  ['Buick', 'Encore', 'suv'],
+  ['Buick', 'LaCrosse', 'sedan'],
+  ['Dodge', 'Grand Caravan', 'suv'],
+  ['Chrysler', 'Town & Country', 'suv'],
+  ['Toyota', 'FJ Cruiser', 'suv'],
+  ['Honda', 'Element', 'suv'],
+  ['Subaru', 'Tribeca', 'suv'],
+  ['Cadillac', 'SRX', 'suv'],
+  ['Lincoln', 'MKX', 'suv'],
+  ['Lincoln', 'MKZ', 'sedan'],
   ['', '', 'sedan'],
-];
-
-// Cosmetic (it only picks the 3D body, and the paint shop can override it), but worth knowing.
-const BODY_MISSES: [string, string][] = [
-  ['Buick', 'Enclave'],
-  ['Buick', 'Encore'],
-  ['Dodge', 'Grand Caravan'],
-  ['Toyota', 'FJ Cruiser'],
-  ['Honda', 'Element'],
 ];
 
 describe('guessBody', () => {
   for (const [make, model, want] of BODIES) it(`${make.trim()} ${model || '(blank)'} is ${want}`, () => expect(guessBody(make, model)).toBe(want));
-  for (const [make, model] of BODY_MISSES) it.fails(`known miss: ${make} ${model} should be suv`, () => expect(guessBody(make, model)).toBe('suv'));
 });

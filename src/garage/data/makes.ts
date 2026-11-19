@@ -45,32 +45,27 @@ export function guessPowertrain(make: string, model: string): Powertrain {
 }
 
 const SUV_MAKES = /^(jeep|land rover|rivian)$/i;
-const SUV_MODELS = new RegExp(
-  '\\b(' +
-    [
-      'cr-?v', 'hr-?v', 'pilot', 'passport', 'ridgeline', 'odyssey', 'prologue',
-      'rav4', 'highlander', '4runner', 'sequoia', 'land cruiser', 'venza', 'c-hr', 'corolla cross', 'bz4x', 'tacoma', 'tundra', 'sienna',
-      'tahoe', 'suburban', 'equinox', 'traverse', 'blazer', 'trailblazer', 'trax', 'silverado', 'colorado',
-      'yukon', 'acadia', 'terrain', 'sierra', 'canyon', 'hummer', 'savana',
-      'explorer', 'expedition', 'escape', 'edge', 'bronco', 'ranger', 'maverick', 'f-?\\d{3}', 'transit', 'mach-e', 'mustang mach',
-      'grand cherokee', 'cherokee', 'compass', 'renegade', 'wrangler', 'gladiator', 'wagoneer',
-      'durango', 'journey', 'pacifica', 'ram', 'promaster',
-      'tucson', 'santa fe', 'palisade', 'kona', 'venue', 'santa cruz', 'ioniq 5', 'ioniq 9',
-      'sportage', 'sorento', 'telluride', 'seltos', 'soul', 'niro', 'carnival', 'ev9',
-      'rogue', 'murano', 'pathfinder', 'armada', 'kicks', 'frontier', 'titan', 'ariya', 'juke', 'xterra',
-      'forester', 'outback', 'ascent', 'crosstrek', 'solterra',
-      'tiguan', 'atlas', 'taos', 'id\\.?\\s?4', 'touareg',
-      'cx-\\d+', 'mx-30', 'outlander', 'eclipse cross',
-      'model [xy]', 'cybertruck',
-      'mdx', 'rdx', 'zdx', 'qx\\d+', 'gv\\d+', 'xc\\d+', 'ex\\d+',
-      'rx', 'nx', 'gx', 'lx', 'ux', 'tx', 'rz',
-      'q[2-8]', 'e-tron', 'x[1-7]', 'ix', 'gl[abcse]', 'g-class', 'eq[bes] suv',
-      'escalade', 'xt[456]', 'lyriq', 'navigator', 'aviator', 'nautilus', 'corsair',
-      'cayenne', 'macan', 'countryman', 'stelvio', 'levante', 'urus', 'bentayga', 'cullinan', 'dbx',
-    ].join('|') +
-    ')\\b',
-  'i',
-);
+const SUV_MODELS = words([
+  'cr-?v', 'hr-?v', 'pilot', 'element', 'passport', 'ridgeline', 'odyssey', 'prologue',
+  'rav4', 'highlander', '4runner', 'sequoia', 'land cruiser', 'fj cruiser', 'venza', 'c-hr', 'corolla cross', 'bz4x', 'tacoma', 'tundra', 'sienna',
+  'tahoe', 'suburban', 'avalanche', 'tracker', 'captiva', 'uplander', 'express', 'equinox', 'traverse', 'blazer', 'trailblazer', 'trax', 'silverado', 'colorado',
+  'yukon', 'acadia', 'envoy', 'terrain', 'sierra', 'canyon', 'hummer', 'savana',
+  'explorer', 'expedition', 'escape', 'edge', 'bronco', 'ranger', 'maverick', 'f-?\\d{3}', 'transit', 'mach-e', 'mustang mach',
+  'grand cherokee', 'cherokee', 'compass', 'renegade', 'wrangler', 'gladiator', 'wagoneer',
+  'durango', 'journey', 'caravan', 'town & country', 'aspen', 'pacifica', 'ram', 'promaster',
+  'tucson', 'santa fe', 'palisade', 'kona', 'venue', 'santa cruz', 'ioniq 5', 'ioniq 9',
+  'sportage', 'sorento', 'telluride', 'seltos', 'soul', 'niro', 'carnival', 'ev9',
+  'rogue', 'murano', 'quest', 'pathfinder', 'armada', 'kicks', 'frontier', 'titan', 'ariya', 'juke', 'xterra',
+  'forester', 'outback', 'ascent', 'crosstrek', 'solterra', 'tribeca',
+  'tiguan', 'atlas', 'taos', 'id\\.?\\s?4', 'touareg',
+  'cx-\\d+', 'mx-30', 'outlander', 'eclipse cross',
+  'model [xy]', 'cybertruck',
+  'mdx', 'rdx', 'zdx', 'qx\\d+', 'gv\\d+', 'xc\\d+', 'ex\\d+',
+  'rx', 'nx', 'gx', 'lx', 'ux', 'tx', 'rz',
+  'q[2-8]', 'e-tron', 'x[1-7]', 'ix', 'gl[abcse]', 'g-class', 'eq[bes] suv',
+  'enclave', 'encore', 'envision', 'envista', 'escalade', 'xt[456]', 'srx', 'lyriq', 'navigator', 'aviator', 'mk[ctx]', 'nautilus', 'corsair',
+    'cayenne', 'macan', 'countryman', 'stelvio', 'levante', 'urus', 'bentayga', 'cullinan', 'dbx',
+]);
 
 /** Rough body style from make and model; good enough to pick a generic 3D body. */
 export function guessBody(make: string, model: string): BodyKind {
