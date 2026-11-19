@@ -4,10 +4,9 @@
 /* The model's dots for keyboards: a row over the quick fixes that shows while focus is in it. */
 .spot-nav { bottom: var(--overlay-row); }
 .spot-nav:not(:focus-within) { opacity: 0; pointer-events: none; }
-.scene-menu { position: absolute; top: var(--overlay-gap); left: 16px; z-index: var(--z-overlay); }
+.scene-menu { position: absolute; top: var(--overlay-gap); left: var(--overlay-gap); z-index: var(--z-overlay); }
 .scene-menu.open .paint-card { display: flex; }
-.paint-card .seg button:disabled { opacity: 0.35; cursor: not-allowed; }
-.swatches.dim { opacity: 0.35; }
+.swatches.dim { opacity: var(--dim); }
 .fine-print { font-size: var(--fs-xs); color: var(--muted); line-height: 1.4; }
 .paint-card .fine-print { margin-top: -2px; }
 
@@ -23,7 +22,7 @@
   display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: var(--pill); font-size: var(--fs-sm);
   background: rgb(var(--hi) / 0.04); border: 1px solid var(--line); color: var(--muted); text-decoration: none;
 }
-.link-chip:hover { color: var(--text); border-color: rgb(var(--hi) / 0.22); }
+:is(a, button).link-chip:hover { color: var(--text); border-color: rgb(var(--hi) / 0.22); }
 button.link-chip { cursor: pointer; }
 .repair-body .panel-links { margin: 0; }
 
@@ -39,6 +38,7 @@ button.link-chip { cursor: pointer; }
 .side-actions > * { justify-content: center; }
 .ghost-btn.danger:hover { color: var(--diff-3); border-color: color-mix(in srgb, var(--red) 40%, transparent); }
 .opt-name { font-weight: 650; line-height: 1.25; }
+.opt-tick { display: inline-flex; align-items: center; gap: 4px; color: var(--accent); font-size: var(--fs-xs); font-weight: 700; }
 
 /* Picker modals (the PC parts picker, the garden bed planner): a list beside a summary column. */
 .builder-modal { width: min(1080px, 100%); --side-w: 320px; --list-gap: 8px; --side-gap: 12px; }

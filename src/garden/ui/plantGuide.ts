@@ -72,8 +72,8 @@ export function openPlantGuide(startAt?: string): void {
   function relChips(ids: string[], cls: string): HTMLElement {
     if (!ids.length) return h('p', { class: 'muted small' }, 'None in particular.');
     return h('div', { class: 'plant-chips' }, ...ids.map((id) => PLANT_BY_ID.has(id)
-      ? h('button', { class: `rel-chip ${cls}`, onClick: () => show(id) }, plantName(id))
-      : h('span', { class: `rel-chip ${cls}` }, plantName(id))));
+      ? h('button', { class: `link-chip ${cls}`, onClick: () => show(id) }, plantName(id))
+      : h('span', { class: `link-chip ${cls}` }, plantName(id))));
   }
 
   function show(id: string): void {

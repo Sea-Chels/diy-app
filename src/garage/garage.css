@@ -4,6 +4,6 @@
 .ride-switch ~ .hint { top: var(--overlay-row); }
 
 @media (--phone) {
-  .ride-switch { left: auto; right: 12px; transform: none; }
+  .ride-switch { left: auto; right: var(--overlay-gap); transform: none; }
   .ride-switch button { padding: 6px 10px; }
 }

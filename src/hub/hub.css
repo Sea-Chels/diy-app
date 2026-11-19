@@ -1,13 +1,21 @@
 @import '../shared/media.css';
 html:has(body.hub) { scroll-behavior: smooth; }
 body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto; }
-.hub :is(#carousel, #how, #workshops) { scroll-margin-top: 70px; }
-.hub { --comic: 'Bangers', var(--font); }
+.hub {
+  --comic: 'Bangers', var(--font);
+  /* The comic ink outline. */
+  --stroke: 3px;
+  --logo-h: 52px;
+  --nav-pad: 8px;
+  --nav-h: calc(var(--logo-h) + 2 * var(--nav-pad) + var(--stroke));
+}
+/* Jumps to a section land just below the sticky nav. */
+.hub :is(#carousel, #how, #workshops) { scroll-margin-top: var(--nav-h); }
 .hub-main { display: block; padding: 0 0 72px; }
 
 .burst {
   position: relative; display: grid; place-items: center; margin: 0;
-  clip-path: polygon(50% 0%, 58% 18%, 75% 6%, 74% 26%, 96% 20%, 84% 38%, 100% 50%, 84% 62%, 96% 80%, 74% 74%, 75% 94%, 58% 82%, 50% 100%, 42% 82%, 25% 94%, 26% 74%, 4% 80%, 16% 62%, 0% 50%, 16% 38%, 4% 20%, 26% 26%, 25% 6%, 42% 18%);
+  clip-path: var(--burst-shape);
   background:
     radial-gradient(circle, color-mix(in srgb, var(--ink) 28%, transparent) 1.6px, transparent 2px) 0 0 / 9px 9px,
     var(--burst);
@@ -21,24 +29,19 @@ body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto;
 
 .nav {
   position: sticky; top: 0; z-index: var(--z-topbar);
-  display: flex; align-items: center; gap: 18px; padding: 8px 20px;
+  display: flex; align-items: center; gap: 18px; padding: var(--nav-pad) 20px;
   background: color-mix(in srgb, var(--bg-deep) 78%, transparent); backdrop-filter: blur(12px);
-  border-bottom: 3px solid var(--ink); box-shadow: 0 1px 0 var(--line);
+  border-bottom: var(--stroke) solid var(--ink); box-shadow: 0 1px 0 var(--line);
 }
 .logo { display: block; text-decoration: none; flex-shrink: 0; transition: transform var(--t-slow) var(--ease-pop); }
 .logo:hover { transform: rotate(-6deg) scale(1.06); }
 .logo-burst {
-  position: relative; display: grid; place-items: center; width: 84px; height: 52px;
-  clip-path: polygon(50% 0%, 58% 18%, 75% 6%, 74% 26%, 96% 20%, 84% 38%, 100% 50%, 84% 62%, 96% 80%, 74% 74%, 75% 94%, 58% 82%, 50% 100%, 42% 82%, 25% 94%, 26% 74%, 4% 80%, 16% 62%, 0% 50%, 16% 38%, 4% 20%, 26% 26%, 25% 6%, 42% 18%);
+  width: 84px; height: var(--logo-h);
   background:
     radial-gradient(circle, color-mix(in srgb, var(--ink) 28%, transparent) 1px, transparent 1.3px) 0 0 / 5px 5px,
     var(--burst);
 }
-.logo-burst span {
-  font-size: 1.45rem; font-weight: 900; letter-spacing: 0.02em; color: var(--yellow); line-height: 1;
-  -webkit-text-stroke: 0.08em var(--ink); paint-order: stroke fill; text-shadow: 0.06em 0.06em 0 var(--ink);
-  transform: rotate(-4deg);
-}
+.logo-burst span { font-size: 1.45rem; }
 
 .nav-links { display: flex; align-items: center; gap: 4px; margin-right: auto; }
 .nav-link {
@@ -55,7 +58,7 @@ body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto;
 .nav-cta {
   display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px;
   font-family: var(--comic); font-size: 1.15rem; letter-spacing: 0.06em; color: var(--ink); text-decoration: none;
-  background: var(--yellow); border: 3px solid var(--ink); border-radius: var(--r-lg); box-shadow: 4px 4px 0 var(--ink);
+  background: var(--yellow); border: var(--stroke) solid var(--ink); border-radius: var(--r-lg); box-shadow: 4px 4px 0 var(--ink);
   transition: transform var(--t-fast) ease, box-shadow var(--t-fast) ease;
 }
 .nav-cta:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
@@ -67,7 +70,7 @@ body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto;
 .carousel {
   --ws: var(--violet);
   position: relative; overflow: hidden; isolation: isolate;
-  padding: 40px 24px 28px; border-bottom: 3px solid var(--ink);
+  padding: 40px 24px 28px; border-bottom: var(--stroke) solid var(--ink);
   background: radial-gradient(900px 520px at 70% 45%, color-mix(in srgb, var(--ws) 22%, transparent), transparent 70%);
   transition: --ws 0.8s ease;
   touch-action: pan-y;
@@ -108,7 +111,7 @@ body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto;
 .caption {
   display: inline-block; align-self: flex-start; padding: 5px 12px;
   font-family: var(--comic); font-size: 1.05rem; letter-spacing: 0.08em; color: var(--ink);
-  background: var(--yellow); border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); transform: rotate(-1.5deg);
+  background: var(--yellow); border: var(--stroke) solid var(--ink); box-shadow: 3px 3px 0 var(--ink); transform: rotate(-1.5deg);
 }
 .caption.small { font-size: var(--fs-sm); padding: 3px 8px; }
 .title {
@@ -118,11 +121,11 @@ body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto;
 .bubble {
   position: relative; align-self: flex-start; max-width: 480px; padding: 14px 20px;
   font-family: var(--comic); font-size: 1.45rem; letter-spacing: 0.04em; line-height: 1.15; color: var(--ink);
-  background: rgb(var(--hi)); border: 3px solid var(--ink); border-radius: 26px; box-shadow: 4px 4px 0 var(--ink);
+  background: rgb(var(--hi)); border: var(--stroke) solid var(--ink); border-radius: 26px; box-shadow: 4px 4px 0 var(--ink);
 }
 .bubble::after {
   content: ''; position: absolute; left: 34px; bottom: -19px; width: 24px; height: 20px;
-  background: rgb(var(--hi)); border-right: 3px solid var(--ink); border-bottom: 3px solid var(--ink);
+  background: rgb(var(--hi)); border-right: var(--stroke) solid var(--ink); border-bottom: var(--stroke) solid var(--ink);
   clip-path: polygon(0 0, 100% 0, 100% 100%); transform: skewX(-18deg);
 }
 .copy { display: flex; flex-direction: column; gap: 18px; }
@@ -135,7 +138,7 @@ body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto;
 .btn-comic {
   display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; padding: 12px 20px;
   font-family: var(--comic); font-size: 1.35rem; letter-spacing: 0.06em; color: var(--ink); text-decoration: none;
-  background: var(--ws); border: 3px solid var(--ink); border-radius: var(--r-lg); box-shadow: 5px 5px 0 var(--ink);
+  background: var(--ws); border: var(--stroke) solid var(--ink); border-radius: var(--r-lg); box-shadow: 5px 5px 0 var(--ink);
   transition: transform var(--t-fast) ease, box-shadow var(--t-fast) ease;
 }
 .btn-comic:hover { transform: translate(-2px, -2px) rotate(-0.6deg); box-shadow: 8px 8px 0 var(--ink); }
@@ -218,7 +221,7 @@ body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto;
 .car-controls { display: flex; align-items: center; justify-content: center; gap: 10px; max-width: 1180px; margin: 30px auto 0; }
 .car-btn {
   display: grid; place-items: center; width: 42px; height: 42px; flex-shrink: 0; color: var(--text);
-  background: rgb(var(--surface)); border: 3px solid var(--ink); border-radius: 50%; box-shadow: 3px 3px 0 var(--ink);
+  background: rgb(var(--surface)); border: var(--stroke) solid var(--ink); border-radius: 50%; box-shadow: 3px 3px 0 var(--ink);
   transition: transform var(--t-fast) ease, background var(--t-med) ease;
 }
 .car-btn:hover { transform: translate(-1px, -1px); background: var(--bg-glow); }
@@ -257,14 +260,14 @@ body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto;
 .num {
   position: absolute; right: 14px; top: -18px; display: grid; place-items: center; width: 40px; height: 40px;
   font-family: var(--comic); font-size: 1.5rem; color: var(--ink); background: var(--ws);
-  border: 3px solid var(--ink); border-radius: 50%; box-shadow: 3px 3px 0 var(--ink);
+  border: var(--stroke) solid var(--ink); border-radius: 50%; box-shadow: 3px 3px 0 var(--ink);
 }
 
 .workshops { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
 .ws {
   --ws: var(--accent);
   position: relative; display: flex; flex-direction: column; gap: 14px; padding: 18px; min-height: 280px;
-  border: 3px solid var(--ink); border-radius: var(--r-2xl); text-decoration: none; color: var(--text);
+  border: var(--stroke) solid var(--ink); border-radius: var(--r-2xl); text-decoration: none; color: var(--text);
   background: rgb(var(--surface)); box-shadow: 6px 6px 0 rgb(var(--scrim)); overflow: hidden;
   transition: transform var(--t-med) var(--ease-out), box-shadow var(--t-med) ease;
 }
@@ -274,7 +277,7 @@ a.ws:hover { transform: translate(-3px, -3px) rotate(-0.4deg); box-shadow: 10px 
 .ws-home { --ws: var(--ws-home); }
 .ws-garden { --ws: var(--ws-garden); }
 .ws-art {
-  display: grid; place-items: center; height: 120px; border-radius: var(--r-lg); border: 3px solid var(--ink); color: var(--ink);
+  display: grid; place-items: center; height: 120px; border-radius: var(--r-lg); border: var(--stroke) solid var(--ink); color: var(--ink);
   background: radial-gradient(circle, color-mix(in srgb, var(--ink) 22%, transparent) 1.5px, transparent 1.9px) 0 0 / 8px 8px, var(--ws);
 }
 .ws-art .icon { stroke-width: 2.4; filter: drop-shadow(3px 3px 0 rgb(var(--hi) / 0.35)); }
@@ -297,12 +300,12 @@ a.ws:hover { transform: translate(-3px, -3px) rotate(-0.4deg); box-shadow: 10px 
   .strip-panel:nth-child(2) { transform: rotate(0.8deg); }
 }
 @media (--hub-phone) {
-  .nav { gap: 10px; padding: 8px 14px; }
+  .nav { gap: 10px; padding: var(--nav-pad) 14px; }
   .nav-toggle { display: grid; margin-left: auto; }
   .nav-cta { display: none; }
   .nav-links {
     position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; align-items: stretch; gap: 2px; padding: 10px 14px 16px;
-    background: color-mix(in srgb, var(--bg-deep) 96%, transparent); border-bottom: 3px solid var(--ink);
+    background: color-mix(in srgb, var(--bg-deep) 96%, transparent); border-bottom: var(--stroke) solid var(--ink);
     visibility: hidden; opacity: 0; transform: translateY(-8px); transition: opacity var(--t-med) ease, transform var(--t-med) ease, visibility var(--t-med);
   }
   .nav-links.open { visibility: visible; opacity: 1; transform: none; }

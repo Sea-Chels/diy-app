@@ -62,6 +62,8 @@ export const hex = (name: ColorName): number => parseInt(PALETTE[name].slice(1),
 /** A 0xrrggbb number as a CSS color. */
 export const cssHex = (c: number) => `#${c.toString(16).padStart(6, '0')}`;
 
+const BURST_SHAPE = `polygon(${[[50, 0], [58, 18], [75, 6], [74, 26], [96, 20], [84, 38], [100, 50], [84, 62], [96, 80], [74, 74], [75, 94], [58, 82], [50, 100], [42, 82], [25, 94], [26, 74], [4, 80], [16, 62], [0, 50], [16, 38], [4, 20], [26, 26], [25, 6], [42, 18]].map(([x, y]) => `${x}% ${y}%`).join(',')})`;
+
 /** The custom-color swatch: a full turn of hues. */
 const HUE_WHEEL = ['#ff4f6d', '#ffc531', '#9be22d', '#14b8a6', '#2f5bea', PALETTE.purple, '#ff4fa3', '#ff4f6d'];
 
@@ -75,6 +77,8 @@ export function paletteCss(): string {
   const vars = Object.entries(PALETTE).map(([k, v]) => `--${kebab(k)}:${CHANNELS.includes(k as ColorName) ? channels(v) : v}`);
   for (const [ws, c] of Object.entries(WORKSHOP_COLOR)) vars.push(`--ws-${ws}:var(--${kebab(c)})`);
   vars.push('--burst:linear-gradient(135deg,var(--pink),var(--purple) 55%,var(--sky))');
+  // The comic starburst outline, for clip-path.
+  vars.push(`--burst-shape:${BURST_SHAPE}`);
   vars.push(`--hue-wheel:conic-gradient(${HUE_WHEEL.join(',')})`);
   // initial-value can't reference other properties, so the hub's animated --ws gets its default here.
   return `@property --ws{syntax:'<color>';inherits:true;initial-value:${PALETTE.violet}}:root{${vars.join(';')}}`;

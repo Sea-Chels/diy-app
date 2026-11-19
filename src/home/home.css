@@ -31,13 +31,11 @@
 .calc { display: flex; flex-direction: column; gap: 14px; }
 .calc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
 .calc-field { display: flex; flex-direction: column; gap: 4px; font-size: var(--fs-sm); color: var(--muted); }
-.calc-field input {
-  background: rgb(var(--surface)); border: 1px solid var(--line); border-radius: var(--r-md); padding: 8px 10px; color: var(--text); font-size: var(--fs-body);
-}
+.calc-field input { font-size: var(--fs-body); }
 .calc-check { display: flex; gap: 8px; align-items: center; font-size: var(--fs-sm); color: var(--muted); }
 .calc-result { border-left: 3px solid var(--yellow); padding: 4px 0 4px 14px; display: flex; flex-direction: column; gap: 4px; }
 .calc-result .big { font-size: 1.8rem; font-weight: 800; color: var(--yellow); }
 .wire-table { width: 100%; border-collapse: collapse; font-size: var(--fs-md); }
 .wire-table th, .wire-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
-.wire-table th { color: var(--muted); font-weight: 600; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.06em; }
+.wire-table th { font-weight: 600; }
 .wire-table td:nth-child(2) { color: var(--yellow); font-weight: 700; white-space: nowrap; }

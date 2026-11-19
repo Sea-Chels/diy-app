@@ -13,7 +13,7 @@
   /* The burst ratchets round in clicks, like a socket wrench. */
   .ld-burst {
     position: absolute; width: 150px; height: 150px; animation: ld-ratchet 2.4s steps(12) infinite;
-    clip-path: polygon(50% 0%, 58% 18%, 75% 6%, 74% 26%, 96% 20%, 84% 38%, 100% 50%, 84% 62%, 96% 80%, 74% 74%, 75% 94%, 58% 82%, 50% 100%, 42% 82%, 25% 94%, 26% 74%, 4% 80%, 16% 62%, 0% 50%, 16% 38%, 4% 20%, 26% 26%, 25% 6%, 42% 18%);
+    clip-path: var(--burst-shape);
     background: radial-gradient(circle, color-mix(in srgb, var(--ink) 28%, transparent) 1.4px, transparent 1.8px) 0 0 / 8px 8px, var(--burst);
     filter: drop-shadow(5px 5px 0 var(--ink));
   }

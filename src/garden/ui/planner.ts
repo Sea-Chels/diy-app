@@ -142,7 +142,7 @@ export function openPlanner(): void {
     side.append(h('h4', { class: 'side-h' }, 'Checks'), h('ul', { class: 'issues' }, ...issues.map((i) => h('li', { class: `lvl-${i.level}` }, icon(LEVEL_ICON[i.level], 16), h('span', {}, i.text)))));
     if (good.length) {
       side.append(h('h4', { class: 'side-h' }, 'Good companions here'),
-        h('div', { class: 'plant-chips' }, ...good.map(([a, b]) => h('span', { class: 'rel-chip good' }, `${a.name} + ${b.name}`))));
+        h('div', { class: 'plant-chips' }, ...good.map(([a, b]) => h('span', { class: 'link-chip good' }, `${a.name} + ${b.name}`))));
     }
     const sugg = suggestions(plan());
     if (sugg.length) {
