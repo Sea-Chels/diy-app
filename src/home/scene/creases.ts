@@ -69,7 +69,6 @@ export function addCreases(c: HomeCtx, fanBlades: THREE.Group) {
     });
     const ink = (g: LineSegmentsGeometry, parent: THREE.Object3D) => {
       const l = new LineSegments2(g, mat);
-      l.userData.ink = true;
       l.raycast = () => {};
       parent.add(l);
     };
