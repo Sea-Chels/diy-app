@@ -82,7 +82,7 @@ export function buildCar(kind: BodyKind): CarRig {
   const views: Record<CarPart, View> = {
     hood: viewFrom([0, hoodLine(hoodMidZ), hoodMidZ], [0.55, 0.75, 1], 3.4),
     engine: viewFrom([0.02, F + 0.25, bm], bayDir, 1.9),
-    battery: viewFrom([-0.34, F + 0.1, bz0 + 0.16], [-0.6, 1.1, 0.9], 1.7),
+    battery: viewFrom([-0.34, F + 0.1, bz0 + 0.16], [-0.35, 1.5, 0.8], 1.7),
     oil: viewFrom([0.14, F + 0.3, bm - 0.05], bayDir, 1.7),
     airbox: viewFrom([0.4, F + 0.15, bz0 + 0.17], [0.45, 1.5, 0.8], 1.7),
     // Steep and from the front: the tanks sit right behind the nose, and the open hood stands up behind them.

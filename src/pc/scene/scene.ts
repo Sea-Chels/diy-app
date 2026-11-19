@@ -29,7 +29,7 @@ export function createScene(canvas: HTMLCanvasElement, initial: Setup, initialSp
     ground: { center: [0.8, 0, 0.6], disc: 5.2, ring: [4.6, 5.2], ringY: 0.001, segments: 64 },
     fit: { base: 1.6, min: 1, max: 2.7, raiseLimit: false },
     flight: { ms: 1100, lift: 0.6 },
-    framing: { desktop: { pullback: 1, shift: 0.2 }, phone: { pullback: 1.35, drop: 0.2 } },
+    framing: { desktop: { pullback: 1, shift: 0.2 }, phone: { pullback: 1.35 } },
     beaconPulse: { amp: 0.12, speed: 3.2 },
     beaconScale: { near: 4.5, max: 1 },
     debugName: 'pc',

@@ -20,7 +20,7 @@ export function createScene(canvas: HTMLCanvasElement, initial: Setup) {
     ground: { center: [0, 0, 0], ring: [5.12, 5.7], ringY: 0.002, segments: 72 },
     fit: { base: 1.3, min: 0.85, max: 3, raiseLimit: true },
     flight: { ms: 1200, lift: 0.8 },
-    framing: { desktop: { pullback: 1, shift: 0.2 }, phone: { pullback: 1.3, drop: 0.2 } },
+    framing: { desktop: { pullback: 1, shift: 0.2 }, phone: { pullback: 1.3 } },
     beaconPulse: { amp: 0.12, speed: 3.2 },
     beaconScale: { near: 6, max: 1.3 },
     debugName: 'garden',

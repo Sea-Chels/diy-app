@@ -104,7 +104,7 @@ export function buildRig(s: Setup): Rig {
     cooler: view(new THREE.Vector3(coolerTop.x * 0.5 + sk.x * 0.5, sk.y + (s.cooling === 'air' ? 0 : 40), sk.z + (s.cooling === 'air' ? 0 : 60)), [-1, 0.34, 0.5], s.cooling === 'air' ? 640 : 760 * scale),
     ram: view(P(L.ram.u0 + 14, ramMid, 0), [-1, 0.16, 0.18], 440),
     gpu: gpuDims ? view(new THREE.Vector3(gpuDims.cx, slotY - gpuDims.t / 2, gpuDims.z0 + gpuDims.len / 2), [-1, 0.05, 0.42], 640) : view(P(50, L.pcie[0], 0), [-1, 0.2, 0.3], 320),
-    m2: view(P((m0 + m1) / 2, mv, 0), [-1, 0.4, 0.22], 420),
+    m2: view(P((m0 + m1) / 2, mv, 0), [-1, 0.08, 0.22], 420),
     storage: view(storageC, s.size === 'itx' ? [-0.5, 0.3, 1] : [-1, 0.42, 0.45], s.size === 'itx' ? 360 : 460),
     psu: view(psuC, [-1, 0.36, 0.3], 560),
     fans: dm.front.n ? view(fanC, [-0.65, 0.25, 1], 740 * scale) : view(fanC, [-0.6, 1, 0.4], 520),

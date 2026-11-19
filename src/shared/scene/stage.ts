@@ -9,6 +9,10 @@ import { createOutlinePass, HOVER_LAYER, SELECT_LAYER } from './outline';
 import type { V3 } from './kit';
 import { MAT } from './materials';
 
+const UP = new THREE.Vector3(0, 1, 0);
+/** World units a pulled-back camera keeps from the surface it backed up to. */
+const CLEAR_MARGIN = 0.15;
+
 export interface View {
   pos: V3;
   target: V3;
@@ -68,11 +72,11 @@ export interface StageConfig<S, Id extends string, Lid extends string, R extends
   fit: { base: number; min: number; max: number; raiseLimit: boolean };
   flight: { ms: number; lift: number };
   /**
-   * How area views make room for the side panel: pulled back by `pullback`, then shifted
-   * left by `shift` × distance on desktop, or dropped by `drop` × distance on phones,
-   * where the panel covers the bottom of the screen.
+   * How area views make room for the side panel: pulled back by `pullback`, then on desktop
+   * shifted left by `shift` × distance. On phones the panel covers the bottom of the screen,
+   * so the view slides down until its target sits in the middle of what's left above it.
    */
-  framing: { desktop: { pullback: number; shift: number }; phone: { pullback: number; drop: number } };
+  framing: { desktop: { pullback: number; shift: number }; phone: { pullback: number } };
   beaconPulse: { amp: number; speed: number };
   /** Beacons shrink as the camera closes in: scale = clamp(distance / near, 0.3, max). Null keeps them one size. */
   beaconScale: { near: number; max: number } | null;
@@ -190,20 +194,38 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     if (selected) setGlow(selected, 'selected');
   }
 
-  function pick(ev: PointerEvent): Id | null {
+  /** The area under the pointer, and whether it was its beacon that was hit. */
+  function pick(ev: PointerEvent): { id: Id; beacon: boolean } | null {
     const rect = canvas.getBoundingClientRect();
     pointer.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
-    const live = (o: THREE.Object3D) => shown(o) && (!rig.canPick || o.userData.blocker || rig.canPick(o.userData.area as Id));
-    const hits = raycaster.intersectObjects(rig.picks, false);
+    const areaOf = (o: THREE.Object3D) => (o.userData.area as Id | undefined) ?? meshArea.get(o);
+    const live = (o: THREE.Object3D) => shown(o) && (!rig.canPick || o.userData.blocker || rig.canPick(areaOf(o) as Id));
+    const hits = raycaster.intersectObjects(selected ? closePicks() : rig.picks, false);
     // Beacons draw on top of everything, so they win when hit.
     const beacon = hits.find((h) => h.object.userData.beacon && live(h.object));
-    if (beacon) return beacon.object.userData.area as Id;
+    if (beacon) return { id: areaOf(beacon.object) as Id, beacon: true };
     // Pick boxes overlap: the nearest wins, unless a blocker is in front of it.
     const first = hits.find((h) => !h.object.userData.beacon && live(h.object));
     if (!first || first.object.userData.blocker) return null;
-    return first.object.userData.area as Id;
+    const id = areaOf(first.object);
+    return id ? { id, beacon: false } : null;
+  }
+
+  // Zoomed in, a spot's generous pick box can fill the screen and leave nothing to tap to get out, so while
+  // something is selected only the models themselves (and beacons and blockers) pick.
+  let meshArea = new Map<THREE.Object3D, Id>();
+  let closeFor: R | null = null;
+  let close: THREE.Object3D[] = [];
+  function closePicks(): THREE.Object3D[] {
+    if (closeFor !== rig) {
+      closeFor = rig;
+      meshArea = new Map();
+      for (const [id, ms] of rig.glow) for (const m of ms) meshArea.set(m, id);
+      close = [...rig.picks.filter((o) => o.userData.beacon || o.userData.blocker), ...meshArea.keys()];
+    }
+    return close;
   }
 
   let downAt: { x: number; y: number } | null = null;
@@ -215,8 +237,10 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     const moved = Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y);
     downAt = null;
     if (moved > 6) return;
-    const id = pick(e);
-    if (id && id === selected) rig.poke(id);
+    const hit = pick(e);
+    // Tapping the selected area again lets go of it (its model can fill a phone screen); its beacon plays its animation instead.
+    if (hit?.id === selected && hit?.beacon) return rig.poke(hit.id);
+    const id = hit && hit.id !== selected ? hit.id : null;
     selectCbs.forEach((cb) => cb(id));
   });
   let moveQueued = false;
@@ -225,7 +249,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     moveQueued = true;
     requestAnimationFrame(() => {
       moveQueued = false;
-      const id = pick(e);
+      const id = pick(e)?.id ?? null;
       if (id === hovered) return;
       hovered = id;
       canvas.style.cursor = id ? 'pointer' : 'grab';
@@ -271,7 +295,35 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     });
   }
 
+  const sight = new THREE.Raycaster();
+  /**
+   * How far a camera can back away from `from` along `dir` (up to `far`) and still see `from`.
+   * The ray runs back from the far end, so it only meets faces turned toward that camera: a
+   * one-sided cutaway wall seen from behind doesn't count, but the inside of a closed object's
+   * ink hull (which would fill the screen) does. Glass, pick boxes and beacons never block.
+   */
+  function clearance(from: THREE.Vector3, dir: THREE.Vector3, far: number): number {
+    sight.set(new THREE.Vector3().copy(from).addScaledVector(dir, far), new THREE.Vector3().copy(dir).negate());
+    sight.far = far;
+    const hits = sight.intersectObject(scene, true);
+    // Hulls opt out of raycasting so they never take a click; ask them directly.
+    scene.traverse((o) => {
+      if (!o.userData.ink || !shown(o)) return;
+      const proto = (o as THREE.InstancedMesh).isInstancedMesh ? THREE.InstancedMesh.prototype : THREE.Mesh.prototype;
+      proto.raycast.call(o as THREE.Mesh, sight, hits);
+    });
+    let nearest = far;
+    for (const { object: o, distance } of hits) {
+      const m = o as THREE.Mesh;
+      const mat = (Array.isArray(m.material) ? m.material[0] : m.material) as THREE.Material | undefined;
+      if (m.isMesh && mat?.visible && !(mat.transparent && mat.opacity < 0.9) && !o.userData.beacon && shown(o)) nearest = Math.min(nearest, far - distance);
+    }
+    return nearest;
+  }
+
   const onPhone = media('phone');
+  const panelEl = document.getElementById('panel');
+  const overlayEl = document.querySelector<HTMLElement>('.scene-menu');
   /** An area's view, nudged clear of the side panel (right on desktop, bottom on phones). */
   function framed(id: Id): View {
     const v = rig.views[id];
@@ -279,10 +331,24 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     const p = new THREE.Vector3(...v.pos);
     const { desktop, phone } = cfg.framing;
     if (onPhone.matches) {
-      p.sub(t).multiplyScalar(phone.pullback).add(t);
-      const down = new THREE.Vector3(0, -1, 0).multiplyScalar(p.distanceTo(t) * phone.drop);
-      t.add(down);
-      p.add(down);
+      // The view slides down along the camera's own up (for a view looking into an engine bay, world down points into the screen)
+      // until the target sits mid-strip between the floating top controls and the panel, `covered` half-heights above screen center.
+      const authored = p.distanceTo(t);
+      const back = new THREE.Vector3().subVectors(p, t).normalize();
+      const up = new THREE.Vector3().crossVectors(new THREE.Vector3().crossVectors(back, UP).negate(), back.clone().negate()).normalize();
+      const top = overlayEl ? (overlayEl.getBoundingClientRect().bottom - canvas.getBoundingClientRect().top) / canvas.clientHeight : 0;
+      const covered = (panelEl ? panelEl.offsetHeight / canvas.clientHeight : 0) - top;
+      const slide = up.multiplyScalar(-Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * covered);
+      // Both moves grow with distance, so the camera sits on one line, target + (back + slide) × distance. Pull back along it
+      // to fit the short strip, stopping short of anything in the way (the car beside a motorcycle view).
+      const path = new THREE.Vector3().addVectors(back, slide);
+      const step = path.length();
+      path.normalize();
+      const start = new THREE.Vector3().copy(t).addScaledVector(path, authored * step);
+      const extra = authored * step * (phone.pullback - 1);
+      const dist = authored + Math.max(0, Math.min(extra, clearance(start, path, extra) - CLEAR_MARGIN)) / step;
+      p.copy(t).addScaledVector(path, dist * step);
+      t.addScaledVector(slide, dist);
     } else {
       p.sub(t).multiplyScalar(desktop.pullback).add(t);
       const right = new THREE.Vector3().subVectors(t, p).cross(new THREE.Vector3(0, 1, 0)).normalize();

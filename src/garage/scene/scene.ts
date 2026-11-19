@@ -37,7 +37,7 @@ export function createScene(canvas: HTMLCanvasElement, initial: Appearance) {
     ground: { center: [0, 0, 0], disc: 7, ring: [6.2, 7], ringY: 0.001, segments: 64 },
     fit: { base: 1.6, min: 1, max: 2.6, raiseLimit: true },
     flight: { ms: 950, lift: 0 },
-    framing: { desktop: { pullback: 1.3, shift: 0.18 }, phone: { pullback: 1.3, drop: 0 } },
+    framing: { desktop: { pullback: 1.3, shift: 0.18 }, phone: { pullback: 1.8 } },
     beaconPulse: { amp: 0.18, speed: 2.4 },
     beaconScale: null,
     debugName: 'garage',
