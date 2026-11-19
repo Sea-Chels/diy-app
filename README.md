@@ -100,6 +100,8 @@ pnpm check      # everything CI runs: typecheck, lint, unit tests and the browse
 | `pnpm test` | Vitest: data checks for every workshop (ids unique, every reference resolves) and unit tests for the compatibility rules, bed planner, store and chain path |
 | `pnpm test:e2e` | builds, then Playwright opens each page in Chrome and clicks through guides, deep links and the ride switch |
 
+To run the e2e suite the way CI does, against a build at the Pages path: `VITE_BASE=/diy-app/ pnpm test:e2e`. The build and the preview server both read `VITE_BASE`. Set `E2E_PORT` to run it on another port.
+
 ## Data sources
 
 | What | Where | Cost |
@@ -224,4 +226,4 @@ Add an entry to `CATALOG` in `src/pc/data/catalog.ts` with the fields its catego
 
 ## Deploy to GitHub Pages
 
-In the repo, go to Settings, then Pages, and set Source to "GitHub Actions". After that every push to `main` deploys, once CI passes: `deploy.yml` runs `ci.yml` first, then builds with the repo's base path and publishes `dist/`. Other branches and pull requests run CI only.
+In the repo, go to Settings, then Pages, and set Source to "GitHub Actions". After that every push to `main` deploys, once CI passes: `deploy.yml` runs `ci.yml`, which builds with the repo's base path, runs every check and the e2e suite against that build, and hands the same `dist/` to the deploy job. Other branches and pull requests run CI only.
