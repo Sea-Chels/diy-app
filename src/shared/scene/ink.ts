@@ -39,7 +39,7 @@ export function rides(o: THREE.Object3D | null, movers: Set<THREE.Object3D>, roo
 
 /**
  * Merges ink hulls into one mesh per rigid frame and ink style, turning hundreds of hull draw calls into dozens.
- * A frame is the nearest of the hull's mesh and its ancestors that is one of `movers`, an area's group or `root`;
+ * A frame is the nearest of the hull's mesh and its ancestors that is one of `movers`, a spot's group or `root`;
  * nothing between a mesh and its frame moves, so the merged hull lives in the frame and moves and hides with it.
  * Meshes that highlight together (the same `glow` lists) share a hull, which each reaches through its `hull` tag.
  */

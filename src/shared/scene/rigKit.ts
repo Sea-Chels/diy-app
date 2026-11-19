@@ -60,7 +60,7 @@ export interface BeaconOpts {
   segments: [number, number];
   /**
    * Drawn over everything and picked before what's behind them (the `beacon` tag).
-   * Off, they're depth-tested like the model: the vehicle hides them and they pick like any part.
+   * Off, they're depth-tested like the model: the vehicle hides them and they pick like the rest of the model.
    */
   onTop: boolean;
   /** Pick lists to add each beacon to. */

@@ -25,16 +25,16 @@ export interface View {
 export interface StageRig<Id extends string, Lid extends string> {
   group: THREE.Group;
   picks: THREE.Object3D[];
-  /** Meshes highlighted when an area is hovered or selected. */
+  /** Meshes highlighted when a spot is hovered or selected. */
   glow: Map<Id, THREE.Mesh[]>;
   beacons: Map<Id, THREE.Mesh>;
   views: Record<Id, View>;
   overview: View;
   setLid(lid: Lid, open: boolean): void;
   focus?(id: Id | null): void;
-  /** False while an area can't be clicked, e.g. it's behind a closed lid; picks pass through it. */
+  /** False while a spot can't be clicked, e.g. it's behind a closed lid; picks pass through it. */
   canPick?(id: Id): boolean;
-  /** Play an area's small animation, if it has one. */
+  /** Play a spot's small animation, if it has one. */
   poke(id: Id): void;
   /** Advances ambient animation to `t` seconds and says what moved, so the stage keeps drawing frames (and shadows) while it does. */
   update(t: number): Motion;
@@ -44,7 +44,7 @@ export interface StageRig<Id extends string, Lid extends string> {
 export interface StageConfig<S, Id extends string, Lid extends string, R extends StageRig<Id, Lid>> extends SwapOpts<S, R>, Lighting {
   lids: readonly Lid[];
   opens(id: Id): readonly Lid[] | undefined;
-  /** 'hull' recolors each mesh's ink; 'outline' draws one rim round the whole area. */
+  /** 'hull' recolors each mesh's ink; 'outline' draws one rim round the whole spot. */
   highlight: 'hull' | 'outline';
   /** Fly back to the current view once a rebuilt rig is in. */
   reflyOnSwap?: boolean;
@@ -55,7 +55,7 @@ export interface StageConfig<S, Id extends string, Lid extends string, R extends
   fit: Fit;
   flight: Flight;
   /**
-   * How area views make room for the side panel: pulled back by `pullback`, then on desktop
+   * How spot views make room for the side panel: pulled back by `pullback`, then on desktop
    * shifted left by `shift` × distance. On phones the panel covers the bottom of the screen,
    * so the view slides down until its target sits in the middle of what's left above it.
    */
@@ -124,7 +124,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
 
   onPointer(canvas, createPicker<Id>(canvas, camera, rig, () => selected), {
     tap(hit) {
-      // Tapping the selected area again lets go of it (its model can fill a phone screen); its beacon plays its animation instead.
+      // Tapping the selected spot again lets go of it (its model can fill a phone screen); its beacon plays its animation instead.
       if (hit?.id === selected && hit?.beacon) {
         rig().poke(hit.id);
         return invalidate();

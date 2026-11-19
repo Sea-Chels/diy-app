@@ -4,7 +4,7 @@ export const HOVER_LAYER = 1;
 export const SELECT_LAYER = 2;
 
 /**
- * One cyan rim around a whole area's silhouette, instead of tinting every
+ * One cyan rim around a whole spot's silhouette, instead of tinting every
  * leaf's ink. Meshes on HOVER_LAYER / SELECT_LAYER are drawn into a mask
  * (red = hovered, green = selected), and a full-screen pass turns its edge
  * into the rim.

@@ -54,7 +54,7 @@ export interface Insets { height: number; top: number; bottom: number }
 export type Clearance = (from: THREE.Vector3, dir: THREE.Vector3, far: number) => number;
 
 /**
- * Frames an area's view clear of the side panel: on desktop it pulls back and shifts aside, as `framing.desktop` says;
+ * Frames a spot's view clear of the side panel: on desktop it pulls back and shifts aside, as `framing.desktop` says;
  * on a phone, where the panel covers the bottom of the screen, it slides and pulls back to fit the strip above it.
  */
 export function frameView(v: View, fov: number, phone: boolean, insets: Insets, framing: Framing, clear: Clearance): View {
