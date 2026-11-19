@@ -88,7 +88,7 @@ Needs Node 24 (see `.node-version`) and pnpm.
 
 ```sh
 pnpm install
-pnpm dev        # http://localhost:5173, workshops at /pc/, /garage/, /garden/ and /home/
+pnpm dev        # http://localhost:4318, workshops at /pc/, /garage/, /garden/ and /home/
 pnpm build      # outputs dist/
 pnpm check      # everything CI runs: typecheck, lint, unit tests and the browser smoke tests
 ```

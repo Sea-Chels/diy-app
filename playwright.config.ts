@@ -1,6 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
-const PORT = 4319;
+// Overridable so two checkouts can run the suite at once.
+const PORT = Number(process.env.E2E_PORT ?? 4319);
 
 export default defineConfig({
   testDir: 'e2e',

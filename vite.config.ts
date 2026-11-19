@@ -52,6 +52,8 @@ export default defineConfig({
   // GitHub Pages serves project sites from /<repo-name>/; the deploy workflow sets VITE_BASE.
   base: process.env.VITE_BASE ?? '/',
   plugins: [loaderPlugin()],
+  // Fixed so it never lands on another local project's dev server.
+  server: { port: 4318, strictPort: true },
   css: { transformer: 'lightningcss', lightningcss: { drafts: { customMedia: true } } },
   build: {
     target: 'es2022',
