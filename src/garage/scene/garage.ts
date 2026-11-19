@@ -57,7 +57,6 @@ export function buildGarage(kind: BodyKind, ride: RideId): GarageRig {
   let current = ride;
 
   return {
-    key: kind,
     group,
     car: car.group,
     picks: [...[...hotspots.values()].flat(), ...beacons.values()],

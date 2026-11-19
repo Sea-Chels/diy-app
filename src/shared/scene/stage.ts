@@ -23,8 +23,6 @@ export interface View {
  * beacons are also tagged `beacon`, and `blocker` marks a surface that hides any pick behind it.
  */
 export interface StageRig<Id extends string, Lid extends string> {
-  /** Rebuild when this changes. */
-  key: string;
   group: THREE.Group;
   picks: THREE.Object3D[];
   /** Meshes highlighted when an area is hovered or selected. */

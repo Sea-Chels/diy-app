@@ -183,7 +183,6 @@ export function buildRig(s: Setup): Rig {
 
   const tmp = new THREE.Color();
   return {
-    key: rigKey(s),
     group: new THREE.Group().add(root, glowHolder),
     picks: [...[...hotspots.values()].flat(), ...beacons.values()],
     glow: hotspots,

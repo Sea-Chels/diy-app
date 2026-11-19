@@ -100,7 +100,6 @@ export function buildRig(s: Setup): Rig {
   let swarmStart = -10;
 
   return {
-    key: rigKey(s),
     group: new THREE.Group().add(root),
     picks,
     glow,

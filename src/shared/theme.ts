@@ -54,8 +54,8 @@ export type ColorName = keyof typeof PALETTE;
 
 export const WORKSHOP_COLOR = { pc: 'cyan', garage: 'coral', home: 'yellow', garden: 'green', hub: 'pink' } as const satisfies Record<string, ColorName>;
 
-/** The comic lighting every scene shares: warm key, cool front fill, magenta and cyan rims. */
-export const LIGHT = { key: 0xfff0dc, front: 0xb8c4ff, rimPink: 0xff4fd8, rimCyan: 0x45e0ff, ground: 0x2a1830 } as const;
+/** The comic lighting every scene shares: warm key, cool front fill, magenta and cyan rims, and a sky a shade paler over a whole room or yard than over one model. */
+export const LIGHT = { key: 0xfff0dc, front: 0xb8c4ff, rimPink: 0xff4fd8, rimCyan: 0x45e0ff, ground: 0x2a1830, skyObject: 0xc9d2ff, skySite: 0xd9e2ff } as const;
 
 export const hex = (name: ColorName): number => parseInt(PALETTE[name].slice(1), 16);
 

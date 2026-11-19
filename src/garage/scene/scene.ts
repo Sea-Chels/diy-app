@@ -1,4 +1,6 @@
 import { createStage } from '../../shared/scene/stage';
+import { OBJECT_KEY, objectRims } from '../../shared/scene/presets';
+import { LIGHT } from '../../shared/theme';
 import { lidsFor, LIDS, type LidId, type PartId } from '../data/parts';
 import type { BodyKind } from '../data/paint';
 import type { RideId } from '../data/rides';
@@ -30,9 +32,9 @@ export function createScene(canvas: HTMLCanvasElement, initial: Appearance) {
     reflyOnSwap: true,
     near: 0.1,
     controls: { minDistance: 1.2, maxDistance: 14, polarMargin: 0.03, pan: false, rotateSpeed: 0.5 },
-    sky: { color: 0xc9d2ff, intensity: 0.75 },
-    key: { pos: [4, 7, 5], intensity: 1.45, shadowMap: 2048, shadowExtent: 5, shadowFar: 25, bias: -0.0005 },
-    rims: { pink: { pos: [-6, 3, -4], intensity: 0.9 }, cyan: { pos: [6, 2.5, -5], intensity: 0.8 } },
+    sky: { color: LIGHT.skyObject, intensity: 0.75 },
+    key: { ...OBJECT_KEY, pos: [4, 7, 5], shadowExtent: 5 },
+    rims: objectRims(-1),
     front: { pos: [-2, 3, 7], intensity: 0.3 },
     ground: { center: [0, 0, 0], disc: 7, ring: [6.2, 7], ringY: 0.001, segments: 64 },
     fit: { base: 1.6, min: 1, max: 2.6, raiseLimit: true },

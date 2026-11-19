@@ -128,7 +128,6 @@ export function buildRig(s: Setup): Rig {
   };
 
   return {
-    key: rigKey(s),
     group: new THREE.Group().add(root),
     picks,
     glow,
