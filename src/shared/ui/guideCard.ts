@@ -15,12 +15,12 @@ export function guideChips(g: GuideBase & { kind: string }, kindLabel: string, t
 
 /** Expandable card for the side panel; `body` is only built while the card is open. */
 export function guideCard(g: GuideBase, o: { open: boolean; chips: HTMLElement; onToggle: () => void; body: () => Child[] }): HTMLElement {
-  const card = h('article', { class: `repair-card diff-${g.difficulty}${o.open ? ' open' : ''}`, 'data-guide': g.id });
+  const card = h('article', { class: `guide-card diff-${g.difficulty}${o.open ? ' open' : ''}`, 'data-guide': g.id });
   card.append(
-    h('button', { class: 'repair-head', 'aria-expanded': String(o.open), onClick: o.onToggle },
-      h('span', { class: 'repair-title' }, g.title), o.chips),
+    h('button', { class: 'guide-head', 'aria-expanded': String(o.open), onClick: o.onToggle },
+      h('span', { class: 'guide-title' }, g.title), o.chips),
   );
-  if (o.open) card.append(h('div', { class: 'repair-body' }, ...o.body()));
+  if (o.open) card.append(h('div', { class: 'guide-body' }, ...o.body()));
   return card;
 }
 

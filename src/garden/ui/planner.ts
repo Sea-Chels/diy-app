@@ -119,7 +119,7 @@ export function openPlanner(): void {
     }
 
     side.append(
-      h('p', { class: 'paint-label' }, 'Bed size'), seg,
+      h('p', { class: 'group-label' }, 'Bed size'), seg,
       h('div', { class: `meter${used > total ? ' over' : ''}` }, h('span', { style: `width:${Math.min(100, (used / total) * 100)}%` })),
       h('p', { class: 'muted small' }, `${used} of ${total} square feet planted${rows.length ? ' · click a square to remove it' : ''}`),
       grid,

@@ -120,7 +120,7 @@ export function openPlantGuide(startAt?: string): void {
   }
 
   const unusual = PLANTS.filter((p) => p.unusual).length;
-  openModal({ title: 'Plant guide', sub: `${PLANTS.length} plants, from tomatoes to ${unusual} unusual ones like pawpaw, goji and marshmallow.`, className: 'glossary-modal plant-modal', body });
+  openModal({ title: 'Plant guide', sub: `${PLANTS.length} plants, from tomatoes to ${unusual} unusual ones like pawpaw, goji and marshmallow.`, className: 'index-modal plant-modal', body });
   if (current) show(current);
   else {
     showList();

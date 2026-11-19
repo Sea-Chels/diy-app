@@ -9,7 +9,7 @@ const FINISH_LABEL = Object.fromEntries(Object.entries(FINISHES).map(([f, v]) =>
 
 /** Floating "Paint" menu: body style, color and finish. Built once, then kept in sync. */
 export function mountPaintShop(root: HTMLElement): void {
-  const { toggle, card } = sceneMenu(root, { id: 'paint-card', icon: 'palette', label: 'Paint', title: 'Paint and body style' });
+  const { toggle, card } = sceneMenu(root, { id: 'menu-card', icon: 'palette', label: 'Paint', title: 'Paint and body style' });
 
   const setAppearance = (patch: Partial<Appearance>) => setState({ appearance: { ...getState().appearance, ...patch } });
 
@@ -22,9 +22,9 @@ export function mountPaintShop(root: HTMLElement): void {
   const finish = segControl('Finish', FINISH_LABEL, (f) => setAppearance({ finish: f }));
 
   card.append(
-    h('p', { class: 'paint-label' }, 'Body'), body.el,
-    h('p', { class: 'paint-label' }, 'Color'), color.el,
-    h('p', { class: 'paint-label' }, 'Finish'), finish.el,
+    h('p', { class: 'group-label' }, 'Body'), body.el,
+    h('p', { class: 'group-label' }, 'Color'), color.el,
+    h('p', { class: 'group-label' }, 'Finish'), finish.el,
   );
 
   function sync(): void {

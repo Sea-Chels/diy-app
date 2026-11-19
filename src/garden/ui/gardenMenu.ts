@@ -13,9 +13,9 @@ export function mountGardenMenu(root: HTMLElement): void {
   const hydro = segControl('Hydroponics', HYDRO_LABEL, (v) => { setSetup({ hydro: v }); select('hydro'); });
 
   card.append(
-    h('p', { class: 'paint-label' }, 'Season'), season.el,
-    h('p', { class: 'paint-label' }, 'Raised bed fill'), fill.el,
-    h('p', { class: 'paint-label' }, 'Hydroponics'), hydro.el,
+    h('p', { class: 'group-label' }, 'Season'), season.el,
+    h('p', { class: 'group-label' }, 'Raised bed fill'), fill.el,
+    h('p', { class: 'group-label' }, 'Hydroponics'), hydro.el,
   );
 
   const DOT: Record<Setup['season'], string> = { spring: 'var(--lime)', summer: 'var(--green)', fall: 'var(--ochre)' };

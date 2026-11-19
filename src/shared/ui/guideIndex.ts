@@ -41,7 +41,7 @@ export function openGuideIndex<Z extends string, G extends GuideBase>(o: GuideIn
   let toggled = true;
 
   const input = h('input', { type: 'search', placeholder: o.placeholder, 'aria-label': 'Search guides', autocomplete: 'off' });
-  const results = h('div', { class: 'glossary-results' });
+  const results = h('div', { class: 'index-results' });
   const chips = h('div', { class: 'filter-row' });
 
   const renderChips = () => keepFocus(chips, renderChipsNow);
@@ -79,8 +79,8 @@ export function openGuideIndex<Z extends string, G extends GuideBase>(o: GuideIn
       results.append(h('h3', { class: 'section-label' }, o.zoneLabel(z)));
       for (const g of list) {
         results.append(
-          h('button', { class: `glossary-item diff-${g.difficulty}`, onClick: () => { closeModal(); o.onPick(g); } },
-            h('span', { class: 'repair-title' }, g.title), o.chips(g), h('span', { class: 'muted small' }, g.summary)),
+          h('button', { class: `index-item diff-${g.difficulty}`, onClick: () => { closeModal(); o.onPick(g); } },
+            h('span', { class: 'guide-title' }, g.title), o.chips(g), h('span', { class: 'muted small' }, g.summary)),
         );
       }
     }
@@ -92,7 +92,7 @@ export function openGuideIndex<Z extends string, G extends GuideBase>(o: GuideIn
   }
 
   input.addEventListener('input', () => { query = input.value; renderResults(); });
-  openModal({ title: o.title ?? 'Every guide', sub: o.sub, className: 'glossary-modal', body: h('div', { class: 'modal-body' }, input, chips, results) });
+  openModal({ title: o.title ?? 'Every guide', sub: o.sub, className: 'index-modal', body: h('div', { class: 'modal-body' }, input, chips, results) });
   renderAll();
   input.focus();
 }

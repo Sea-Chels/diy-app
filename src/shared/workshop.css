@@ -5,10 +5,10 @@
 .spot-nav { bottom: var(--overlay-row); }
 .spot-nav:not(:focus-within) { opacity: 0; pointer-events: none; }
 .scene-menu { position: absolute; top: var(--overlay-gap); left: var(--overlay-gap); z-index: var(--z-overlay); }
-.scene-menu.open .paint-card { display: flex; }
+.scene-menu.open .menu-card { display: flex; }
 .swatches.dim { opacity: var(--dim); }
 .fine-print { font-size: var(--fs-xs); color: var(--muted); line-height: 1.4; }
-.paint-card .fine-print { margin-top: -2px; }
+.menu-card .fine-print { margin-top: -2px; }
 
 .chip.kind { font-weight: 600; }
 .chip.kind-fix { color: var(--peach); background: color-mix(in srgb, var(--coral) 14%, transparent); }
@@ -24,7 +24,7 @@
 }
 :is(a, button).link-chip:hover { color: var(--text); border-color: rgb(var(--hi) / 0.22); }
 button.link-chip { cursor: pointer; }
-.repair-body .panel-links { margin: 0; }
+.guide-body .panel-links { margin: 0; }
 
 /* Compatibility and planner results in the PC parts picker and the garden bed planner. */
 .issues { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 7px; font-size: var(--fs-sm); line-height: 1.4; }

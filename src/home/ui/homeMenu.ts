@@ -16,10 +16,10 @@ export function mountHomeMenu(root: HTMLElement): void {
   wall.el.classList.add('home-swatches');
 
   card.append(
-    h('p', { class: 'paint-label' }, 'Countertop'), counter.el,
-    h('p', { class: 'paint-label' }, 'Ceiling'), ceiling.el,
-    h('p', { class: 'paint-label' }, 'Floor'), floor.el,
-    h('p', { class: 'paint-label' }, 'Wall color'), wall.el,
+    h('p', { class: 'group-label' }, 'Countertop'), counter.el,
+    h('p', { class: 'group-label' }, 'Ceiling'), ceiling.el,
+    h('p', { class: 'group-label' }, 'Floor'), floor.el,
+    h('p', { class: 'group-label' }, 'Wall color'), wall.el,
   );
 
   function sync(): void {

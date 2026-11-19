@@ -151,28 +151,28 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
   radial-gradient(60% 50% at 18% 30%, color-mix(in srgb, var(--pink) 10%, transparent), transparent 70%),
   radial-gradient(55% 45% at 85% 25%, color-mix(in srgb, var(--rim) 10%, transparent), transparent 70%); }
 
-.paint-toggle {
+.menu-toggle {
   display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: var(--pill); color: var(--text);
 }
-.paint-toggle:hover { border-color: rgb(var(--hi) / 0.25); }
-.paint-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 2px rgb(var(--hi) / 0.15); }
-.paint-card {
+.menu-toggle:hover { border-color: rgb(var(--hi) / 0.25); }
+.menu-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 2px rgb(var(--hi) / 0.15); }
+.menu-card {
   position: absolute; top: calc(100% + 8px); left: 0; width: 280px; padding: 14px;
   background: rgb(var(--surface)); border: 1px solid var(--line); border-radius: var(--r-xl); box-shadow: 0 20px 50px rgb(var(--shade) / 0.45);
   display: none; flex-direction: column; gap: 8px; animation: pop var(--t-med) var(--ease-out);
 }
 /* The small uppercase heading over a group of controls or a list. */
-.paint-label, .section-label, .side-h, .cat-label, .two-col h4, .repair-body > h4, .plant-detail h4, .wire-table th {
+.group-label, .section-label, .side-h, .cat-label, .two-col h4, .guide-body > h4, .plant-detail h4, .wire-table th {
   font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
 }
-.paint-label { margin-top: 4px; }
+.group-label { margin-top: 4px; }
 .seg { display: flex; background: rgb(var(--surface)); border: 1px solid var(--line); border-radius: var(--r-md); padding: 3px; gap: 3px; }
 .seg button { flex: 1; background: none; border: 0; border-radius: var(--r-sm); padding: 6px 4px; font-size: var(--fs-sm); color: var(--muted); white-space: nowrap; }
 .seg button:hover { color: var(--text); }
 .seg button.active { background: var(--accent); color: var(--on-accent); font-weight: 600; }
 :is(.primary-btn, .ghost-btn, .seg button):disabled { opacity: var(--dim); cursor: not-allowed; transform: none; }
 /* Controls floating over a 3D scene. */
-.quick-chip, .paint-toggle, .ride-switch { background: var(--float); border: 1px solid var(--line); backdrop-filter: blur(8px); }
+.quick-chip, .menu-toggle, .ride-switch { background: var(--float); border: 1px solid var(--line); backdrop-filter: blur(8px); }
 .swatches { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; }
 .swatch {
   aspect-ratio: 1; border-radius: 50%; border: 2px solid rgb(var(--hi) / 0.12); background: var(--c);
@@ -196,27 +196,27 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
 .panel-head h2 { font-size: var(--fs-xl); margin-bottom: 4px; }
 .section-label { margin: 18px 0 8px; }
 
-.repair-list { display: flex; flex-direction: column; gap: 8px; }
-.repair-card {
+.guide-list { display: flex; flex-direction: column; gap: 8px; }
+.guide-card {
   border: 1px solid var(--line); border-radius: var(--r-xl); background: rgb(var(--hi) / 0.025);
   overflow: hidden; border-left: 3px solid var(--diff-2);
 }
-.repair-card.diff-1 { border-left-color: var(--diff-1); }
-.repair-card.diff-3 { border-left-color: var(--diff-3); }
-.repair-card.open { background: rgb(var(--hi) / 0.045); }
-.repair-head {
+.guide-card.diff-1 { border-left-color: var(--diff-1); }
+.guide-card.diff-3 { border-left-color: var(--diff-3); }
+.guide-card.open { background: rgb(var(--hi) / 0.045); }
+.guide-head {
   width: 100%; background: none; border: 0; text-align: left; padding: 12px 14px;
   display: flex; flex-direction: column; gap: 6px;
 }
-.repair-head:hover { background: rgb(var(--hi) / 0.03); }
-.repair-title { font-weight: 600; }
+.guide-head:hover { background: rgb(var(--hi) / 0.03); }
+.guide-title { font-weight: 600; }
 .chips { display: flex; gap: 6px; flex-wrap: wrap; }
 .chip { font-size: var(--fs-xs); padding: 2px 8px; border-radius: var(--pill); background: rgb(var(--hi) / 0.07); color: var(--muted); }
 .diff-1 .chip.diff { color: var(--diff-1); }
 .diff-2 .chip.diff { color: var(--diff-2); }
 .diff-3 .chip.diff { color: var(--diff-3); }
 
-.repair-body { padding: 0 14px 16px; display: flex; flex-direction: column; gap: 12px; animation: fadeUp var(--t-slow) ease; }
+.guide-body { padding: 0 14px 16px; display: flex; flex-direction: column; gap: 12px; animation: fadeUp var(--t-slow) ease; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .summary { line-height: 1.45; }
 .savings { color: var(--diff-1); font-size: var(--fs-md); display: flex; gap: 8px; align-items: flex-start; }
@@ -226,7 +226,7 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
 .cautions p { display: flex; gap: 8px; align-items: flex-start; }
 .cautions .icon { color: var(--diff-3); }
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: var(--fs-sm); }
-.two-col h4, .repair-body > h4 { margin-bottom: 4px; }
+.two-col h4, .guide-body > h4 { margin-bottom: 4px; }
 .two-col li { margin-bottom: 3px; }
 .steps { display: flex; flex-direction: column; gap: 8px; line-height: 1.45; font-size: var(--fs-md); }
 .steps li::marker { color: var(--accent); font-weight: 700; }
@@ -253,21 +253,21 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
 .filter-row .spacer { flex: 1; }
 .chip-btn { background: transparent; border: 1px solid var(--line); border-radius: var(--pill); padding: 5px 11px; font-size: var(--fs-sm); color: var(--muted); }
 :is(.chip-btn, .quick-chip).active { background: var(--accent); color: var(--on-accent); border-color: transparent; font-weight: 600; }
-.glossary-results { display: flex; flex-direction: column; gap: 6px; }
-.glossary-item {
+.index-results { display: flex; flex-direction: column; gap: 6px; }
+.index-item {
   background: rgb(var(--hi) / 0.025); border: 1px solid var(--line); border-left: 3px solid var(--diff-2); border-radius: var(--r-lg);
   padding: 10px 14px; text-align: left; display: flex; flex-direction: column; gap: 5px; transition: background var(--t-fast) ease;
 }
-.glossary-item:hover { background: rgb(var(--hi) / 0.06); }
-.glossary-item.diff-1 { border-left-color: var(--diff-1); }
-.glossary-item.diff-3 { border-left-color: var(--diff-3); }
+.index-item:hover { background: rgb(var(--hi) / 0.06); }
+.index-item.diff-1 { border-left-color: var(--diff-1); }
+.index-item.diff-3 { border-left-color: var(--diff-3); }
 
 :focus-visible { outline: var(--ring-w) solid var(--ring); outline-offset: var(--ring-w); }
 /* Focus scrolls a control this far clear of its scroller's edge, so the ring outside it shows. */
 :is(button, a, input, select, textarea) { scroll-margin: calc(2 * var(--ring-w)); }
 /* Controls that fill a clipping box (a card's head, a chip in a scrolling row) draw the ring inside it. */
-:is(.quick-chip, .repair-head, .builder-list *, .builder-side *):focus-visible { outline-offset: calc(-1 * var(--ring-w)); }
-:is(.repair-head, .cat-head):focus-visible { border-radius: inherit; }
+:is(.quick-chip, .guide-head, .builder-list *, .builder-side *):focus-visible { outline-offset: calc(-1 * var(--ring-w)); }
+:is(.guide-head, .cat-head):focus-visible { border-radius: inherit; }
 /* Text-sized controls: a hit area --target-min tall that doesn't move anything. */
 .hit-pad { position: relative; }
 .hit-pad::before { content: ''; position: absolute; inset: calc(50% - var(--target-min) / 2) 0; }
@@ -276,7 +276,7 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
 [tabindex="-1"]:focus { outline: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  .paint-card, .repair-body, .modal-backdrop, .modal, .opt-grid { animation: none; }
+  .menu-card, .guide-body, .modal-backdrop, .modal, .opt-grid { animation: none; }
   /* biome-ignore lint/complexity/noImportantStyles: has to beat every transition rule, whatever its specificity */
   *, *::before, *::after { transition: none !important; }
   /* Hover lifts stay put; their color and border changes still show. html outranks the feature sheets, which load later. */

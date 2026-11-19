@@ -33,7 +33,7 @@ for (const { ws, guide, spot } of WORKSHOPS) {
 
       await page.locator('#quick-fixes .quick-chip:not(.more)').first().click();
       await expect(page.locator('#panel')).toHaveClass(/open/);
-      await expect(page.locator('.repair-card.open')).toBeVisible();
+      await expect(page.locator('.guide-card.open')).toBeVisible();
       expect(new URL(page.url()).hash).not.toBe('');
 
       await page.locator('#panel .icon-btn').first().click();
@@ -45,10 +45,10 @@ for (const { ws, guide, spot } of WORKSHOPS) {
     test('deep links open a guide or a spot', async ({ page }) => {
       const errors = watchErrors(page);
       await page.goto(`./${ws}/#${guide}`);
-      await expect(page.locator('.repair-card.open')).toBeVisible();
+      await expect(page.locator('.guide-card.open')).toBeVisible();
       await page.evaluate((s) => (location.hash = s), spot);
       await expect(page.locator('#panel')).toHaveClass(/open/);
-      await expect(page.locator('.repair-card.open')).toHaveCount(0);
+      await expect(page.locator('.guide-card.open')).toHaveCount(0);
       expect(errors).toEqual([]);
     });
   });

@@ -16,15 +16,15 @@ export function mountRigMenu(root: HTMLElement): void {
   const rgb = segControl('Lighting', RGB_LABEL, (v) => setSetup({ rgb: v }));
   const rgbColor = swatchRow('Lighting color', asSwatches(RGB_SWATCHES), (c) => setSetup({ rgbColor: c }));
   const caseColor = swatchRow('Case color', asSwatches(CASE_SWATCHES), (c) => setSetup({ caseColor: c }));
-  const rgbLabel = h('p', { class: 'paint-label' }, 'Lighting');
+  const rgbLabel = h('p', { class: 'group-label' }, 'Lighting');
   const loopNote = h('p', { class: 'fine-print' }, 'Custom loops need room for a reservoir, so Mini-ITX uses an AIO.');
 
   card.append(
-    h('p', { class: 'paint-label' }, 'Case'), size.el,
-    h('p', { class: 'paint-label' }, 'Cooling'), cooling.el, loopNote,
-    h('p', { class: 'paint-label' }, 'Graphics card'), gpu.el,
+    h('p', { class: 'group-label' }, 'Case'), size.el,
+    h('p', { class: 'group-label' }, 'Cooling'), cooling.el, loopNote,
+    h('p', { class: 'group-label' }, 'Graphics card'), gpu.el,
     rgbLabel, rgb.el, rgbColor.el,
-    h('p', { class: 'paint-label' }, 'Case color'), caseColor.el,
+    h('p', { class: 'group-label' }, 'Case color'), caseColor.el,
   );
 
   function sync(): void {

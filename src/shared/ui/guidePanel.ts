@@ -63,7 +63,7 @@ export function mountGuidePanel<S extends string, G extends GuideBase<S>, St ext
       ...(o.extras?.(selected, s) ?? []).filter((e): e is HTMLElement => Boolean(e)),
     );
 
-    const list = h('div', { class: 'repair-list' });
+    const list = h('div', { class: 'guide-list' });
     if (!primary.length && !related.length && o.empty) list.append(h('p', { class: 'muted' }, o.empty(s)));
     if (o.heading) list.append(h('h3', { class: 'section-label' }, o.heading));
     for (const g of primary) list.append(o.card(g, g.id === openGuide));
@@ -75,7 +75,7 @@ export function mountGuidePanel<S extends string, G extends GuideBase<S>, St ext
 
     if (openGuide) {
       requestAnimationFrame(() => {
-        const card = root.querySelector<HTMLElement>('.repair-card.open');
+        const card = root.querySelector<HTMLElement>('.guide-card.open');
         // Leaves the header and the card before it in view.
         if (card) root.scrollTo({ top: Math.max(0, card.offsetTop - 120), behavior: scrollBehavior() });
       });
