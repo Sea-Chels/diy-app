@@ -36,6 +36,32 @@ const POWERTRAINS: [string, string, Powertrain][] = [
   ['Honda', 'Prologue', 'ev'],
   ['Toyota', 'bZ4X', 'ev'],
   ['Toyota', 'Mirai', 'ev'],
+  ['Jaguar', 'I-Pace', 'ev'],
+  ['Volvo', 'EX30', 'ev'],
+  ['Volvo', 'C40 Recharge', 'ev'],
+  ['Volvo', 'XC40 Recharge', 'ev'],
+  ['Hyundai', 'Ioniq Electric', 'ev'],
+  ['Hyundai', 'Ioniq 9', 'ev'],
+  ['Mazda', 'MX-30', 'ev'],
+  ['GMC', 'Sierra EV', 'ev'],
+  ['Cadillac', 'Escalade IQ', 'ev'],
+  ['Cadillac', 'Lyriq', 'ev'],
+  ['Ford', 'E-Transit', 'ev'],
+  ['Mitsubishi', 'i-MiEV', 'ev'],
+  ['Lexus', 'RZ', 'ev'],
+  ['Audi', 'A3 Sportback e-tron', 'hybrid'],
+  ['Audi', 'A3 e-tron', 'hybrid'],
+  ['Polestar', '1', 'hybrid'],
+  ['Lexus', 'CT 200h', 'hybrid'],
+  ['Lexus', 'CT', 'hybrid'],
+  ['Lexus', 'RX 450h', 'hybrid'],
+  ['BMW', 'i8', 'hybrid'],
+  ['BMW', '330e', 'hybrid'],
+  ['BMW', 'X5 xDrive45e', 'hybrid'],
+  ['Mercedes-Benz', 'GLC 350e', 'hybrid'],
+  ['Volvo', 'XC60 Recharge', 'hybrid'],
+  ['Volvo', 'XC90 T8', 'hybrid'],
+  ['Jeep', 'Wrangler 4xe', 'hybrid'],
   ['Toyota', 'Prius', 'hybrid'],
   ['Toyota', 'Prius Prime', 'hybrid'],
   ['Toyota', 'RAV4 Prime', 'hybrid'],
@@ -65,26 +91,12 @@ const POWERTRAINS: [string, string, Powertrain][] = [
   ['Ford', 'Mustang', 'gas'],
   ['BMW', '330i', 'gas'],
   ['Subaru', 'WRX', 'gas'],
+  ['Lexus', 'RX', 'gas'],
+  ['Mercedes-Benz', '300E', 'gas'],
+  ['Infiniti', 'EX35', 'gas'],
+  ['Volvo', 'XC60', 'gas'],
+  ['Jeep', 'Wrangler', 'gas'],
   ['', '', 'gas'],
-];
-
-// Known misses, kept as failing expectations so they flip to errors once makes.ts learns them.
-const POWERTRAIN_MISSES: [string, string, Powertrain, string][] = [
-  ['Audi', 'A3 Sportback e-tron', 'hybrid', 'a plug-in hybrid with an engine, guessed ev'],
-  ['Jaguar', 'I-Pace', 'ev', 'guessed gas'],
-  ['Volvo', 'EX30', 'ev', 'guessed gas'],
-  ['Volvo', 'C40 Recharge', 'ev', 'guessed gas'],
-  ['Hyundai', 'Ioniq Electric', 'ev', '"ioniq" alone wins: guessed hybrid'],
-  ['Hyundai', 'Ioniq 9', 'ev', '"ioniq" alone wins: guessed hybrid'],
-  ['Mazda', 'MX-30', 'ev', 'guessed gas'],
-  ['GMC', 'Sierra EV', 'ev', 'guessed gas'],
-  ['Cadillac', 'Escalade IQ', 'ev', 'guessed gas'],
-  ['Ford', 'E-Transit', 'ev', 'guessed gas'],
-  ['Mitsubishi', 'i-MiEV', 'ev', 'guessed gas'],
-  ['Lexus', 'CT 200h', 'hybrid', 'the "lexus (ct|…)" branch tests the model, which never contains "Lexus"'],
-  ['Lexus', 'RX 450h', 'hybrid', 'same dead "lexus" branch'],
-  ['BMW', 'i8', 'hybrid', 'guessed gas'],
-  ['Jeep', 'Wrangler 4xe', 'hybrid', 'guessed gas'],
 ];
 
 describe('guessPowertrain', () => {
@@ -93,7 +105,7 @@ describe('guessPowertrain', () => {
     expect(guessPowertrain('tesla', 'model y')).toBe('ev');
     expect(guessPowertrain('TOYOTA', 'PRIUS')).toBe('hybrid');
   });
-  for (const [make, model, want, why] of POWERTRAIN_MISSES) it.fails(`known miss: ${make} ${model} should be ${want} (${why})`, () => expect(guessPowertrain(make, model)).toBe(want));
+  it('ignores stray spaces', () => expect(guessPowertrain(' Lexus ', ' CT ')).toBe('hybrid'));
 });
 
 const BODIES: [string, string, BodyKind][] = [

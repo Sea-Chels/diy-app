@@ -13,16 +13,35 @@ const CURRENT_YEAR = new Date().getFullYear();
 export const YEARS: number[] = [];
 for (let y = CURRENT_YEAR + 1; y >= 1990; y--) YEARS.push(y);
 
-const EV_MAKES = /^(tesla|rivian|lucid|polestar)$/i;
-const EV_MODELS = /\b(leaf|bolt|ioniq 5|ioniq 6|ev6|ev9|mach-e|mustang mach|id\.?4|id\.? buzz|e-tron|q4|q8 e|eqs|eqb|eqe|i3|i4|i5|i7|ix|taycan|lyriq|ariya|solterra|bz4x|lightning|niro ev|kona electric|e-golf|spark ev|500e|cooper se|blazer ev|equinox ev|silverado ev|prologue|zdx|hummer ev|r1t|r1s|air|cybertruck|model [3sxy]|focus electric|fit ev|soul ev|clarity electric|mirai|nexo)\b/i;
-const HYBRID_MODELS = /\b(prius|hybrid|hev|phev|plug-in|insight|cr-z|volt|clarity|niro|ioniq|rav4 prime|pacifica hybrid|e-power|energi|lexus (ct|es 300h|nx 300h|rx 450h|ux 250h))\b/i;
-const DIESEL_MODELS = /\b(tdi|diesel|power stroke|duramax|cummins|bluetec|ecodiesel|d4d|crd|td)\b/i;
+/** Matches any of `names` as whole words; each name is a regex fragment. */
+const words = (names: string[]) => new RegExp(`\\b(${names.join('|')})\\b`, 'i');
+
+/**
+ * Tested in order against "make model", first match wins: the plug-ins that share an EV badge come first,
+ * and the EV names ("Ioniq 5") sit above the hybrid ones ("Ioniq").
+ */
+const POWERTRAIN_RULES: [Powertrain, RegExp][] = [
+  ['hybrid', words(['a3 (sportback )?e-tron', 'polestar 1'])],
+  ['ev', /^(tesla|rivian|lucid|polestar)\b/i],
+  ['ev', words([
+    'leaf', 'ariya', 'bolt', 'spark ev', 'blazer ev', 'equinox ev', 'silverado ev', 'sierra ev', 'hummer ev',
+    'lyriq', 'optiq', 'vistiq', 'escalade iq', 'mach-e', 'mustang mach', 'lightning', 'e-transit', 'focus electric',
+    'ioniq ([569]|electric)', 'kona electric', 'ev[69]', 'niro ev', 'soul ev', 'id\\.? ?4', 'id\\.? buzz', 'e-golf',
+    'e-tron', 'q4', 'q8 e', 'eq[bes]', 'i[3-7]', 'ix', 'taycan', 'i-pace', 'ex(30|40|90)', 'ec40', 'c40', 'xc40 recharge',
+    'mx-30', 'solterra', 'bz4x', 'lexus rz', 'prologue', 'zdx', 'fit ev', 'clarity electric', 'mirai', 'nexo',
+    '500e', 'cooper se', 'i-miev', 'r1[ts]', 'air', 'cybertruck', 'model [3sxy]',
+  ])],
+  ['hybrid', words([
+    'hybrid', 'hev', 'phev', 'plug-in', 'prius', 'rav4 prime', 'insight', 'cr-z', 'volt', 'clarity', 'niro', 'ioniq',
+    'e-power', 'energi', 'recharge', 't8', 'tfsi e', '4xe', 'i8', 'bmw \\d{3}e', 'xdrive\\d{2}e', 'mercedes-benz .* \\d{3}e',
+    'lexus ct', 'lexus .*\\d{3}h',
+  ])],
+  ['diesel', words(['tdi', 'diesel', 'power stroke', 'duramax', 'cummins', 'bluetec', 'ecodiesel', 'd4d', 'crd', 'td'])],
+];
 
 export function guessPowertrain(make: string, model: string): Powertrain {
-  if (EV_MAKES.test(make) || EV_MODELS.test(model)) return 'ev';
-  if (HYBRID_MODELS.test(model)) return 'hybrid';
-  if (DIESEL_MODELS.test(model)) return 'diesel';
-  return 'gas';
+  const name = `${make.trim()} ${model.trim()}`;
+  return POWERTRAIN_RULES.find(([, re]) => re.test(name))?.[0] ?? 'gas';
 }
 
 const SUV_MAKES = /^(jeep|land rover|rivian)$/i;
