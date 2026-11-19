@@ -3,6 +3,7 @@ import { announce } from './announce';
 import { h, clear } from './dom';
 import { keepFocus } from './focus';
 import { media } from './media';
+import { scrollBehavior } from './motion';
 import { press } from './ui/choices';
 import type { Selection, Store } from './store';
 
@@ -66,6 +67,8 @@ export function wireWorkshop<S extends string, G extends GuideBase<S>, St extend
 
   const spotNav = h('nav', { class: 'quick-fixes spot-nav', 'aria-label': o.spots.label });
   quick.before(spotNav);
+  // Chrome doesn't scroll a half-shown control into view on focus, and these rows scroll sideways.
+  for (const row of [quick, spotNav]) row.addEventListener('focusin', (e) => (e.target as HTMLElement).scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: scrollBehavior() }));
   let listed = '';
   function syncSpots(s: St): void {
     const ids = o.spots.ids(s);

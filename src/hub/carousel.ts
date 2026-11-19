@@ -21,7 +21,7 @@ export function initCarousel(root: HTMLElement): void {
   const dots = slides.map((slide, i) => {
     const label = slide.dataset.label ?? '';
     const fill = h('span', { class: 'dot-fill', onAnimationend: () => go(index + 1, 1) });
-    const dot = h('button', { type: 'button', class: 'dot', 'aria-label': `Slide ${i + 1} of ${slides.length}: ${label}`, onClick: () => go(i, i < index ? -1 : 1) },
+    const dot = h('button', { type: 'button', class: 'dot hit-pad', 'aria-label': `Slide ${i + 1} of ${slides.length}: ${label}`, onClick: () => go(i, i < index ? -1 : 1) },
       h('span', { class: 'dot-label' }, label),
       h('span', { class: 'dot-bar' }, fill));
     dot.style.setProperty('--ws', slide.style.getPropertyValue('--ws'));

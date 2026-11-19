@@ -67,7 +67,7 @@ export function openBuilder(focus?: Category): void {
                 h('span', { class: 'muted small' }, p.blurb),
                 clash.length ? h('span', { class: 'opt-clash' }, icon('bad', 14), h('span', {}, clash[0].text)) : null,
                 picked ? h('span', { class: 'opt-tick' }, icon('check', 14), 'Picked') : null),
-              h('a', { class: 'opt-ppp', href: pppSearch(p.name), target: '_blank', rel: 'noopener noreferrer', title: 'Prices and specs on PCPartPicker' }, 'PCPartPicker', icon('external', 12))),
+              h('a', { class: 'opt-ppp hit-pad', href: pppSearch(p.name), target: '_blank', rel: 'noopener noreferrer', title: 'Prices and specs on PCPartPicker' }, 'PCPartPicker', icon('external', 12))),
           );
         }
         row.append(grid);
