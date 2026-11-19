@@ -97,7 +97,7 @@ pnpm check      # everything CI runs: typecheck, lint, unit tests and the browse
 |---|---|
 | `pnpm typecheck` | `tsc` over `src/`, then over the Node-side config and tests |
 | `pnpm lint` | Biome, lint rules only (no formatter) |
-| `pnpm test` | Vitest: data checks for every workshop (ids unique, every reference resolves) and unit tests for the compatibility rules, bed planner, store and chain path |
+| `pnpm test` | Vitest: data checks for every workshop (ids unique, every reference resolves, electrical guides cut the power before any wiring) and unit tests for the compatibility rules, bed planner, store, chain path, car powertrain and body guesses, vPIC client (errors and timeout) and the home calculators and wire chart |
 | `pnpm test:e2e` | builds, then Playwright opens each page in Chrome and clicks through guides, deep links and the ride switch |
 
 To run the e2e suite the way CI does, against a build at the Pages path: `VITE_BASE=/diy-app/ pnpm test:e2e`. The build and the preview server both read `VITE_BASE`. Set `E2E_PORT` to run it on another port.
