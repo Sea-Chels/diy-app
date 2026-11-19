@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { tween, onTweenStart, updateTweens, cancelTweens, easeInOutCubic, easeOutBack, lerp } from '../tween';
+import { tween, onTweenStart, updateTweens, cancelTweens, easeInOutCubic, easeOutBack, lerp, type Motion } from '../tween';
 import { onReducedMotionChange, reducedMotion } from '../motion';
 import { media } from '../media';
 import { lineMaterials, setHighlight, shared } from '../toon';
@@ -41,8 +41,8 @@ export interface StageRig<Id extends string, Lid extends string> {
   canPick?(id: Id): boolean;
   /** Play an area's small animation, if it has one. */
   poke(id: Id): void;
-  /** Advances ambient animation to `t` seconds. True while something is still moving, so the stage keeps drawing frames. */
-  update(t: number): boolean;
+  /** Advances ambient animation to `t` seconds and says what moved, so the stage keeps drawing frames (and shadows) while it does. */
+  update(t: number): Motion;
   dispose(): void;
 }
 
@@ -92,7 +92,7 @@ export interface Stage<S, Id extends string, R> {
   onHover(cb: (id: Id | null) => void): void;
   setSetup(s: S): void;
   rig(): R;
-  /** Draw a fresh frame after changing the rig from outside the stage. */
+  /** Draw a fresh frame, shadows included, after changing the rig from outside the stage. */
   invalidate(): void;
 }
 
@@ -109,6 +109,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
+  renderer.shadowMap.autoUpdate = false;
   renderer.toneMapping = THREE.NoToneMapping;
 
   const scene = new THREE.Scene();
@@ -163,13 +164,15 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
 
   // Frames are drawn on demand: whatever changes the picture asks for one, and the frame asks for the next while anything still moves.
   let queued = false;
-  function invalidate(): void {
+  let shadowsStale = true;
+  function invalidate(m: Motion = 'picture'): void {
+    if (m === 'casters') shadowsStale = true;
     if (queued) return;
     queued = true;
     requestAnimationFrame(frame);
   }
-  onTweenStart(invalidate);
-  onReducedMotionChange(invalidate);
+  onTweenStart(() => invalidate());
+  onReducedMotionChange(() => invalidate());
 
   let rig = cfg.build(cfg.initial);
   scene.add(rig.group);
@@ -288,7 +291,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     controls.autoRotate = !reducedMotion();
     invalidate();
   };
-  controls.addEventListener('change', invalidate);
+  controls.addEventListener('change', () => invalidate());
   controls.addEventListener('start', () => {
     controls.autoRotate = false;
     cancelTweens('camera');
@@ -312,6 +315,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
       duration: cfg.flight.ms,
       ease: easeInOutCubic,
       tag: 'camera',
+      shadows: false,
       update: (k) => {
         camera.position.lerpVectors(p0, p1, k);
         camera.position.y += Math.sin(k * Math.PI) * lift;
@@ -459,7 +463,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   // A change that keeps the current rig applies at once, even mid-swap, so a camera move that follows sees it.
   function setSetup(s: S): void {
     latest = s;
-    invalidate();
+    invalidate('casters');
     if (cfg.rigKey(s) === rig.key) cfg.restyle?.(rig, s);
     else if (!swapping) swap();
   }
@@ -500,8 +504,9 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     timer ??= new THREE.Timer();
     skipped += Math.max(0, timer.update().getDelta() - MAX_STEP);
     const t = timer.getElapsed() - skipped;
-    let moving = updateTweens(performance.now());
-    if (rig.update(t)) moving = true;
+    const tweened = updateTweens(performance.now());
+    const ambient = rig.update(t);
+    let moving = Boolean(tweened || ambient);
     const still = reducedMotion() || !cfg.beaconPulse.amp;
     const pulse = still ? 1 : 1 + Math.sin(t * cfg.beaconPulse.speed) * cfg.beaconPulse.amp;
     const bs = cfg.beaconScale;
@@ -522,6 +527,8 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     keyDir.copy(key.position).sub(key.target.position).normalize();
     shared.uKeyDir.value.copy(keyDir).transformDirection(camera.matrixWorldInverse);
     shared.uUpView.value.set(0, 1, 0).transformDirection(camera.matrixWorldInverse);
+    renderer.shadowMap.needsUpdate = shadowsStale || tweened === 'casters' || ambient === 'casters';
+    shadowsStale = false;
     renderer.render(scene, camera);
     if (outline && (hovered || selected)) outline.render(scene, camera);
     if (moving) invalidate();
@@ -535,6 +542,6 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     onHover: (cb) => hoverCbs.push(cb),
     setSetup,
     rig: () => rig,
-    invalidate,
+    invalidate: () => invalidate('casters'),
   };
 }

@@ -161,7 +161,9 @@ export function buildRig(s: Setup): Rig {
           drops.splice(i, 1);
         }
       }
-      return !reducedMotion() || drops.length > 0 || sw < 3 || swarm > 0 || Math.abs(target - shared.uGust.value) > 1e-3;
+      if (!reducedMotion() || sw < 3 || swarm > 0) return 'casters';
+      // Wind sways only the drawn plants; their shadows stand still.
+      return drops.length > 0 || Math.abs(target - shared.uGust.value) > 1e-3 ? 'picture' : false;
     },
     dispose() {
       disposeTree(root);

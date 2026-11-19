@@ -267,7 +267,8 @@ export function buildRig(s: Setup): Rig {
       glow.intensity = on ? 1.2 * power : 0;
       for (const m of coolantMats) m.emissiveIntensity = 0.12 + 0.3 * power;
       ledMat.emissiveIntensity = power;
-      return !reducedMotion() || boot !== null;
+      // Under reduced motion the fans hold still, so only a boot changes the picture, and only on screen.
+      return !reducedMotion() ? 'casters' : boot ? 'picture' : false;
     },
     dispose() {
       disposeTree(root);

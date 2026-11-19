@@ -195,7 +195,8 @@ export function buildRig(s: Setup): Rig {
       for (const b of burners) b.material = hot ? burnerHot : burnerCold;
       const jg = t - jiggleAt;
       knobs.forEach((k) => (k.rotation.x = jg < 0.8 ? Math.sin(jg * 30) * 0.3 * (1 - jg / 0.8) : 0));
-      return !reducedMotion() || drops.length > 0 || dripsDue.length > 0 || fl < 6 || hot || jg < 0.8;
+      if (!reducedMotion() || fl < 6 || jg < 0.8) return 'casters';
+      return drops.length > 0 || dripsDue.length > 0 || hot ? 'picture' : false;
     },
     dispose() {
       disposeTree(root);

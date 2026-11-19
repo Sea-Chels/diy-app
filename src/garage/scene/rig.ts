@@ -123,6 +123,7 @@ export function buildCar(kind: BodyKind): CarRig {
         duration: 420,
         ease: easeInOutCubic,
         tag: `paint:${m.uuid}`,
+        shadows: false,
         update: (k) => {
           m.color.copy(c0).lerp(target, k);
           u.uShine.value = lerp(s0, p.shine, k);
