@@ -1,4 +1,4 @@
-/** How the house model is shown. Every field rebuilds the model. */
+/** How the house model is shown. The counter and ceiling rebuild the model; the floor and wall color repaint it. */
 import { asRecord, oneOf } from '../../shared/store';
 export type Counter = 'laminate' | 'butcher' | 'quartz';
 export type Ceiling = 'fan' | 'light';

@@ -9,6 +9,7 @@ export function createScene(canvas: HTMLCanvasElement, initial: Setup) {
     initial,
     build: buildRig,
     rigKey,
+    restyle: (rig, s) => rig.setLook(s),
     lids: LIDS,
     opens: (a) => AREAS[a].opens,
     ...SITE,

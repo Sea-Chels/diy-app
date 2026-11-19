@@ -29,13 +29,16 @@ import { findMovers, mergeInk, moves } from '../../shared/scene/ink';
 import { K, X0, Z0, WH } from './room';
 import { tag } from '../../shared/scene/sceneTags';
 
-export type Rig = StageRig<AreaId, LidId>;
+export interface Rig extends StageRig<AreaId, LidId> {
+  /** The wall color and floor change in place, without a rebuild. */
+  setLook(s: Setup): void;
+}
 
-export const rigKey = (s: Setup) => `${s.counter}|${s.ceiling}|${s.floor}|${s.wall}`;
+export const rigKey = (s: Setup) => `${s.counter}|${s.ceiling}`;
 
 export function buildRig(s: Setup): Rig {
   const c = createCtx(s);
-  const { lidHooks, root, areas, picks } = c;
+  const { lidHooks, looks, root, areas, picks } = c;
   buildFloor(c);
   buildWalls(c);
   const { sink, appliances, SINK, DRIP_FROM } = buildKitchen(c);
@@ -136,6 +139,7 @@ export function buildRig(s: Setup): Rig {
     views,
     overview,
     setLid,
+    setLook: (n) => looks.forEach((f) => f(n)),
     poke(id) {
       if (id === 'sink') pokedDrips = 5;
       else if (id === 'lights') {

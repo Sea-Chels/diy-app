@@ -114,6 +114,13 @@ export function mapped(color: THREE.ColorRepresentation, map: THREE.Texture, o: 
   return m;
 }
 
+/** Swaps a material's texture for a new one, disposing the old. */
+export function remap(m: THREE.MeshToonMaterial, map: THREE.Texture): void {
+  m.map?.dispose();
+  m.map = map;
+  m.needsUpdate = true;
+}
+
 
 export type LeafShape = 'ovate' | 'obovate' | 'lance' | 'round' | 'heart' | 'strap' | 'pinnate' | 'palmate' | 'petal' | 'blade';
 

@@ -12,6 +12,9 @@ import { tag } from '../../shared/scene/sceneTags';
 export function createCtx(s: Setup) {
   const r = rng(77);
   const lidHooks: Partial<Record<LidId, (k: number) => void>> = {};
+  /** What a wall color or floor change repaints in place; the counter and ceiling choices rebuild the house. */
+  const looks: ((s: Setup) => void)[] = [];
+  const look = (fn: (s: Setup) => void) => void looks.push(fn);
   const root = new THREE.Group();
   root.scale.setScalar(K);
 
@@ -46,6 +49,8 @@ export function createCtx(s: Setup) {
     water: MAT.water(),
     wire: { black: toon(0x202020), white: toon(0xf1f1f1), bare: toon(0xc77a45, { shine: 0.7, metal: 0.6 }), green: toon(0x2e9a4c) },
   };
+
+  look((n) => M.paint.color.setHex(WALL_HEX[n.wall]));
 
   const { groups: areas, picks, spot: area, pick: pickBox } = createSpots<AreaId>(root);
   const siding = (y0: number, y1: number) => mapped(0xffffff, lapSiding(y0, y1), { halftone: 0.5 });
@@ -119,7 +124,7 @@ export function createCtx(s: Setup) {
     g.userData.device = dev;
     return g;
   }
-  return { s, r, lidHooks, root, M, areas, picks, siding, blocker, area, pick, slab, pivot, shaker, plateWith };
+  return { s, r, lidHooks, looks, look, root, M, areas, picks, siding, blocker, area, pick, slab, pivot, shaker, plateWith };
 }
 
 export type HomeCtx = ReturnType<typeof createCtx>;

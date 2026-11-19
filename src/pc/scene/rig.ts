@@ -9,7 +9,7 @@ import * as THREE from 'three';
 import { easeInOutCubic, lerp, tweenScope } from '../../shared/tween';
 import { disposeTree } from '../../shared/toon';
 import { reducedMotion } from '../../shared/motion';
-import type { V3 } from '../../shared/scene/kit';
+import { remap, type V3 } from '../../shared/scene/kit';
 import type { StageRig, View } from '../../shared/scene/stage';
 import { createBeacons, createLids, viewFrom, rigClock } from '../../shared/scene/rigKit';
 import { findMovers, mergeInk, moves } from '../../shared/scene/ink';
@@ -154,10 +154,7 @@ export function buildRig(s: Setup): Rig {
     root.traverse((o) => {
       const m = o as THREE.Mesh;
       if (m.userData.coverColor) {
-        const mat = m.material as THREE.MeshToonMaterial;
-        mat.map?.dispose();
-        mat.map = label([{ text: 'DIY', size: 60, color: '#ffffff' }], n.caseColor, 512, 96);
-        mat.needsUpdate = true;
+        remap(m.material as THREE.MeshToonMaterial, label([{ text: 'DIY', size: 60, color: '#ffffff' }], n.caseColor, 512, 96));
       }
     });
   }

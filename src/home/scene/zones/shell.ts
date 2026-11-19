@@ -1,12 +1,12 @@
 import * as THREE from 'three';
-import { add, canvasTex, mapped, type V3 } from '../../../shared/scene/kit';
+import { add, canvasTex, mapped, remap, type V3 } from '../../../shared/scene/kit';
 import { X0, X1, Z0, Z1, T, WH, PH, BX, BZ, PT, HOLE, WIN, DOOR } from '../room';
 import { hexTile, floorTex } from '../textures';
 import type { HomeCtx } from '../ctx';
 
 /** Floor slab, cut to show the layers. */
 export function buildFloor(c: HomeCtx) {
-  const { root, M, slab, s } = c;
+  const { root, M, slab, s, look } = c;
   const floorFront = mapped(0xffffff, canvasTex(256, 64, (ctx) => {
     // Front cut: finish floor, underlayment, subfloor, joist ends every 16 in, drywall ceiling below.
     ctx.fillStyle = '#2a2420';
@@ -37,6 +37,7 @@ export function buildFloor(c: HomeCtx) {
 
   // Finish floor with a hole at the front where planks lift out (the floor area).
   const floorMat = mapped(0xffffff, floorTex(s.floor), { halftone: 0.6 });
+  look((n) => remap(floorMat, floorTex(n.floor)));
   {
     const sh = new THREE.Shape();
     // Shape y is world -z. L-shape around the bathroom.

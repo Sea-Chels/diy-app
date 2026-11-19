@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
-import { add, box, canvasTex, label, leafGeo, leafMatrix, mapped, range, rng, speckle, tube, V, type V3 } from '../../../shared/scene/kit';
+import { add, box, canvasTex, label, leafGeo, leafMatrix, mapped, range, remap, rng, speckle, tube, V, type V3 } from '../../../shared/scene/kit';
 import { hex, PALETTE } from '../../../shared/theme';
 import { Z0, WH, HOLE } from '../room';
 import { floorTex } from '../textures';
 import type { HomeCtx } from '../ctx';
+import type { Setup } from '../../data/setup';
 import { MAT } from '../../../shared/scene/materials';
 
 export function buildLiving(c: HomeCtx) {
@@ -251,28 +252,43 @@ export function buildPaintCorner(c: HomeCtx) {
 
 /** Floor cutaway: planks lift off the underlayment. */
 export function buildFloorCutaway(c: HomeCtx) {
-  const { lidHooks, M, area, pick, slab, pivot, s } = c;
+  const { lidHooks, M, area, pick, slab, pivot, s, look } = c;
   const floorA = area('floor');
   const planks: THREE.Group[] = [];
   {
     const f = floorA;
-    const under = { oak: 0xb5543c, lvp: 0x5d86b5, tile: 0x9a9a94 }[s.floor];
+    const under = (n: Setup) => ({ oak: 0xb5543c, lvp: 0x5d86b5, tile: 0x9a9a94 })[n.floor];
+    const unders: THREE.MeshToonMaterial[] = [];
+    const underMat = () => {
+      const m = toon(under(s));
+      unders.push(m);
+      return m;
+    };
     const ux = (HOLE.x0 + HOLE.x1) / 2 + 0.1;
-    slab([HOLE.x0, -0.016, HOLE.z0], [ux, -0.012, HOLE.z1], toon(under), f, null);
+    slab([HOLE.x0, -0.016, HOLE.z0], [ux, -0.012, HOLE.z1], underMat(), f, null);
     const osb = mapped(0xffffff, speckle('#c9a36a', ['#a8834e', '#dcb87c', '#8f6a3c', '#e3c48e'], 500, [3, 9], [1, 1], 17));
     slab([ux, -0.018, HOLE.z0], [HOLE.x1, -0.014, HOLE.z1], osb, f, null);
-    add(new THREE.CylinderGeometry(0.035, 0.035, HOLE.z1 - HOLE.z0 - 0.02, 16), toon(under), f, { at: [ux + 0.035, 0.022, (HOLE.z0 + HOLE.z1) / 2], rot: [Math.PI / 2, 0, 0] });
+    add(new THREE.CylinderGeometry(0.035, 0.035, HOLE.z1 - HOLE.z0 - 0.02, 16), underMat(), f, { at: [ux + 0.035, 0.022, (HOLE.z0 + HOLE.z1) / 2], rot: [Math.PI / 2, 0, 0] });
     const n = 3;
     const pw = (HOLE.z1 - HOLE.z0) / n;
     const len = HOLE.x1 - HOLE.x0;
-    for (let i = 0; i < n; i++) {
-      const tex = floorTex(s.floor);
+    const plankTex = (n: Setup, i: number) => {
+      const tex = floorTex(n.floor);
       tex.repeat.set(tex.repeat.x * len, tex.repeat.y * pw);
       tex.offset.set(0.13 * i, 0.31 * i);
+      return tex;
+    };
+    const tops: THREE.MeshToonMaterial[] = [];
+    for (let i = 0; i < n; i++) {
       const g = pivot(f, [HOLE.x0, 0, HOLE.z0 + pw * (i + 0.5)]);
-      slab([0, -0.012, -pw / 2 + 0.001], [len, 0.0025, pw / 2 - 0.001], [M.oak, M.oak, mapped(0xffffff, tex, { halftone: 0.6 }), M.oak, M.oak, M.oak], g, 'thin');
+      tops.push(mapped(0xffffff, plankTex(s, i), { halftone: 0.6 }));
+      slab([0, -0.012, -pw / 2 + 0.001], [len, 0.0025, pw / 2 - 0.001], [M.oak, M.oak, tops[i], M.oak, M.oak, M.oak], g, 'thin');
       planks.push(g);
     }
+    look((n) => {
+      for (const m of unders) m.color.setHex(under(n));
+      tops.forEach((m, i) => remap(m, plankTex(n, i)));
+    });
     lidHooks.planks = (k) => planks.forEach((g, i) => {
       g.rotation.z = [0.32, 0.5, 0.22][i] * k;
       g.position.y = 0.02 * k * (i + 1);
