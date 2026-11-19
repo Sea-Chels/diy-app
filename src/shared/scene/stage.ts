@@ -4,7 +4,8 @@ import { onReducedMotionChange, reducedMotion } from '../motion';
 import { lineMaterials, shared } from '../toon';
 import { createOutlinePass } from './outline';
 import type { V3 } from './kit';
-import { clearance, createFraming, type Framing } from './framing';
+import { media } from '../media';
+import { clearance, frameView, type Framing, type Insets } from './framing';
 import { addGround, addLights, type Ground, type Lighting } from './lights';
 import { createLoop, createRenderer, watchSize } from './loop';
 import { createPicker, onPointer, showGlow } from './picking';
@@ -107,8 +108,16 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   const rig = swap.rig;
 
   const overviewFit = () => fitOverview(rig().overview, camera.aspect, cfg.fit, controls, cfg.controls.maxDistance);
-  const frameView = createFraming(camera, canvas, cfg.framing, (from, dir, far) => clearance(scene, swap.target(), from, dir, far));
-  const framed = (id: Id) => frameView(rig().views[id]);
+  const onPhone = media('phone');
+  const panelEl = document.getElementById('panel');
+  const overlayEl = document.querySelector<HTMLElement>('.scene-menu');
+  const insets = (): Insets => ({
+    height: canvas.clientHeight,
+    top: overlayEl ? overlayEl.getBoundingClientRect().bottom - canvas.getBoundingClientRect().top : 0,
+    bottom: panelEl?.offsetHeight ?? 0,
+  });
+  const framed = (id: Id) =>
+    frameView(rig().views[id], camera.fov, onPhone.matches, insets(), cfg.framing, (from, dir, far) => clearance(scene, swap.target(), from, dir, far));
 
   function refreshGlow(): void {
     invalidate();

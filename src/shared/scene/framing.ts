@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { media } from '../media';
 import type { View } from './stage';
 
 const UP = new THREE.Vector3(0, 1, 0);
@@ -47,44 +46,47 @@ export function clearance(scene: THREE.Scene, rig: THREE.Object3D, from: THREE.V
 
 export interface Framing { desktop: { pullback: number; shift: number }; phone: { pullback: number } }
 
-/** Frames area views, nudged clear of the side panel (right on desktop, bottom on phones). */
-export function createFraming(camera: THREE.PerspectiveCamera, canvas: HTMLCanvasElement, framing: Framing, clear: (from: THREE.Vector3, dir: THREE.Vector3, far: number) => number) {
-  const onPhone = media('phone');
-  const panelEl = document.getElementById('panel');
-  const overlayEl = document.querySelector<HTMLElement>('.scene-menu');
-  return (v: View): View => {
-    const t = new THREE.Vector3(...v.target);
-    const p = new THREE.Vector3(...v.pos);
-    const { desktop, phone } = framing;
-    if (onPhone.matches) {
-      // The view slides down along the camera's own up (for a view looking into an engine bay, world down points into the screen)
-      // until the target sits mid-strip between the floating top controls and the panel, `covered` half-heights above screen center.
-      const authored = p.distanceTo(t);
-      const back = new THREE.Vector3().subVectors(p, t).normalize();
-      const side = new THREE.Vector3().crossVectors(back, UP).negate();
-      // Straight down (or up) has no side; three's lookAt then turns screen-up to ∓z.
-      const up = side.lengthSq() < 1e-12 ? new THREE.Vector3(0, 0, -Math.sign(back.y)) : new THREE.Vector3().crossVectors(side, back.clone().negate()).normalize();
-      const h = canvas.clientHeight;
-      const top = overlayEl && h ? (overlayEl.getBoundingClientRect().bottom - canvas.getBoundingClientRect().top) / h : 0;
-      const covered = h ? (panelEl ? panelEl.offsetHeight / h : 0) - top : 0;
-      const slide = up.multiplyScalar(-Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * covered);
-      // Both moves grow with distance, so the camera sits on one line, target + (back + slide) × distance. Pull back along it
-      // to fit the short strip, stopping short of anything in the way (the car beside a motorcycle view).
-      const path = new THREE.Vector3().addVectors(back, slide);
-      const step = path.length();
-      path.normalize();
-      const start = new THREE.Vector3().copy(t).addScaledVector(path, authored * step);
-      const extra = authored * step * (phone.pullback - 1);
-      const dist = authored + Math.max(0, Math.min(extra, clear(start, path, extra) - CLEAR_MARGIN)) / step;
-      p.copy(t).addScaledVector(path, dist * step);
-      t.addScaledVector(slide, dist);
-    } else {
-      p.sub(t).multiplyScalar(desktop.pullback).add(t);
-      const right = new THREE.Vector3().subVectors(t, p).cross(new THREE.Vector3(0, 1, 0)).normalize();
-      const shift = right.multiplyScalar(p.distanceTo(t) * desktop.shift);
-      t.add(shift);
-      p.add(shift);
-    }
-    return { pos: [p.x, p.y, p.z], target: [t.x, t.y, t.z] };
-  };
+/** How much of the canvas is covered, in px: by the floating controls along its top, and by the panel along its bottom on a phone. */
+export interface Insets { height: number; top: number; bottom: number }
+
+/** How far a camera can back away from `from` along `dir`, up to `far`, and still see it. */
+export type Clearance = (from: THREE.Vector3, dir: THREE.Vector3, far: number) => number;
+
+/**
+ * Frames an area's view clear of the side panel: on desktop it pulls back and shifts aside, as `framing.desktop` says;
+ * on a phone, where the panel covers the bottom of the screen, it slides and pulls back to fit the strip above it.
+ */
+export function frameView(v: View, fov: number, phone: boolean, insets: Insets, framing: Framing, clear: Clearance): View {
+  const t = new THREE.Vector3(...v.target);
+  const p = new THREE.Vector3(...v.pos);
+  if (phone) {
+    // The view slides down along the camera's own up (for a view looking into an engine bay, world down points into the screen)
+    // until the target sits mid-strip between the floating top controls and the panel, `covered` half-heights above screen center.
+    const authored = p.distanceTo(t);
+    const back = new THREE.Vector3().subVectors(p, t).normalize();
+    const side = new THREE.Vector3().crossVectors(back, UP).negate();
+    // Straight down (or up) has no side; three's lookAt then turns screen-up to ∓z.
+    const up = side.lengthSq() < 1e-12 ? new THREE.Vector3(0, 0, -Math.sign(back.y)) : new THREE.Vector3().crossVectors(side, back.clone().negate()).normalize();
+    const h = insets.height;
+    const top = h ? insets.top / h : 0;
+    const covered = h ? insets.bottom / h - top : 0;
+    const slide = up.multiplyScalar(-Math.tan(THREE.MathUtils.degToRad(fov / 2)) * covered);
+    // Both moves grow with distance, so the camera sits on one line, target + (back + slide) × distance. Pull back along it
+    // to fit the short strip, stopping short of anything in the way (the car beside a motorcycle view).
+    const path = new THREE.Vector3().addVectors(back, slide);
+    const step = path.length();
+    path.normalize();
+    const start = new THREE.Vector3().copy(t).addScaledVector(path, authored * step);
+    const extra = authored * step * (framing.phone.pullback - 1);
+    const dist = authored + Math.max(0, Math.min(extra, clear(start, path, extra) - CLEAR_MARGIN)) / step;
+    p.copy(t).addScaledVector(path, dist * step);
+    t.addScaledVector(slide, dist);
+  } else {
+    p.sub(t).multiplyScalar(framing.desktop.pullback).add(t);
+    const right = new THREE.Vector3().subVectors(t, p).cross(UP).normalize();
+    const shift = right.multiplyScalar(p.distanceTo(t) * framing.desktop.shift);
+    t.add(shift);
+    p.add(shift);
+  }
+  return { pos: [p.x, p.y, p.z], target: [t.x, t.y, t.z] };
 }
