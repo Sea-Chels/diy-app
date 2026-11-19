@@ -74,13 +74,14 @@ function wireChart(): HTMLElement {
     ['15 A', '14 AWG', 'Lighting and general outlets'],
     ['20 A', '12 AWG', 'Kitchen and bathroom outlets, dishwashers, disposals'],
     ['30 A', '10 AWG', 'Electric dryers, some water heaters'],
-    ['40–50 A', '8–6 AWG', 'Electric ranges and cooktops'],
+    ['40 A', '8 AWG', 'Cooktops and smaller electric ranges'],
+    ['50 A', '6 AWG', 'Electric ranges'],
   ];
   return h('div', { class: 'calc' },
     h('table', { class: 'wire-table' },
       h('thead', {}, h('tr', {}, h('th', {}, 'Breaker'), h('th', {}, 'Copper wire'), h('th', {}, 'Typical use'))),
       h('tbody', {}, ...rows.map(([a, w, u]) => h('tr', {}, h('td', {}, a), h('td', {}, w), h('td', {}, u))))),
-    h('p', { class: 'fine-print' }, 'Wire gauge must match or be heavier than the breaker calls for: never put a bigger breaker on thinner wire. Smaller AWG numbers are thicker wire. 15 A outlets are allowed on a 20 A circuit with more than one outlet; a 20 A outlet never goes on a 15 A circuit. Aluminum wire, long runs and appliance circuits follow the nameplate and local code: check with an electrician.'));
+    h('p', { class: 'fine-print' }, 'Wire gauge must match or be heavier than the breaker calls for: never put a bigger breaker on thinner wire. Smaller AWG numbers are thicker wire. The 8 and 6 AWG sizes are for NM (Romex) cable, which is rated at 60 °C. 15 A outlets are allowed on a 20 A circuit with more than one outlet; a 20 A outlet never goes on a 15 A circuit. Aluminum wire, long runs and appliance circuits follow the nameplate and local code: check with an electrician.'));
 }
 
 export function openCalculators(start: CalcTab = 'paint'): void {

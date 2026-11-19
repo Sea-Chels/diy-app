@@ -71,6 +71,13 @@ describe('wire and breaker chart', () => {
     expect(awg.get('12 AWG')).toBe('20 A');
     expect(awg.get('10 AWG')).toBe('30 A');
   });
+  it('sizes range circuits for NM cable at 60 °C: 8 AWG for 40 A, 6 AWG for 50 A', () => {
+    openCalculators('wire');
+    const awg = new Map(rows().map(([breaker, wire]) => [wire, breaker]));
+    expect(awg.get('8 AWG')).toBe('40 A');
+    expect(awg.get('6 AWG')).toBe('50 A');
+    expect(rows().every(([b, w]) => /^\d+ A$/.test(b!) && /^\d+ AWG$/.test(w!)), 'one size per row').toBe(true);
+  });
   it('pairs bigger breakers with thicker wire, row by row', () => {
     openCalculators('wire');
     const amps = rows().map(([b]) => Number.parseInt(b!, 10));
