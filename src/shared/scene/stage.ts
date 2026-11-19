@@ -2,18 +2,15 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { tween, onTweenStart, updateTweens, cancelTweens, easeInOutCubic, easeOutBack, lerp, type Motion } from '../tween';
 import { onReducedMotionChange, reducedMotion } from '../motion';
-import { media } from '../media';
 import { lineMaterials, setHighlight, shared } from '../toon';
 import { hex, LIGHT } from '../theme';
 import { createOutlinePass, HOVER_LAYER, SELECT_LAYER } from './outline';
 import type { V3 } from './kit';
 import { MAT } from './materials';
+import { clearance, createFraming, shown, type Framing } from './framing';
 
-const UP = new THREE.Vector3(0, 1, 0);
 /** The longest step the animation clock takes in one frame, in seconds: time spent idle or in a background tab counts as one short step, so whatever starts next starts on time. */
 const MAX_STEP = 0.1;
-/** World units a pulled-back camera keeps from the surface it backed up to. */
-const CLEAR_MARGIN = 0.15;
 
 export interface View {
   pos: V3;
@@ -79,7 +76,7 @@ export interface StageConfig<S, Id extends string, Lid extends string, R extends
    * shifted left by `shift` × distance. On phones the panel covers the bottom of the screen,
    * so the view slides down until its target sits in the middle of what's left above it.
    */
-  framing: { desktop: { pullback: number; shift: number }; phone: { pullback: number } };
+  framing: Framing;
   beaconPulse: { amp: number; speed: number };
   /** Beacons shrink as the camera closes in: scale = clamp(distance / near, 0.3, max). Null keeps them one size. */
   beaconScale: { near: number; max: number } | null;
@@ -95,11 +92,6 @@ export interface Stage<S, Id extends string, R> {
   /** Draw a fresh frame, shadows included, after changing the rig from outside the stage. */
   invalidate(): void;
 }
-
-const shown = (o: THREE.Object3D | null): boolean => {
-  for (; o; o = o.parent) if (!o.visible) return false;
-  return true;
-};
 
 export function createStage<S, Id extends string, Lid extends string, R extends StageRig<Id, Lid>>(
   canvas: HTMLCanvasElement,
@@ -324,79 +316,9 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     });
   }
 
-  const sight = new THREE.Raycaster();
-  /**
-   * How far a camera can back away from `from` along `dir` (up to `far`) and still see `from`.
-   * The ray runs back from the far end, so it only meets faces turned toward that camera: a
-   * one-sided cutaway wall seen from behind doesn't count, but the inside of a closed object's
-   * ink hull (which would fill the screen) does. Glass, pick boxes and beacons never block.
-   * It tests the rig at full size: a view can be framed before the first render or mid swap-in.
-   */
-  function clearance(from: THREE.Vector3, dir: THREE.Vector3, far: number): number {
-    const grow = swapped(rig).scale;
-    const scale = grow.x;
-    grow.setScalar(1);
-    scene.updateMatrixWorld();
-    sight.set(new THREE.Vector3().copy(from).addScaledVector(dir, far), new THREE.Vector3().copy(dir).negate());
-    sight.far = far;
-    const hits = sight.intersectObject(scene, true);
-    // Hulls opt out of raycasting so they never take a click; ask them directly.
-    scene.traverse((o) => {
-      if (!o.userData.ink || !shown(o)) return;
-      const proto = (o as THREE.InstancedMesh).isInstancedMesh ? THREE.InstancedMesh.prototype : THREE.Mesh.prototype;
-      proto.raycast.call(o as THREE.Mesh, sight, hits);
-    });
-    let nearest = far;
-    for (const { object: o, distance } of hits) {
-      const m = o as THREE.Mesh;
-      const mat = (Array.isArray(m.material) ? m.material[0] : m.material) as THREE.Material | undefined;
-      if (m.isMesh && mat?.visible && !(mat.transparent && mat.opacity < 0.9) && !o.userData.beacon && shown(o)) nearest = Math.min(nearest, far - distance);
-    }
-    grow.setScalar(scale);
-    scene.updateMatrixWorld();
-    return nearest;
-  }
-
-  const onPhone = media('phone');
-  const panelEl = document.getElementById('panel');
-  const overlayEl = document.querySelector<HTMLElement>('.scene-menu');
-  /** An area's view, nudged clear of the side panel (right on desktop, bottom on phones). */
-  function framed(id: Id): View {
-    const v = rig.views[id];
-    const t = new THREE.Vector3(...v.target);
-    const p = new THREE.Vector3(...v.pos);
-    const { desktop, phone } = cfg.framing;
-    if (onPhone.matches) {
-      // The view slides down along the camera's own up (for a view looking into an engine bay, world down points into the screen)
-      // until the target sits mid-strip between the floating top controls and the panel, `covered` half-heights above screen center.
-      const authored = p.distanceTo(t);
-      const back = new THREE.Vector3().subVectors(p, t).normalize();
-      const side = new THREE.Vector3().crossVectors(back, UP).negate();
-      // Straight down (or up) has no side; three's lookAt then turns screen-up to ∓z.
-      const up = side.lengthSq() < 1e-12 ? new THREE.Vector3(0, 0, -Math.sign(back.y)) : new THREE.Vector3().crossVectors(side, back.clone().negate()).normalize();
-      const h = canvas.clientHeight;
-      const top = overlayEl && h ? (overlayEl.getBoundingClientRect().bottom - canvas.getBoundingClientRect().top) / h : 0;
-      const covered = h ? (panelEl ? panelEl.offsetHeight / h : 0) - top : 0;
-      const slide = up.multiplyScalar(-Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * covered);
-      // Both moves grow with distance, so the camera sits on one line, target + (back + slide) × distance. Pull back along it
-      // to fit the short strip, stopping short of anything in the way (the car beside a motorcycle view).
-      const path = new THREE.Vector3().addVectors(back, slide);
-      const step = path.length();
-      path.normalize();
-      const start = new THREE.Vector3().copy(t).addScaledVector(path, authored * step);
-      const extra = authored * step * (phone.pullback - 1);
-      const dist = authored + Math.max(0, Math.min(extra, clearance(start, path, extra) - CLEAR_MARGIN)) / step;
-      p.copy(t).addScaledVector(path, dist * step);
-      t.addScaledVector(slide, dist);
-    } else {
-      p.sub(t).multiplyScalar(desktop.pullback).add(t);
-      const right = new THREE.Vector3().subVectors(t, p).cross(new THREE.Vector3(0, 1, 0)).normalize();
-      const shift = right.multiplyScalar(p.distanceTo(t) * desktop.shift);
-      t.add(shift);
-      p.add(shift);
-    }
-    return { pos: [p.x, p.y, p.z], target: [t.x, t.y, t.z] };
-  }
+  const clear = (from: THREE.Vector3, dir: THREE.Vector3, far: number) => clearance(scene, swapped(rig), from, dir, far);
+  const frameView = createFraming(camera, canvas, cfg.framing, clear);
+  const framed = (id: Id): View => frameView(rig.views[id]);
 
   function flyToArea(id: Id | null): void {
     if (id) {
