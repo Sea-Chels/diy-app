@@ -140,13 +140,10 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
 .quick-chip:hover { transform: translateY(-2px); border-color: var(--accent); }
 .quick-chip.more { color: var(--accent); }
 
-.stage::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background:
-    radial-gradient(circle, rgb(var(--hi) / 0.05) 1px, transparent 1.4px) 0 0 / 7px 7px,
-    radial-gradient(120% 90% at 50% 40%, transparent 55%, rgb(var(--scrim) / 0.55) 100%);
-  mix-blend-mode: screen;
-}
+/* Over the scene: a vignette that darkens the edges (under the overlays), and halftone dots that lighten it (over them). */
+.stage::before, .stage::after { content: ''; position: absolute; inset: 0; pointer-events: none; }
+.stage::before { background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgb(var(--scrim) / 0.55) 100%); }
+.stage::after { background: radial-gradient(circle, rgb(var(--hi) / 0.05) 1px, transparent 1.4px) 0 0 / 7px 7px; mix-blend-mode: screen; }
 .stage { background:
   radial-gradient(60% 50% at 18% 30%, color-mix(in srgb, var(--pink) 10%, transparent), transparent 70%),
   radial-gradient(55% 45% at 85% 25%, color-mix(in srgb, var(--rim) 10%, transparent), transparent 70%); }
