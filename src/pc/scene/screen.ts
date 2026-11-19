@@ -4,6 +4,7 @@
  */
 import * as THREE from 'three';
 import { PALETTE as P } from '../../shared/theme';
+import { reducedMotion } from '../../shared/motion';
 
 export type ScreenState = 'off' | 'post' | 'bios' | 'install' | 'desktop';
 
@@ -106,7 +107,7 @@ export function createScreen(): Screen {
     lines.forEach((l, i) => {
       if (e > 0.25 + i * 0.3) text(l, 40, 44 + i * 34, 24, '#c9cfdc', { font: MONO, weight: 500 });
     });
-    if (Math.floor(e * 2.5) % 2 === 0 || e > 1.6) text('Press DEL to enter setup  ·  F11 boot menu', W / 2, H - 60, 26, '#e7e9ef', { align: 'center', font: MONO, weight: 500 });
+    if (reducedMotion() || Math.floor(e * 2.5) % 2 === 0 || e > 1.6) text('Press DEL to enter setup  ·  F11 boot menu', W / 2, H - 60, 26, '#e7e9ef', { align: 'center', font: MONO, weight: 500 });
   }
 
   function drawBios(e: number): void {
@@ -210,7 +211,8 @@ export function createScreen(): Screen {
     const e = now - since;
     if (current === 'off') drawOff();
     else if (current === 'post') drawPost(e);
-    else if (current === 'bios') drawBios(e);
+    // The BIOS only uses time for its idle pulse and temperature flicker.
+    else if (current === 'bios') drawBios(reducedMotion() ? 0 : e);
     else if (current === 'install') drawInstall(e);
     else drawDesktop();
     texture.needsUpdate = true;

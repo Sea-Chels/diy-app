@@ -1,6 +1,6 @@
 import { h } from '../shared/dom';
 import { icon } from '../shared/icons';
-import { reducedMotion } from '../shared/motion';
+import { onReducedMotionChange, reducedMotion } from '../shared/motion';
 
 /** How long each slide stays up before the next one turns in. */
 const SLIDE_MS = 7000;
@@ -114,6 +114,8 @@ export function initCarousel(root: HTMLElement): void {
     }
   });
 
+  // Turning reduced motion on mid-visit stops the autoplay; turning it off starts it again.
+  onReducedMotionChange(() => setUserPaused(reducedMotion()));
   setUserPaused(userPaused);
   show();
 }

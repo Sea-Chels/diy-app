@@ -336,4 +336,5 @@ a.ws:hover { transform: translate(-3px, -3px) rotate(-0.4deg); box-shadow: 10px 
   html:has(body.hub) { scroll-behavior: auto; }
   /* biome-ignore lint/complexity/noImportantStyles: reduced motion has to beat every animation rule, whatever its specificity */
   .rays, .slide, .slide *, .logo, .carousel { animation: none !important; transition: none !important; }
+  :is(.logo, .nav-cta, .btn-comic, .car-btn, a.ws):is(:hover, :active) { transform: none; }
 }

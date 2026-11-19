@@ -9,6 +9,7 @@
  */
 import * as THREE from 'three';
 import { disposeTree, shared, toon } from '../../shared/toon';
+import { idleClock, reducedMotion } from '../../shared/motion';
 import type { V3 } from '../../shared/scene/kit';
 import { hex } from '../../shared/theme';
 import type { StageRig, View } from '../../shared/scene/stage';
@@ -92,6 +93,7 @@ export function buildRig(s: Setup): Rig {
 
   const { setLid } = createLids<LidId>(lidHooks, { tag: 'home-lid', ms: 900 });
   let clock = 0;
+  const idle = idleClock();
   const drops: THREE.Mesh[] = [];
   const dropMat = new THREE.MeshBasicMaterial({ color: hex('water') });
   const dropGeo = new THREE.SphereGeometry(0.008, 8, 6);
@@ -147,10 +149,12 @@ export function buildRig(s: Setup): Rig {
     update(t) {
       const dt = Math.min(0.05, t - clock);
       clock = t;
-      shared.uTime.value = t;
-      if (t > nextDrip) {
+      const it = idle(t);
+      shared.uTime.value = it;
+      // The idle drip waits on the idle clock; a poked sink's drops fall whatever the setting.
+      if (it > nextDrip) {
         drip();
-        nextDrip = t + 2.4;
+        nextDrip = it + 2.4;
       }
       for (let i = drops.length - 1; i >= 0; i--) {
         const d = drops[i];
@@ -163,7 +167,7 @@ export function buildRig(s: Setup): Rig {
       }
       // Fan blades: a lazy spin, faster for a while when poked.
       spin += (1.6 - spin) * Math.min(1, dt * 0.6);
-      fanBlades.rotation.y += spin * dt;
+      fanBlades.rotation.y += spin * (reducedMotion() ? 0 : dt);
       // Flush: handle down, flapper up, tank drains and refills.
       const fl = t - flushAt;
       if (fl >= 0 && fl < 6) {

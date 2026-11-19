@@ -7,6 +7,7 @@
  */
 import * as THREE from 'three';
 import { disposeTree, shared } from '../../shared/toon';
+import { idleClock } from '../../shared/motion';
 import { jitter, V, type V3 } from '../../shared/scene/kit';
 import { hex } from '../../shared/theme';
 import type { StageRig, View } from '../../shared/scene/stage';
@@ -89,6 +90,7 @@ export function buildRig(s: Setup): Rig {
   const { setLid } = createLids<LidId>(lidHooks, { tag: 'garden-lid', ms: 900 });
   let gustUntil = 0;
   let clock = 0;
+  const idle = idleClock();
   const drops: THREE.Mesh[] = [];
   const dropMat = new THREE.MeshBasicMaterial({ color: hex('water') });
   let swingStart = -10;
@@ -121,12 +123,13 @@ export function buildRig(s: Setup): Rig {
     update(t) {
       const dt = Math.min(0.05, t - clock);
       clock = t;
-      shared.uTime.value = t;
+      const it = idle(t);
+      shared.uTime.value = it;
       const target = t < gustUntil ? 3.2 : 1;
       shared.uGust.value += (target - shared.uGust.value) * Math.min(1, dt * 3);
       const swarm = Math.max(0, 1 - (t - swarmStart) / 4);
       for (const c of bugs) {
-        const a = t * c.speed + c.phase;
+        const a = it * c.speed + c.phase;
         const rad = c.rad * (1 - 0.5 * swarm);
         const x = Math.cos(a) * rad + Math.sin(a * 2.3) * 0.12;
         const z = Math.sin(a * 1.1) * rad;
@@ -135,11 +138,11 @@ export function buildRig(s: Setup): Rig {
         const vx = -Math.sin(a) * rad;
         const vz = Math.cos(a * 1.1) * rad * 1.1;
         c.g.rotation.y = Math.atan2(-vz, vx);
-        const flap = c.bee ? Math.sin(t * 60) * 0.6 : Math.sin(t * 9 + c.phase) * 1.0;
+        const flap = c.bee ? Math.sin(it * 60) * 0.6 : Math.sin(it * 9 + c.phase) * 1.0;
         for (const w of c.wings) w.rotation.x = w.userData.side * (c.bee ? 0.3 + flap : flap);
       }
       for (const p of steam) {
-        const k2 = (t * 0.25 + p.userData.phase) % 1;
+        const k2 = (it * 0.25 + p.userData.phase) % 1;
         p.position.set(steamBase.x + Math.sin(k2 * 6 + p.userData.phase * 9) * 0.08, 0.62 + k2 * 0.7, -0.02);
         p.scale.setScalar(0.05 + k2 * 0.12);
         (p.material as THREE.MeshBasicMaterial).opacity = 0.4 * Math.sin(k2 * Math.PI);

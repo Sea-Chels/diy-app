@@ -267,7 +267,10 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
 
 @media (prefers-reduced-motion: reduce) {
   .paint-card, .repair-body, .modal-backdrop, .modal, .opt-grid { animation: none; }
-  .panel { transition: none; }
+  /* biome-ignore lint/complexity/noImportantStyles: has to beat every transition rule, whatever its specificity */
+  *, *::before, *::after { transition: none !important; }
+  /* Hover lifts stay put; their color and border changes still show. html outranks the feature sheets, which load later. */
+  html :is(.primary-btn, .quick-chip, .swatch, .opt, .plant-tile):hover { transform: none; }
 }
 
 @media (--phone) {

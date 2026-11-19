@@ -8,6 +8,7 @@
 import * as THREE from 'three';
 import { tween, easeInOutCubic, lerp } from '../../shared/tween';
 import { disposeTree } from '../../shared/toon';
+import { idleClock, reducedMotion } from '../../shared/motion';
 import type { V3 } from '../../shared/scene/kit';
 import type { StageRig, View } from '../../shared/scene/stage';
 import { createBeacons, createLids, viewFrom } from '../../shared/scene/rigKit';
@@ -127,6 +128,7 @@ export function buildRig(s: Setup): Rig {
   let boot: { start: number } | null = null;
   let clock = 0;
   let lastT = 0;
+  const idle = idleClock();
   let focused: PartId | null = null;
   let usbShown = false;
 
@@ -226,6 +228,7 @@ export function buildRig(s: Setup): Rig {
       const dt = Math.min(0.05, t - lastT);
       lastT = t;
       clock = t;
+      const it = idle(t);
       // Boot sequence: power down, POST, BIOS, installer, desktop.
       if (boot) {
         const e = t - boot.start;
@@ -242,7 +245,8 @@ export function buildRig(s: Setup): Rig {
         }
       }
       screen.update(t);
-      for (const r of rotors) r.obj.rotation.z += (r.speed * power + boost[r.boost] * 26) * dt;
+      const idt = reducedMotion() ? 0 : dt;
+      for (const r of rotors) r.obj.rotation.z += (r.speed * power + boost[r.boost] * 26) * idt;
       const on = rgbMode !== 'off';
       for (const { mat, phase } of rgbMats) {
         if (!on) {
@@ -251,14 +255,14 @@ export function buildRig(s: Setup): Rig {
           continue;
         }
         if (rgbMode === 'solid') tmp.copy(rgbColor);
-        else tmp.setHSL((t * 0.12 + phase) % 1, 0.95, 0.6);
+        else tmp.setHSL((it * 0.12 + phase) % 1, 0.95, 0.6);
         mat.color.copy(tmp);
         mat.emissive.copy(tmp);
         mat.emissiveIntensity = 0.9 * power;
       }
       if (on) {
         if (rgbMode === 'solid') glow.color.copy(rgbColor);
-        else glow.color.setHSL((t * 0.12 + 0.4) % 1, 0.95, 0.6);
+        else glow.color.setHSL((it * 0.12 + 0.4) % 1, 0.95, 0.6);
       }
       glow.intensity = on ? 1.2 * power : 0;
       for (const m of coolantMats) m.emissiveIntensity = 0.12 + 0.3 * power;
