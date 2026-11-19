@@ -1,10 +1,4 @@
 @import '../shared/media.css';
-@property --ws {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: #b46cff;
-}
-
 html:has(body.hub) { scroll-behavior: smooth; }
 body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto; }
 .hub :is(#carousel, #how, #workshops) { scroll-margin-top: 70px; }
@@ -82,8 +76,8 @@ body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto;
 .rays {
   position: absolute; z-index: -1; left: 50%; top: 50%; width: 260vmax; height: 260vmax; margin: -130vmax 0 0 -130vmax;
   background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--ws) 16%, transparent) 0deg 5deg, transparent 5deg 13deg);
-  -webkit-mask: radial-gradient(circle at center, #000 0 14%, transparent 34%);
-  mask: radial-gradient(circle at center, #000 0 14%, transparent 34%);
+  -webkit-mask: radial-gradient(circle at center, rgb(var(--shade)) 0 14%, transparent 34%);
+  mask: radial-gradient(circle at center, rgb(var(--shade)) 0 14%, transparent 34%);
   animation: rays-spin 90s linear infinite;
 }
 .carousel::after {
@@ -124,11 +118,11 @@ body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto;
 .bubble {
   position: relative; align-self: flex-start; max-width: 480px; padding: 14px 20px;
   font-family: var(--comic); font-size: 1.45rem; letter-spacing: 0.04em; line-height: 1.15; color: var(--ink);
-  background: #fff; border: 3px solid var(--ink); border-radius: 26px; box-shadow: 4px 4px 0 var(--ink);
+  background: rgb(var(--hi)); border: 3px solid var(--ink); border-radius: 26px; box-shadow: 4px 4px 0 var(--ink);
 }
 .bubble::after {
   content: ''; position: absolute; left: 34px; bottom: -19px; width: 24px; height: 20px;
-  background: #fff; border-right: 3px solid var(--ink); border-bottom: 3px solid var(--ink);
+  background: rgb(var(--hi)); border-right: 3px solid var(--ink); border-bottom: 3px solid var(--ink);
   clip-path: polygon(0 0, 100% 0, 100% 100%); transform: skewX(-18deg);
 }
 .copy { display: flex; flex-direction: column; gap: 18px; }
@@ -227,7 +221,7 @@ body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto;
   background: rgb(var(--surface)); border: 3px solid var(--ink); border-radius: 50%; box-shadow: 3px 3px 0 var(--ink);
   transition: transform var(--t-fast) ease, background var(--t-med) ease;
 }
-.car-btn:hover { transform: translate(-1px, -1px); background: #1e2330; }
+.car-btn:hover { transform: translate(-1px, -1px); background: var(--bg-glow); }
 .car-btn.pause { margin-left: 6px; }
 .dots { display: flex; gap: 8px; }
 .dot {
@@ -246,7 +240,7 @@ body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto;
 .how, .workshops-wrap { max-width: 1080px; margin: 0 auto; padding: 64px 20px 0; }
 .section-title {
   font-family: var(--comic); font-weight: 400; font-size: clamp(2.2rem, 4.5vw, 3rem); letter-spacing: 0.05em; margin-bottom: 26px;
-  color: #fff; -webkit-text-stroke: 0.05em var(--ink); paint-order: stroke fill; text-shadow: 0.06em 0.06em 0 var(--ink);
+  color: rgb(var(--hi)); -webkit-text-stroke: 0.05em var(--ink); paint-order: stroke fill; text-shadow: 0.06em 0.06em 0 var(--ink);
 }
 .strip { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 .strip-panel {
@@ -271,10 +265,10 @@ body.hub { overflow-x: hidden; overflow-y: auto; min-height: 100%; height: auto;
   --ws: var(--accent);
   position: relative; display: flex; flex-direction: column; gap: 14px; padding: 18px; min-height: 280px;
   border: 3px solid var(--ink); border-radius: var(--r-2xl); text-decoration: none; color: var(--text);
-  background: rgb(var(--surface)); box-shadow: 6px 6px 0 #05060a; overflow: hidden;
+  background: rgb(var(--surface)); box-shadow: 6px 6px 0 rgb(var(--scrim)); overflow: hidden;
   transition: transform var(--t-med) var(--ease-out), box-shadow var(--t-med) ease;
 }
-a.ws:hover { transform: translate(-3px, -3px) rotate(-0.4deg); box-shadow: 10px 10px 0 #05060a; }
+a.ws:hover { transform: translate(-3px, -3px) rotate(-0.4deg); box-shadow: 10px 10px 0 rgb(var(--scrim)); }
 .ws-pc { --ws: var(--ws-pc); }
 .ws-garage { --ws: var(--ws-garage); }
 .ws-home { --ws: var(--ws-home); }

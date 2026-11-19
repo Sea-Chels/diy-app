@@ -28,6 +28,26 @@ export const PALETTE = {
   purple: '#7b3fe4',
   sky: '#1d9bf0',
   water: '#7fd8ff',
+  rose: '#fb7185',
+  lime: '#a3e635',
+  ochre: '#f59e0b',
+  /** The cool rim light's hue, for the glow behind a scene. */
+  rim: '#45e0ff',
+  hi: '#ffffff',
+  shade: '#000000',
+  /** The darkest backdrop: modal scrims, hard comic shadows, the vignette. */
+  scrim: '#05060a',
+  /** The lilac tint behind "call a pro" advice. */
+  advise: '#9b5cff',
+  /** Light text on green and red tinted chips; the clash note reads stronger. */
+  goodText: '#bbf7d0',
+  badText: '#fecaca',
+  clashText: '#fca5a5',
+  /** Pink text where a pink badge tint is too dark to read. */
+  pinkText: '#ff9be8',
+  soil: '#3a2a1d',
+  /** Galvanized steel, as on a raised-bed frame. */
+  steel: '#8b9298',
 } as const;
 
 export type ColorName = keyof typeof PALETTE;
@@ -42,15 +62,20 @@ export const hex = (name: ColorName): number => parseInt(PALETTE[name].slice(1),
 /** A 0xrrggbb number as a CSS color. */
 export const cssHex = (c: number) => `#${c.toString(16).padStart(6, '0')}`;
 
+/** The custom-color swatch: a full turn of hues. */
+const HUE_WHEEL = ['#ff4f6d', '#ffc531', '#9be22d', '#14b8a6', '#2f5bea', PALETTE.purple, '#ff4fa3', '#ff4f6d'];
+
 const kebab = (s: string) => s.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
 
 /** Colors CSS uses at several alphas go out as bare channels, as in `rgb(var(--surface) / 0.9)`. */
-const CHANNELS: ColorName[] = ['surface'];
+const CHANNELS: ColorName[] = ['surface', 'hi', 'shade', 'scrim', 'advise'];
 const channels = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)).join(' ');
 
 export function paletteCss(): string {
   const vars = Object.entries(PALETTE).map(([k, v]) => `--${kebab(k)}:${CHANNELS.includes(k as ColorName) ? channels(v) : v}`);
   for (const [ws, c] of Object.entries(WORKSHOP_COLOR)) vars.push(`--ws-${ws}:var(--${kebab(c)})`);
   vars.push('--burst:linear-gradient(135deg,var(--pink),var(--purple) 55%,var(--sky))');
-  return `:root{${vars.join(';')}}`;
+  vars.push(`--hue-wheel:conic-gradient(${HUE_WHEEL.join(',')})`);
+  // initial-value can't reference other properties, so the hub's animated --ws gets its default here.
+  return `@property --ws{syntax:'<color>';inherits:true;initial-value:${PALETTE.violet}}:root{${vars.join(';')}}`;
 }

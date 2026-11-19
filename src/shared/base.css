@@ -1,9 +1,5 @@
 @import './media.css';
 :root {
-  /* White, black and the advisory lilac, as channels for their alpha variants. */
-  --hi: 255 255 255;
-  --shade: 0 0 0;
-  --advise: 155 92 255;
   --panel: rgb(var(--surface) / 0.92);
   --float: rgb(var(--surface) / 0.85);
   --line: rgb(var(--hi) / 0.08);
@@ -72,7 +68,7 @@ ul, ol { padding-left: 1.2em; }
 }
 .brand { font-weight: 700; font-size: 1.1rem; letter-spacing: 0.01em; display: flex; align-items: center; gap: 8px; color: var(--text); text-decoration: none; }
 .brand .crumb { color: var(--muted); font-weight: 600; }
-.brand-mark { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: var(--r-md); background: color-mix(in srgb, var(--cyan) 12%, transparent); color: var(--accent); }
+.brand-mark { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: var(--r-md); background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
 .icon { flex: 0 0 auto; display: block; }
 .picker { display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap; }
 .picker-label { color: var(--muted); font-size: 0.85rem; margin-right: 2px; }
@@ -119,7 +115,7 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
   --fade: 16px;
   position: absolute; left: 0; right: 0; bottom: var(--overlay-gap);
   display: flex; gap: 8px; padding: 0 var(--fade); overflow-x: auto; scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, rgb(var(--shade)) var(--fade), rgb(var(--shade)) calc(100% - var(--fade)), transparent);
 }
 /* A focused chip scrolls clear of the faded edges. */
 .quick-fixes > * { scroll-margin-inline: var(--fade); }
@@ -135,18 +131,18 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background:
     radial-gradient(circle, rgb(var(--hi) / 0.05) 1px, transparent 1.4px) 0 0 / 7px 7px,
-    radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(5,4,12,0.55) 100%);
+    radial-gradient(120% 90% at 50% 40%, transparent 55%, rgb(var(--scrim) / 0.55) 100%);
   mix-blend-mode: screen;
 }
 .stage { background:
   radial-gradient(60% 50% at 18% 30%, color-mix(in srgb, var(--pink) 10%, transparent), transparent 70%),
-  radial-gradient(55% 45% at 85% 25%, rgba(69,224,255,0.10), transparent 70%); }
+  radial-gradient(55% 45% at 85% 25%, color-mix(in srgb, var(--rim) 10%, transparent), transparent 70%); }
 
 .paint-toggle {
   display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: var(--pill); color: var(--text);
 }
 .paint-toggle:hover { border-color: rgb(var(--hi) / 0.25); }
-.paint-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--c, #d7263d); box-shadow: 0 0 0 2px rgb(var(--hi) / 0.15); }
+.paint-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 2px rgb(var(--hi) / 0.15); }
 .paint-card {
   position: absolute; top: calc(100% + 8px); left: 0; width: 280px; padding: 14px;
   background: rgb(var(--surface)); border: 1px solid var(--line); border-radius: var(--r-xl); box-shadow: 0 20px 50px rgb(var(--shade) / 0.45);
@@ -165,8 +161,8 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
   padding: 0; position: relative; transition: transform var(--t-fast) ease;
 }
 .swatch:hover { transform: scale(1.1); }
-.swatch.active { border-color: #fff; box-shadow: 0 0 0 2px var(--accent); }
-.swatch.custom { cursor: pointer; background: conic-gradient(#ff4f6d, #ffc531, #9be22d, #14b8a6, #2f5bea, #7b3fe4, #ff4fa3, #ff4f6d); }
+.swatch.active { border-color: rgb(var(--hi)); box-shadow: 0 0 0 2px var(--accent); }
+.swatch.custom { cursor: pointer; background: var(--hue-wheel); }
 .swatch.custom.active { background: var(--c); }
 .swatch.custom input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; border: 0; padding: 0; }
 
@@ -218,7 +214,7 @@ main { flex: 1; display: flex; min-height: 0; position: relative; }
 .steps li::marker { color: var(--accent); font-weight: 700; }
 
 .modal-backdrop {
-  position: fixed; inset: 0; background: rgba(5,6,9,0.65); backdrop-filter: blur(6px);
+  position: fixed; inset: 0; background: rgb(var(--scrim) / 0.65); backdrop-filter: blur(6px);
   display: grid; place-items: center; z-index: var(--z-modal); padding: 16px; animation: fadeIn var(--t-med) ease;
 }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

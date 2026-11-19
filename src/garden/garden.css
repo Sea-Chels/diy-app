@@ -6,8 +6,8 @@
 
 /* plant type colors, used by tiles, planner rows and the square-foot grid */
 .t-veg { --t: var(--green); }
-.t-fruit { --t: #fb7185; }
-.t-herb { --t: #a3e635; }
+.t-fruit { --t: var(--rose); }
+.t-herb { --t: var(--lime); }
 .t-flower { --t: var(--amber); }
 
 .plant-modal { width: min(920px, 100%); }
@@ -20,7 +20,7 @@
 .plant-tile:hover { transform: translateY(-1px); border-color: rgb(var(--hi) / 0.22); border-left-color: var(--t); }
 .plant-name { font-weight: 650; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .latin { font-style: italic; color: var(--muted); font-size: 0.82rem; }
-.badge { --badge: var(--pink); --badge-text: #ff9be8; }
+.badge { --badge: var(--pink); --badge-text: var(--pink-text); }
 .back-link { align-self: flex-start; display: inline-flex; gap: 6px; align-items: center; background: none; border: 0; color: var(--accent); padding: 0; font-size: 0.88rem; }
 .plant-detail { display: flex; flex-direction: column; gap: 12px; border-left: 3px solid var(--t); padding-left: 14px; }
 .plant-title h3 { font-size: 1.4rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -35,14 +35,14 @@
 .problems .icon { color: var(--diff-2); margin-top: 3px; flex-shrink: 0; }
 .rel-chip { font-size: 0.8rem; padding: 4px 10px; border-radius: var(--pill); border: 1px solid var(--line); background: rgb(var(--hi) / 0.03); color: var(--text); }
 button.rel-chip:hover { border-color: rgb(var(--hi) / 0.3); }
-.rel-chip.good { border-color: color-mix(in srgb, var(--green) 35%, transparent); color: #bbf7d0; }
-.rel-chip.bad { border-color: color-mix(in srgb, var(--red) 35%, transparent); color: #fecaca; }
+.rel-chip.good { border-color: color-mix(in srgb, var(--green) 35%, transparent); color: var(--good-text); }
+.rel-chip.bad { border-color: color-mix(in srgb, var(--red) 35%, transparent); color: var(--bad-text); }
 
 .builder-modal input[type="search"] { width: 100%; padding: 10px 12px; border-radius: var(--r-md); background: rgb(var(--surface)); border: 1px solid var(--line); color: var(--text); font-size: 1rem; }
 .builder-modal { --side-w: 380px; --list-gap: 10px; --side-gap: 10px; }
 .planner-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px; }
 .plan-opt { display: flex; align-items: center; gap: 6px; padding-right: 8px; border: 1px solid var(--line); border-left: 3px solid var(--t); border-radius: var(--r-md); background: rgb(var(--shade) / 0.18); }
-.plan-opt.picked { background: color-mix(in srgb, var(--cyan) 6%, transparent); border-color: color-mix(in srgb, var(--cyan) 35%, transparent); border-left-color: var(--t); }
+.plan-opt.picked { background: color-mix(in srgb, var(--accent) 7%, transparent); border-color: color-mix(in srgb, var(--accent) 35%, transparent); border-left-color: var(--t); }
 .plan-opt-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; text-align: left; background: none; border: 0; padding: 8px 10px; }
 .opt-tick { color: var(--accent); font-size: 0.8rem; font-weight: 700; }
 .small-btn { width: 28px; height: 28px; border-radius: var(--r-md); flex-shrink: 0; }
@@ -50,14 +50,13 @@ button.rel-chip:hover { border-color: rgb(var(--hi) / 0.3); }
 .meter span { display: block; height: 100%; background: var(--diff-1); transition: width var(--t-slow) ease; }
 .meter.over span { background: var(--diff-3); }
 .sqft {
-  --soil: #3a2a1d;
   display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 3px; padding: 6px; border-radius: var(--r-md);
-  background: var(--soil); border: 3px solid #8b9298; box-shadow: inset 0 0 0 1px rgb(var(--shade) / 0.4);
+  background: var(--soil); border: 3px solid var(--steel); box-shadow: inset 0 0 0 1px rgb(var(--shade) / 0.4);
 }
 .sq {
   aspect-ratio: 1; border-radius: var(--r-xs); border: 0; padding: 2px; min-width: 0; overflow: hidden;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
-  background: color-mix(in srgb, var(--t) 34%, var(--soil)); color: #fff; font-size: 0.6rem; line-height: 1.05; text-align: center;
+  background: color-mix(in srgb, var(--t) 34%, var(--soil)); color: rgb(var(--hi)); font-size: 0.6rem; line-height: 1.05; text-align: center;
 }
 .sq span { max-width: 100%; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sq small { opacity: 0.8; font-size: 0.58rem; }

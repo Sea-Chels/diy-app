@@ -13,7 +13,7 @@
 
 .chip.kind { font-weight: 600; }
 .chip.kind-fix { color: var(--peach); background: color-mix(in srgb, var(--coral) 14%, transparent); }
-.chip:is(.kind-swap, .kind-build, .kind-install) { color: var(--accent); background: color-mix(in srgb, var(--cyan) 12%, transparent); }
+.chip:is(.kind-swap, .kind-build, .kind-install) { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
 .chip:is(.kind-setup, .kind-preserve) { color: var(--lilac); background: rgb(var(--advise) / 0.16); }
 .chip:is(.kind-grow, .kind-maintain) { color: var(--mint); background: color-mix(in srgb, var(--green) 13%, transparent); }
 .chip.kind-finish { color: var(--yellow); background: color-mix(in srgb, var(--yellow) 13%, transparent); }

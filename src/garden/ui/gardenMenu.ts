@@ -18,7 +18,7 @@ export function mountGardenMenu(root: HTMLElement): void {
     h('p', { class: 'paint-label' }, 'Hydroponics'), hydro.el,
   );
 
-  const DOT: Record<Setup['season'], string> = { spring: '#a3e635', summer: '#4ade80', fall: '#f59e0b' };
+  const DOT: Record<Setup['season'], string> = { spring: 'var(--lime)', summer: 'var(--green)', fall: 'var(--ochre)' };
   function sync(): void {
     const s = getState().setup;
     season.sync(s.season);

@@ -12,10 +12,10 @@
 .opt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; padding: 0 14px 14px; animation: fadeUp var(--t-slow) ease; }
 .opt { position: relative; border: 1px solid var(--line); border-radius: var(--r-lg); background: rgb(var(--shade) / 0.18); display: flex; flex-direction: column; transition: border-color var(--t-fast) ease, transform var(--t-fast) ease; }
 .opt:hover { border-color: rgb(var(--hi) / 0.22); transform: translateY(-1px); }
-.opt.picked { border-color: var(--accent); background: color-mix(in srgb, var(--cyan) 7%, transparent); }
+.opt.picked { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); }
 .opt.clash { border-color: color-mix(in srgb, var(--red) 35%, transparent); }
 .opt-main { background: none; border: 0; text-align: left; padding: 10px 12px 6px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
-.opt-clash { display: flex; gap: 6px; align-items: flex-start; color: #fca5a5; font-size: 0.78rem; line-height: 1.35; margin-top: 2px; }
+.opt-clash { display: flex; gap: 6px; align-items: flex-start; color: var(--clash-text); font-size: 0.78rem; line-height: 1.35; margin-top: 2px; }
 .opt-clash .icon { margin-top: 1px; color: var(--diff-3); }
 .opt-tick { display: inline-flex; align-items: center; gap: 4px; color: var(--accent); font-size: 0.78rem; font-weight: 700; }
 .opt-ppp { align-self: flex-start; margin: 0 12px 10px; font-size: 0.74rem; color: var(--muted); text-decoration: none; display: inline-flex; gap: 4px; align-items: center; }
