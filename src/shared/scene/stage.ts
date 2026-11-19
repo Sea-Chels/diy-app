@@ -396,9 +396,10 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   }
 
   let swapping = false;
-  let pending: S | null = null;
+  /** The newest setup. A swap builds from it, not from what started the swap, so the last choice wins. */
+  let latest = cfg.initial;
 
-  function swap(s: S): void {
+  function swap(): void {
     swapping = true;
     const old = rig;
     tween({
@@ -409,7 +410,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
       done: () => {
         scene.remove(old.group);
         old.dispose();
-        rig = cfg.build(s);
+        rig = cfg.build(latest);
         swapped(rig).scale.setScalar(0.001);
         scene.add(rig.group);
         syncLineResolution();
@@ -424,24 +425,18 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
           update: (k) => swapped(rig).scale.setScalar(Math.max(0.001, k)),
           done: () => {
             swapping = false;
-            if (pending) {
-              const next = pending;
-              pending = null;
-              setSetup(next);
-            }
+            if (cfg.rigKey(latest) !== rig.key) swap();
           },
         });
       },
     });
   }
 
+  // A change that keeps the current rig applies at once, even mid-swap, so a camera move that follows sees it.
   function setSetup(s: S): void {
-    if (swapping) {
-      pending = s;
-      return;
-    }
-    if (cfg.rigKey(s) !== rig.key) swap(s);
-    else cfg.restyle?.(rig, s);
+    latest = s;
+    if (cfg.rigKey(s) === rig.key) cfg.restyle?.(rig, s);
+    else if (!swapping) swap();
   }
 
   function syncLineResolution(): void {
