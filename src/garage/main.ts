@@ -14,6 +14,7 @@ import { mountPanel } from './ui/panel';
 import { openGuideIndex } from './ui/guideIndex';
 import { hydrateIcons } from '../shared/icons';
 import { hideLoaderAfterFrames } from '../shared/loader';
+import { sceneOr } from '../shared/scene/fallback';
 import { wireWorkshop } from '../shared/workshop';
 
 hydrateIcons();
@@ -25,7 +26,7 @@ function appearance(): Appearance {
 }
 
 const canvas = document.getElementById('scene') as HTMLCanvasElement;
-const scene = createScene(canvas, appearance());
+const scene = sceneOr(canvas, () => createScene(canvas, appearance()));
 mountPaintShop(document.getElementById('paint-shop')!);
 mountRideSwitch(document.getElementById('ride-switch')!, () => scene.focus(null));
 mountVehiclePicker(document.getElementById('vehicle-picker')!);

@@ -12,12 +12,13 @@ import { openBuilder } from './ui/builder';
 import { specsFor } from './ui/context';
 import { hydrateIcons } from '../shared/icons';
 import { hideLoaderAfterFrames } from '../shared/loader';
+import { sceneOr } from '../shared/scene/fallback';
 import { wireWorkshop } from '../shared/workshop';
 
 hydrateIcons();
 
 const canvas = document.getElementById('scene') as HTMLCanvasElement;
-const scene = createScene(canvas, getState().setup, specsFor(getState().build));
+const scene = sceneOr(canvas, () => createScene(canvas, getState().setup, specsFor(getState().build)));
 mountRigMenu(document.getElementById('rig-menu')!);
 mountPanel(document.getElementById('panel')!);
 document.getElementById('guides-btn')!.addEventListener('click', openGuideIndex);

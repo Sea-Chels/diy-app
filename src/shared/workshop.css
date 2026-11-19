@@ -49,6 +49,15 @@ button.link-chip { cursor: pointer; }
   background: color-mix(in srgb, var(--badge) 16%, transparent); color: var(--badge-text, var(--badge));
 }
 
+/* Stands in for the canvas when WebGL won't start; the hint's drag-and-click advice goes with it. */
+.scene-off {
+  position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 6px;
+  padding: var(--overlay-row) 24px; text-align: center; color: var(--muted); font-size: 0.95rem;
+}
+.scene-off span { max-width: 34ch; }
+.scene-off strong { color: var(--text); font-size: 1.1rem; }
+.stage:has(.scene-off) .hint { display: none; }
+
 @media (--narrow) {
   .builder-body { grid-template-columns: 1fr; overflow-y: auto; }
   .builder-list { overflow: visible; padding: 14px; }
@@ -57,6 +66,8 @@ button.link-chip { cursor: pointer; }
 
 @media (--phone) {
   .hint { top: var(--overlay-row); }
+  /* The panel covers the lower part of the stage. */
+  .scene-off { align-content: start; padding-top: calc(var(--overlay-row) + var(--overlay-gap)); }
   .topbar .spacer { display: none; }
   .lbl-long { display: none; }
   /* Topbars with long labels are the crowded ones. */
