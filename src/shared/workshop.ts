@@ -1,6 +1,7 @@
 import type { GuideBase, GuideBook } from './guides';
 import { h, clear } from './dom';
 import { keepFocus } from './focus';
+import { media } from './media';
 import { press } from './ui/choices';
 import type { Selection, Store } from './store';
 
@@ -77,8 +78,22 @@ export function wireWorkshop<S extends string, G extends GuideBase<S>, St extend
     for (const b of spotNav.querySelectorAll<HTMLButtonElement>('button')) press(b, b.dataset.key === s.selected);
   }
 
+  // A phone's bottom sheet covers the lower overlays; inert keeps Tab from reaching what can't be seen.
+  const panel = document.getElementById('panel')!;
+  const phone = media('phone');
+  function syncCovered(): void {
+    const open = phone.matches && Boolean(store.getState().selected);
+    const top = panel.offsetParent ? panel.offsetParent.getBoundingClientRect().top + panel.offsetTop : Infinity;
+    for (const el of quick.parentElement!.children) {
+      if (el instanceof HTMLElement && !(el instanceof HTMLCanvasElement)) el.inert = open && el.getBoundingClientRect().bottom > top;
+    }
+  }
+  phone.addEventListener('change', syncCovered);
+  window.addEventListener('resize', syncCovered);
+
   store.subscribe((s, prev) => {
     syncSpots(s);
+    if (s.selected !== prev.selected) syncCovered();
     if (s.selected !== prev.selected || o.refocus?.(s, prev)) scene.focus(s.selected);
     if (s.selected !== prev.selected || s.openGuide !== prev.openGuide) {
       const hash = s.openGuide ?? s.selected;

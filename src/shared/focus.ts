@@ -52,8 +52,10 @@ export function panelFocus(root: HTMLElement, close: () => void): (render: () =>
       opener = before instanceof HTMLElement && before !== document.body && !hadFocus ? before : null;
       head?.focus({ preventScroll: true });
     } else if (!open && was && hadFocus) {
-      if (opener?.isConnected) opener.focus({ preventScroll: true });
+      const back = opener;
       opener = null;
+      // After the rest of this store update, which may lift the inert the open sheet put on the opener.
+      queueMicrotask(() => back?.isConnected && back.focus({ preventScroll: true }));
     }
   };
 }
