@@ -1,3 +1,4 @@
+import { announce } from '../../shared/announce';
 import { h, clear } from '../../shared/dom';
 import { keepFocus } from '../../shared/focus';
 import { openModal } from '../../shared/modal';
@@ -12,8 +13,11 @@ function num(label: string, value: number, step = 1, onInput: () => void): { el:
   return { el: h('label', { class: 'calc-field' }, h('span', {}, label), input), get: () => Math.max(0, Number(input.value) || 0) };
 }
 
-function result(...lines: (string | HTMLElement)[]): HTMLElement {
-  return h('div', { class: 'calc-result' }, ...lines.map((l) => (typeof l === 'string' ? h('p', {}, l) : l)));
+/** A calculator's answer; a change after the first draw is read out. */
+function result(first: boolean, ...lines: (string | HTMLElement)[]): HTMLElement {
+  const el = h('div', { class: 'calc-result' }, ...lines.map((l) => (typeof l === 'string' ? h('p', {}, l) : l)));
+  if (!first) announce(lines.map((l) => (typeof l === 'string' ? l : l.textContent)).join(' '));
+  return el;
 }
 
 /** Paint for a room: walls (and optionally the ceiling) at about 350 sq ft per gallon per coat. */
@@ -24,8 +28,9 @@ function paintCalc(): HTMLElement {
     const area = Math.max(0, walls) + (ceil.checked ? L.get() * W.get() : 0);
     const gal = (area * coats.get()) / 350;
     const quarts = Math.ceil(gal * 4);
+    const first = !out.firstChild;
     clear(out);
-    out.append(result(
+    out.append(result(first,
       h('p', { class: 'big' }, `${gal.toFixed(1)} gal`),
       `${Math.round(area)} sq ft to paint × ${coats.get()} coat${coats.get() === 1 ? '' : 's'}.`,
       `Buy ${Math.floor(quarts / 4)} gallon${Math.floor(quarts / 4) === 1 ? '' : 's'}${quarts % 4 ? ` and ${quarts % 4} quart${quarts % 4 === 1 ? '' : 's'}` : ''}. Textured walls and dark-to-light changes take more.`,
@@ -52,8 +57,9 @@ function floorCalc(): HTMLElement {
     const area = L.get() * W.get();
     const withWaste = area * (1 + waste.get() / 100);
     const boxes = box.get() ? Math.ceil(withWaste / box.get()) : 0;
+    const first = !out.firstChild;
     clear(out);
-    out.append(result(
+    out.append(result(first,
       h('p', { class: 'big' }, `${boxes} box${boxes === 1 ? '' : 'es'}`),
       `${area.toFixed(0)} sq ft of floor, ${withWaste.toFixed(0)} sq ft with ${waste.get()}% waste.`,
       'Keep a spare box: a matching batch is hard to find later.',

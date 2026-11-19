@@ -51,6 +51,7 @@ a { color: var(--accent); }
 h1, h2, h3, h4, p, ul, ol { margin: 0; }
 ul, ol { padding-left: 1.2em; }
 .muted { color: var(--muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .small { font-size: 0.85rem; }
 
 #app { height: 100%; display: flex; flex-direction: column; }

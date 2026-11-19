@@ -1,4 +1,5 @@
 import type { GuideBase, GuideBook } from './guides';
+import { announce } from './announce';
 import { h, clear } from './dom';
 import { keepFocus } from './focus';
 import { media } from './media';
@@ -93,7 +94,10 @@ export function wireWorkshop<S extends string, G extends GuideBase<S>, St extend
 
   store.subscribe((s, prev) => {
     syncSpots(s);
-    if (s.selected !== prev.selected) syncCovered();
+    if (s.selected !== prev.selected) {
+      syncCovered();
+      if (s.selected) announce(o.label(s.selected));
+    }
     if (s.selected !== prev.selected || o.refocus?.(s, prev)) scene.focus(s.selected);
     if (s.selected !== prev.selected || s.openGuide !== prev.openGuide) {
       const hash = s.openGuide ?? s.selected;
