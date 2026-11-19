@@ -25,11 +25,3 @@ export const GUIDES: Guide[] = [
 ];
 
 export const BOOK = guideBook<PartId, Guide>(GUIDES);
-
-export function appliesTo(g: Guide, cooling: Cooling): boolean {
-  return !g.cooling || g.cooling.includes(cooling);
-}
-
-export function guidesForPart(part: PartId, cooling: Cooling): Guide[] {
-  return BOOK.forSpot(part).filter((g) => appliesTo(g, cooling));
-}

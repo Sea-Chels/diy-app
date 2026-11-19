@@ -36,11 +36,3 @@ export const GUIDES: Guide[] = [
 ];
 
 export const BOOK = guideBook<PartId, Guide>(GUIDES);
-
-export function appliesTo(g: Guide, powertrain: Powertrain): boolean {
-  return !g.powertrains || g.powertrains.includes(powertrain);
-}
-
-export function guidesForPart(part: PartId, powertrain: Powertrain): Guide[] {
-  return BOOK.forSpot(part).filter((g) => appliesTo(g, powertrain));
-}
