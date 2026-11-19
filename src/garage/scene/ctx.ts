@@ -5,13 +5,15 @@ import type { BodyKind } from '../data/paint';
 import { curve, ringPoint, tAtY, type SectionFn } from './loft';
 import { SPECS } from './specs';
 import { rbox } from './kit';
-import { createParts } from './parts3d';
+import { createHotspots } from '../../shared/scene/rigKit';
+import type { PartId } from '../data/parts';
 
 /** Everything the car's zones share: the body's spec, its profile curves and the mesh helpers. */
 export function createCtx(kind: BodyKind) {
   const S = SPECS[kind];
   const group = new THREE.Group();
-  const { hotspots, tag } = createParts();
+  // `tag` makes meshes a part's hotspots. Give each its own material: `shareMaterials` keeps a part's glow on that part.
+  const { hotspots, add: tag } = createHotspots<PartId>();
   const tweens = tweenScope();
   const paintMats: THREE.MeshToonMaterial[] = [];
 

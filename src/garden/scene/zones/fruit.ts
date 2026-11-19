@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { add, box, jitter, mapped, speckle, UNIT_BOX, V, WIND } from '../../../shared/scene/kit';
+import { add, box, jitter, mapped, speckle, UNIT_BOX, V } from '../../../shared/scene/kit';
 import { climber } from '../plants/flowers';
 import { lavender } from '../plants/herbs';
-import { G as LEAVES } from '../plants/kit';
+import { G as LEAVES, WIND } from '../plants/kit';
 import { blueberry, goji, pawpaw } from '../plants/shrubs';
 import type { GardenCtx } from '../ctx';
 

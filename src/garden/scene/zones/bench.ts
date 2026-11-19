@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
-import { add, box, jitter, leafMatrix, UNIT_BOX, V, WIND } from '../../../shared/scene/kit';
+import { add, box, jitter, leafMatrix, UNIT_BOX, V } from '../../../shared/scene/kit';
 import { basil, tomato } from '../plants/fruiting';
 import { strawberry } from '../plants/greens';
-import { CYL, G as LEAVES } from '../plants/kit';
+import { CYL, G as LEAVES, WIND } from '../plants/kit';
 import { UP } from '../geometry';
 import type { GardenCtx } from '../ctx';
 

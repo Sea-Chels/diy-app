@@ -1,7 +1,6 @@
 import * as THREE from 'three';
-import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { toon, type ToonOpts } from '../../shared/toon';
-import { mapped, type V3 } from '../../shared/scene/kit';
+import { mapped, roundedBox, type Rounding, type V3 } from '../../shared/scene/kit';
 
 /** Everything in the garage that isn't the car's body paint. */
 export const C = {
@@ -56,7 +55,9 @@ export const M = {
   lamp: (color: number, glow = 0.5, glowColor = color) => toon(color, { emissive: glowColor, emissiveIntensity: glow, shine: 0.85, halftone: 0 }),
 };
 
-export const rbox = (w: number, h: number, d: number, r = 0.02) => new RoundedBoxGeometry(w, h, d, 3, Math.min(r, w / 2 - 1e-3, h / 2 - 1e-3, d / 2 - 1e-3));
+/** The car's panels round off finer than the shared default, and as tight as a thin part needs. */
+const CAR: Rounding = { segments: 3, margin: 1e-3, least: -Infinity };
+export const rbox = (w: number, h: number, d: number, r = 0.02) => roundedBox(w, h, d, r, CAR);
 
 /**
  * A printed label or screen laid flat just off a surface; it faces +z until `rot` turns it.

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { leafMatrix, range, jitter, tube, WIND } from '../../../shared/scene/kit';
-import { V, UP, CYL, SPHERE, flowerGeo, POM, type PlantKit, plantGroup, put, faceM, ballM, stalkM, mix, vary, outUp, G } from './kit';
+import { leafMatrix, range, jitter, tube } from '../../../shared/scene/kit';
+import { V, UP, CYL, SPHERE, flowerGeo, POM, type PlantKit, plantGroup, put, faceM, ballM, stalkM, mix, vary, outUp, G, WIND } from './kit';
 
 export function zinnia(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3, color: number): THREE.Group {
   const g = plantGroup(parent, p, k.r() * 6.28, k.growth * 0.6 + 0.4);

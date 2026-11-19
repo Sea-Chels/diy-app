@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { leafMatrix, range, jitter, tube, add, WIND } from '../../../shared/scene/kit';
-import { V, UP, CYL, SPHERE, CAPSULE, DISC, flowerGeo, POM, PUMPKIN, CORN_LEAF, type PlantKit, plantGroup, put, faceM, ballM, stalkM, vary, outUp, G } from './kit';
+import { leafMatrix, range, jitter, tube, add } from '../../../shared/scene/kit';
+import { V, UP, CYL, SPHERE, CAPSULE, DISC, flowerGeo, POM, PUMPKIN, CORN_LEAF, type PlantKit, plantGroup, put, faceM, ballM, stalkM, vary, outUp, G, WIND } from './kit';
 
 export function tomato(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3, o: { cage?: boolean; cageMat?: THREE.Material } = {}): THREE.Group {
   const g = plantGroup(parent, p, k.r() * 6.28);

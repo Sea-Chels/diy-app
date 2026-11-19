@@ -6,29 +6,13 @@ import { createBeacons, createLids } from '../../shared/scene/rigKit';
 import { moves } from '../../shared/scene/ink';
 import type { TweenScope } from '../../shared/tween';
 import { PARTS, type LidId, type PartId } from '../data/parts';
-import { tag as setTag, tagOf } from '../../shared/scene/sceneTags';
-
-/** `tag` makes meshes a part's hotspots. Give each its own material: `shareMaterials` keeps a part's glow on that part. */
-export function createParts() {
-  const hotspots = new Map<PartId, THREE.Mesh[]>();
-
-  const tag = (part: PartId, ...meshes: THREE.Mesh[]) => {
-    const list = hotspots.get(part) ?? [];
-    for (const m of meshes) {
-      setTag(m, 'spot', part);
-      list.push(m);
-    }
-    hotspots.set(part, list);
-  };
-
-  return { hotspots, tag };
-}
+import { tag, tagOf } from '../../shared/scene/sceneTags';
 
 /** Glowing dots marking each part, added to `parent`. They hide while their part can't be picked (its lid is shut). */
 export function createPartBeacons(parent: THREE.Object3D, canPick: (part: PartId) => boolean) {
   // Unlike the other workshops' beacons these are depth-tested, so the vehicle hides them and they pick like any other part.
   const { beacons, beaconAt: dot } = createBeacons<PartId>(parent, { radius: 0.045, segments: [16, 16], onTop: false });
-  const beaconAt = (part: PartId, p: V3) => setTag(dot(part, p), 'seen', () => canPick(part));
+  const beaconAt = (part: PartId, p: V3) => tag(dot(part, p), 'seen', () => canPick(part));
   return { beacons, beaconAt };
 }
 

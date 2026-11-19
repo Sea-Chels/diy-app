@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { toon, type InkWeight } from '../../shared/toon';
-import { add, Batches, canvasTex, label, mapped, rng, speckle, UNIT_BOX, V, woodTexture, type V3 } from '../../shared/scene/kit';
+import { add, canvasTex, label, mapped, rng, speckle, UNIT_BOX, V, woodTexture, type V3 } from '../../shared/scene/kit';
+import { Batches } from './batches';
 import type { Setup } from '../data/setup';
 import type { AreaId, LidId } from '../data/areas';
 import { plantKit } from './plants/kit';

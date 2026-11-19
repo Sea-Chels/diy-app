@@ -4,7 +4,8 @@ import type { V3 } from '../../shared/scene/kit';
 import type { View } from '../../shared/scene/stage';
 import type { LidId, PartId } from '../data/parts';
 import { tweenScope } from '../../shared/tween';
-import { createPartBeacons, createPivotLids, createParts, shareMaterials, viewInParent, viewsInParent, type LidSpec, type RideRig } from './parts3d';
+import { createHotspots } from '../../shared/scene/rigKit';
+import { createPartBeacons, createPivotLids, shareMaterials, viewInParent, viewsInParent, type LidSpec, type RideRig } from './parts3d';
 
 /**
  * Geometry the motorcycle and bike share. Both are built facing +z with the wheels on the
@@ -137,7 +138,7 @@ export function createCycle(lean: number) {
   const body = new THREE.Group();
   body.rotation.z = lean;
   group.add(body);
-  const { hotspots, tag } = createParts();
+  const { hotspots, add: tag } = createHotspots<PartId>();
   const tweens = tweenScope();
   /** Height above `body`'s origin at which a stand foot `x` out from the wheels meets the ground. */
   const groundY = (x: number) => x * Math.tan(-lean);

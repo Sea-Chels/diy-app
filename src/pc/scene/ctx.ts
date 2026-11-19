@@ -2,12 +2,15 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { toon } from '../../shared/toon';
-import { add, type MeshOpts } from '../../shared/scene/kit';
+import { add, box, type MeshOpts, type Rounding } from '../../shared/scene/kit';
 import type { Setup } from '../data/setup';
 import type { PartId } from '../data/parts';
 import { K, FEET, DIMS, ATX, ITX } from './layout';
 import { C } from './kit';
-import { tag, tagOf } from '../../shared/scene/sceneTags';
+import { tagOf } from '../../shared/scene/sceneTags';
+import { createHotspots } from '../../shared/scene/rigKit';
+
+const MM: Rounding = { segments: 2, margin: 0.05, least: 0.05 };
 
 export function createCtx(s: Setup) {
   const dm = DIMS[s.size];
@@ -21,35 +24,30 @@ export function createCtx(s: Setup) {
   cg.position.y = FEET;
   root.add(cg);
 
-  const hotspots = new Map<PartId, THREE.Mesh[]>();
+  const { hotspots, add: addHot } = createHotspots<PartId>();
   const rgbMats: { mat: THREE.MeshToonMaterial; phase: number }[] = [];
   const coolantMats: THREE.MeshToonMaterial[] = [];
   type Boost = 'case' | 'cooler' | 'gpu';
   const rotors: { obj: THREE.Object3D; speed: number; boost: Boost }[] = [];
   const boost: Record<Boost, number> = { case: 0, cooler: 0, gpu: 0 };
 
-  /** A rounded box in millimeters; `r` is the corner radius, clamped to fit. */
-  function rbox(w: number, h: number, d: number, mat: THREE.Material, parent: THREE.Object3D, o: MeshOpts & { r?: number } = {}): THREE.Mesh {
-    const r = Math.max(0.05, Math.min(o.r ?? 2, Math.min(w, h, d) / 2 - 0.05));
-    return add(new RoundedBoxGeometry(w, h, d, 2, r), mat, parent, o);
-  }
+  /** A rounded box in millimeters, 2 mm round unless `r` says otherwise. */
+  const rbox = (w: number, h: number, d: number, mat: THREE.Material, parent: THREE.Object3D, o: MeshOpts & { r?: number } = {}) => box(w, h, d, mat, parent, { ...o, r: o.r ?? 2 }, MM);
   /** Cylinder lying along x (perpendicular to the motherboard). */
   function cylX(r: number, len: number, mat: THREE.Material, parent: THREE.Object3D, o: MeshOpts & { seg?: number } = {}): THREE.Mesh {
     const g = new THREE.CylinderGeometry(r, r, len, o.seg ?? 32);
     g.rotateZ(Math.PI / 2);
     return add(g, mat, parent, o);
   }
-  function hot(part: PartId, ...meshes: THREE.Object3D[]): void {
-    const list = hotspots.get(part) ?? [];
-    for (const o of meshes) {
+  /** Makes every mesh under `objs` (but their ink) the part's hotspots. */
+  function hot(part: PartId, ...objs: THREE.Object3D[]): void {
+    const found: THREE.Mesh[] = [];
+    for (const o of objs) {
       o.traverse((c) => {
-        const m = c as THREE.Mesh;
-        if (!m.isMesh || tagOf(m, 'ink')) return;
-        tag(m, 'spot', part);
-        list.push(m);
+        if ((c as THREE.Mesh).isMesh && !tagOf(c, 'ink')) found.push(c as THREE.Mesh);
       });
     }
-    hotspots.set(part, list);
+    addHot(part, ...found);
   }
   function rgb(phase: number): THREE.MeshToonMaterial {
     const m = toon(0x3a3d48, { halftone: 0 });

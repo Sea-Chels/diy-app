@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { leafMatrix, range, jitter, tube, WIND } from '../../../shared/scene/kit';
-import { V, UP, SPHERE, CAPSULE, flowerGeo, type PlantKit, plantGroup, put, faceM, ballM, vary, outUp, G } from './kit';
+import { leafMatrix, range, jitter, tube } from '../../../shared/scene/kit';
+import { V, UP, SPHERE, CAPSULE, flowerGeo, type PlantKit, plantGroup, put, faceM, ballM, vary, outUp, G, WIND } from './kit';
 
 export function pawpaw(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3): THREE.Group {
   const g = plantGroup(parent, p, k.r() * 6.28);

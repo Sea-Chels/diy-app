@@ -14,6 +14,20 @@ export function viewFrom(target: V3, dir: V3, dist: number, scale = 1): View {
   return { target: [t.x * scale, t.y * scale, t.z * scale], pos: [p.x * scale, p.y * scale, p.z * scale] };
 }
 
+/** The meshes that glow for each spot. `add` tags meshes with their spot and lists them, in order. */
+export function createHotspots<S extends string>() {
+  const hotspots = new Map<S, THREE.Mesh[]>();
+  const add = (spot: S, ...meshes: THREE.Mesh[]): void => {
+    const list = hotspots.get(spot) ?? [];
+    for (const m of meshes) {
+      tag(m, 'spot', spot);
+      list.push(m);
+    }
+    hotspots.set(spot, list);
+  };
+  return { hotspots, add };
+}
+
 /**
  * Spots modelled as groups under `root`. Each gets invisible pick boxes, so a click
  * anywhere near it selects it, not just on its meshes.

@@ -3,15 +3,10 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { outline, toon, type InkWeight, type ToonOpts } from '../toon';
 import { PALETTE } from '../theme';
-import { tag } from './sceneTags';
 
 export type V3 = [number, number, number];
 export const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 export const UNIT_BOX = new THREE.BoxGeometry(1, 1, 1);
-
-/** Sway strength shared by every plant material, so stems, leaves and fruit move together. */
-export const WIND = 0.008;
-
 
 /** Small seeded PRNG (mulberry32) so the garden looks the same on every load. */
 export function rng(seed: number): () => number {
@@ -41,34 +36,6 @@ export function canvasTex(w: number, h: number, draw: (ctx: CanvasRenderingConte
     t.repeat.set(...repeat);
   }
   return t;
-}
-
-/** White leaf with a darker midrib and veins; instance color tints it. */
-export function leafTexture(veins = 6, rib = 0.16): THREE.CanvasTexture {
-  return canvasTex(64, 128, (ctx) => {
-    const g = ctx.createLinearGradient(0, 128, 0, 0);
-    g.addColorStop(0, '#d9d9d9');
-    g.addColorStop(1, '#ffffff');
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, 64, 128);
-    ctx.strokeStyle = `rgba(40,30,40,${rib + 0.2})`;
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(32, 128);
-    ctx.lineTo(32, 4);
-    ctx.stroke();
-    ctx.strokeStyle = `rgba(40,30,40,${rib})`;
-    ctx.lineWidth = 1.6;
-    for (let i = 1; i <= veins; i++) {
-      const y = 128 - (i / (veins + 1)) * 124;
-      for (const side of [-1, 1]) {
-        ctx.beginPath();
-        ctx.moveTo(32, y);
-        ctx.quadraticCurveTo(32 + side * 14, y - 8, 32 + side * 30, y - 22);
-        ctx.stroke();
-      }
-    }
-  });
 }
 
 /** Wood planks: warm base with darker grain lines along u. */
@@ -266,54 +233,6 @@ export function leafMatrix(pos: THREE.Vector3, dir: THREE.Vector3, face: THREE.V
 }
 
 
-interface Batch {
-  parent: THREE.Object3D;
-  geo: THREE.BufferGeometry;
-  mat: THREE.Material;
-  ink: InkWeight | null;
-  wind: number;
-  shadow: boolean;
-  matrices: THREE.Matrix4[];
-  colors: THREE.Color[];
-}
-
-/** Collect many copies of one geometry + material under a parent; `flush` turns each set into an InstancedMesh. */
-export class Batches {
-  private batches = new Map<string, Batch>();
-
-  add(parent: THREE.Object3D, geo: THREE.BufferGeometry, mat: THREE.Material, matrix: THREE.Matrix4, o: { color?: THREE.ColorRepresentation; ink?: InkWeight | null; wind?: number; shadow?: boolean } = {}): void {
-    const ink = o.ink === undefined ? 'thin' : o.ink;
-    const wind = o.wind ?? 0;
-    const key = `${parent.uuid}|${geo.uuid}|${mat.uuid}|${ink}|${wind}`;
-    let b = this.batches.get(key);
-    if (!b) {
-      b = { parent, geo, mat, ink, wind, shadow: o.shadow ?? true, matrices: [], colors: [] };
-      this.batches.set(key, b);
-    }
-    b.matrices.push(matrix);
-    b.colors.push(new THREE.Color(o.color ?? 0xffffff));
-  }
-
-  flush(): void {
-    for (const b of this.batches.values()) {
-      const inst = new THREE.InstancedMesh(b.geo, b.mat, b.matrices.length);
-      b.matrices.forEach((m, i) => {
-        inst.setMatrixAt(i, m);
-        inst.setColorAt(i, b.colors[i]);
-      });
-      inst.instanceMatrix.needsUpdate = true;
-      if (inst.instanceColor) inst.instanceColor.needsUpdate = true;
-      inst.castShadow = b.shadow;
-      inst.receiveShadow = true;
-      inst.computeBoundingSphere();
-      tag(inst, 'sharedGeometry', true); // the geometry is cached across rebuilds; the material isn't
-      if (b.ink) outline(inst, b.ink, b.wind);
-      b.parent.add(inst);
-    }
-    this.batches.clear();
-  }
-}
-
 export interface MeshOpts {
   at?: V3;
   rot?: V3;
@@ -339,10 +258,18 @@ export function add(geo: THREE.BufferGeometry, mat: THREE.Material | THREE.Mater
   return m;
 }
 
-/** A rounded box; `r` is the corner radius, clamped to fit. */
-export function box(w: number, h: number, d: number, mat: THREE.Material, parent: THREE.Object3D, o: MeshOpts & { r?: number } = {}): THREE.Mesh {
-  const r = Math.max(0.002, Math.min(o.r ?? 0.01, Math.min(w, h, d) / 2 - 0.001));
-  return add(new RoundedBoxGeometry(w, h, d, 2, r), mat, parent, o);
+/** How rounded boxes round off: corner `segments`, the `margin` a corner keeps from the box's half-size, and the `least` radius. */
+export interface Rounding { segments: number; margin: number; least: number }
+/** For rigs modelled in meters. */
+export const METERS: Rounding = { segments: 2, margin: 0.001, least: 0.002 };
+
+/** A rounded box geometry; `r` is the corner radius, clamped to fit. */
+export const roundedBox = (w: number, h: number, d: number, r: number, k: Rounding = METERS) =>
+  new RoundedBoxGeometry(w, h, d, k.segments, Math.max(k.least, Math.min(r, Math.min(w, h, d) / 2 - k.margin)));
+
+/** Adds a rounded box mesh; `r` is the corner radius, clamped to fit. */
+export function box(w: number, h: number, d: number, mat: THREE.Material, parent: THREE.Object3D, o: MeshOpts & { r?: number } = {}, k: Rounding = METERS): THREE.Mesh {
+  return add(roundedBox(w, h, d, o.r ?? 0.01, k), mat, parent, o);
 }
 
 /** A tube along a curve, for stems, vines and hoops. */
@@ -367,6 +294,3 @@ export function tube(points: THREE.Vector3[], radius: number, mat: THREE.Materia
   }
   return add(g, mat, parent, o);
 }
-
-/** Plant-part material: toon that sways with the wind. */
-export const plantMat = (color: THREE.ColorRepresentation, o: ToonOpts = {}) => toon(color, { wind: WIND, ...o });
