@@ -5,11 +5,6 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# A deploy that has started finishes, so Pages never ends up half-published.
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
@@ -21,7 +16,11 @@ jobs:
   # Publishes the build CI tested; nothing is rebuilt here.
   deploy:
     needs: ci
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    # A deploy that has started finishes, so Pages never ends up half-published.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     permissions:
       pages: write
       id-token: write

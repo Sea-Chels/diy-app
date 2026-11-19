@@ -15,6 +15,8 @@ export default defineConfig({
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     baseURL: `http://localhost:${PORT}${BASE}`,
+    trace: process.env.CI ? 'retain-on-failure' : 'off',
+    screenshot: 'only-on-failure',
     // System Chrome is on every GitHub runner, so there's no browser download. SwiftShader gives it WebGL without a GPU.
     channel: 'chrome',
     launchOptions: { args: ['--enable-unsafe-swiftshader'] },
