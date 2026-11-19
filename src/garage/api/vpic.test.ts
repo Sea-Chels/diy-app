@@ -7,6 +7,7 @@ let year = 2000;
 const nextYear = () => year++;
 
 afterEach(() => {
+  vi.restoreAllMocks();
   vi.unstubAllGlobals();
   vi.useRealTimers();
 });
@@ -17,7 +18,7 @@ describe('vPIC client', () => {
     vi.stubGlobal('fetch', fetch);
     const y = nextYear();
     await modelsForMakeYear('Land Rover', y);
-    expect(fetch).toHaveBeenCalledWith(`https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Land%20Rover/modelyear/${y}?format=json`);
+    expect(fetch).toHaveBeenCalledWith(`https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Land%20Rover/modelyear/${y}?format=json`, { signal: expect.any(AbortSignal) });
   });
   it('trims, drops blanks and duplicates, and sorts', async () => {
     vi.stubGlobal('fetch', async () => ok(['Pilot ', 'Accord', ' ', 'Civic', 'Accord', 'CR-V']));
@@ -53,13 +54,21 @@ describe('vPIC client', () => {
     vi.stubGlobal('fetch', async () => new Response('{}'));
     await expect(modelsForMakeYear('Mazda', nextYear())).rejects.toThrow();
   });
-  // Known gap: fetch gets no AbortSignal, so a stalled vPIC leaves the model picker empty instead of falling back to the free-text box.
-  it.fails('gives up on a request that never answers', async () => {
+  it('gives up on a request that never answers, and forgets it', async () => {
     vi.useFakeTimers();
-    vi.stubGlobal('fetch', (_url: string, init?: RequestInit) => new Promise((_, reject) => init?.signal?.addEventListener('abort', () => reject(init.signal!.reason))));
-    const p = modelsForMakeYear('Subaru', nextYear());
-    const settled = p.then(() => 'resolved', () => 'rejected');
-    await vi.advanceTimersByTimeAsync(60_000);
-    expect(await Promise.race([settled, Promise.resolve('pending')])).toBe('rejected');
+    // Node's AbortSignal.timeout runs on real timers, so rebuild it on the faked ones.
+    vi.spyOn(AbortSignal, 'timeout').mockImplementation((ms) => {
+      const c = new AbortController();
+      setTimeout(() => c.abort(new DOMException('The operation timed out.', 'TimeoutError')), ms);
+      return c.signal;
+    });
+    const fetch = vi.fn((_url: string, init?: RequestInit) => new Promise<Response>((_, reject) => init?.signal?.addEventListener('abort', () => reject(init.signal!.reason))));
+    vi.stubGlobal('fetch', fetch);
+    const y = nextYear();
+    const p = expect(modelsForMakeYear('Subaru', y)).rejects.toThrow(/timed out|abort/i);
+    await vi.advanceTimersByTimeAsync(10_000);
+    await p;
+    void modelsForMakeYear('Subaru', y).catch(() => {});
+    expect(fetch).toHaveBeenCalledTimes(2);
   });
 });
