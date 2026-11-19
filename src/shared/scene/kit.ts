@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { outline, toon, type InkWeight, type ToonOpts } from '../toon';
 import { PALETTE } from '../theme';
+import { tag } from './sceneTags';
 
 export type V3 = [number, number, number];
 export const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
@@ -305,7 +306,7 @@ export class Batches {
       inst.castShadow = b.shadow;
       inst.receiveShadow = true;
       inst.computeBoundingSphere();
-      inst.userData.sharedGeometry = true; // the geometry is cached across rebuilds; the material isn't
+      tag(inst, 'sharedGeometry', true); // the geometry is cached across rebuilds; the material isn't
       if (b.ink) outline(inst, b.ink, b.wind);
       b.parent.add(inst);
     }

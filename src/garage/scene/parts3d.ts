@@ -5,6 +5,7 @@ import { hex } from '../../shared/theme';
 import { createBeacons, createLids } from '../../shared/scene/rigKit';
 import { moves } from '../../shared/scene/ink';
 import { PARTS, type LidId, type PartId } from '../data/parts';
+import { tag as setTag, tagOf } from '../../shared/scene/sceneTags';
 
 /** `tag` makes meshes a part's hotspots. Give each its own material: `shareMaterials` keeps a part's glow on that part. */
 export function createParts() {
@@ -13,7 +14,7 @@ export function createParts() {
   const tag = (part: PartId, ...meshes: THREE.Mesh[]) => {
     const list = hotspots.get(part) ?? [];
     for (const m of meshes) {
-      m.userData.area = part;
+      setTag(m, 'spot', part);
       list.push(m);
     }
     hotspots.set(part, list);
@@ -26,7 +27,7 @@ export function createParts() {
 export function createPartBeacons(parent: THREE.Object3D, canPick: (part: PartId) => boolean) {
   // Unlike the other workshops' beacons these are depth-tested, so the vehicle hides them and they pick like any other part.
   const { beacons, beaconAt: dot } = createBeacons<PartId>(parent, { radius: 0.045, segments: [16, 16], onTop: false });
-  const beaconAt = (part: PartId, p: V3) => (dot(part, p).userData.seen = () => canPick(part));
+  const beaconAt = (part: PartId, p: V3) => setTag(dot(part, p), 'seen', () => canPick(part));
   return { beacons, beaconAt };
 }
 
@@ -77,7 +78,7 @@ export function shareMaterials(root: THREE.Object3D, hotspots: Map<PartId, THREE
   const swapped = new Map<THREE.Material, THREE.Material>();
   root.traverse((o) => {
     const mesh = o as THREE.Mesh;
-    if (!mesh.isMesh || o.userData.ink || Array.isArray(mesh.material)) return;
+    if (!mesh.isMesh || tagOf(o, 'ink') || Array.isArray(mesh.material)) return;
     const m = mesh.material;
     const key = `${parts.get(m) ?? ''}|${painted.has(m)}|${look(m)}`;
     const keep = kept.get(key) ?? m;

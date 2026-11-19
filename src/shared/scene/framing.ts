@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import type { View } from './stage';
+import { tagOf } from './sceneTags';
 
 const UP = new THREE.Vector3(0, 1, 0);
 /** World units a pulled-back camera keeps from the surface it backed up to. */
@@ -28,7 +29,7 @@ export function clearance(scene: THREE.Scene, rig: THREE.Object3D, from: THREE.V
   const hits = sight.intersectObject(scene, true);
   // Hulls opt out of raycasting so they never take a click; ask them directly.
   scene.traverse((o) => {
-    if (!o.userData.ink || !shown(o)) return;
+    if (!tagOf(o, 'ink') || !shown(o)) return;
     const proto = (o as THREE.InstancedMesh).isInstancedMesh ? THREE.InstancedMesh.prototype : THREE.Mesh.prototype;
     proto.raycast.call(o as THREE.Mesh, sight, hits);
   });
@@ -36,7 +37,7 @@ export function clearance(scene: THREE.Scene, rig: THREE.Object3D, from: THREE.V
   for (const { object: o, distance } of hits) {
     const m = o as THREE.Mesh;
     const mat = (Array.isArray(m.material) ? m.material[0] : m.material) as THREE.Material | undefined;
-    if (m.isMesh && mat?.visible && !(mat.transparent && mat.opacity < 0.9) && !o.userData.beacon && shown(o)) nearest = Math.min(nearest, far - distance);
+    if (m.isMesh && mat?.visible && !(mat.transparent && mat.opacity < 0.9) && !tagOf(o, 'beacon') && shown(o)) nearest = Math.min(nearest, far - distance);
   }
   grow.setScalar(scale);
   scene.updateMatrixWorld();

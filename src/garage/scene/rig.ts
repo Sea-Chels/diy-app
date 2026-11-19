@@ -23,6 +23,7 @@ import { buildFront } from './zones/front';
 import { buildRear } from './zones/rear';
 import { buildWipers } from './zones/wipers';
 import { buildWheels } from './zones/wheels';
+import { tagOf } from '../../shared/scene/sceneTags';
 
 export interface Paint {
   color: string;
@@ -112,7 +113,7 @@ export function buildCar(kind: BodyKind): CarRig {
     current = p;
     const target = new THREE.Color(p.color);
     for (const m of paintMats) {
-      const u = m.userData.uniforms as ToonUniforms;
+      const u = tagOf(m, 'uniforms') as ToonUniforms;
       const c0 = m.color.clone();
       const s0 = u.uShine.value;
       const m0 = u.uMetal.value;

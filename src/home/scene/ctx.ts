@@ -7,6 +7,7 @@ import { K } from './room';
 import { EXT_LAYERS, INT_LAYERS, sectionTex, lapSiding } from './textures';
 import { MAT } from '../../shared/scene/materials';
 import { createSpots } from '../../shared/scene/rigKit';
+import { tag } from '../../shared/scene/sceneTags';
 
 export function createCtx(s: Setup) {
   const r = rng(77);
@@ -50,7 +51,7 @@ export function createCtx(s: Setup) {
   const siding = (y0: number, y1: number) => mapped(0xffffff, lapSiding(y0, y1), { halftone: 0.5 });
   /** Outer walls: picks behind them don't count. */
   const blocker = (m: THREE.Mesh) => {
-    m.userData.blocker = true;
+    tag(m, 'blocker', true);
     // Walls are built in pieces round the window and door; their outline is drawn once, below.
     m.userData.noCrease = true;
     picks.push(m);

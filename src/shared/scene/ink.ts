@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import type { HullSet } from '../toon';
+import { tag, tagOf } from './sceneTags';
 
 /** Marks objects whose own position, rotation, scale or visibility animates at runtime. */
 export function moves(...objs: THREE.Object3D[]): void {
-  for (const o of objs) o.userData.moves = true;
+  for (const o of objs) tag(o, 'moves', true);
 }
 
 /**
@@ -25,7 +26,7 @@ export function findMovers(root: THREE.Object3D, poses: ((k: number) => void)[])
   root.updateMatrixWorld(true);
   const movers = new Set<THREE.Object3D>();
   root.traverse((o) => {
-    if (o.userData.moves || shut.get(o) !== open.get(o)) movers.add(o);
+    if (tagOf(o, 'moves') || shut.get(o) !== open.get(o)) movers.add(o);
   });
   return movers;
 }
@@ -40,7 +41,7 @@ export function rides(o: THREE.Object3D | null, movers: Set<THREE.Object3D>, roo
  * Merges ink hulls into one mesh per rigid frame and ink style, turning hundreds of hull draw calls into dozens.
  * A frame is the nearest of the hull's mesh and its ancestors that is one of `movers`, an area's group or `root`;
  * nothing between a mesh and its frame moves, so the merged hull lives in the frame and moves and hides with it.
- * Meshes that highlight together (the same `glow` lists) share a hull, which each reaches through `userData.hull`.
+ * Meshes that highlight together (the same `glow` lists) share a hull, which each reaches through its `hull` tag.
  */
 export function mergeInk(root: THREE.Object3D, movers: Set<THREE.Object3D>, glow?: Map<string, THREE.Object3D[]>): void {
   root.updateMatrixWorld(true);
@@ -48,16 +49,16 @@ export function mergeInk(root: THREE.Object3D, movers: Set<THREE.Object3D>, glow
   for (const [id, ms] of glow ?? []) for (const m of ms) glowOf.set(m, glowOf.has(m) ? `${glowOf.get(m)}|${id}` : id);
   const frameOf = (o: THREE.Object3D): THREE.Object3D => {
     let f = o;
-    while (f !== root && f.parent && !movers.has(f) && !(f.userData.area && !(f as THREE.Mesh).isMesh)) f = f.parent;
+    while (f !== root && f.parent && !movers.has(f) && !(tagOf(f, 'spot') && !(f as THREE.Mesh).isMesh)) f = f.parent;
     return f;
   };
   const sets = new Map<string, { frame: THREE.Object3D; hl: HullSet; hulls: THREE.Mesh[] }>();
   root.traverse((o) => {
     const host = o.parent;
-    if (!o.userData.ink || !host || (o as THREE.InstancedMesh).isInstancedMesh) return;
+    if (!tagOf(o, 'ink') || !host || (o as THREE.InstancedMesh).isInstancedMesh) return;
     const frame = frameOf(host);
     for (let a: THREE.Object3D | null = host; a && a !== frame; a = a.parent) if (!a.visible) return;
-    const hl = o.userData.hl as HullSet;
+    const hl = tagOf(o, 'hl') as HullSet;
     const key = `${frame.uuid}|${hl.base.uuid}|${glowOf.get(host) ?? ''}`;
     const set = sets.get(key) ?? { frame, hl, hulls: [] };
     set.hulls.push(o as THREE.Mesh);
@@ -84,11 +85,11 @@ export function mergeInk(root: THREE.Object3D, movers: Set<THREE.Object3D>, glow
     const merged = new THREE.Mesh(mergeGeometries(parts), hl.base);
     for (const g of parts) g.dispose();
     merged.raycast = () => {};
-    merged.userData.ink = true;
-    merged.userData.hl = hl;
+    tag(merged, 'ink', true);
+    tag(merged, 'hl', hl);
     frame.add(merged);
     for (const h of hulls) {
-      (h.parent as THREE.Object3D).userData.hull = merged;
+      tag(h.parent as THREE.Object3D, 'hull', merged);
       h.removeFromParent();
     }
   }

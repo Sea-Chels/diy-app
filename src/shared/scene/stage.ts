@@ -11,6 +11,7 @@ import { createLoop, createRenderer, watchSize } from './loop';
 import { createPicker, onPointer, showGlow } from './picking';
 import { createControls, fitOverview, flyTo, type ControlsOpts, type Fit, type Flight } from './camera';
 import { createSwap, type SwapOpts } from './swap';
+import { tagOf } from './sceneTags';
 
 export interface View {
   pos: V3;
@@ -18,9 +19,8 @@ export interface View {
 }
 
 /**
- * What a workshop's 3D model gives the stage. Pick meshes carry `userData.area`;
- * beacons also carry `userData.beacon`, and `userData.blocker` marks a surface
- * that hides any pick behind it.
+ * What a workshop's 3D model gives the stage. Pick meshes are tagged with their spot (see sceneTags.ts);
+ * beacons are also tagged `beacon`, and `blocker` marks a surface that hides any pick behind it.
  */
 export interface StageRig<Id extends string, Lid extends string> {
   /** Rebuild when this changes. */
@@ -217,7 +217,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     const bs = cfg.beaconScale;
     r.beacons.forEach((b, id) => {
       // Beacons draw without depth testing, so ones on the far side of an outer wall have to hide themselves.
-      const seen = b.userData.seen as ((cam: THREE.Vector3) => boolean) | undefined;
+      const seen = tagOf(b, 'seen');
       b.visible = id !== selected && (!seen || seen(camera.position));
       if (b.visible && !still) moving = true;
       if (!bs) {

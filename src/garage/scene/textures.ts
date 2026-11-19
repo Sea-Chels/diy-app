@@ -2,6 +2,7 @@ import type * as THREE from 'three';
 import { canvasTex, label, mapped, stripes } from '../../shared/scene/kit';
 import { cssHex, PALETTE } from '../../shared/theme';
 import { C } from './kit';
+import { tag } from '../../shared/scene/sceneTags';
 
 
 // Built once and shared by both bodies, so swapping sedan/SUV doesn't make new canvases.
@@ -10,7 +11,7 @@ const once = (make: () => THREE.Texture) => {
   return () => {
     if (!v) {
       v = make();
-      v.userData.shared = true;
+      tag(v, 'sharedTexture', true);
     }
     return v;
   };

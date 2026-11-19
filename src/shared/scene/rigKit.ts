@@ -3,6 +3,7 @@ import { hex } from '../theme';
 import { tween, easeInOutCubic, lerp } from '../tween';
 import { UNIT_BOX, type V3 } from './kit';
 import type { View } from './stage';
+import { spotOf, tag, tagOf } from './sceneTags';
 
 /** A camera view of `target` from `dist` away along `dir`, scaled by `scale` for rigs modelled in other units. */
 export function viewFrom(target: V3, dir: V3, dist: number, scale = 1): View {
@@ -21,7 +22,7 @@ export function createSpots<S extends string>(root: THREE.Object3D) {
   const pickMat = new THREE.MeshBasicMaterial({ visible: false });
   const spot = (id: S): THREE.Group => {
     const g = new THREE.Group();
-    g.userData.area = id;
+    tag(g, 'spot', id);
     root.add(g);
     groups.set(id, g);
     return g;
@@ -31,7 +32,7 @@ export function createSpots<S extends string>(root: THREE.Object3D) {
     const m = new THREE.Mesh(UNIT_BOX, pickMat);
     m.scale.set(...size);
     m.position.set(...at);
-    m.userData.area = g.userData.area;
+    tag(m, 'spot', spotOf<S>(g) as S);
     g.add(m);
     picks.push(m);
   };
@@ -42,7 +43,7 @@ export interface BeaconOpts {
   radius: number;
   segments: [number, number];
   /**
-   * Drawn over everything and picked before what's behind them (the stage's `userData.beacon`).
+   * Drawn over everything and picked before what's behind them (the `beacon` tag).
    * Off, they're depth-tested like the model: the vehicle hides them and they pick like any part.
    */
   onTop: boolean;
@@ -59,8 +60,8 @@ export function createBeacons<S extends string>(parent: THREE.Object3D, o: Beaco
     const b = new THREE.Mesh(geom, mat);
     b.position.set(...p);
     b.renderOrder = o.onTop ? 10 : 3;
-    b.userData.area = id;
-    if (o.onTop) b.userData.beacon = true;
+    tag(b, 'spot', id);
+    if (o.onTop) tag(b, 'beacon', true);
     parent.add(b);
     beacons.set(id, b);
     o.picks?.push(b);
@@ -103,7 +104,7 @@ export function glowMeshes<S extends string>(groups: Map<S, THREE.Object3D>): Ma
     const list: THREE.Mesh[] = [];
     g.traverse((o) => {
       const m = o as THREE.Mesh;
-      if (!m.isMesh || m.userData.ink) return;
+      if (!m.isMesh || tagOf(m, 'ink')) return;
       if (Array.isArray(m.material)) return void list.push(m);
       const mat = m.material as THREE.Material & { isLineMaterial?: boolean; opacity: number };
       if (mat.visible !== false && !mat.isLineMaterial && !(mat.transparent && mat.opacity < 0.05)) list.push(m);

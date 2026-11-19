@@ -7,6 +7,7 @@ import type { V3 } from '../../shared/scene/kit';
 import { K, X0, X1, Z0, Z1, T, WH } from './room';
 import type { HomeCtx } from './ctx';
 import { rides } from '../../shared/scene/ink';
+import { tagOf } from '../../shared/scene/sceneTags';
 
 export function addCreases(c: HomeCtx, movers: Set<THREE.Object3D>) {
   const { root } = c;
@@ -43,7 +44,7 @@ export function addCreases(c: HomeCtx, movers: Set<THREE.Object3D>) {
     const targets: THREE.Mesh[] = [];
     root.traverse((o) => {
       const m = o as THREE.Mesh;
-      if (!m.isMesh || m.userData.ink || m.userData.beacon || m.userData.noCrease || (m as unknown as { isInstancedMesh?: boolean }).isInstancedMesh) return;
+      if (!m.isMesh || tagOf(m, 'ink') || tagOf(m, 'beacon') || m.userData.noCrease || (m as unknown as { isInstancedMesh?: boolean }).isInstancedMesh) return;
       const mats = Array.isArray(m.material) ? m.material : [m.material];
       if (mats.some((x) => !x.visible || x.transparent || (x as THREE.MeshBasicMaterial).isMeshBasicMaterial || (x as THREE.ShaderMaterial).isShaderMaterial)) return;
       m.geometry.computeBoundingBox();

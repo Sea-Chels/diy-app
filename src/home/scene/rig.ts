@@ -26,6 +26,7 @@ import { buildExterior } from './zones/exterior';
 import { addCreases } from './creases';
 import { findMovers, mergeInk, moves } from '../../shared/scene/ink';
 import { K, X0, Z0, WH } from './room';
+import { tag } from '../../shared/scene/sceneTags';
 
 export type Rig = StageRig<AreaId, LidId>;
 
@@ -69,10 +70,10 @@ export function buildRig(s: Setup): Rig {
   beaconAt('floor', [0.8, 0.28, 2.35]);
   // Which side of the outer walls the camera must be on to see each beacon.
   for (const [id, b] of beacons) {
-    b.userData.seen =
+    tag(b, 'seen',
       id === 'gutters' ? (c: THREE.Vector3) => c.z < Z0 * K || c.x < X0 * K || c.y > (WH + 1.2) * K
       : id === 'exterior' ? (c: THREE.Vector3) => c.x < XO * K
-      : (c: THREE.Vector3) => c.x > X0 * K && c.z > Z0 * K;
+      : (c: THREE.Vector3) => c.x > X0 * K && c.z > Z0 * K);
   }
 
   const view = (target: V3, dir: V3, dist: number) => viewFrom(target, dir, dist, K);

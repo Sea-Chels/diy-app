@@ -9,6 +9,7 @@ import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 import { hex } from './theme';
+import { tag, tagOf } from './scene/sceneTags';
 
 export const INK = hex('ink');
 
@@ -131,7 +132,7 @@ export function toon(color: THREE.ColorRepresentation, o: ToonOpts = {}): THREE.
     side: o.side ?? THREE.FrontSide,
   });
   const u: ToonUniforms = { uShine: { value: o.shine ?? 0 }, uMetal: { value: o.metal ?? 0 }, uHalftone: { value: o.halftone ?? 1 } };
-  m.userData.uniforms = u;
+  tag(m, 'uniforms', u);
   const wind = o.wind ?? 0;
   m.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, shared, u);
@@ -253,9 +254,9 @@ function hullSet(weight: InkWeight, wind: number): HullSet {
 }
 
 export function setHighlight(mesh: THREE.Mesh, level: 'none' | 'hover' | 'selected'): void {
-  const hull = (mesh.userData.hull ?? mesh.children.find((c) => c.userData.ink)) as THREE.Mesh | undefined;
-  if (!hull) return;
-  const set = hull.userData.hl as HullSet;
+  const hull = tagOf(mesh, 'hull') ?? (mesh.children.find((c) => tagOf(c, 'ink')) as THREE.Mesh | undefined);
+  const set = hull && tagOf(hull, 'hl');
+  if (!hull || !set) return;
   hull.material = level === 'none' ? set.base : set[level];
 }
 
@@ -291,8 +292,8 @@ export function outline(mesh: THREE.Mesh, weight: InkWeight = 'thin', wind = 0):
     hull = new THREE.Mesh(smoothNormals(mesh.geometry), set.base);
   }
   hull.raycast = () => {};
-  hull.userData.ink = true;
-  hull.userData.hl = set;
+  tag(hull, 'ink', true);
+  tag(hull, 'hl', set);
   mesh.add(hull);
 }
 
@@ -311,7 +312,7 @@ function copyShape(dst: THREE.BufferGeometry, src: THREE.BufferGeometry): void {
  */
 export function reshape(mesh: THREE.Mesh, g: THREE.BufferGeometry): void {
   copyShape(mesh.geometry, g);
-  const hull = mesh.children.find((c) => c.userData.ink) as THREE.Mesh | undefined;
+  const hull = mesh.children.find((c) => tagOf(c, 'ink')) as THREE.Mesh | undefined;
   if (hull) copyShape(hull.geometry, smoothNormals(g));
   g.dispose();
 }
@@ -335,18 +336,18 @@ const TEXTURE_SLOTS = ['map', 'emissiveMap', 'alphaMap', 'bumpMap', 'normalMap',
 
 export function disposeTree(root: THREE.Object3D): void {
   root.traverse((o) => {
-    if (o.userData.ink) {
+    if (tagOf(o, 'ink')) {
       (o as THREE.Mesh).geometry.dispose(); // hull materials are shared; keep them
       return;
     }
     const mesh = o as THREE.Mesh;
-    if (!o.userData.sharedGeometry) mesh.geometry?.dispose();
+    if (!tagOf(o, 'sharedGeometry')) mesh.geometry?.dispose();
     const mats = Array.isArray(mesh.material) ? mesh.material : mesh.material ? [mesh.material] : [];
     for (const m of mats) {
       if (m instanceof LineMaterial) lineMaterials.delete(m);
       for (const slot of TEXTURE_SLOTS) {
         const t = (m as unknown as Record<string, unknown>)[slot];
-        if (t instanceof THREE.Texture && !t.userData.shared) t.dispose();
+        if (t instanceof THREE.Texture && !tagOf(t, 'sharedTexture')) t.dispose();
       }
       m.dispose();
     }

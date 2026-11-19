@@ -3,6 +3,7 @@ import { setHighlight } from '../toon';
 import { shown } from './framing';
 import { HOVER_LAYER, SELECT_LAYER } from './outline';
 import type { StageRig } from './stage';
+import { spotOf, tagOf } from './sceneTags';
 
 export interface Hit<Id> {
   id: Id;
@@ -28,7 +29,7 @@ export function createPicker<Id extends string>(canvas: HTMLCanvasElement, camer
       closeFor = r;
       meshArea = new Map();
       for (const [id, ms] of r.glow) for (const m of ms) meshArea.set(m, id);
-      close = [...r.picks.filter((o) => o.userData.beacon || o.userData.blocker), ...meshArea.keys()];
+      close = [...r.picks.filter((o) => tagOf(o, 'beacon') || tagOf(o, 'blocker')), ...meshArea.keys()];
     }
     return close;
   }
@@ -39,15 +40,15 @@ export function createPicker<Id extends string>(canvas: HTMLCanvasElement, camer
     pointer.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
-    const areaOf = (o: THREE.Object3D) => (o.userData.area as Id | undefined) ?? meshArea.get(o);
-    const live = (o: THREE.Object3D) => shown(o) && (!r.canPick || o.userData.blocker || r.canPick(areaOf(o) as Id));
+    const areaOf = (o: THREE.Object3D) => spotOf<Id>(o) ?? meshArea.get(o);
+    const live = (o: THREE.Object3D) => shown(o) && (!r.canPick || tagOf(o, 'blocker') || r.canPick(areaOf(o) as Id));
     const hits = raycaster.intersectObjects(selected() ? closePicks() : r.picks, false);
     // Beacons draw on top of everything, so they win when hit.
-    const beacon = hits.find((h) => h.object.userData.beacon && live(h.object));
+    const beacon = hits.find((h) => tagOf(h.object, 'beacon') && live(h.object));
     if (beacon) return { id: areaOf(beacon.object) as Id, beacon: true };
     // Pick boxes overlap: the nearest wins, unless a blocker is in front of it.
-    const first = hits.find((h) => !h.object.userData.beacon && live(h.object));
-    if (!first || first.object.userData.blocker) return null;
+    const first = hits.find((h) => !tagOf(h.object, 'beacon') && live(h.object));
+    if (!first || tagOf(first.object, 'blocker')) return null;
     const id = areaOf(first.object);
     return id ? { id, beacon: false } : null;
   };

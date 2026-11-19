@@ -7,6 +7,7 @@ import type { Setup } from '../data/setup';
 import type { PartId } from '../data/parts';
 import { K, FEET, DIMS, ATX, ITX } from './layout';
 import { C } from './kit';
+import { tag, tagOf } from '../../shared/scene/sceneTags';
 
 export function createCtx(s: Setup) {
   const dm = DIMS[s.size];
@@ -43,8 +44,8 @@ export function createCtx(s: Setup) {
     for (const o of meshes) {
       o.traverse((c) => {
         const m = c as THREE.Mesh;
-        if (!m.isMesh || m.userData.ink) return;
-        m.userData.area = part;
+        if (!m.isMesh || tagOf(m, 'ink')) return;
+        tag(m, 'spot', part);
         list.push(m);
       });
     }
