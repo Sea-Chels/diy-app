@@ -103,7 +103,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.toneMapping = THREE.NoToneMapping;
 
   const scene = new THREE.Scene();
@@ -466,9 +466,11 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
 
   const keyDir = new THREE.Vector3();
   const tmpV = new THREE.Vector3();
-  const clock = new THREE.Clock();
+  let timer: THREE.Timer | null = null;
   renderer.setAnimationLoop(() => {
-    const t = clock.getElapsedTime();
+    // Started on the first frame, as THREE.Clock did, so animations begin at t = 0 however long the build took.
+    timer ??= new THREE.Timer();
+    const t = timer.update().getElapsed();
     updateTweens(performance.now());
     rig.update(t);
     const pulse = reducedMotion() ? 1 : 1 + Math.sin(t * cfg.beaconPulse.speed) * cfg.beaconPulse.amp;
