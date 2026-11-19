@@ -8,12 +8,13 @@
  * and a view.
  */
 import * as THREE from 'three';
-import { disposeTree, shared, toon } from '../../shared/toon';
-import { idleClock, reducedMotion } from '../../shared/motion';
+import { disposeTree, toon } from '../../shared/toon';
+import { reducedMotion } from '../../shared/motion';
+import { tweenScope } from '../../shared/tween';
 import type { V3 } from '../../shared/scene/kit';
 import { hex } from '../../shared/theme';
 import type { StageRig, View } from '../../shared/scene/stage';
-import { createBeacons, createLids, glowMeshes, viewFrom } from '../../shared/scene/rigKit';
+import { createBeacons, createLids, glowMeshes, viewFrom, rigClock } from '../../shared/scene/rigKit';
 import type { AreaId, LidId } from '../data/areas';
 import type { Setup } from '../data/setup';
 import { createCtx } from './ctx';
@@ -96,9 +97,9 @@ export function buildRig(s: Setup): Rig {
   };
   const overview: View = view([0, 0.6, 0.1], [0.85, 0.95, 1.1], 11.5);
 
-  const { setLid } = createLids<LidId>(lidHooks, { tag: 'home-lid', ms: 900 });
-  let clock = 0;
-  const idle = idleClock();
+  const tw = tweenScope();
+  const { setLid } = createLids<LidId>(lidHooks, { tweens: tw, ms: 900 });
+  const clock = rigClock();
   const drops: THREE.Mesh[] = [];
   const dropMat = new THREE.MeshBasicMaterial({ color: hex('water') });
   const dropGeo = new THREE.SphereGeometry(0.008, 8, 6);
@@ -116,7 +117,7 @@ export function buildRig(s: Setup): Rig {
   const drip = () => {
     const d = new THREE.Mesh(dropGeo, dropMat);
     d.position.copy(DRIP_FROM);
-    d.userData.born = clock;
+    d.userData.born = clock.now;
     sink.add(d);
     drops.push(d);
   };
@@ -141,9 +142,9 @@ export function buildRig(s: Setup): Rig {
         if (s.ceiling === 'fan') spin = 9;
         else setLight(!lightOn);
       } else if (id === 'outlets') setLight(!lightOn);
-      else if (id === 'toilet') flushAt = clock;
-      else if (id === 'appliances') burnAt = clock;
-      else if (id === 'door') jiggleAt = clock;
+      else if (id === 'toilet') flushAt = clock.now;
+      else if (id === 'appliances') burnAt = clock.now;
+      else if (id === 'door') jiggleAt = clock.now;
       else if (id === 'exterior') porchBulb.emissiveIntensity = porchBulb.emissiveIntensity > 0.5 ? 0.05 : 0.9;
       else if (id === 'utility') {
         // Reset the tripped breaker: all the way off, then on.
@@ -153,10 +154,8 @@ export function buildRig(s: Setup): Rig {
       }
     },
     update(t) {
-      const dt = Math.min(0.05, t - clock);
-      clock = t;
-      const it = idle(t);
-      shared.uTime.value = it;
+      clock.tick(t);
+      const { dt, idle: it } = clock;
       // The idle drip waits on the idle clock; a poked sink's drops fall whatever the setting.
       if (it > nextDrip) {
         drip();
@@ -203,6 +202,7 @@ export function buildRig(s: Setup): Rig {
       return drops.length > 0 || dripsDue.length > 0 || hot ? 'picture' : false;
     },
     dispose() {
+      tw.stop();
       disposeTree(root);
     },
   };

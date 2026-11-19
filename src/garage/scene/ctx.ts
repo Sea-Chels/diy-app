@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { toon } from '../../shared/toon';
+import { tweenScope } from '../../shared/tween';
 import type { BodyKind } from '../data/paint';
 import { curve, ringPoint, tAtY, type SectionFn } from './loft';
 import { SPECS } from './specs';
@@ -11,6 +12,7 @@ export function createCtx(kind: BodyKind) {
   const S = SPECS[kind];
   const group = new THREE.Group();
   const { hotspots, tag } = createParts();
+  const tweens = tweenScope();
   const paintMats: THREE.MeshToonMaterial[] = [];
 
   // The rig paints every body panel before the first frame, so the starting color never shows.
@@ -129,7 +131,7 @@ export function createCtx(kind: BodyKind) {
   };
 
   return {
-    S, kind, group, hotspots, paintMats, paint, tag,
+    S, kind, group, hotspots, paintMats, paint, tag, tweens,
     lowerTop, lowerBottom, lowerWidth, hoodLine, fasciaBottom, fasciaWidth, roofLine,
     archR, LOWER_N, lower, fenderW, hoodW, hoodZ1, fender, front, hoodEdgeT, noseTopY, onNose, GH_N, TUB_T, sill, ghBaseY, gh, GH_CORNER_T, beltTrim, roofY, sideX,
   };

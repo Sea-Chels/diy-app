@@ -127,7 +127,7 @@ export function buildBike(): RideRig<BikePart> {
 
   add(rod([0.045, 0.3, -0.17], [0.22, groundY(0.22), -0.33], 0.009), M.trim(), body, { ink: null });
 
-  return finish<BikePart>('bike', {
+  return finish<BikePart>({
     dots: {
       bike_tire: [-0.05, R, FZ + R + 0.07],
       bike_chain: [-0.15, 0.32, -0.25],

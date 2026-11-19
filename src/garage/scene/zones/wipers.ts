@@ -1,12 +1,11 @@
 import * as THREE from 'three';
-import { tween } from '../../../shared/tween';
 import { M, rbox } from '../kit';
 import type { CarCtx } from '../ctx';
 import { add } from '../../../shared/scene/kit';
 import { moves } from '../../../shared/scene/ink';
 
 export function buildWipers(c: CarCtx) {
-  const { S, kind, group, tag, roofLine } = c;
+  const { S, group, tag, tweens, roofLine } = c;
   const wipers: THREE.Mesh[] = [];
   const wipeArms: THREE.Group[] = [];
   const wipeZ = S.cowlZ - 0.08;
@@ -30,10 +29,10 @@ export function buildWipers(c: CarCtx) {
   }
   tag('wiper', ...wipers);
   const wipe = () =>
-    tween({
+    tweens.tween({
       duration: 1700,
       ease: (k) => k,
-      tag: `wipe:${kind}`,
+      tag: 'wipe',
       update: (k) => {
         const a = 0.5 - 0.5 * Math.cos(k * Math.PI * 4); // two full sweeps
         wipeArms.forEach((arm, i) => (arm.rotation.y = WIPER_REST - 1.3 * Math.max(0, a - i * 0.03)));

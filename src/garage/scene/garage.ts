@@ -73,6 +73,9 @@ export function buildGarage(kind: BodyKind, ride: RideId): GarageRig {
     canPick: (p) => rides[rideOf(p)].canPick(p),
     poke: (p) => rides[rideOf(p)].poke(p),
     update: () => false,
-    dispose: () => disposeTree(group),
+    dispose: () => {
+      for (const r of Object.values(rides)) r.stop();
+      disposeTree(group);
+    },
   };
 }

@@ -6,12 +6,12 @@
  * gets hotspot meshes, a beacon and a camera view.
  */
 import * as THREE from 'three';
-import { tween, easeInOutCubic, lerp } from '../../shared/tween';
+import { easeInOutCubic, lerp, tweenScope } from '../../shared/tween';
 import { disposeTree } from '../../shared/toon';
-import { idleClock, reducedMotion } from '../../shared/motion';
+import { reducedMotion } from '../../shared/motion';
 import type { V3 } from '../../shared/scene/kit';
 import type { StageRig, View } from '../../shared/scene/stage';
-import { createBeacons, createLids, viewFrom } from '../../shared/scene/rigKit';
+import { createBeacons, createLids, viewFrom, rigClock } from '../../shared/scene/rigKit';
 import { findMovers, mergeInk, moves } from '../../shared/scene/ink';
 import type { LidId, PartId } from '../data/parts';
 import type { Setup } from '../data/setup';
@@ -68,7 +68,8 @@ export function buildRig(s: Setup): Rig {
     },
     shroud: (k) => (shroudG.rotation.z = 1.45 * k),
   };
-  const { setLid } = createLids<LidId>(lidPoses, { tag: 'pc-lid', ms: (lid) => (lid === 'glass' ? 850 : 750) });
+  const tw = tweenScope();
+  const { setLid } = createLids<LidId>(lidPoses, { tweens: tw, ms: (lid) => (lid === 'glass' ? 850 : 750) });
   moves(...rotors.map((r) => r.obj), gpuG, cmosG, usb, ...ramSticks, ...aioTubes.map((t) => t.mesh));
   mergeInk(root, findMovers(root, Object.values(lidPoses)), hotspots);
 
@@ -130,9 +131,7 @@ export function buildRig(s: Setup): Rig {
   const rgbColor = new THREE.Color(s.rgbColor);
   let power = 1;
   let boot: { start: number } | null = null;
-  let clock = 0;
-  let lastT = 0;
-  const idle = idleClock();
+  const clock = rigClock();
   let focused: PartId | null = null;
   let usbShown = false;
 
@@ -140,7 +139,7 @@ export function buildRig(s: Setup): Rig {
     if (on === usbShown) return;
     usbShown = on;
     const from = usb.scale.x;
-    tween({ duration: 450, ease: easeInOutCubic, tag: 'usb', update: (k) => usb.scale.setScalar(Math.max(0.001, lerp(from, on ? 1 : 0, k))) });
+    tw.tween({ duration: 450, ease: easeInOutCubic, tag: 'usb', update: (k) => usb.scale.setScalar(Math.max(0.001, lerp(from, on ? 1 : 0, k))) });
   }
 
   function setLook(n: Setup): void {
@@ -164,9 +163,9 @@ export function buildRig(s: Setup): Rig {
   }
 
   function startBoot(): void {
-    boot = { start: clock };
+    boot = { start: clock.now };
     showUsb(true);
-    tween({ duration: 3200, ease: (t) => t, tag: 'boost-gpu', update: (k) => (boost.gpu = k < 0.35 ? 0 : Math.sin(((k - 0.35) / 0.65) * Math.PI)) });
+    tw.tween({ duration: 3200, ease: (t) => t, tag: 'boost-gpu', update: (k) => (boost.gpu = k < 0.35 ? 0 : Math.sin(((k - 0.35) / 0.65) * Math.PI)) });
   }
 
   const bootSteps: [number, 'off' | 'post' | 'bios' | 'install' | 'desktop'][] = [
@@ -178,7 +177,7 @@ export function buildRig(s: Setup): Rig {
   ];
 
   function pulse(tag: string, ms: number, update: (k: number) => void): void {
-    tween({ duration: ms, ease: (t) => t, tag, update, done: () => update(0) });
+    tw.tween({ duration: ms, ease: (t) => t, tag, update, done: () => update(0) });
   }
 
   const tmp = new THREE.Color();
@@ -209,9 +208,9 @@ export function buildRig(s: Setup): Rig {
       else if (part === 'cooler') pulse('boost-cooler', 2400, (k) => (boost.cooler = Math.sin(k * Math.PI)));
       else if (part === 'gpu') {
         pulse('boost-gpu', 2600, (k) => (boost.gpu = Math.sin(k * Math.PI)));
-        tween({ duration: 1500, ease: (t) => t, tag: 'gpu-pop', update: (k) => (gpuG.position.x = -Math.sin(k * Math.PI) * 38) });
+        tw.tween({ duration: 1500, ease: (t) => t, tag: 'gpu-pop', update: (k) => (gpuG.position.x = -Math.sin(k * Math.PI) * 38) });
       } else if (part === 'ram') {
-        tween({
+        tw.tween({
           duration: 1500,
           ease: (t) => t,
           tag: 'ram-pop',
@@ -221,17 +220,15 @@ export function buildRig(s: Setup): Rig {
           }),
         });
       } else if (part === 'cmos') {
-        tween({ duration: 1300, ease: (t) => t, tag: 'cmos-pop', update: (k) => {
+        tw.tween({ duration: 1300, ease: (t) => t, tag: 'cmos-pop', update: (k) => {
           cmosG.position.x = cm.x - Math.sin(k * Math.PI) * 12;
           cmosG.rotation.z = Math.sin(k * Math.PI) * 0.35;
         } });
       }
     },
     update(t) {
-      const dt = Math.min(0.05, t - lastT);
-      lastT = t;
-      clock = t;
-      const it = idle(t);
+      clock.tick(t);
+      const { dt, idle: it } = clock;
       // Boot sequence: power down, POST, BIOS, installer, desktop.
       if (boot) {
         const e = t - boot.start;
@@ -274,6 +271,7 @@ export function buildRig(s: Setup): Rig {
       return !reducedMotion() ? 'casters' : boot ? 'picture' : false;
     },
     dispose() {
+      tw.stop();
       disposeTree(root);
       screen.texture.dispose();
     },

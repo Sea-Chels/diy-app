@@ -4,6 +4,7 @@ import type { View } from '../../shared/scene/stage';
 import { hex } from '../../shared/theme';
 import { createBeacons, createLids } from '../../shared/scene/rigKit';
 import { moves } from '../../shared/scene/ink';
+import type { TweenScope } from '../../shared/tween';
 import { PARTS, type LidId, type PartId } from '../data/parts';
 import { tag as setTag, tagOf } from '../../shared/scene/sceneTags';
 
@@ -100,6 +101,8 @@ export interface Ride {
   setLid(lid: LidId, open: boolean): void;
   canPick(part: PartId): boolean;
   poke(part: PartId): void;
+  /** Ends its running tweens, when the garage is rebuilt. */
+  stop(): void;
 }
 
 /** A vehicle with a camera view, in its own frame, for every one of its parts `P`. */
@@ -127,14 +130,14 @@ export interface LidSpec {
   open: number;
 }
 
-/** Hinged panels that swing open for the parts behind them. `key` keeps two vehicles' tweens apart. */
-export function createPivotLids(lids: Partial<Record<LidId, LidSpec>>, key: string) {
+/** Hinged panels that swing open for the parts behind them, in the vehicle's `tweens`. */
+export function createPivotLids(lids: Partial<Record<LidId, LidSpec>>, tweens: TweenScope) {
   const apply: Partial<Record<LidId, (k: number) => void>> = {};
   for (const [id, { pivot, axis, open }] of Object.entries(lids) as [LidId, LidSpec][]) {
     moves(pivot);
     apply[id] = (k) => (pivot.rotation[axis] = open * k);
   }
-  const { setLid, isOpen } = createLids<LidId>(apply, { tag: `lid:${key}`, ms: 750 });
+  const { setLid, isOpen } = createLids<LidId>(apply, { tweens, ms: 750 });
   const canPick = (part: PartId) => {
     const { behind, seeThrough } = PARTS[part];
     return !behind || seeThrough === true || isOpen(behind);

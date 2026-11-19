@@ -173,7 +173,7 @@ export function buildMoto(): RideRig<MotoPart> {
   for (const s of [1, -1]) add(rod([s * 0.2, 0.37, -0.22], [s * 0.31, 0.37, -0.23], 0.014), M.trim(), body, { ink: null });
   add(rod([0.14, 0.33, -0.12], [0.3, groundY(0.3), -0.05], 0.012), M.trim(), body, { ink: null });
 
-  return finish<MotoPart>('moto', {
+  return finish<MotoPart>({
     lids: { moto_seat: { pivot: seatPivot, axis: 'x', open: 1.0 } },
     dots: {
       moto_tire: [0.1, 0.64, FZ],

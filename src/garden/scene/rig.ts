@@ -7,11 +7,12 @@
  */
 import * as THREE from 'three';
 import { disposeTree, shared } from '../../shared/toon';
-import { idleClock, reducedMotion } from '../../shared/motion';
+import { reducedMotion } from '../../shared/motion';
+import { tweenScope } from '../../shared/tween';
 import { jitter, V, type V3 } from '../../shared/scene/kit';
 import { hex } from '../../shared/theme';
 import type { StageRig, View } from '../../shared/scene/stage';
-import { createBeacons, createLids, glowMeshes, viewFrom } from '../../shared/scene/rigKit';
+import { createBeacons, createLids, glowMeshes, viewFrom, rigClock } from '../../shared/scene/rigKit';
 import type { AreaId, LidId } from '../data/areas';
 import type { Setup } from '../data/setup';
 import { createCtx } from './ctx';
@@ -90,10 +91,10 @@ export function buildRig(s: Setup): Rig {
   };
   const overview: View = view([0, 0.2, 0.2], [0.16, 0.72, 1], 15.5);
 
-  const { setLid } = createLids<LidId>(lidHooks, { tag: 'garden-lid', ms: 900 });
+  const tw = tweenScope();
+  const { setLid } = createLids<LidId>(lidHooks, { tweens: tw, ms: 900 });
   let gustUntil = 0;
-  let clock = 0;
-  const idle = idleClock();
+  const clock = rigClock();
   const drops: THREE.Mesh[] = [];
   const dropMat = new THREE.MeshBasicMaterial({ color: hex('water') });
   let swingStart = -10;
@@ -112,21 +113,19 @@ export function buildRig(s: Setup): Rig {
         for (let i = 0; i < 6; i++) {
           const d = new THREE.Mesh(LOW_SPHERE, dropMat);
           d.scale.setScalar(0.018);
-          d.userData.born = clock + i * 0.12;
+          d.userData.born = clock.now + i * 0.12;
           d.userData.from = id === 'water' ? spigot.clone() : V(pos('hydro').x + jitter(r, 0.3), 1.3, pos('hydro').z + 0.1);
           d.visible = false;
           root.add(d);
           drops.push(d);
         }
-      } else if (id === 'tools') swingStart = clock;
-      else if (id === 'pollinators' || id === 'fruit' || id === 'herbs' || id === 'arbor') swarmStart = clock;
-      if (id !== 'pantry' && id !== 'water') gustUntil = clock + 1.8;
+      } else if (id === 'tools') swingStart = clock.now;
+      else if (id === 'pollinators' || id === 'fruit' || id === 'herbs' || id === 'arbor') swarmStart = clock.now;
+      if (id !== 'pantry' && id !== 'water') gustUntil = clock.now + 1.8;
     },
     update(t) {
-      const dt = Math.min(0.05, t - clock);
-      clock = t;
-      const it = idle(t);
-      shared.uTime.value = it;
+      clock.tick(t);
+      const { dt, idle: it } = clock;
       const target = t < gustUntil ? 3.2 : 1;
       shared.uGust.value += (target - shared.uGust.value) * Math.min(1, dt * 3);
       const swarm = Math.max(0, 1 - (t - swarmStart) / 4);
@@ -168,6 +167,7 @@ export function buildRig(s: Setup): Rig {
       return drops.length > 0 || Math.abs(target - shared.uGust.value) > 1e-3 ? 'picture' : false;
     },
     dispose() {
+      tw.stop();
       disposeTree(root);
     },
   };

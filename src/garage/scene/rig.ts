@@ -4,7 +4,7 @@
  * hotspot meshes, a beacon and a camera view.
  */
 import * as THREE from 'three';
-import { tween, easeInOutCubic, lerp } from '../../shared/tween';
+import { easeInOutCubic, lerp } from '../../shared/tween';
 import type { ToonUniforms } from '../../shared/toon';
 import type { V3 } from '../../shared/scene/kit';
 import type { View } from '../../shared/scene/stage';
@@ -37,7 +37,7 @@ export interface CarRig extends RideRig<CarPart> {
 
 export function buildCar(kind: BodyKind): CarRig {
   const c = createCtx(kind);
-  const { S, group, hotspots, paintMats, roofLine, hoodLine } = c;
+  const { S, group, hotspots, paintMats, roofLine, hoodLine, tweens } = c;
   buildBody(c);
   const { hoodPivot, hoodZ0, hoodZ1 } = buildHood(c);
   const trunk = buildTrunk(c);
@@ -55,7 +55,7 @@ export function buildCar(kind: BodyKind): CarRig {
     hood: { pivot: hoodPivot, axis: 'x', open: -1.1 },
     trunk: { pivot: trunkPivot, axis: 'x', open: trunkOpen },
     door: { pivot: doorPivot, axis: 'y', open: -1.0 },
-  }, kind);
+  }, tweens);
   const { beacons, beaconAt } = createPartBeacons(group, canPick);
   const hoodMidZ = (hoodZ0 + hoodZ1) / 2;
   beaconAt('hood', [0, hoodLine(hoodMidZ) + 0.12, hoodMidZ]);
@@ -123,7 +123,7 @@ export function buildCar(kind: BodyKind): CarRig {
         u.uMetal.value = p.metal;
         continue;
       }
-      tween({
+      tweens.tween({
         duration: 420,
         ease: easeInOutCubic,
         tag: `paint:${m.uuid}`,
@@ -149,6 +149,7 @@ export function buildCar(kind: BodyKind): CarRig {
       paintTo(p, instant);
     },
     canPick,
+    stop: tweens.stop,
     poke: (part) => {
       if (part === 'wiper') wipe();
       if (part === 'headlight') blink();

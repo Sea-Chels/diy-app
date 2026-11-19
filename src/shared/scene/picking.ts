@@ -19,19 +19,17 @@ export function createPicker<Id extends string>(canvas: HTMLCanvasElement, camer
   const pointer = new THREE.Vector2();
 
   // Zoomed in, a spot's generous pick box can fill the screen and leave nothing to tap to get out, so while
-  // something is selected only the models themselves (and beacons and blockers) pick.
-  let meshArea = new Map<THREE.Object3D, Id>();
-  let closeFor: Pickable<Id> | null = null;
-  let close: THREE.Object3D[] = [];
-  function closePicks(): THREE.Object3D[] {
-    const r = rig();
-    if (closeFor !== r) {
-      closeFor = r;
-      meshArea = new Map();
+  // something is selected only the models themselves (and beacons and blockers) pick. Keyed weakly, so a swapped-out rig can go.
+  const closeSets = new WeakMap<Pickable<Id>, { meshArea: Map<THREE.Object3D, Id>; close: THREE.Object3D[] }>();
+  function closeSet(r: Pickable<Id>) {
+    let set = closeSets.get(r);
+    if (!set) {
+      const meshArea = new Map<THREE.Object3D, Id>();
       for (const [id, ms] of r.glow) for (const m of ms) meshArea.set(m, id);
-      close = [...r.picks.filter((o) => tagOf(o, 'beacon') || tagOf(o, 'blocker')), ...meshArea.keys()];
+      set = { meshArea, close: [...r.picks.filter((o) => tagOf(o, 'beacon') || tagOf(o, 'blocker')), ...meshArea.keys()] };
+      closeSets.set(r, set);
     }
-    return close;
+    return set;
   }
 
   return (ev: PointerEvent): Hit<Id> | null => {
@@ -40,9 +38,9 @@ export function createPicker<Id extends string>(canvas: HTMLCanvasElement, camer
     pointer.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
-    const areaOf = (o: THREE.Object3D) => spotOf<Id>(o) ?? meshArea.get(o);
+    const areaOf = (o: THREE.Object3D) => spotOf<Id>(o) ?? closeSets.get(r)?.meshArea.get(o);
     const live = (o: THREE.Object3D) => shown(o) && (!r.canPick || tagOf(o, 'blocker') || r.canPick(areaOf(o) as Id));
-    const hits = raycaster.intersectObjects(selected() ? closePicks() : r.picks, false);
+    const hits = raycaster.intersectObjects(selected() ? closeSet(r).close : r.picks, false);
     // Beacons draw on top of everything, so they win when hit.
     const beacon = hits.find((h) => tagOf(h.object, 'beacon') && live(h.object));
     if (beacon) return { id: areaOf(beacon.object) as Id, beacon: true };

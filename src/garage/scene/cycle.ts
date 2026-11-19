@@ -3,6 +3,7 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import type { V3 } from '../../shared/scene/kit';
 import type { View } from '../../shared/scene/stage';
 import type { LidId, PartId } from '../data/parts';
+import { tweenScope } from '../../shared/tween';
 import { createPartBeacons, createPivotLids, createParts, shareMaterials, viewInParent, viewsInParent, type LidSpec, type RideRig } from './parts3d';
 
 /**
@@ -137,13 +138,13 @@ export function createCycle(lean: number) {
   body.rotation.z = lean;
   group.add(body);
   const { hotspots, tag } = createParts();
+  const tweens = tweenScope();
   /** Height above `body`'s origin at which a stand foot `x` out from the wheels meets the ground. */
   const groundY = (x: number) => x * Math.tan(-lean);
   const finish = <P extends PartId>(
-    key: string,
     spec: { lids?: Partial<Record<LidId, LidSpec>>; dots: Record<P, V3>; views: Record<P, View>; overview: View },
   ): RideRig<P> => {
-    const { setLid, canPick } = createPivotLids(spec.lids ?? {}, key);
+    const { setLid, canPick } = createPivotLids(spec.lids ?? {}, tweens);
     shareMaterials(group, hotspots);
     const { beacons, beaconAt } = createPartBeacons(body, canPick);
     for (const p of Object.keys(spec.dots) as P[]) beaconAt(p, spec.dots[p]);
@@ -156,6 +157,7 @@ export function createCycle(lean: number) {
       setLid,
       canPick,
       poke: () => {},
+      stop: tweens.stop,
     };
   };
   return { body, tag, groundY, finish };

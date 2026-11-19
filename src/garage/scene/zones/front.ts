@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
-import { tween, easeInOutCubic, lerp } from '../../../shared/tween';
+import { easeInOutCubic, lerp } from '../../../shared/tween';
 import { add, mapped } from '../../../shared/scene/kit';
 import { moves } from '../../../shared/scene/ink';
 import { C, M, rbox } from '../kit';
@@ -12,7 +12,7 @@ import type { CarCtx } from '../ctx';
  * clear parking lamps across the bumper and a low oval mouth behind the plate.
  */
 export function buildFront(c: CarCtx) {
-  const { S, kind, group, paint, tag, fasciaWidth, fasciaBottom, noseTopY, onNose } = c;
+  const { S, group, paint, tag, tweens, fasciaWidth, fasciaBottom, noseTopY, onNose } = c;
   const heads: THREE.Mesh[] = [];
   const along = (g: THREE.BufferGeometry) => g.rotateX(Math.PI / 2);
   const base = fasciaBottom(S.fasciaZ);
@@ -58,10 +58,10 @@ export function buildFront(c: CarCtx) {
     heads.push(add(new THREE.TorusGeometry(lampR * 0.5, 0.004, 6, 28), M.chrome(), upright, { at: lampAt(0.011), ink: null }));
   }
   const blink = () =>
-    tween({
+    tweens.tween({
       duration: 1800,
       ease: (k) => k,
-      tag: `blink:${kind}`,
+      tag: 'blink',
       update: (k) => {
         const shut = k < 0.35 ? easeInOutCubic(k / 0.35) : k < 0.65 ? 1 : 1 - easeInOutCubic((k - 0.65) / 0.35);
         for (const p of pivots) p.rotation.x = lerp(open, closed, shut);

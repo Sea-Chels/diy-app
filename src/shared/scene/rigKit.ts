@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { hex } from '../theme';
-import { tween, easeInOutCubic, lerp } from '../tween';
+import { idleClock } from '../motion';
+import { shared } from '../toon';
+import { easeInOutCubic, lerp, type TweenScope } from '../tween';
 import { UNIT_BOX, type V3 } from './kit';
 import type { View } from './stage';
 import { spotOf, tag, tagOf } from './sceneTags';
@@ -71,10 +73,10 @@ export function createBeacons<S extends string>(parent: THREE.Object3D, o: Beaco
 }
 
 /**
- * Lids, doors and panels that tween open and shut. `apply(k)` poses one at k (0 shut, 1 open);
- * lids without a hook are ignored. `tag` keeps one rig's tweens apart from another's.
+ * Lids, doors and panels that tween open and shut, in the rig's `tweens`. `apply(k)` poses one at k (0 shut, 1 open);
+ * lids without a hook are ignored.
  */
-export function createLids<L extends string>(apply: Partial<Record<L, (k: number) => void>>, o: { tag: string; ms: number | ((lid: L) => number) }) {
+export function createLids<L extends string>(apply: Partial<Record<L, (k: number) => void>>, o: { tweens: TweenScope; ms: number | ((lid: L) => number) }) {
   const state = new Map<L, { open: boolean; k: number }>();
   const isOpen = (lid: L) => state.get(lid)?.open ?? false;
   const setLid = (lid: L, open: boolean): void => {
@@ -84,10 +86,10 @@ export function createLids<L extends string>(apply: Partial<Record<L, (k: number
     st.open = open;
     state.set(lid, st);
     const k0 = st.k;
-    tween({
+    o.tweens.tween({
       duration: typeof o.ms === 'number' ? o.ms : o.ms(lid),
       ease: easeInOutCubic,
-      tag: `${o.tag}:${lid}`,
+      tag: lid,
       update: (t) => {
         st.k = lerp(k0, open ? 1 : 0, t);
         pose(st.k);
@@ -112,4 +114,24 @@ export function glowMeshes<S extends string>(groups: Map<S, THREE.Object3D>): Ma
     glow.set(id, list);
   }
   return glow;
+}
+
+/**
+ * The clock a rig's update runs on. `tick(t)` each frame sets `now` to t, `dt` to the step since the last frame
+ * (capped, so a stall doesn't fling anything), and `idle` to the idle clock, which also drives the wind.
+ */
+export function rigClock() {
+  const idle = idleClock();
+  const c = {
+    now: 0,
+    dt: 0,
+    idle: 0,
+    tick(t: number): void {
+      c.dt = Math.min(0.05, t - c.now);
+      c.now = t;
+      c.idle = idle(t);
+      shared.uTime.value = c.idle;
+    },
+  };
+  return c;
 }
