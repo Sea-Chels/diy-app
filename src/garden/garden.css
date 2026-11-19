@@ -1,6 +1,6 @@
 /* Garden workshop additions on top of shared/workshop.css */
 @import '../shared/media.css';
-.wait { color: var(--butter); font-size: 0.9rem; display: flex; gap: 8px; align-items: flex-start; }
+.wait { color: var(--butter); font-size: var(--fs-md); display: flex; gap: 8px; align-items: flex-start; }
 .wait .icon { margin-top: 2px; }
 .plant-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 
@@ -19,32 +19,32 @@
 }
 .plant-tile:hover { transform: translateY(-1px); border-color: rgb(var(--hi) / 0.22); border-left-color: var(--t); }
 .plant-name { font-weight: 650; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.latin { font-style: italic; color: var(--muted); font-size: 0.82rem; }
+.latin { font-style: italic; color: var(--muted); font-size: var(--fs-sm); }
 .badge { --badge: var(--pink); --badge-text: var(--pink-text); }
-.back-link { align-self: flex-start; display: inline-flex; gap: 6px; align-items: center; background: none; border: 0; color: var(--accent); padding: 0; font-size: 0.88rem; }
+.back-link { align-self: flex-start; display: inline-flex; gap: 6px; align-items: center; background: none; border: 0; color: var(--accent); padding: 0; font-size: var(--fs-sm); }
 .plant-detail { display: flex; flex-direction: column; gap: 12px; border-left: 3px solid var(--t); padding-left: 14px; }
-.plant-title h3 { font-size: 1.4rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.plant-detail h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: -4px; }
+.plant-title h3 { font-size: var(--fs-xl); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.plant-detail h4 { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: -4px; }
 .plant-detail .two-col h4 { margin-bottom: 6px; }
 .plant-cols p { line-height: 1.45; margin-bottom: 4px; }
 .plant-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.care { display: flex; flex-direction: column; gap: 6px; padding-left: 18px; line-height: 1.45; font-size: 0.93rem; }
+.care { display: flex; flex-direction: column; gap: 6px; padding-left: 18px; line-height: 1.45; font-size: var(--fs-md); }
 .care li::marker { color: var(--t); }
-.problems { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 5px; font-size: 0.9rem; }
+.problems { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 5px; font-size: var(--fs-md); }
 .problems li { display: flex; gap: 8px; align-items: flex-start; }
 .problems .icon { color: var(--diff-2); margin-top: 3px; flex-shrink: 0; }
-.rel-chip { font-size: 0.8rem; padding: 4px 10px; border-radius: var(--pill); border: 1px solid var(--line); background: rgb(var(--hi) / 0.03); color: var(--text); }
+.rel-chip { font-size: var(--fs-sm); padding: 4px 10px; border-radius: var(--pill); border: 1px solid var(--line); background: rgb(var(--hi) / 0.03); color: var(--text); }
 button.rel-chip:hover { border-color: rgb(var(--hi) / 0.3); }
 .rel-chip.good { border-color: color-mix(in srgb, var(--green) 35%, transparent); color: var(--good-text); }
 .rel-chip.bad { border-color: color-mix(in srgb, var(--red) 35%, transparent); color: var(--bad-text); }
 
-.builder-modal input[type="search"] { width: 100%; padding: 10px 12px; border-radius: var(--r-md); background: rgb(var(--surface)); border: 1px solid var(--line); color: var(--text); font-size: 1rem; }
+.builder-modal input[type="search"] { width: 100%; padding: 10px 12px; border-radius: var(--r-md); background: rgb(var(--surface)); border: 1px solid var(--line); color: var(--text); }
 .builder-modal { --side-w: 380px; --list-gap: 10px; --side-gap: 10px; }
 .planner-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px; }
 .plan-opt { display: flex; align-items: center; gap: 6px; padding-right: 8px; border: 1px solid var(--line); border-left: 3px solid var(--t); border-radius: var(--r-md); background: rgb(var(--shade) / 0.18); }
 .plan-opt.picked { background: color-mix(in srgb, var(--accent) 7%, transparent); border-color: color-mix(in srgb, var(--accent) 35%, transparent); border-left-color: var(--t); }
 .plan-opt-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; text-align: left; background: none; border: 0; padding: 8px 10px; }
-.opt-tick { color: var(--accent); font-size: 0.8rem; font-weight: 700; }
+.opt-tick { color: var(--accent); font-size: var(--fs-sm); font-weight: 700; }
 .small-btn { width: 28px; height: 28px; border-radius: var(--r-md); flex-shrink: 0; }
 .meter { height: 8px; border-radius: var(--pill); background: rgb(var(--hi) / 0.06); overflow: hidden; }
 .meter span { display: block; height: 100%; background: var(--diff-1); transition: width var(--t-slow) ease; }
@@ -53,21 +53,22 @@ button.rel-chip:hover { border-color: rgb(var(--hi) / 0.3); }
   display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 3px; padding: 6px; border-radius: var(--r-md);
   background: var(--soil); border: 3px solid var(--steel); box-shadow: inset 0 0 0 1px rgb(var(--shade) / 0.4);
 }
+/* Labels run below the type scale so they fit a square-foot cell. */
 .sq {
   aspect-ratio: 1; border-radius: var(--r-xs); border: 0; padding: 2px; min-width: 0; overflow: hidden;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
-  background: color-mix(in srgb, var(--t) 34%, var(--soil)); color: rgb(var(--hi)); font-size: 0.6rem; line-height: 1.05; text-align: center;
+  background: color-mix(in srgb, var(--t) 34%, var(--soil)); color: rgb(var(--hi)); font-size: calc(0.8 * var(--fs-xs)); line-height: 1.05; text-align: center;
 }
 .sq span { max-width: 100%; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sq small { opacity: 0.8; font-size: 0.58rem; }
+.sq small { opacity: 0.8; font-size: inherit; }
 .sq:not(.empty):hover { outline: 2px solid var(--diff-3); outline-offset: -2px; cursor: pointer; }
 .icon-btn.danger:hover { color: var(--diff-3); border-color: color-mix(in srgb, var(--red) 40%, transparent); }
 .sq.cont { background: color-mix(in srgb, var(--t) 22%, var(--soil)); }
 .sq.empty { background: rgb(var(--shade) / 0.22); }
 .sq.over { outline: 2px solid var(--diff-3); outline-offset: -2px; }
-.side-h { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 6px; }
+.side-h { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 6px; }
 .plan-rows { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 4px; }
-.plan-rows li { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 8px; font-size: 0.88rem; }
+.plan-rows li { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 8px; font-size: var(--fs-sm); }
 .plan-name { background: none; border: 0; padding: 0; text-align: left; color: var(--text); font-weight: 600; }
 .plan-name:hover { color: var(--accent); }
 .stepper { display: inline-flex; gap: 4px; }

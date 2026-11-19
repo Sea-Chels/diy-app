@@ -1,10 +1,10 @@
 /* Home workshop additions on top of shared/workshop.css */
 .home-swatches { grid-template-columns: repeat(4, 32px); }
 
-.pro { display: flex; gap: 8px; align-items: flex-start; font-size: 0.9rem; color: var(--lilac); background: rgb(var(--advise) / 0.1); border-radius: var(--r-md); padding: 8px 10px; }
+.pro { display: flex; gap: 8px; align-items: flex-start; font-size: var(--fs-md); color: var(--lilac); background: rgb(var(--advise) / 0.1); border-radius: var(--r-md); padding: 8px 10px; }
 .pro .icon { margin-top: 2px; flex-shrink: 0; }
 
-.have-count { background: none; border: 0; padding: 0; margin-left: 4px; color: var(--accent); font-size: 0.72rem; text-transform: none; letter-spacing: 0; cursor: pointer; }
+.have-count { background: none; border: 0; padding: 0; margin-left: 4px; color: var(--accent); font-size: var(--fs-xs); text-transform: none; letter-spacing: 0; cursor: pointer; }
 .tool-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 3px; }
 .tool-list .tool-free { padding-left: 21px; color: var(--muted); }
 .tool-check { display: inline-flex; gap: 6px; align-items: flex-start; background: none; border: 0; padding: 0; color: var(--text); text-align: left; font-size: inherit; cursor: pointer; }
@@ -13,7 +13,7 @@
 
 .toolbox-modal { width: min(920px, 100%); }
 .tool-stats { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
-.tool-stats strong { font-size: 1.2rem; color: var(--accent); }
+.tool-stats strong { font-size: var(--fs-lg); color: var(--accent); }
 .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
 .tool-tile {
   display: flex; flex-direction: column; gap: 4px; text-align: left; padding: 10px 12px; border-radius: var(--r-lg);
@@ -24,21 +24,20 @@
 .tool-tile.has .tool-name .icon { color: var(--green); }
 .tool-name { font-weight: 650; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .tool-name .icon { color: var(--muted); }
-.tool-meta { display: flex; gap: 10px; font-size: 0.75rem; color: var(--muted); }
+.tool-meta { display: flex; gap: 10px; font-size: var(--fs-xs); color: var(--muted); }
 .badge { --badge: var(--yellow); }
-.small { font-size: 0.82rem; }
 
 .calc-modal { width: min(640px, 100%); }
 .calc { display: flex; flex-direction: column; gap: 14px; }
 .calc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
-.calc-field { display: flex; flex-direction: column; gap: 4px; font-size: 0.82rem; color: var(--muted); }
+.calc-field { display: flex; flex-direction: column; gap: 4px; font-size: var(--fs-sm); color: var(--muted); }
 .calc-field input {
-  background: rgb(var(--surface)); border: 1px solid var(--line); border-radius: var(--r-md); padding: 8px 10px; color: var(--text); font-size: 1rem;
+  background: rgb(var(--surface)); border: 1px solid var(--line); border-radius: var(--r-md); padding: 8px 10px; color: var(--text); font-size: var(--fs-body);
 }
-.calc-check { display: flex; gap: 8px; align-items: center; font-size: 0.85rem; color: var(--muted); }
+.calc-check { display: flex; gap: 8px; align-items: center; font-size: var(--fs-sm); color: var(--muted); }
 .calc-result { border-left: 3px solid var(--yellow); padding: 4px 0 4px 14px; display: flex; flex-direction: column; gap: 4px; }
 .calc-result .big { font-size: 1.8rem; font-weight: 800; color: var(--yellow); }
-.wire-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.wire-table { width: 100%; border-collapse: collapse; font-size: var(--fs-md); }
 .wire-table th, .wire-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
-.wire-table th { color: var(--muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.wire-table th { color: var(--muted); font-weight: 600; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.06em; }
 .wire-table td:nth-child(2) { color: var(--yellow); font-weight: 700; white-space: nowrap; }

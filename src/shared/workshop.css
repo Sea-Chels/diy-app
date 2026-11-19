@@ -8,7 +8,7 @@
 .scene-menu.open .paint-card { display: flex; }
 .paint-card .seg button:disabled { opacity: 0.35; cursor: not-allowed; }
 .swatches.dim { opacity: 0.35; }
-.fine-print { font-size: 0.76rem; color: var(--muted); line-height: 1.4; }
+.fine-print { font-size: var(--fs-xs); color: var(--muted); line-height: 1.4; }
 .paint-card .fine-print { margin-top: -2px; }
 
 .chip.kind { font-weight: 600; }
@@ -20,7 +20,7 @@
 
 .panel-links { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 14px; }
 .link-chip {
-  display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: var(--pill); font-size: 0.8rem;
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: var(--pill); font-size: var(--fs-sm);
   background: rgb(var(--hi) / 0.04); border: 1px solid var(--line); color: var(--muted); text-decoration: none;
 }
 .link-chip:hover { color: var(--text); border-color: rgb(var(--hi) / 0.22); }
@@ -28,7 +28,7 @@ button.link-chip { cursor: pointer; }
 .repair-body .panel-links { margin: 0; }
 
 /* Compatibility and planner results in the PC parts picker and the garden bed planner. */
-.issues { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 7px; font-size: 0.86rem; line-height: 1.4; }
+.issues { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 7px; font-size: var(--fs-sm); line-height: 1.4; }
 .issues li { display: flex; gap: 8px; align-items: flex-start; }
 .issues .icon { margin-top: 2px; flex-shrink: 0; }
 .lvl-error .icon { color: var(--diff-3); }
@@ -48,17 +48,17 @@ button.link-chip { cursor: pointer; }
 
 /* Small caps tag beside a name; a workshop sets --badge (and --badge-text if the tint is too dark to read). */
 .badge {
-  font-size: 0.66rem; font-style: normal; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 6px; border-radius: var(--r-sm); font-weight: 700;
+  font-size: var(--fs-xs); font-style: normal; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 6px; border-radius: var(--r-sm); font-weight: 700;
   background: color-mix(in srgb, var(--badge) 16%, transparent); color: var(--badge-text, var(--badge));
 }
 
 /* Stands in for the canvas when WebGL won't start; the hint's drag-and-click advice goes with it. */
 .scene-off {
   position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 6px;
-  padding: var(--overlay-row) 24px; text-align: center; color: var(--muted); font-size: 0.95rem;
+  padding: var(--overlay-row) 24px; text-align: center; color: var(--muted); font-size: var(--fs-md);
 }
 .scene-off span { max-width: 34ch; }
-.scene-off strong { color: var(--text); font-size: 1.1rem; }
+.scene-off strong { color: var(--text); font-size: var(--fs-lg); }
 .stage:has(.scene-off) .hint { display: none; }
 
 @media (--narrow) {
