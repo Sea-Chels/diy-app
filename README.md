@@ -119,16 +119,17 @@ To run the e2e suite the way CI does, against a build at the Pages path: `VITE_B
 
 ```
 index.html               hub page
-pc/index.html            PC workshop page
-garage/index.html        Garage workshop page
-garden/index.html        Garden workshop page
-home/index.html          Home workshop page
+pc/index.html            PC workshop page (a stub; vite.config.ts builds it from the shared shell)
+garage/index.html        Garage workshop page (likewise)
+garden/index.html        Garden workshop page (likewise)
+home/index.html          Home workshop page (likewise)
 src/
   shared/
     theme.ts             the color palette; injected into every page as CSS variables
     base.css             design tokens, page shell, top bar, buttons, side panel, modals
     media.css, media.ts  the breakpoints, for stylesheets and scripts alike
     workshop.css         styles shared by the workshop pages
+    workshop.html        the workshop page shell; each page's title, buttons and labels are in PAGES in vite.config.ts
     workshop.ts          wiring every workshop page shares: selection, hover hints, URL hash, quick-fix bar
     store.ts             small state store that saves to localStorage
     guides.ts            fields every workshop's guides share, and the guide book (lookups by id and spot)
@@ -200,7 +201,7 @@ e2e/                     Playwright smoke tests
 
 Unit tests sit next to the code they test, as `*.test.ts`.
 
-Each workshop is its own Vite page (see `vite.config.ts`), so adding one means a new folder with an `index.html` plus its `src/<name>/` code, reusing `src/shared/`.
+Each workshop is its own Vite page (see `vite.config.ts`), so adding one means a new folder with a stub `index.html`, an entry in `PAGES`, and its `src/<name>/` code, reusing `src/shared/`.
 
 ### Adding a guide
 
