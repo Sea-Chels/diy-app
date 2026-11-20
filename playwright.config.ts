@@ -9,9 +9,9 @@ export default defineConfig({
   testDir: 'e2e',
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
-  // CI has no GPU: SwiftShader draws a garden frame in seconds, and every click waits for one.
-  timeout: process.env.CI ? 180_000 : 30_000,
-  expect: { timeout: process.env.CI ? 60_000 : 10_000 },
+  // CI has no GPU. Under forced SwiftShader (two workers) the slowest test took 20 s and the longest wait, the garden's first frame, 12 s; these are about 3× that.
+  timeout: process.env.CI ? 60_000 : 30_000,
+  expect: { timeout: process.env.CI ? 30_000 : 10_000 },
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     baseURL: `http://localhost:${PORT}${BASE}`,
@@ -21,6 +21,8 @@ export default defineConfig({
     channel: 'chrome',
     launchOptions: { args: ['--enable-unsafe-swiftshader'] },
     viewport: { width: 1280, height: 800 },
+    // Stills the idle spin and ambient loops, so the scene draws only when something changes: on SwiftShader a garden frame takes about a second.
+    reducedMotion: 'reduce',
   },
   // Tests the production build, so run `vite build` first (the test:e2e script does).
   webServer: { command: `vite preview --port ${PORT} --strictPort`, url: `http://localhost:${PORT}${BASE}`, reuseExistingServer: !process.env.CI },

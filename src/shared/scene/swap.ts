@@ -59,6 +59,8 @@ export function createSwap<S, R extends { group: THREE.Group; dispose(): void }>
     rig: () => rig,
     /** What a swap scales on the current rig. */
     target: () => target(rig),
+    /** True from a rebuild's start until its new rig has popped all the way in. */
+    busy: () => swapping,
     set(s: S): void {
       latest = s;
       if (o.rigKey(s) === key) o.restyle?.(rig, s);

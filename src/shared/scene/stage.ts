@@ -232,10 +232,16 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     shared.uUpView.value.set(0, 1, 0).transformDirection(camera.matrixWorldInverse);
     return { moving, casters: tweened === 'casters' || ambient === 'casters' };
   }
+  // canvas[data-scene="ready"] says a whole rig is on screen: set once a frame with it has drawn, cleared while a rebuild runs. Tests wait on it.
+  function markScene(): void {
+    const state = swap.busy() ? 'swapping' : 'ready';
+    if (canvas.dataset.scene !== state) canvas.dataset.scene = state;
+  }
   function draw(shadows: boolean): void {
     renderer.shadowMap.needsUpdate = shadows;
     renderer.render(scene, camera);
     if (outline && (hovered || selected)) outline.render(scene, camera);
+    markScene();
   }
   invalidate();
   if (import.meta.env.DEV) (window as unknown as Record<string, unknown>)[`__${cfg.debugName}`] = { renderer, camera, controls, scene };
@@ -247,6 +253,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
     setSetup(s) {
       invalidate('casters');
       swap.set(s);
+      if (swap.busy()) markScene();
     },
     rig,
     invalidate: () => invalidate('casters'),
