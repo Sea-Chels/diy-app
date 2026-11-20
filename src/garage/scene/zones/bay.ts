@@ -5,6 +5,7 @@ import { C, M, decal, rbox } from '../kit';
 import { batteryLabel, engineLabel, fuseLabel, oilIcon, radiatorTex, washerIcon } from '../textures';
 import type { CarCtx } from '../ctx';
 import { TONE } from '../../../shared/theme';
+import { FINISH } from '../../../shared/scene/materials';
 
 const v = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 const FLAT: [number, number, number] = [-Math.PI / 2, 0, 0];
@@ -18,7 +19,7 @@ export function buildEngineBay(c: CarCtx) {
   const hose = () => toon(TONE.blackPart, { shine: 0.3 });
 
   const block = add(rbox(0.56, 0.26, 0.4, 0.04), M.casting(), group, { at: [0.02, F + 0.13, bm] });
-  const cover = add(rbox(0.5, 0.07, 0.34, 0.03), toon(TONE.cover, { shine: 0.5, metal: 0.4 }), group, { at: [0.02, F + 0.315, bm] });
+  const cover = add(rbox(0.5, 0.07, 0.34, 0.03), toon(TONE.cover, FINISH.satin), group, { at: [0.02, F + 0.315, bm] });
   const badge = decal(group, engineLabel(), 0.2, 0.1, [-0.09, F + 0.351, bm + 0.06], FLAT);
   const plenumZ = bm - 0.25;
   const plenum = add(new THREE.CylinderGeometry(0.05, 0.05, 0.44, 20), M.cover(), group, { at: [0, F + 0.27, plenumZ] });
@@ -43,7 +44,7 @@ export function buildEngineBay(c: CarCtx) {
   });
   const belt = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(beltPts, true), 60, 0.009, 6, true), toon(C.darkPart));
   group.add(belt);
-  const alternator = add(new THREE.CylinderGeometry(0.07, 0.07, 0.12, 20), toon(C.disc, { shine: 0.6, metal: 0.5 }), group, { at: [0.41, F + 0.27, bm + 0.15] });
+  const alternator = add(new THREE.CylinderGeometry(0.07, 0.07, 0.12, 20), toon(C.disc, FINISH.brushed), group, { at: [0.41, F + 0.27, bm + 0.15] });
   alternator.rotation.z = Math.PI / 2;
   tag('engine', block, cover, badge, plenum, ...runners, throttle, ...drive, belt, alternator);
 

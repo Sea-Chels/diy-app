@@ -9,6 +9,7 @@ import { C } from './kit';
 import { TONE } from '../../shared/theme';
 import { tagOf } from '../../shared/scene/sceneTags';
 import { createHotspots } from '../../shared/scene/rigKit';
+import { FINISH } from '../../shared/scene/materials';
 
 const MM: Rounding = { segments: 2, margin: 0.05, least: 0.05 };
 
@@ -110,11 +111,11 @@ export function createCtx(s: Setup) {
     slot: toon(TONE.cover),
     black: toon(TONE.blackPart, { shine: 0.2 }),
     plastic: toon(TONE.plastic, { shine: 0.3 }),
-    metal: toon(TONE.silver, { shine: 0.7, metal: 0.6 }),
-    darkMetal: toon(C.darkMetal, { shine: 0.5, metal: 0.4 }),
-    copper: toon(C.copper, { shine: 0.8, metal: 0.6 }),
+    metal: toon(TONE.silver, FINISH.bright),
+    darkMetal: toon(C.darkMetal, FINISH.satin),
+    copper: toon(C.copper, FINISH.polished),
     sleeve: toon(TONE.blackPart, { shine: 0.15 }),
-    ihs: toon(TONE.polished, { shine: 0.8, metal: 0.5 }),
+    ihs: toon(TONE.polished, FINISH.polished),
     ramBody: toon(TONE.cover, { shine: 0.45, metal: 0.2 }),
     gpu: toon(TONE.plastic, { shine: 0.4 }),
     fanFrame: toon(TONE.charcoal, { shine: 0.25 }),

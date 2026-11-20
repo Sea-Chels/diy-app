@@ -8,6 +8,7 @@ import { label, stripes, bentPath } from '../kit';
 import type { PcCtx } from '../ctx';
 import type { CaseShell } from '../zones/case';
 import type { Board, Gpu } from '../zones/board';
+import { FINISH } from '../../../shared/scene/materials';
 
 /** A soft AIO hose from the pump (`from`, raised by `lift` as the cooler lifts away) to the radiator (`to`). */
 interface AioTube {
@@ -51,7 +52,7 @@ export function buildCooling(c: PcCtx, shell: CaseShell, board: Board, gpu: Gpu)
     cl.push(rbox(8, 46, 46, mats.copper, coolerG, { at: [sk.x - 12, sk.y, sk.z], r: 1.5 }));
     for (const dz of [-15, -5, 5, 15]) cl.push(cylX(3.2, 140, mats.copper, coolerG, { at: [sk.x - 84, sk.y + (dz % 10 === 5 ? 18 : -18), sk.z + dz], seg: 12 }));
     const stackLen = 108;
-    const fins = rbox(stackLen, 122, 54, mapped(TONE.steel, stripes([22, 1], '#d4d9e3', '#6f7688'), { shine: 0.5, metal: 0.4 }), coolerG, { at: [sk.x - 42 - stackLen / 2, sk.y, sk.z], ink: 'body' });
+    const fins = rbox(stackLen, 122, 54, mapped(TONE.steel, stripes([22, 1], '#d4d9e3', '#6f7688'), FINISH.satin), coolerG, { at: [sk.x - 42 - stackLen / 2, sk.y, sk.z], ink: 'body' });
     const cap = rbox(6, 126, 58, textured(label([{ text: 'DIY', size: 44, color: PALETTE.ink }], '#d8dce6', 128, 256)), coolerG, { at: [sk.x - 153, sk.y, sk.z], r: 2.5, ink: 'body' });
     const f = fan(120, coolerG, { ring: s.rgb !== 'off', boost: 'cooler', phase: 0.2 });
     f.position.set(sk.x - 96, sk.y, sk.z + 27 + 13);

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { toon, type ToonOpts } from '../../shared/toon';
 import { TONE } from '../../shared/theme';
 import { roundedBox, type Rounding, type V3, textured } from '../../shared/scene/kit';
+import { FINISH } from '../../shared/scene/materials';
 
 /** Everything in the garage that isn't the car's body paint. */
 export const C = {
@@ -32,10 +33,10 @@ export const C = {
 export const M = {
   chrome: () => toon(C.chrome, { shine: 1, metal: 0.9 }),
   /** `bright` for polished pipes, covers and rims; `brushed` for spokes, levers and fins. */
-  metal: (grade: 'bright' | 'brushed' = 'brushed') => toon(TONE.polished, grade === 'bright' ? { shine: 0.85, metal: 0.7 } : { shine: 0.65, metal: 0.5 }),
+  metal: (grade: 'bright' | 'brushed' = 'brushed') => toon(TONE.polished, grade === 'bright' ? FINISH.chrome : FINISH.brushed),
   /** `matte` for a tire lying flat, whose face would catch the key light. */
   rubber: (grade: 'tread' | 'matte' = 'tread') => toon(C.tire, grade === 'tread' ? { shine: 0.15 } : {}),
-  casting: () => toon(C.engine, { shine: 0.5, metal: 0.4 }),
+  casting: () => toon(C.engine, FINISH.satin),
   trim: (o?: ToonOpts) => toon(C.trim, o),
   /** Satin dark plastic and powder coat: the motorcycle frame, fuse box lids. */
   frame: () => toon(C.darkPart, { shine: 0.3 }),

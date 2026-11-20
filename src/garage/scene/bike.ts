@@ -8,6 +8,7 @@ import { viewFrom } from '../../shared/scene/rigKit';
 import type { BikePart } from '../data/parts';
 import { add } from '../../shared/scene/kit';
 import { TONE } from '../../shared/theme';
+import { FINISH } from '../../shared/scene/materials';
 
 /** Kickstand lean, toward the rider's left (+x). */
 const LEAN = -0.1;
@@ -82,7 +83,7 @@ export function buildBike(): RideRig<BikePart> {
   const guide = { c: [RZ - 0.015, R - 0.105] as [number, number], r: 0.024, wrap: -1 as const };
   const tension = { c: [RZ + 0.02, R - 0.19] as [number, number], r: 0.024, wrap: 1 as const };
   const chainMeshes = [
-    add(chain([ring, cog, guide, tension] as Pulley[], CX, 0.006), toon(TONE.gunmetal, { shine: 0.6, metal: 0.5 }), body),
+    add(chain([ring, cog, guide, tension] as Pulley[], CX, 0.006), toon(TONE.gunmetal, FINISH.brushed), body),
     add(onAxle(new THREE.TorusGeometry(0.098, 0.01, 6, 40), 'z').scale(0.4, 1, 1), M.metal(), body, { at: [CX - 0.004, BB[1], BB[2]] }),
   ];
   for (let i = 0; i < 5; i++) {

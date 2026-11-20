@@ -6,7 +6,7 @@ import type { Setup } from '../data/setup';
 import type { AreaId, LidId } from '../data/areas';
 import { plantKit } from './plants/kit';
 import { K } from './geometry';
-import { MAT } from '../../shared/scene/materials';
+import { MAT, FINISH } from '../../shared/scene/materials';
 import { createSpots } from '../../shared/scene/rigKit';
 import { C } from './palette';
 import { TONE } from '../../shared/theme';
@@ -30,8 +30,8 @@ export function createCtx(s: Setup) {
   const white = toon(TONE.white);
   const whiteShiny = toon(TONE.white, { shine: 0.7 });
   const M = {
-    galv: toon(TONE.silver, { shine: 0.75, metal: 0.65 }),
-    galvDark: toon(C.galvDark, { shine: 0.5, metal: 0.5 }),
+    galv: toon(TONE.silver, FINISH.bright),
+    galvDark: toon(C.galvDark, FINISH.satin),
     cedar: textured(woodTexture('#c27a4c', '#8a4628', [1, 1])),
     cedarDark: textured(woodTexture('#9a5a36', '#6a3a20', [1, 1])),
     weathered: textured(woodTexture('#a89a86', '#7a6a58', [1, 1])),
@@ -65,9 +65,9 @@ export function createCtx(s: Setup) {
     terracotta: MAT.terracotta(),
     tote: toon(C.tote, { shine: 0.3 }),
     cloth: new THREE.MeshToonMaterial({ color: TONE.porcelain, transparent: true, opacity: 0.62, side: THREE.DoubleSide, depthWrite: false }),
-    steel: toon(TONE.toolSteel, { shine: 0.7, metal: 0.7 }),
+    steel: toon(TONE.toolSteel, FINISH.bright),
     handle: toon(TONE.tan),
-    blade: toon(C.blade, { shine: 0.8, metal: 0.8 }),
+    blade: toon(C.blade, FINISH.chrome),
     red: MAT.red(),
     barrel: toon(C.barrel, { shine: 0.35 }),
     brass: MAT.brass(),

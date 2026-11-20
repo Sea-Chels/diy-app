@@ -8,6 +8,7 @@ import type { RideRig } from './parts3d';
 import { viewFrom } from '../../shared/scene/rigKit';
 import type { MotoPart } from '../data/parts';
 import { TONE } from '../../shared/theme';
+import { FINISH } from '../../shared/scene/materials';
 
 /** Side-stand lean, toward the rider's left (+x). */
 const LEAN = -0.09;
@@ -89,7 +90,7 @@ export function buildMoto(): RideRig<MotoPart> {
   const sprocketF = { c: [-0.14, 0.38] as [number, number], r: 0.05, wrap: 1 as const };
   const sprocketR = { c: [RZ, 0.31] as [number, number], r: 0.12, wrap: 1 as const };
   const chainMeshes = [
-    add(chain([sprocketF, sprocketR], CX, 0.011), toon(TONE.gunmetal, { shine: 0.6, metal: 0.5 }), body),
+    add(chain([sprocketF, sprocketR], CX, 0.011), toon(TONE.gunmetal, FINISH.brushed), body),
     add(onAxle(new THREE.CylinderGeometry(sprocketR.r, sprocketR.r, 0.008, 36)), M.metal(), body, { at: [CX, 0.31, RZ] }),
     add(onAxle(new THREE.CylinderGeometry(0.07, 0.07, 0.03, 20)), toon(TONE.cover), body, { at: [CX + 0.005, 0.38, -0.14] }),
   ];
@@ -101,7 +102,7 @@ export function buildMoto(): RideRig<MotoPart> {
   }
 
   const disc = (x: number, z: number, y: number, r: number) =>
-    add(onAxle(new THREE.CylinderGeometry(r, r, 0.006, 40)), toon(C.disc, { shine: 0.9, metal: 0.8 }), body, { at: [x, y, z] });
+    add(onAxle(new THREE.CylinderGeometry(r, r, 0.006, 40)), toon(C.disc, FINISH.chrome), body, { at: [x, y, z] });
   const brakeMeshes = [
     disc(0.07, FZ, 0.3, 0.15),
     add(rbox(0.035, 0.1, 0.06, 0.012), toon(TONE.brightRed, { shine: 0.6 }), body, { at: [0.08, 0.39, FZ - 0.1] }),

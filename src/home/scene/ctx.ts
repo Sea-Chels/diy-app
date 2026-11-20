@@ -5,7 +5,7 @@ import { WALL_HEX, type Setup } from '../data/setup';
 import type { AreaId, LidId } from '../data/areas';
 import { K } from './room';
 import { EXT_LAYERS, INT_LAYERS, sectionTex, lapSiding } from './textures';
-import { MAT } from '../../shared/scene/materials';
+import { MAT, FINISH } from '../../shared/scene/materials';
 import { createSpots } from '../../shared/scene/rigKit';
 import { tag } from '../../shared/scene/sceneTags';
 import { C } from './palette';
@@ -35,13 +35,13 @@ export function createCtx(s: Setup) {
     cab: toon(C.cabinet),
     cabIn: toon(C.cabinetIn),
     brass: MAT.brass(),
-    steel: toon(TONE.steel, { shine: 0.8, metal: 0.7 }),
-    chrome: toon(TONE.polished, { shine: 0.9, metal: 0.8 }),
+    steel: toon(TONE.steel, FINISH.polished),
+    chrome: toon(TONE.polished, FINISH.chrome),
     black: toon(TONE.soot, { shine: 0.5 }),
     porcelain: toon(TONE.porcelain, { shine: 0.6 }),
     pvc: MAT.pvc(),
-    copper: toon(C.copper, { shine: 0.7, metal: 0.6 }),
-    braided: toon(C.satinMetal, { shine: 0.5, metal: 0.4 }),
+    copper: toon(C.copper, FINISH.bright),
+    braided: toon(C.satinMetal, FINISH.satin),
     plate: toon(C.trim, { shine: 0.3 }),
     red: MAT.red(),
     coldBlue: MAT.coldBlue(),
@@ -49,7 +49,7 @@ export function createCtx(s: Setup) {
     oak: textured(woodTexture('#c8955c', '#9a6a3a', [1, 1])),
     walnut: textured(woodTexture('#7a5236', '#553620', [1, 1])),
     water: MAT.water(),
-    wire: { black: toon(C.wire.black), white: toon(TONE.porcelain), bare: toon(C.copper, { shine: 0.7, metal: 0.6 }), green: toon(C.wire.ground) },
+    wire: { black: toon(C.wire.black), white: toon(TONE.porcelain), bare: toon(C.copper, FINISH.bright), green: toon(C.wire.ground) },
   };
 
   look((n) => M.paint.color.setHex(WALL_HEX[n.wall]));

@@ -5,6 +5,7 @@ import { C, M, rbox } from '../kit';
 import { tireTex } from '../textures';
 import type { CarCtx } from '../ctx';
 import { TONE } from '../../../shared/theme';
+import { FINISH } from '../../../shared/scene/materials';
 
 export function buildWheels(c: CarCtx) {
   const { S, group, tag } = c;
@@ -54,11 +55,11 @@ export function buildWheels(c: CarCtx) {
       const a = ((k + 0.5) * Math.PI * 2) / 5;
       const lug = new THREE.CylinderGeometry(0.016, 0.016, 0.03, 6);
       lug.rotateZ(Math.PI / 2);
-      wheelMeshes.push(add(lug, toon(C.trim, { shine: 0.6, metal: 0.5 }), wg, { at: [face + side * 0.012, Math.sin(a) * 0.22 * R, Math.cos(a) * 0.22 * R], ink: null }));
+      wheelMeshes.push(add(lug, toon(C.trim, FINISH.brushed), wg, { at: [face + side * 0.012, Math.sin(a) * 0.22 * R, Math.cos(a) * 0.22 * R], ink: null }));
     }
     const disc = new THREE.CylinderGeometry(0.5 * R, 0.5 * R, 0.025, 28);
     disc.rotateZ(Math.PI / 2);
-    brakeMeshes.push(add(disc, toon(C.disc, { shine: 0.5, metal: 0.6 }), wg));
+    brakeMeshes.push(add(disc, toon(C.disc, FINISH.brushed), wg));
     const hat = new THREE.CylinderGeometry(0.27 * R, 0.27 * R, 0.04, 24);
     hat.rotateZ(Math.PI / 2);
     brakeMeshes.push(add(hat, toon(C.barrel, { metal: 0.5 }), wg, { at: [side * 0.01, 0, 0], ink: null }));

@@ -6,7 +6,7 @@ import { Z0, WH, HOLE } from '../room';
 import { floorTex } from '../textures';
 import type { HomeCtx } from '../ctx';
 import type { Setup } from '../../data/setup';
-import { MAT } from '../../../shared/scene/materials';
+import { MAT, FINISH } from '../../../shared/scene/materials';
 import { C } from '../palette';
 
 export function buildLiving(c: HomeCtx) {
@@ -99,7 +99,7 @@ export function buildLights(c: HomeCtx) {
     slab([FX - HW, WH + 0.07, FZ - HW], [FX + HW, WH + 0.08, FZ + HW], M.cut, l, null);
     for (const [min, max] of [[[FX - HW, WH, FZ + HW - 0.002], [FX + HW, WH + 0.08, FZ + HW]], [[FX + HW - 0.002, WH, FZ - HW], [FX + HW, WH + 0.08, FZ + HW]], [[FX - HW, WH, FZ - HW], [FX + HW, WH + 0.08, FZ - HW + 0.002]], [[FX - HW, WH, FZ - HW], [FX - HW + 0.002, WH + 0.08, FZ + HW]]] as [V3, V3][]) slab(min, max, ceilSec, l, 'body');
     // Fan-rated box with its brace, open at the bottom.
-    add(new THREE.CylinderGeometry(0.075, 0.075, 0.07, 8, 1, true), toon(C.fanBox, { shine: 0.6, metal: 0.5, side: THREE.DoubleSide }), l, { at: [FX, WH + 0.035, FZ], ink: null });
+    add(new THREE.CylinderGeometry(0.075, 0.075, 0.07, 8, 1, true), toon(C.fanBox, { ...FINISH.brushed, side: THREE.DoubleSide }), l, { at: [FX, WH + 0.035, FZ], ink: null });
     add(new THREE.CircleGeometry(0.075, 8), M.dark, l, { at: [FX, WH + 0.069, FZ], rot: [Math.PI / 2, 0, 0], ink: null });
     slab([FX - HW + 0.01, WH + 0.07, FZ - 0.015], [FX + HW - 0.01, WH + 0.1, FZ + 0.015], M.steel, l, 'thin');
     // Wires drop out of the box when the canopy comes down.
@@ -113,7 +113,7 @@ export function buildLights(c: HomeCtx) {
     l.add(hang);
     if (s.ceiling === 'fan') {
       slab([FX - 0.06, WH - 0.012, FZ - 0.012], [FX + 0.06, WH, FZ + 0.012], M.steel, l, 'thin');
-      const bronze = toon(C.bronze, { shine: 0.5, metal: 0.4 });
+      const bronze = toon(C.bronze, FINISH.satin);
       add(new THREE.CylinderGeometry(0.012, 0.012, 0.2, 8), bronze, l, { at: [FX, WH - 0.12, FZ] });
       add(new THREE.CylinderGeometry(0.06, 0.09, 0.07, 20), bronze, hang, { at: [FX, WH - 0.036, FZ] });
       add(new THREE.CylinderGeometry(0.12, 0.14, 0.11, 24), bronze, l, { at: [FX, WH - 0.27, FZ] });

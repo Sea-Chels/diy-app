@@ -5,6 +5,7 @@ import { hex, PALETTE, TONE } from '../../../shared/theme';
 import { X0, Z0, T, DOOR } from '../room';
 import type { HomeCtx } from '../ctx';
 import { C } from '../palette';
+import { FINISH } from '../../../shared/scene/materials';
 
 /** Left wall: shut-offs, outlets, a hole, the front door. */
 export function buildLeftWall(c: HomeCtx) {
@@ -17,7 +18,7 @@ export function buildLeftWall(c: HomeCtx) {
   const tripped = new THREE.Group();
   {
     const u = utility;
-    box(0.08, 0.66, 0.38, toon(TONE.alloy, { shine: 0.5, metal: 0.4 }), u, { at: [X0 + 0.04, 1.47, PZ], r: 0.008 });
+    box(0.08, 0.66, 0.38, toon(TONE.alloy, FINISH.satin), u, { at: [X0 + 0.04, 1.47, PZ], r: 0.008 });
     slab([X0 + 0.08, 1.16, PZ - 0.17], [X0 + 0.084, 1.78, PZ + 0.17], toon(C.panelIn, { shine: 0.4 }), u, null);
     box(0.03, 0.07, 0.16, M.black, u, { at: [X0 + 0.095, 1.71, PZ], r: 0.004 });
     for (let row = 0; row < 8; row++) {
@@ -34,7 +35,7 @@ export function buildLeftWall(c: HomeCtx) {
     tripped.userData.sd = 1;
     // Panel door with the circuit directory inside.
     const hinge = pivot(u, [X0 + 0.085, 1.47, PZ - 0.19]);
-    slab([0, -0.33, 0], [0.01, 0.33, 0.38], toon(C.satinMetal, { shine: 0.5, metal: 0.4 }), hinge, 'thin');
+    slab([0, -0.33, 0], [0.01, 0.33, 0.38], toon(C.satinMetal, FINISH.satin), hinge, 'thin');
     slab([-0.002, -0.2, 0.06], [0, 0.22, 0.32], textured(label([{ text: 'CIRCUITS', size: 22, color: '#222' }, { text: '1 Kitchen 20A', size: 15, color: '#444' }, { text: '2 Bath GFCI 20A', size: 15, color: '#444' }, { text: '3 Living 15A', size: 15, color: '#444' }], '#f4f1e6', 128, 192)), hinge, null);
     box(0.012, 0.04, 0.015, M.black, hinge, { at: [0.012, 0, 0.35], r: 0.003 });
     lidHooks.panelDoor = (k) => (hinge.rotation.y = 1.9 * k);
@@ -105,7 +106,7 @@ export function buildLeftWall(c: HomeCtx) {
     add(jag(0.065, 4), toon(TONE.umber), w, { at: [X0 + 0.003, HY, HZ], rot: [0, Math.PI / 2, 0], ink: null });
     add(new THREE.CylinderGeometry(0.13, 0.12, 0.3, 20), M.plate, w, { at: [X0 + 0.25, 0.15, 0.56] });
     add(new THREE.CylinderGeometry(0.135, 0.135, 0.03, 20), toon(C.boxBlue), w, { at: [X0 + 0.25, 0.315, 0.56] });
-    box(0.32, 0.07, 0.11, toon(TONE.toolSteel, { shine: 0.6, metal: 0.5 }), w, { at: [X0 + 0.4, 0.036, 0.95], rot: [0, 0.4, 0], r: 0.008 });
+    box(0.32, 0.07, 0.11, toon(TONE.toolSteel, FINISH.brushed), w, { at: [X0 + 0.4, 0.036, 0.95], rot: [0, 0.4, 0], r: 0.008 });
     box(0.15, 0.004, 0.1, M.steel, w, { at: [X0 + 0.55, 0.004, 1.18], rot: [0, -0.3, 0], r: 0.002 });
     add(new THREE.CylinderGeometry(0.015, 0.015, 0.12, 10), toon(C.boxBlue), w, { at: [X0 + 0.66, 0.016, 1.12], rot: [Math.PI / 2, 0, 1.27] });
     const mesh = canvasTex(64, 64, (ctx) => {

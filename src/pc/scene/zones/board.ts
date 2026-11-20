@@ -7,6 +7,7 @@ import { T } from '../layout';
 import { label, C, stripes } from '../kit';
 import type { PcCtx } from '../ctx';
 import type { CaseShell } from '../zones/case';
+import { FINISH } from '../../../shared/scene/materials';
 
 export function buildMotherboard(c: PcCtx, shell: CaseShell) {
   const { L, cg, rbox, cylX, hot, rgb, mats } = c;
@@ -31,7 +32,7 @@ export function buildMotherboard(c: PcCtx, shell: CaseShell) {
   cg.add(ioRgb);
   const [vt0, vt1, vtv] = L.vrmTop;
   const vtp = P((vt0 + vt1) / 2, vtv, 10);
-  const vrmTex = () => mapped(TONE.silver, stripes([1, 10]), { shine: 0.6, metal: 0.5 });
+  const vrmTex = () => mapped(TONE.silver, stripes([1, 10]), FINISH.brushed);
   mb.push(rbox(20, 22, vt1 - vt0, vrmTex(), cg, { at: [vtp.x, vtp.y, vtp.z], r: 2.5, ink: 'body' }));
   const [vsu, vs0, vs1] = L.vrmSide;
   const vsp = P(vsu, (vs0 + vs1) / 2, 10);
@@ -108,7 +109,7 @@ export function buildMotherboard(c: PcCtx, shell: CaseShell) {
   ];
   const sinkG = new THREE.Group();
   cg.add(sinkG);
-  const sink = rbox(8, 27, m1 - m0 + 6, mapped(TONE.toolSteel, stripes([16, 1], '#aeb5c4', '#6b7284'), { shine: 0.6, metal: 0.5 }), sinkG, { at: [m2c.x - 8, m2c.y, m2c.z], r: 2.5, ink: 'body' });
+  const sink = rbox(8, 27, m1 - m0 + 6, mapped(TONE.toolSteel, stripes([16, 1], '#aeb5c4', '#6b7284'), FINISH.brushed), sinkG, { at: [m2c.x - 8, m2c.y, m2c.z], r: 2.5, ink: 'body' });
   hot('m2', m2Stick, ...m2Chips, sink);
 
   const cmosG = new THREE.Group();
