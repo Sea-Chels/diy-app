@@ -6,6 +6,9 @@ import { label } from '../kit';
 import type { PcCtx } from '../ctx';
 import type { CaseShell } from '../zones/case';
 
+/** How far a PSU's sticker stands off its side. */
+const LABEL_LIFT = 0.4;
+
 export function buildPsuArea(c: PcCtx, shell: CaseShell) {
   const { dm, H, D, cg, rbox, hot, mats, s } = c;
   const { trayX, innerX0, innerCx, boardRear } = shell;
@@ -19,27 +22,30 @@ export function buildPsuArea(c: PcCtx, shell: CaseShell) {
     new THREE.MeshBasicMaterial({ map: label([{ text: '750W', size: 54, color: PALETTE.ink }, { text: '80+ GOLD', size: 26, color: '#7a5b12' }], '#f1d46b', 256, 160) });
   if (dm.shroud) {
     const sTop = dm.shroud;
-    psuC = new THREE.Vector3(innerCx, T + 44, -D / 2 + T + 82);
-    psuParts.push(rbox(150, 86, 160, mats.darkMetal, cg, { at: [psuC.x, psuC.y, psuC.z], r: 4, ink: 'body' }));
+    const psu = { w: 150, h: 86, d: 160 };
+    psuC = new THREE.Vector3(innerCx, T + psu.h / 2 + 1, -D / 2 + T + psu.d / 2 + 2);
+    psuParts.push(rbox(psu.w, psu.h, psu.d, mats.darkMetal, cg, { at: [psuC.x, psuC.y, psuC.z], r: 4, ink: 'body' }));
     const lab = new THREE.Mesh(new THREE.PlaneGeometry(80, 50), psuLabel());
     lab.rotation.y = -Math.PI / 2;
-    lab.position.set(psuC.x - 75.4, psuC.y, psuC.z);
+    lab.position.set(psuC.x - (psu.w / 2 + LABEL_LIFT), psuC.y, psuC.z);
     cg.add(lab);
     psuParts.push(lab);
-    for (let i = 0; i < 4; i++) psuParts.push(rbox(26, 12, 2, mats.black, cg, { at: [psuC.x - 40 + (i % 2) * 40, psuC.y - 18 + Math.floor(i / 2) * 26, psuC.z + 80.6], r: 0.8, ink: null }));
-    const cageZ0 = psuC.z + 92;
+    for (let i = 0; i < 4; i++) psuParts.push(rbox(26, 12, 2, mats.black, cg, { at: [psuC.x - 40 + (i % 2) * 40, psuC.y - 18 + Math.floor(i / 2) * 26, psuC.z + (psu.d / 2 + 0.6)], r: 0.8, ink: null }));
+    const cageZ0 = psuC.z + psu.d / 2 + 12;
     const cageZ1 = D / 2 - T - 46;
-    storageC = new THREE.Vector3(innerCx, T + 40, (cageZ0 + cageZ1) / 2);
+    const cage = { w: 110, h: 74 };
+    storageC = new THREE.Vector3(innerCx, T + cage.h / 2 + 3, (cageZ0 + cageZ1) / 2);
     const cageLen = Math.min(150, cageZ1 - cageZ0);
     // Open-sided cage: back wall and rails, so the drives show once the cover is down.
-    storageParts.push(rbox(3, 74, cageLen, mats.inner, cg, { at: [storageC.x + 56, storageC.y, storageC.z], r: 1 }));
-    for (const dy of [-37, 0, 37]) storageParts.push(rbox(110, 3, cageLen, mats.inner, cg, { at: [storageC.x, storageC.y + dy, storageC.z], r: 1 }));
+    storageParts.push(rbox(3, cage.h, cageLen, mats.inner, cg, { at: [storageC.x + cage.w / 2 + 1, storageC.y, storageC.z], r: 1 }));
+    for (const dy of [-cage.h / 2, 0, cage.h / 2]) storageParts.push(rbox(cage.w, 3, cageLen, mats.inner, cg, { at: [storageC.x, storageC.y + dy, storageC.z], r: 1 }));
     const hddLabel = textured(label([{ text: '4 TB', size: 44, color: PALETTE.ink }, { text: 'HDD', size: 26, color: '#4a5061' }], '#d9dde6', 256, 128));
+    const drive = { w: 100, x: 2 };
     for (const dy of [-18, 18]) {
-      storageParts.push(rbox(100, 25, cageLen - 8, mats.darkMetal, cg, { at: [storageC.x - 2, storageC.y + dy, storageC.z] }));
+      storageParts.push(rbox(drive.w, 25, cageLen - 8, mats.darkMetal, cg, { at: [storageC.x - drive.x, storageC.y + dy, storageC.z] }));
       const sticker = new THREE.Mesh(new THREE.PlaneGeometry(cageLen * 0.5, 18), hddLabel);
       sticker.rotation.y = -Math.PI / 2;
-      sticker.position.set(storageC.x - 52.2, storageC.y + dy, storageC.z);
+      sticker.position.set(storageC.x - (drive.x + drive.w / 2 + 0.2), storageC.y + dy, storageC.z);
       cg.add(sticker);
       storageParts.push(sticker);
     }
@@ -51,13 +57,14 @@ export function buildPsuArea(c: PcCtx, shell: CaseShell) {
     const sCover = rbox(3, sTop - T, sLen, textured(label([{ text: 'DIY', size: 60, color: '#ffffff' }], s.caseColor, 512, 96)), shroudG, { at: [0, (sTop - T) / 2, sz], r: 1, ink: 'body' });
     sCover.userData.coverColor = true;
     psuParts.push(sTopPlate, sCover);
-    storageParts.push(rbox(70, 7, 100, textured(label([{ text: 'SSD', size: 60, color: PALETTE.text }], '#3a3f4e')), cg, { at: [trayX - 50, sTop + 3.5, boardRear + 60], r: 1.5 }));
+    storageParts.push(rbox(70, 7, 100, textured(label([{ text: 'SSD', size: 60, color: PALETTE.text }], '#3a3f4e')), cg, { at: [trayX - 50, sTop + 7 / 2, boardRear + 60], r: 1.5 }));
   } else {
-    psuC = new THREE.Vector3(innerCx, H - T - 35, D / 2 - T - 56);
-    psuParts.push(rbox(125, 64, 100, mats.darkMetal, cg, { at: [psuC.x, psuC.y, psuC.z], r: 4, ink: 'body' }));
+    const psu = { w: 125, h: 64, d: 100 };
+    psuC = new THREE.Vector3(innerCx, H - T - (psu.h / 2 + 3), D / 2 - T - (psu.d / 2 + 6));
+    psuParts.push(rbox(psu.w, psu.h, psu.d, mats.darkMetal, cg, { at: [psuC.x, psuC.y, psuC.z], r: 4, ink: 'body' }));
     const lab = new THREE.Mesh(new THREE.PlaneGeometry(64, 40), psuLabel());
     lab.rotation.y = -Math.PI / 2;
-    lab.position.set(psuC.x - 62.9, psuC.y, psuC.z);
+    lab.position.set(psuC.x - (psu.w / 2 + LABEL_LIFT), psuC.y, psuC.z);
     cg.add(lab);
     psuParts.push(lab);
     storageC = new THREE.Vector3(-14, 150, D / 2 - T - 8);

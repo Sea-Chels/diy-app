@@ -27,7 +27,8 @@ export function buildCooling(c: PcCtx, shell: CaseShell, board: Board, gpu: Gpu)
   cg.add(coolerG);
   const cl: THREE.Object3D[] = [];
   const radL = dm.rad;
-  const radX = innerX0 + 4 + 60;
+  const rad = { w: 120, h: 27, tank: 14, fan: 118, slot: 120 };
+  const radX = innerX0 + 4 + rad.w / 2;
   const radY = H - T - 16;
   const radZ0 = s.size === 'itx' ? boardRear : -D / 2 + T + 8;
   const radZ1 = radZ0 + radL;
@@ -35,14 +36,14 @@ export function buildCooling(c: PcCtx, shell: CaseShell, board: Board, gpu: Gpu)
   const loopCpuTubes: THREE.Mesh[] = [];
 
   function radiator(): void {
-    const core = rbox(120, 27, radL - 28, mapped(TONE.silver, stripes([1, radL / 4], '#9aa1b2', '#2b2f3a'), { shine: 0.3 }), cg, { at: [radX, radY, (radZ0 + radZ1) / 2], r: 1.5, ink: 'body' });
-    const tanks = [radZ0 + 7, radZ1 - 7].map((z) => rbox(124, 31, 14, mats.darkMetal, cg, { at: [radX, radY, z], r: 3, ink: 'body' }));
+    const core = rbox(rad.w, rad.h, radL - 2 * rad.tank, mapped(TONE.silver, stripes([1, radL / 4], '#9aa1b2', '#2b2f3a'), { shine: 0.3 }), cg, { at: [radX, radY, (radZ0 + radZ1) / 2], r: 1.5, ink: 'body' });
+    const tanks = [radZ0 + rad.tank / 2, radZ1 - rad.tank / 2].map((z) => rbox(rad.w + 4, rad.h + 4, rad.tank, mats.darkMetal, cg, { at: [radX, radY, z], r: 3, ink: 'body' }));
     cl.push(core, ...tanks);
-    const n = Math.floor((radL - 20) / 120);
+    const n = Math.floor((radL - 20) / rad.slot);
     for (let i = 0; i < n; i++) {
-      const f = fan(118, cg, { ring: s.rgb !== 'off', boost: 'cooler', phase: i * 0.12 });
+      const f = fan(rad.fan, cg, { ring: s.rgb !== 'off', boost: 'cooler', phase: i * 0.12 });
       f.rotation.x = -Math.PI / 2;
-      f.position.set(radX, radY - 13.5 - 13, radZ0 + 14 + 59 + i * 120);
+      f.position.set(radX, radY - rad.h / 2 - 13, radZ0 + rad.tank + rad.fan / 2 + i * rad.slot);
       cl.push(f);
     }
   }
@@ -52,14 +53,17 @@ export function buildCooling(c: PcCtx, shell: CaseShell, board: Board, gpu: Gpu)
     cl.push(rbox(8, 46, 46, mats.copper, coolerG, { at: [sk.x - 12, sk.y, sk.z], r: 1.5 }));
     for (const dz of [-15, -5, 5, 15]) cl.push(cylX(3.2, 140, mats.copper, coolerG, { at: [sk.x - 84, sk.y + (dz % 10 === 5 ? 18 : -18), sk.z + dz], seg: 12 }));
     const stackLen = 108;
-    const fins = rbox(stackLen, 122, 54, mapped(TONE.steel, stripes([22, 1], '#d4d9e3', '#6f7688'), FINISH.satin), coolerG, { at: [sk.x - 42 - stackLen / 2, sk.y, sk.z], ink: 'body' });
-    const cap = rbox(6, 126, 58, textured(label([{ text: 'DIY', size: 44, color: PALETTE.ink }], '#d8dce6', 128, 256)), coolerG, { at: [sk.x - 153, sk.y, sk.z], r: 2.5, ink: 'body' });
+    const stackD = 54;
+    const capT = 6;
+    const fins = rbox(stackLen, 122, stackD, mapped(TONE.steel, stripes([22, 1], '#d4d9e3', '#6f7688'), FINISH.satin), coolerG, { at: [sk.x - 42 - stackLen / 2, sk.y, sk.z], ink: 'body' });
+    const cap = rbox(capT, 126, stackD + 4, textured(label([{ text: 'DIY', size: 44, color: PALETTE.ink }], '#d8dce6', 128, 256)), coolerG, { at: [sk.x - (42 + stackLen + capT / 2), sk.y, sk.z], r: 2.5, ink: 'body' });
     const f = fan(120, coolerG, { ring: s.rgb !== 'off', boost: 'cooler', phase: 0.2 });
-    f.position.set(sk.x - 96, sk.y, sk.z + 27 + 13);
+    f.position.set(sk.x - (42 + stackLen / 2), sk.y, sk.z + stackD / 2 + 13);
     cl.push(fins, cap, f);
-    coolerTop.x = sk.x - 156;
+    coolerTop.x = sk.x - (42 + stackLen + capT);
   } else if (s.cooling === 'aio' || s.size === 'itx') {
-    cl.push(cylX(34, 34, mats.darkMetal, coolerG, { at: [sk.x - 21, sk.y, sk.z], seg: 40, ink: 'body' }));
+    const pumpLen = 34;
+    cl.push(cylX(34, pumpLen, mats.darkMetal, coolerG, { at: [sk.x - (4 + pumpLen / 2), sk.y, sk.z], seg: 40, ink: 'body' }));
     const capMat = textured(label([{ text: 'DIY', size: 96, color: PALETTE.text }], '#1b1a23', 256, 256));
     const capMesh = cylX(29, 3, capMat, coolerG, { at: [sk.x - 39, sk.y, sk.z], seg: 40 });
     cl.push(capMesh);
@@ -77,15 +81,16 @@ export function buildCooling(c: PcCtx, shell: CaseShell, board: Board, gpu: Gpu)
       return {
         mesh: m,
         from: new THREE.Vector3(sk.x - 22, sk.y + 33, sk.z + side * 12),
-        to: new THREE.Vector3(radX + side * 24, radY - 15, radZ0 + 7),
+        to: new THREE.Vector3(radX + side * 24, radY - 15, radZ0 + rad.tank / 2),
         lift: null,
       };
     });
     coolerTop.x = sk.x - 42;
   } else {
     // Custom loop: CPU block, reservoir + pump, radiator and hard tubes.
-    cl.push(rbox(24, 74, 74, mats.darkMetal, coolerG, { at: [sk.x - 16, sk.y, sk.z], r: 4, ink: 'body' }));
-    cl.push(rbox(4, 58, 58, coolant(), coolerG, { at: [sk.x - 30, sk.y, sk.z] }));
+    const blockT = 24;
+    cl.push(rbox(blockT, 74, 74, mats.darkMetal, coolerG, { at: [sk.x - (4 + blockT / 2), sk.y, sk.z], r: 4, ink: 'body' }));
+    cl.push(rbox(4, 58, 58, coolant(), coolerG, { at: [sk.x - (4 + blockT + 4 / 2), sk.y, sk.z] }));
     for (const dy of [-20, 20]) cl.push(cylX(8, 10, mats.metal, coolerG, { at: [sk.x - 34, sk.y + dy, sk.z + 22], seg: 20 }));
     radiator();
     coolerTop.x = sk.x - 40;

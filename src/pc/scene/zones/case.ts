@@ -23,16 +23,17 @@ export function buildCaseShell(c: PcCtx) {
   // Front: a frame round a perforated mesh you can see the fans through.
   const fz = D / 2 - T / 2;
   const fb = 18;
+  const fbH = 24;
   const frontBars = [
     rbox(fb, H, T, mats.case, cg, { at: [-W / 2 + fb / 2, H / 2, fz], ink: 'body' }),
     rbox(fb, H, T, mats.case, cg, { at: [W / 2 - fb / 2, H / 2, fz], ink: 'body' }),
-    rbox(W, 24, T, mats.case, cg, { at: [0, H - 12, fz], ink: 'body' }),
-    rbox(W, 24, T, mats.case, cg, { at: [0, 12, fz], ink: 'body' }),
+    rbox(W, fbH, T, mats.case, cg, { at: [0, H - fbH / 2, fz], ink: 'body' }),
+    rbox(W, fbH, T, mats.case, cg, { at: [0, fbH / 2, fz], ink: 'body' }),
   ];
   hot('case', ...frontBars);
   const frontMesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(W - 2 * fb, H - 48),
-    new THREE.MeshBasicMaterial({ map: perforated([(W - 2 * fb) / 9, (H - 48) / 9]), transparent: true, depthWrite: false }),
+    new THREE.PlaneGeometry(W - 2 * fb, H - 2 * fbH),
+    new THREE.MeshBasicMaterial({ map: perforated([(W - 2 * fb) / 9, (H - 2 * fbH) / 9]), transparent: true, depthWrite: false }),
   );
   frontMesh.position.set(0, H / 2, D / 2 - 1);
   cg.add(frontMesh);
@@ -74,24 +75,27 @@ export function buildCaseShell(c: PcCtx) {
   pane.position.set(-1.5, H / 2, D / 2);
   pane.renderOrder = 2;
   glassPivot.add(pane);
+  const tw = 12;
   const trim = [
-    rbox(4, 12, D, mats.black, glassPivot, { at: [-1.5, H - 6, D / 2], r: 1.5 }),
-    rbox(4, 12, D, mats.black, glassPivot, { at: [-1.5, 6, D / 2], r: 1.5 }),
-    rbox(4, H, 12, mats.black, glassPivot, { at: [-1.5, H / 2, 6], r: 1.5 }),
-    rbox(4, H, 12, mats.black, glassPivot, { at: [-1.5, H / 2, D - 6], r: 1.5 }),
+    rbox(4, tw, D, mats.black, glassPivot, { at: [-1.5, H - tw / 2, D / 2], r: 1.5 }),
+    rbox(4, tw, D, mats.black, glassPivot, { at: [-1.5, tw / 2, D / 2], r: 1.5 }),
+    rbox(4, H, tw, mats.black, glassPivot, { at: [-1.5, H / 2, tw / 2], r: 1.5 }),
+    rbox(4, H, tw, mats.black, glassPivot, { at: [-1.5, H / 2, D - tw / 2], r: 1.5 }),
   ];
   hot('case', ...trim);
   for (const y of [H * 0.2, H * 0.8]) cylX(5, 6, mats.metal, glassPivot, { at: [-5, y, 6], seg: 16 });
 
   // Front I/O on the top panel: power button, USB, audio.
   const ioz = D / 2 - 26;
-  const ioPlate = rbox(W * 0.62, 2.4, 30, mats.black, cg, { at: [-W / 2 + W * 0.36, H + 1.2, ioz], r: 1 });
+  const plateT = 2.4;
+  const btnH = 4;
+  const ioPlate = rbox(W * 0.62, plateT, 30, mats.black, cg, { at: [-W / 2 + W * 0.36, H + plateT / 2, ioz], r: 1 });
   const btnX = -W / 2 + 24;
-  const btn = add(new THREE.CylinderGeometry(9, 9, 4, 28), mats.metal, cg, { at: [btnX, H + 2.6, ioz] });
+  const btn = add(new THREE.CylinderGeometry(9, 9, btnH, 28), mats.metal, cg, { at: [btnX, H + 2.6, ioz] });
   const ledMat = toon(TONE.graphite, { halftone: 0, emissive: hex('cyan'), emissiveIntensity: 1 });
   const led = new THREE.Mesh(new THREE.TorusGeometry(9.6, 1.1, 8, 40), ledMat);
   led.rotation.x = Math.PI / 2;
-  led.position.set(btnX, H + 4.4, ioz);
+  led.position.set(btnX, H + (plateT + btnH / 2), ioz);
   cg.add(led);
   hot('power', ioPlate, btn, led);
   const usbXs = [btnX + 26, btnX + 42];
@@ -103,7 +107,8 @@ export function buildCaseShell(c: PcCtx) {
   usb.position.set(usbXs[0], H + 2, ioz);
   usb.scale.setScalar(0.001);
   cg.add(usb);
-  rbox(12, 12, 4.6, mats.metal, usb, { at: [0, 6, 0], r: 0.6 });
+  const plug = 12;
+  rbox(plug, plug, 4.6, mats.metal, usb, { at: [0, plug / 2, 0], r: 0.6 });
   rbox(17, 34, 7, toon(hex('yellow'), { shine: 0.5 }), usb, { at: [0, 27, 0], r: 3 });
   hot('monitor', usb);
   return { trayX, innerX0, innerCx, bw, bh, boardRear, boardTop, boardFace, P, glassPivot, ioz, btnX, ledMat, usb };
@@ -116,19 +121,21 @@ export function buildCaseFans(c: PcCtx, shell: CaseShell, cooling: Cooling) {
   const { innerX0, innerCx, boardTop, boardFace } = shell;
   const { cl, radX } = cooling;
   const fanParts: THREE.Object3D[] = [];
-  let fanC = new THREE.Vector3(innerCx, H / 2, D / 2 - T - 14);
+  /** How far a case fan's center sits in from the panel it blows through. */
+  const inset = 14;
+  let fanC = new THREE.Vector3(innerCx, H / 2, D / 2 - T - inset);
   if (dm.front.n) {
     const sz = dm.front.size;
     for (let i = 0; i < dm.front.n; i++) {
       const f = fan(sz, cg, { ring: s.rgb !== 'off', boost: 'case', phase: 0.6 + i * 0.1, speed: 6 });
-      f.position.set(innerCx, T + 14 + sz / 2 + i * (sz + 8), D / 2 - T - 14);
+      f.position.set(innerCx, T + inset + sz / 2 + i * (sz + 8), D / 2 - T - inset);
       fanParts.push(f);
     }
-    fanC = new THREE.Vector3(innerCx, T + 14 + (dm.front.n * (sz + 8)) / 2, D / 2 - T - 14);
+    fanC = new THREE.Vector3(innerCx, T + inset + (dm.front.n * (sz + 8)) / 2, D / 2 - T - inset);
   }
   if (dm.rear) {
     const f = fan(dm.rear, cg, { ring: s.rgb !== 'off', boost: 'case', phase: 0.05, speed: 6 });
-    f.position.set(boardFace - 25 - dm.rear / 2, boardTop - 20 - dm.rear / 2, -D / 2 + T + 14);
+    f.position.set(boardFace - 25 - dm.rear / 2, boardTop - 20 - dm.rear / 2, -D / 2 + T + inset);
     fanParts.push(f);
   }
   if (s.cooling === 'air') {
@@ -136,10 +143,10 @@ export function buildCaseFans(c: PcCtx, shell: CaseShell, cooling: Cooling) {
     for (let i = 0; i < dm.top.n; i++) {
       const f = fan(sz, cg, { ring: s.rgb !== 'off', boost: 'case', phase: 0.2 + i * 0.1, speed: 6 });
       f.rotation.x = -Math.PI / 2;
-      f.position.set(radX, H - T - 14, -D / 2 + T + 10 + sz / 2 + i * (sz + 6));
+      f.position.set(radX, H - T - inset, -D / 2 + T + 10 + sz / 2 + i * (sz + 6));
       fanParts.push(f);
     }
-    if (!dm.front.n) fanC = new THREE.Vector3(radX, H - T - 14, -D / 2 + T + 10 + (dm.top.n * (sz + 6)) / 2);
+    if (!dm.front.n) fanC = new THREE.Vector3(radX, H - T - inset, -D / 2 + T + 10 + (dm.top.n * (sz + 6)) / 2);
   }
   hot('fans', ...fanParts);
   hot('cooler', ...cl);
