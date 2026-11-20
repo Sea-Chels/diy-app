@@ -34,19 +34,19 @@ function save(key: string, value: unknown): void {
 
 export function createStore<S extends object>(defaults: S, persist: Persist<S>): Store<S> {
   const listeners = new Set<Listener<S>>();
-  const fields = Object.keys(persist) as (keyof S)[];
+  const fields = Object.entries(persist) as [keyof S, { key: string; fix: (raw: unknown) => S[keyof S] }][];
   let state: S = { ...defaults };
-  for (const k of fields) state[k] = persist[k]!.fix(load(persist[k]!.key));
+  for (const [k, f] of fields) state[k] = f.fix(load(f.key));
 
   return {
     getState: (): S => state,
     setState(patch: Partial<S>): void {
       const prev = state;
       state = { ...state, ...patch };
-      for (const k of fields) {
+      for (const [k, f] of fields) {
         if (!(k in patch)) continue;
-        state[k] = persist[k]!.fix(state[k]);
-        save(persist[k]!.key, state[k]);
+        state[k] = f.fix(state[k]);
+        save(f.key, state[k]);
       }
       listeners.forEach((l) => l(state, prev));
     },

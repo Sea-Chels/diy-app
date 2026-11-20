@@ -13,7 +13,7 @@ describe('garage data', () => {
   it('only car guides are limited by powertrain', () => {
     for (const g of GUIDES.filter((g) => g.powertrains)) {
       expect(rideOf(g.spots[0]), g.id).toBe('car');
-      for (const p of g.powertrains!) expect(Object.hasOwn(POWERTRAIN_LABEL, p)).toBe(true);
+      for (const p of g.powertrains ?? []) expect(Object.hasOwn(POWERTRAIN_LABEL, p)).toBe(true);
     }
   });
   it('every guide says what it saves', () => {

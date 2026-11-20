@@ -3,6 +3,7 @@ import { getState, setSetup, subscribe } from '../store';
 import { h } from '../../shared/dom';
 import { segControl, swatchRow } from '../../shared/ui/choices';
 import { sceneMenu } from '../../shared/ui/sceneMenu';
+import { must } from '../../shared/must';
 
 const asSwatches = (list: { name: string; hex: string }[]) => list.map((s) => ({ value: s.hex, color: s.hex, name: s.name }));
 
@@ -35,7 +36,7 @@ export function mountRigMenu(root: HTMLElement): void {
     rgb.sync(s.rgb);
     rgbColor.sync(s.rgbColor);
     caseColor.sync(s.caseColor);
-    cooling.buttons.get('loop')!.disabled = s.size === 'itx';
+    must(cooling.buttons.get('loop'), 'loop cooling button').disabled = s.size === 'itx';
     loopNote.hidden = s.size !== 'itx';
     rgbLabel.textContent = s.cooling === 'loop' ? 'Lighting & coolant' : 'Lighting';
     rgbColor.el.classList.toggle('dim', s.rgb === 'off' && s.cooling !== 'loop');

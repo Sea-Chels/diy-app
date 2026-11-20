@@ -2,6 +2,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { closeModal } from '../../shared/modal';
 import { openCalculators } from './calculators';
+import { $ } from '../../shared/dom';
+import { must } from '../../shared/must';
 
 beforeEach(() => {
   closeModal(false);
@@ -9,7 +11,7 @@ beforeEach(() => {
 });
 
 const result = () => [...document.querySelectorAll('.calc-result p')].map((p) => p.textContent);
-const field = (label: string) => [...document.querySelectorAll('.calc-field')].find((f) => f.textContent === label)!.querySelector('input')!;
+const field = (label: string) => $<HTMLInputElement>('input', must([...document.querySelectorAll('.calc-field')].find((f) => f.textContent === label), `${label} field`));
 function type(label: string, value: string): void {
   const input = field(label);
   input.value = value;
@@ -24,7 +26,7 @@ describe('paint calculator', () => {
   });
   it('adds the ceiling when asked', () => {
     openCalculators();
-    const ceil = document.querySelector<HTMLInputElement>('.calc-check input')!;
+    const ceil = $<HTMLInputElement>('.calc-check input');
     ceil.checked = true;
     ceil.dispatchEvent(new Event('change'));
     expect(result()[1]).toBe('422 sq ft to paint × 2 coats.');
@@ -76,12 +78,12 @@ describe('wire and breaker chart', () => {
     const awg = new Map(rows().map(([breaker, wire]) => [wire, breaker]));
     expect(awg.get('8 AWG')).toBe('40 A');
     expect(awg.get('6 AWG')).toBe('50 A');
-    expect(rows().every(([b, w]) => /^\d+ A$/.test(b!) && /^\d+ AWG$/.test(w!)), 'one size per row').toBe(true);
+    expect(rows().every(([b = '', w = '']) => /^\d+ A$/.test(b) && /^\d+ AWG$/.test(w)), 'one size per row').toBe(true);
   });
   it('pairs bigger breakers with thicker wire, row by row', () => {
     openCalculators('wire');
-    const amps = rows().map(([b]) => Number.parseInt(b!, 10));
-    const gauges = rows().map(([, w]) => Number.parseInt(w!, 10));
+    const amps = rows().map(([b = '']) => Number.parseInt(b, 10));
+    const gauges = rows().map(([, w = '']) => Number.parseInt(w, 10));
     expect(amps).toEqual([...amps].sort((a, b) => a - b));
     expect(gauges).toEqual([...gauges].sort((a, b) => b - a));
   });
@@ -90,7 +92,7 @@ describe('wire and breaker chart', () => {
 describe('calculator tabs', () => {
   it('switch between calculators', () => {
     openCalculators('wire');
-    [...document.querySelectorAll<HTMLButtonElement>('.filter-row button')].find((b) => b.textContent === 'Flooring')!.click();
+    must([...document.querySelectorAll<HTMLButtonElement>('.filter-row button')].find((b) => b.textContent === 'Flooring'), 'Flooring tab').click();
     expect(document.querySelector('.wire-table')).toBeNull();
     expect(result()[0]).toBe('7 boxes');
   });

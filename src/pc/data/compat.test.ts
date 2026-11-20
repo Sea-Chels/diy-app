@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { checkBuild, conflictsFor, estimateWatts, resolve, suggestedPsu, type Build } from './compat';
 import { PART_BY_ID } from './catalog';
+import { must } from '../../shared/must';
 
 const build = (b: Partial<Build>): Build => ({ storage: [], ...b });
 const errors = (b: Build) => checkBuild(b).filter((i) => i.level === 'error');
@@ -19,7 +20,7 @@ describe('checkBuild', () => {
   });
   it('needs a graphics card only when the CPU has no graphics', () => {
     expect(errors(build({ cpu: 'r5-5600' })).some((e) => e.cats.includes('gpu'))).toBe(true);
-    const missing = checkBuild(build({ cpu: 'r5-7600' })).find((i) => i.text.startsWith('Still to pick'))!;
+    const missing = must(checkBuild(build({ cpu: 'r5-7600' })).find((i) => i.text.startsWith('Still to pick')), 'still-to-pick issue');
     expect(missing.cats).not.toContain('gpu');
   });
   it('lists errors before warnings before passes', () => {
@@ -43,8 +44,8 @@ describe('power', () => {
 describe('conflictsFor', () => {
   it('reports only errors the candidate itself causes', () => {
     const base = build({ cpu: 'r5-7600', ram: 'lpx-ddr4-32' });
-    const am4 = conflictsFor(base, PART_BY_ID.get('b550-tomahawk')!);
+    const am4 = conflictsFor(base, must(PART_BY_ID.get('b550-tomahawk'), 'b550-tomahawk'));
     expect(am4.map((e) => e.cats)).toEqual([['cpu', 'board']]);
-    expect(conflictsFor(build({ cpu: 'r5-7600' }), PART_BY_ID.get('b650-tomahawk')!)).toEqual([]);
+    expect(conflictsFor(build({ cpu: 'r5-7600' }), must(PART_BY_ID.get('b650-tomahawk'), 'b650-tomahawk'))).toEqual([]);
   });
 });

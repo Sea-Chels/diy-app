@@ -11,6 +11,7 @@ import { icon, type IconName } from '../../shared/icons';
 import { openModal } from '../../shared/modal';
 import { openPlantGuide } from './plantGuide';
 import { chip } from '../../shared/ui/choices';
+import { must } from '../../shared/must';
 
 const LEVEL_ICON: Record<PlanIssue['level'], IconName> = { error: 'bad', warn: 'alert', ok: 'ok' };
 const BED_KEY = 'diy-garden:bed';
@@ -90,7 +91,7 @@ export function openPlanner(): void {
   const renderSide = () => keepFocus(side, renderSideNow);
   function renderSideNow(): void {
     clear(side);
-    const bed = BED_SIZES.find((b) => b.id === bedId)!;
+    const bed = must(BED_SIZES.find((b) => b.id === bedId), `bed size ${bedId}`);
     const total = bed.w * bed.l;
     const rows = planRows(plan());
     const used = rows.reduce((n, r) => n + r.squares, 0);

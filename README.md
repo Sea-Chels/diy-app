@@ -137,7 +137,8 @@ src/
     focus.ts, motion.ts  focus handling and the reduced-motion setting
     format.ts            time and number formatting
     toon.ts, tween.ts    toon shading and ink outlines, animation tweens
-    dom.ts, icons.ts     the h() DOM helper and Lucide icons
+    dom.ts, icons.ts     the h() and $() DOM helpers and Lucide icons
+    must.ts              must(): a value, or an error naming what was missing
     modal.ts, youtube.ts modals and video search links
     loader.*             the loading screen each page shows while its scene builds
     scene/stage.ts       a workshop's stage: puts the pieces below together around its rig
@@ -147,7 +148,7 @@ src/
     scene/presets.ts     stage settings shared between workshops
     scene/sceneTags.ts   the typed tags scene code keeps in userData
     scene/outline.ts     the silhouette highlight pass
-    scene/kit.ts         leaf shapes, canvas textures, the add() and box() mesh helpers
+    scene/kit.ts         leaf shapes, canvas textures, the add(), box() and merge() mesh helpers
     scene/rigKit.ts      clickable spots, beacons, lids and camera views every rig uses
     scene/materials.ts   material recipes shared between workshops
     ui/guidePanel.ts     the side panel for a selected part or area

@@ -62,7 +62,7 @@ describe('vPIC client', () => {
       setTimeout(() => c.abort(new DOMException('The operation timed out.', 'TimeoutError')), ms);
       return c.signal;
     });
-    const fetch = vi.fn((_url: string, init?: RequestInit) => new Promise<Response>((_, reject) => init?.signal?.addEventListener('abort', () => reject(init.signal!.reason))));
+    const fetch = vi.fn((_url: string, init?: RequestInit) => new Promise<Response>((_, reject) => init?.signal?.addEventListener('abort', () => reject(init.signal?.reason))));
     vi.stubGlobal('fetch', fetch);
     const y = nextYear();
     const p = expect(modelsForMakeYear('Subaru', y)).rejects.toThrow(/timed out|abort/i);

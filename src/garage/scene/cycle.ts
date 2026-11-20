@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import type { V3 } from '../../shared/scene/kit';
+import { merge, type V3 } from '../../shared/scene/kit';
 import type { View } from '../../shared/scene/stage';
 import type { LidId, PartId } from '../data/parts';
 import { tweenScope } from '../../shared/tween';
@@ -60,7 +59,7 @@ export function spokes(n: number, hubR: number, flange: number, rimR: number, r:
     const x = i % 2 ? flange : -flange;
     parts.push(rod([x, Math.sin(h) * hubR, Math.cos(h) * hubR], [0, Math.sin(a) * rimR, Math.cos(a) * rimR], r, 4));
   }
-  return mergeGeometries(parts);
+  return merge(parts);
 }
 
 /** A pulley the chain wraps: center (z, y), radius, and 1 if the chain turns round it from +z toward +y, -1 the other way. */

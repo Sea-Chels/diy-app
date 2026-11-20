@@ -5,6 +5,7 @@
 import * as THREE from 'three';
 import { PALETTE as P } from '../../shared/theme';
 import { reducedMotion } from '../../shared/motion';
+import { must } from '../../shared/must';
 
 export type ScreenState = 'off' | 'post' | 'bios' | 'install' | 'desktop';
 
@@ -34,7 +35,7 @@ export function createScreen(): Screen {
   const canvas = document.createElement('canvas');
   canvas.width = W;
   canvas.height = H;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = must(canvas.getContext('2d'), '2D canvas context');
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = 4;

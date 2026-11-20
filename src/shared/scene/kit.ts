@@ -1,8 +1,10 @@
 /** Modeling helpers shared by the rigs. Instance batches let hundreds of leaves cost a handful of draw calls. */
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { outline, toon, type InkWeight, type ToonOpts } from '../toon';
 import { PALETTE } from '../theme';
+import { must } from '../must';
 
 export type V3 = [number, number, number];
 export const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
@@ -27,7 +29,7 @@ export function canvasTex(w: number, h: number, draw: (ctx: CanvasRenderingConte
   const c = document.createElement('canvas');
   c.width = w;
   c.height = h;
-  draw(c.getContext('2d')!);
+  draw(must(c.getContext('2d'), '2D canvas context'));
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
   t.anisotropy = anisotropy;
@@ -252,6 +254,9 @@ export interface MeshOpts {
 }
 
 /** Adds an inked mesh to `parent`. */
+/** mergeGeometries, which hands back null (whatever its type says) when the parts' attributes don't match. */
+export const merge = (parts: THREE.BufferGeometry[], groups = false): THREE.BufferGeometry => must(mergeGeometries(parts, groups), 'merged geometry (parts with mismatched attributes)');
+
 export function add(geo: THREE.BufferGeometry, mat: THREE.Material | THREE.Material[], parent: THREE.Object3D, o: MeshOpts = {}): THREE.Mesh {
   const m = new THREE.Mesh(geo, mat);
   if (o.at) m.position.set(...o.at);

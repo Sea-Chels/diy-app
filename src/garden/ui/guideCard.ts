@@ -1,5 +1,5 @@
 import { KIND_LABEL, type Guide } from '../data/guides';
-import { PLANT_BY_ID } from '../data/plants';
+import { PLANT_BY_ID, plantName } from '../data/plants';
 import { setState } from '../store';
 import { h } from '../../shared/dom';
 import { icon } from '../../shared/icons';
@@ -26,7 +26,7 @@ export function guideCard(g: Guide, open: boolean): HTMLElement {
         ...card.steps(g),
         ...(plants.length
           ? [h('h4', {}, 'Plant care cards'), h('div', { class: 'plant-chips' }, ...plants.map((id) =>
-              h('button', { class: 'link-chip', onClick: () => openPlantGuide(id) }, icon('sprout', 13), PLANT_BY_ID.get(id)!.name)))]
+              h('button', { class: 'link-chip', onClick: () => openPlantGuide(id) }, icon('sprout', 13), plantName(id))))]
           : []),
       ];
     },

@@ -3,7 +3,7 @@
  * bottom widths) along z. Car bodies are described as profile curves of z.
  */
 import * as THREE from 'three';
-import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { merge } from '../../shared/scene/kit';
 
 export interface Section {
   z: number;
@@ -104,7 +104,7 @@ export function loft(fn: SectionFn, z0: number, z1: number, n: number, steps = 6
     return g;
   };
 
-  return mergeGeometries([body, cap(z0, true), cap(z1, false)])!;
+  return merge([body, cap(z0, true), cap(z1, false)]);
 }
 
 /**
@@ -172,7 +172,7 @@ export function shell(fn: SectionFn, n: number, z0: number, z1: number, t0: numb
   const outer = grid(O, false);
   const inner = grid(I, true);
   rim.setIndex(Array.from({ length: rimPos.length / 3 }, (_, i) => i));
-  return mergeGeometries([outer, inner, rim])!;
+  return merge([outer, inner, rim]);
 }
 
 /** An open, single-sided patch of a lofted surface between t0 and t1 (t may run past 1). */

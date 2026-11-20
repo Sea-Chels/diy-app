@@ -1,4 +1,4 @@
-import { h } from './dom';
+import { $, h } from './dom';
 import { focusables } from './focus';
 import { icon } from './icons';
 
@@ -55,7 +55,7 @@ export function openModal(o: { title: string; sub?: string; className?: string; 
     o.body,
   );
   const el: HTMLElement = h('div', { class: 'modal-backdrop', onClick: (e) => { if (e.target === el) closeModal(); } }, dialog);
-  const root = document.getElementById('modal-root')!;
+  const root = $('#modal-root');
   root.append(el);
   const inert = inertAround(root);
   document.addEventListener('keydown', onKey);

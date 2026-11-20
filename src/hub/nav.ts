@@ -1,7 +1,9 @@
+import { $ } from '../shared/dom';
+
 /** Mobile menu toggle: closes on a link, on Escape, and hands focus back to the toggle. */
 export function initNav(): void {
-  const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle')!;
-  const links = document.getElementById('nav-links')!;
+  const toggle = $<HTMLButtonElement>('.nav-toggle');
+  const links = $('#nav-links');
 
   const setOpen = (open: boolean) => {
     toggle.setAttribute('aria-expanded', String(open));

@@ -4,6 +4,7 @@ import { getState, setState, subscribe, type Appearance } from '../store';
 import { h } from '../../shared/dom';
 import { segControl, swatchRow } from '../../shared/ui/choices';
 import { sceneMenu } from '../../shared/ui/sceneMenu';
+import { must } from '../../shared/must';
 
 const FINISH_LABEL = Object.fromEntries(Object.entries(FINISHES).map(([f, v]) => [f, v.label])) as Record<Finish, string>;
 
@@ -29,7 +30,7 @@ export function mountPaintShop(root: HTMLElement): void {
 
   function sync(): void {
     const { appearance: a, vehicle: v } = getState();
-    body.buttons.get('auto')!.textContent = `${BODY_LABEL.auto} · ${BODY_LABEL[guessBody(v.make, v.model)]}`;
+    must(body.buttons.get('auto'), 'auto body button').textContent = `${BODY_LABEL.auto} · ${BODY_LABEL[guessBody(v.make, v.model)]}`;
     body.sync(a.body);
     // Swatch hexes are lowercase; a stored color may not be.
     const current = a.color.toLowerCase();

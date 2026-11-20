@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
-import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { toon } from '../../shared/toon';
-import { add, box, type MeshOpts, type Rounding } from '../../shared/scene/kit';
+import { add, box, merge, type MeshOpts, type Rounding } from '../../shared/scene/kit';
 import type { Setup } from '../data/setup';
 import type { PartId } from '../data/parts';
 import { K, FEET, DIMS, ATX, ITX } from './layout';
@@ -93,7 +92,7 @@ export function createCtx(s: Setup) {
     const bladeGeo = new RoundedBoxGeometry(size * 0.3, size * 0.15, 1.8, 1, 0.8);
     const pitch = new THREE.Matrix4().compose(new THREE.Vector3(size * 0.31, 0, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0.5, 0, 0.18)), new THREE.Vector3(1, 1, 1));
     const blades = Array.from({ length: n }, (_, i) => bladeGeo.clone().applyMatrix4(new THREE.Matrix4().makeRotationZ((i / n) * Math.PI * 2).multiply(pitch)));
-    add(mergeGeometries([hub.toNonIndexed(), mergeGeometries(blades)], true), [mats.hub, mats.blade], rotor);
+    add(merge([hub.toNonIndexed(), merge(blades)], true), [mats.hub, mats.blade], rotor);
     if (o.ring) {
       const ring = new THREE.Mesh(new THREE.TorusGeometry(size * 0.47, 2.4, 8, 64), rgb(o.phase ?? 0));
       ring.position.z = 12.6;

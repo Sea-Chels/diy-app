@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { checkPlan, planRows } from './plan';
 import { PLANTS, relation, squares, type Plant } from './plants';
+import { must } from '../../shared/must';
 
 const plant = (spacing: number): Plant => ({ ...PLANTS[0], spacing });
 
@@ -26,13 +27,13 @@ describe('planRows', () => {
 
 describe('checkPlan', () => {
   it('errors when the plan needs more squares than the bed has', () => {
-    const big = PLANTS.find((p) => squares(p).squares > 1)!;
+    const big = must(PLANTS.find((p) => squares(p).squares > 1), 'a plant over one square');
     const rows = planRows(Array(17).fill(big.id));
     expect(checkPlan(rows, 16).issues.some((i) => i.level === 'error')).toBe(true);
   });
   it('splits pairs into companions and clashes', () => {
-    const a = PLANTS.find((p) => p.avoid.some((id) => PLANTS.some((q) => q.id === id)))!;
-    const b = a.avoid.find((id) => PLANTS.some((q) => q.id === id))!;
+    const a = must(PLANTS.find((p) => p.avoid.some((id) => PLANTS.some((q) => q.id === id))), 'a plant with a foe');
+    const b = must(a.avoid.find((id) => PLANTS.some((q) => q.id === id)), 'its foe');
     const { bad, good } = checkPlan(planRows([a.id, b]), 32);
     expect(bad.map(([x, y]) => [x.id, y.id])).toEqual([[a.id, b]]);
     expect(good).toEqual([]);

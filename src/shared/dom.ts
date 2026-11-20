@@ -1,3 +1,5 @@
+import { must } from './must';
+
 /** Tiny DOM helpers so the UI stays framework-free. */
 export function h<K extends keyof HTMLElementTagNameMap>(
   tag: K,
@@ -18,6 +20,9 @@ export function h<K extends keyof HTMLElementTagNameMap>(
   }
   return el;
 }
+
+/** The first element under `root` that `selector` matches, or an error naming the selector. */
+export const $ = <E extends Element = HTMLElement>(selector: string, root: ParentNode = document): E => must(root.querySelector<E>(selector), selector);
 
 export function clear(el: HTMLElement): void {
   while (el.firstChild) el.removeChild(el.firstChild);

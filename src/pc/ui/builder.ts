@@ -45,7 +45,7 @@ export function openBuilder(focus?: Category): void {
     clear(list);
     const b = build();
     for (const cat of CATEGORIES) {
-      const chosen = cat === 'storage' ? b.storage.map((id) => PART_BY_ID.get(id)?.name).filter(Boolean).join(', ') : b[cat] ? PART_BY_ID.get(b[cat]!)?.name : '';
+      const chosen = cat === 'storage' ? b.storage.map((id) => PART_BY_ID.get(id)?.name).filter(Boolean).join(', ') : b[cat] ? PART_BY_ID.get(b[cat])?.name : '';
       const bad = issues.some((i) => i.level === 'error' && i.cats.includes(cat));
       const open = active === cat;
       const row = h('section', { class: `cat-row${bad ? ' bad' : ''}${open ? ' open' : ''}${chosen ? ' chosen' : ''}` });
@@ -96,13 +96,14 @@ export function openBuilder(focus?: Category): void {
 
     const patch = setupFromBuild(b);
     const show = h('button', { class: 'primary-btn', disabled: !patch, onClick: () => { if (!patch) return; setSetup(patch); select(null); closeModal(); } }, icon('cpu', 16), 'Show this build in 3D');
+    const copyLabel = h('span', {}, 'Copy parts list');
     const copy = h('button', { class: 'ghost-btn', onClick: () => {
-      const text = CATEGORIES.flatMap((c) => (c === 'storage' ? b.storage : b[c] ? [b[c]!] : []).map((id) => `${CATEGORY_LABEL[c]}: ${PART_BY_ID.get(id)?.name}`)).join('\n');
+      const text = CATEGORIES.flatMap((c) => (c === 'storage' ? b.storage : b[c] ? [b[c]] : []).map((id) => `${CATEGORY_LABEL[c]}: ${PART_BY_ID.get(id)?.name}`)).join('\n');
       navigator.clipboard?.writeText(text || 'Empty build').then(() => {
-        copy.lastChild!.textContent = 'Copied';
-        setTimeout(() => (copy.lastChild!.textContent = 'Copy parts list'), 1600);
+        copyLabel.textContent = 'Copied';
+        setTimeout(() => (copyLabel.textContent = 'Copy parts list'), 1600);
       }, () => {});
-    } }, icon('copy', 15), h('span', {}, 'Copy parts list'));
+    } }, icon('copy', 15), copyLabel);
     side.append(
       h('div', { class: 'side-actions' },
         show,

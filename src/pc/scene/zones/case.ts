@@ -57,10 +57,11 @@ export function buildCaseShell(c: PcCtx) {
   for (let i = 0; i < (s.size === 'itx' ? 2 : 7); i++) {
     rbox(W * 0.62, 9, 1.4, mats.darkMetal, cg, { at: [innerCx, boardTop - L.pcie[0] - 4 - i * 20.3, rz], r: 0.5, ink: null });
   }
-  if (dm.rear) {
-    const ry = boardTop - 20 - dm.rear / 2;
-    const rx = boardFace - 25 - dm.rear / 2;
-    const ringPts = Array.from({ length: 49 }, (_, i) => new THREE.Vector3(rx + Math.cos((i / 48) * Math.PI * 2) * dm.rear! * 0.46, ry + Math.sin((i / 48) * Math.PI * 2) * dm.rear! * 0.46, rz - 0.4));
+  const rearFan = dm.rear;
+  if (rearFan) {
+    const ry = boardTop - 20 - rearFan / 2;
+    const rx = boardFace - 25 - rearFan / 2;
+    const ringPts = Array.from({ length: 49 }, (_, i) => new THREE.Vector3(rx + Math.cos((i / 48) * Math.PI * 2) * rearFan * 0.46, ry + Math.sin((i / 48) * Math.PI * 2) * rearFan * 0.46, rz - 0.4));
     cg.add(inkLine(ringPts, 2));
   }
 

@@ -27,6 +27,7 @@ import { buildPottingBench } from './zones/bench';
 import { buildWildlife } from './zones/wildlife';
 import { findMovers, mergeInk, moves } from '../../shared/scene/ink';
 import { K, LOW_SPHERE } from './geometry';
+import { must } from '../../shared/must';
 
 export type Rig = StageRig<AreaId, LidId>;
 
@@ -55,7 +56,7 @@ export function buildRig(s: Setup): Rig {
   mergeInk(root, findMovers(root, Object.values(lidHooks)), glow);
 
   const { beacons, beaconAt } = createBeacons<AreaId>(root, { radius: 0.11, segments: [16, 12], onTop: true, picks });
-  const pos = (id: AreaId) => areas.get(id)!.position;
+  const pos = (id: AreaId) => must(areas.get(id), `area ${id}`).position;
   const at = (id: AreaId, dx: number, y: number, dz: number): V3 => [pos(id).x + dx, y, pos(id).z + dz];
   beaconAt('bed', at('bed', 1.2, 0.95, 0.6));
   beaconAt('kitchen', at('kitchen', 0.9, 1.35, 0.4));

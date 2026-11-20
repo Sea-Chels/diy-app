@@ -8,6 +8,7 @@ import { openModal, closeModal } from '../../shared/modal';
 import { searchUrl } from '../../shared/youtube';
 import { icon } from '../../shared/icons';
 import { chip } from '../../shared/ui/choices';
+import { must } from '../../shared/must';
 
 type Filter = PlantType | 'unusual' | null;
 
@@ -77,7 +78,8 @@ export function openPlantGuide(startAt?: string): void {
   }
 
   function show(id: string): void {
-    const p = PLANT_BY_ID.get(id)!;
+    const p = must(PLANT_BY_ID.get(id), `plant ${id}`);
+    const { area } = p;
     current = id;
     const hadFocus = body.contains(document.activeElement);
     clear(body);
@@ -96,11 +98,11 @@ export function openPlantGuide(startAt?: string): void {
         h('div', { class: 'plant-title' },
           h('h3', {}, p.name, p.unusual ? h('span', { class: 'badge' }, 'Unusual') : null),
           h('p', { class: 'latin' }, p.latin, ' · ', TYPE_LABEL[p.type])),
-        h('div', { class: 'chips' }, ...facts.filter(Boolean).map((f) => h('span', { class: 'chip' }, f!))),
+        h('div', { class: 'chips' }, ...facts.map((f) => f && h('span', { class: 'chip' }, f))),
         p.note ? h('p', { class: 'summary' }, p.note) : null,
         h('div', { class: 'plant-actions' },
           h('a', { class: 'primary-btn', href: searchUrl(`how to grow ${p.name} ${p.latin.split(' /')[0]}`), target: '_blank', rel: 'noopener noreferrer' }, icon('play', 16), 'Growing videos', icon('external', 15)),
-          p.area ? h('button', { class: 'ghost-btn', onClick: () => { closeModal(); select(p.area!); } }, icon('click', 16), `Show in garden: ${AREAS[p.area].label}`) : null,
+          area ? h('button', { class: 'ghost-btn', onClick: () => { closeModal(); select(area); } }, icon('click', 16), `Show in garden: ${AREAS[area].label}`) : null,
           addBtn),
         h('div', { class: 'two-col plant-cols' },
           h('div', {}, h('h4', {}, 'Planting'), h('p', {}, p.sow), h('p', { class: 'muted small' }, `First harvest: ${p.days}`)),

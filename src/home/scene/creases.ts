@@ -8,6 +8,7 @@ import { K, X0, X1, Z0, Z1, T, WH } from './room';
 import type { HomeCtx } from './ctx';
 import { rides } from '../../shared/scene/ink';
 import { tagOf } from '../../shared/scene/sceneTags';
+import { must } from '../../shared/must';
 
 export function addCreases(c: HomeCtx, movers: Set<THREE.Object3D>) {
   const { root } = c;
@@ -20,7 +21,8 @@ export function addCreases(c: HomeCtx, movers: Set<THREE.Object3D>) {
     const size = new THREE.Vector3();
     const ws = new THREE.Vector3();
     const edgesFor = (g: THREE.BufferGeometry, optIn: boolean): number[] | null => {
-      if (cache.has(g)) return cache.get(g)!;
+      const hit = cache.get(g);
+      if (hit !== undefined) return hit;
       let src: THREE.BufferGeometry | null = null;
       const p = (g as THREE.BoxGeometry).parameters;
       if (g.type === 'BoxGeometry' || g.type === 'RoundedBoxGeometry') src = new THREE.EdgesGeometry(new THREE.BoxGeometry(p.width, p.height, p.depth));
@@ -29,7 +31,7 @@ export function addCreases(c: HomeCtx, movers: Set<THREE.Object3D>) {
       if (src) {
         // Nudge every vertex 3 mm outward so the line sits just proud of its faces.
         g.computeBoundingBox();
-        const c = g.boundingBox!.getCenter(new THREE.Vector3()).toArray();
+        const c = must(g.boundingBox, 'bounding box').getCenter(new THREE.Vector3()).toArray();
         const pos = src.getAttribute('position') as THREE.BufferAttribute;
         out = [];
         for (let i = 0; i < pos.count; i++) {
@@ -48,7 +50,7 @@ export function addCreases(c: HomeCtx, movers: Set<THREE.Object3D>) {
       const mats = Array.isArray(m.material) ? m.material : [m.material];
       if (mats.some((x) => !x.visible || x.transparent || (x as THREE.MeshBasicMaterial).isMeshBasicMaterial || (x as THREE.ShaderMaterial).isShaderMaterial)) return;
       m.geometry.computeBoundingBox();
-      m.geometry.boundingBox!.getSize(size);
+      must(m.geometry.boundingBox, 'bounding box').getSize(size);
       m.getWorldScale(ws);
       // Skip screws, wires and leaves: lines on those just turn to fuzz.
       if (Math.max(size.x * ws.x, size.y * ws.y, size.z * ws.z) / K < 0.05) return;
@@ -82,8 +84,9 @@ export function addCreases(c: HomeCtx, movers: Set<THREE.Object3D>) {
       if (!arr) continue;
       // Anything that moves keeps its own lines; the rest merge into one draw call.
       if (rides(m, movers, root)) {
-        if (!own.has(arr)) own.set(arr, new LineSegmentsGeometry().setPositions(arr));
-        ink(own.get(arr)!, m);
+        const geo = own.get(arr) ?? new LineSegmentsGeometry().setPositions(arr);
+        own.set(arr, geo);
+        ink(geo, m);
         continue;
       }
       rel.multiplyMatrices(rootInv, m.matrixWorld);

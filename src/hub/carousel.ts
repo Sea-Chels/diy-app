@@ -1,4 +1,4 @@
-import { h } from '../shared/dom';
+import { $, h } from '../shared/dom';
 import { icon } from '../shared/icons';
 import { onReducedMotionChange, reducedMotion } from '../shared/motion';
 
@@ -11,8 +11,8 @@ const SLIDE_MS = 7000;
  */
 export function initCarousel(root: HTMLElement): void {
   const slides = [...root.querySelectorAll<HTMLElement>('.slide')];
-  const dotsEl = root.querySelector<HTMLElement>('.dots')!;
-  const pauseBtn = root.querySelector<HTMLButtonElement>('.pause')!;
+  const dotsEl = $('.dots', root);
+  const pauseBtn = $<HTMLButtonElement>('.pause', root);
   let index = 0;
   let userPaused = reducedMotion();
 

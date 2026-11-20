@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import type { HullSet } from '../toon';
 import { tag, tagOf } from './sceneTags';
+import { merge } from './kit';
 
 /** Marks objects whose own position, rotation, scale or visibility animates at runtime. */
 export function moves(...objs: THREE.Object3D[]): void {
@@ -82,7 +82,7 @@ export function mergeInk(root: THREE.Object3D, movers: Set<THREE.Object3D>, glow
       }
       return g;
     });
-    const merged = new THREE.Mesh(mergeGeometries(parts), hl.base);
+    const merged = new THREE.Mesh(merge(parts), hl.base);
     for (const g of parts) g.dispose();
     merged.raycast = () => {};
     tag(merged, 'ink', true);

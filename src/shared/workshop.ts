@@ -1,6 +1,6 @@
 import type { GuideBase, GuideBook } from './guides';
 import { announce } from './announce';
-import { h, clear } from './dom';
+import { $, h, clear } from './dom';
 import { keepFocus } from './focus';
 import { hydrateIcons } from './icons';
 import { hideLoaderAfterFrames } from './loader';
@@ -11,6 +11,7 @@ import { press } from './ui/choices';
 import { mountGuidePanel, type GuidePanelOpts, type SpotInfo } from './ui/guidePanel';
 import { openGuideIndex, type GuideIndexOpts } from './ui/guideIndex';
 import type { Selection, Store } from './store';
+import { must } from './must';
 
 export interface WorkshopScene<S extends string> {
   onSelect(cb: (spot: S | null) => void): void;
@@ -70,8 +71,8 @@ export function mountWorkshop<S extends string, G extends GuideBase<S>, St exten
 
   const canvas = document.getElementById('scene') as HTMLCanvasElement;
   const scene = sceneOr(canvas, () => o.scene(canvas, store.getState()));
-  for (const [id, mount] of Object.entries(o.menus)) mount(document.getElementById(id)!, scene);
-  const panel = document.getElementById('panel')!;
+  for (const [id, mount] of Object.entries(o.menus)) mount($(`#${id}`), scene);
+  const panel = $('#panel');
   mountGuidePanel(panel, { ...o.panel, store, select, info: (spot) => spots[spot], guides: (spot, s) => book.forSpot(spot).filter((g) => applies(g, s)) });
 
   function openIndex(): void {
@@ -90,22 +91,23 @@ export function mountWorkshop<S extends string, G extends GuideBase<S>, St exten
       sub: sub(guides.length),
     });
   }
-  document.getElementById('guides-btn')!.addEventListener('click', openIndex);
-  for (const [id, act] of Object.entries(o.actions ?? {})) document.getElementById(id)!.addEventListener('click', act);
-  if (o.sync) store.subscribe((s, prev) => o.sync!(scene, s, prev));
+  $('#guides-btn').addEventListener('click', openIndex);
+  for (const [id, act] of Object.entries(o.actions ?? {})) $(`#${id}`).addEventListener('click', act);
+  const { sync } = o;
+  if (sync) store.subscribe((s, prev) => sync(scene, s, prev));
 
   scene.onSelect((spot) => {
     if (spot !== store.getState().selected) select(spot);
   });
 
-  const hint = document.getElementById('hint')!;
+  const hint = $('#hint');
   const idle = hint.textContent ?? '';
   scene.onHover((spot) => {
     hint.textContent = spot ? label(spot) : idle;
     hint.classList.toggle('active', Boolean(spot));
   });
 
-  const quick = document.getElementById('quick-fixes')!;
+  const quick = $('#quick-fixes');
   const featured = (s: St) => book.all.filter((g) => g.featured && spotIds(s).includes(g.spots[0]) && applies(g, s));
   let shownFixes: string | null = null;
   function renderQuickFixes(s: St): void {
@@ -140,7 +142,7 @@ export function mountWorkshop<S extends string, G extends GuideBase<S>, St exten
   function syncCovered(): void {
     const open = phone.matches && Boolean(store.getState().selected);
     const top = panel.offsetParent ? panel.offsetParent.getBoundingClientRect().top + panel.offsetTop : Infinity;
-    for (const el of quick.parentElement!.children) {
+    for (const el of must(quick.parentElement, 'quick-fix bar parent').children) {
       if (el instanceof HTMLElement && !(el instanceof HTMLCanvasElement)) el.inert = open && el.getBoundingClientRect().bottom > top;
     }
   }

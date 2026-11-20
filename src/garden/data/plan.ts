@@ -16,10 +16,12 @@ export interface PlanIssue { level: 'error' | 'warn' | 'ok'; text: string }
 
 /** Plan ids repeat: each repeat is one more square (small plants) or one more plant (big ones). */
 export function planRows(plan: string[]): PlanRow[] {
-  const counts = new Map<string, number>();
-  for (const id of plan) if (PLANT_BY_ID.has(id)) counts.set(id, (counts.get(id) ?? 0) + 1);
-  return [...counts].map(([id, count]) => {
-    const plant = PLANT_BY_ID.get(id)!;
+  const counts = new Map<Plant, number>();
+  for (const id of plan) {
+    const plant = PLANT_BY_ID.get(id);
+    if (plant) counts.set(plant, (counts.get(plant) ?? 0) + 1);
+  }
+  return [...counts].map(([plant, count]) => {
     const sq = squares(plant);
     return { plant, count, squares: count * sq.squares, plants: count * sq.perSquare };
   });
