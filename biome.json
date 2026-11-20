@@ -1,15 +1,15 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.6.8/schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
-  "files": { "includes": ["src/**/*.ts", "src/**/*.css", "e2e/**/*.ts", "*.ts"] },
+  "files": { "includes": ["src/**/*.ts", "src/**/*.css", "src/**/*.html", "e2e/**/*.ts", "*.ts", "*.html", "*/index.html"] },
   "formatter": { "enabled": false },
   "assist": { "enabled": false },
+  "html": { "linter": { "enabled": true } },
   "linter": {
     "enabled": true,
     "rules": {
       "preset": "recommended",
-      "style": { "noDescendingSpecificity": "off" },
-      "suspicious": { "useIterableCallbackReturn": "off" }
+      "style": { "noDescendingSpecificity": "off" }
     }
   }
 }

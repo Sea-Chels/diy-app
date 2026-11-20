@@ -40,7 +40,7 @@ export function buildKitchen(c: HomeCtx) {
     hinge.userData.sd = sd;
     sinkDoors.push(hinge);
   }
-  lidHooks.sinkDoors = (t) => sinkDoors.forEach((d) => (d.rotation.y = -d.userData.sd * 1.75 * t));
+  lidHooks.sinkDoors = (t) => sinkDoors.forEach((d) => { d.rotation.y = -d.userData.sd * 1.75 * t; });
 
   // Countertop with the sink cut out, in the chosen material.
   const counterMat = {
@@ -77,7 +77,7 @@ export function buildKitchen(c: HomeCtx) {
   {
     const sh = new THREE.Shape();
     const c = [[-1.0, Z0], [1.52, Z0], [1.52, Z0 + 0.635], [-1.0, Z0 + 0.635]];
-    c.forEach(([x, z], i) => (i ? sh.lineTo(x, -z) : sh.moveTo(x, -z)));
+    c.forEach(([x, z], i) => { if (i) sh.lineTo(x, -z); else sh.moveTo(x, -z); });
     const hole = new THREE.Path();
     hole.moveTo(SINK.x0, -SINK.z0); hole.lineTo(SINK.x0, -SINK.z1); hole.lineTo(SINK.x1, -SINK.z1); hole.lineTo(SINK.x1, -SINK.z0);
     sh.holes.push(hole);

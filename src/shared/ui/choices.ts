@@ -16,7 +16,7 @@ export interface Choices<V extends string> {
 function choices<V extends string>(el: HTMLElement, entries: [V, HTMLButtonElement][]): Choices<V> {
   const buttons = new Map(entries);
   el.append(...buttons.values());
-  return { el, buttons, sync: (current) => buttons.forEach((b, v) => press(b, v === current)) };
+  return { el, buttons, sync: (current) => buttons.forEach((b, v) => { press(b, v === current); }) };
 }
 
 /** A segmented control with one button per key of `labels`. `name` labels the group. */

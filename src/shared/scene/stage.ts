@@ -130,19 +130,19 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
         return invalidate();
       }
       const id = hit && hit.id !== selected ? hit.id : null;
-      selectCbs.forEach((cb) => cb(id));
+      for (const cb of selectCbs) cb(id);
     },
     move(id) {
       if (id === hovered) return;
       hovered = id;
       canvas.style.cursor = id ? 'pointer' : 'grab';
       refreshGlow();
-      hoverCbs.forEach((cb) => cb(id));
+      for (const cb of hoverCbs) cb(id);
     },
     leave() {
       hovered = null;
       refreshGlow();
-      hoverCbs.forEach((cb) => cb(null));
+      for (const cb of hoverCbs) cb(null);
     },
   });
 
@@ -186,7 +186,7 @@ export function createStage<S, Id extends string, Lid extends string, R extends 
 
   const container = canvas.parentElement ?? canvas;
   function syncLineResolution(): void {
-    lineMaterials.forEach((m) => m.resolution.set(container.clientWidth, container.clientHeight));
+    for (const m of lineMaterials) m.resolution.set(container.clientWidth, container.clientHeight);
   }
   const outline = cfg.highlight === 'outline' ? createOutlinePass(renderer) : null;
   watchSize(container, (w, h) => {

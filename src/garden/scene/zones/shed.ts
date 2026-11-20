@@ -129,7 +129,7 @@ export function buildPantry(c: GardenCtx) {
       doors.push(hinge);
       hinge.userData.side = sd;
     }
-    lidHooks.shedDoors = (t) => doors.forEach((d) => (d.rotation.y = d.userData.side * 1.95 * t));
+    lidHooks.shedDoors = (t) => doors.forEach((d) => { d.rotation.y = d.userData.side * 1.95 * t; });
     // Inside: shelves of jars, crates, garlic and herbs drying.
     const shelfX = 0;
     for (const [y, z, w] of [[0.55, -D / 2 + 0.2, W - 0.14], [1.0, -D / 2 + 0.2, W - 0.14], [1.45, -D / 2 + 0.2, W - 0.14]] as const) {

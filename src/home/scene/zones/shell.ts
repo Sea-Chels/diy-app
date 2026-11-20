@@ -42,7 +42,7 @@ export function buildFloor(c: HomeCtx) {
     const sh = new THREE.Shape();
     // Shape y is world -z. L-shape around the bathroom.
     const pts: [number, number][] = [[BX + PT, Z0], [X1, Z0], [X1, Z1], [X0, Z1], [X0, BZ + PT], [BX + PT, BZ + PT]];
-    pts.forEach(([x, z], i) => (i ? sh.lineTo(x, -z) : sh.moveTo(x, -z)));
+    pts.forEach(([x, z], i) => { if (i) sh.lineTo(x, -z); else sh.moveTo(x, -z); });
     const hole = new THREE.Path();
     hole.moveTo(HOLE.x0, -HOLE.z0); hole.lineTo(HOLE.x0, -HOLE.z1); hole.lineTo(HOLE.x1, -HOLE.z1); hole.lineTo(HOLE.x1, -HOLE.z0);
     sh.holes.push(hole);

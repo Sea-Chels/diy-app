@@ -45,8 +45,8 @@ export function buildGarage(kind: BodyKind, ride: RideId): GarageRig {
     r.group.rotation.y = PARKING[id].yaw;
     group.add(r.group);
     overviews[id] = viewInParent(r.overview, r.group);
-    r.hotspots.forEach((m, p) => hotspots.set(p, m));
-    r.beacons.forEach((b, p) => beacons.set(p, b));
+    for (const [p, m] of r.hotspots) hotspots.set(p, m);
+    for (const [p, b] of r.beacons) beacons.set(p, b);
     mergeInk(r.group, findMovers(r.group, []), r.hotspots);
   }
   const views: Record<PartId, View> = {
@@ -67,7 +67,7 @@ export function buildGarage(kind: BodyKind, ride: RideId): GarageRig {
       return overviews[current];
     },
     setRide: (r) => (current = r),
-    setLid: (lid, open) => Object.values(rides).forEach((r) => r.setLid(lid, open)),
+    setLid: (lid, open) => Object.values(rides).forEach((r) => { r.setLid(lid, open); }),
     setPaint: car.setPaint,
     focus: glowFocus(hotspots),
     canPick: (p) => rides[rideOf(p)].canPick(p),

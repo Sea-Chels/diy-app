@@ -119,7 +119,7 @@ export function buildBathroom(c: HomeCtx) {
     slab([X0 + d - 0.02, 0.78, z0], [X0 + d, 0.82, z1], M.cab, b, 'thin');
     slab([X0, 0, z0 + 0.01], [X0 + d - 0.06, 0.1, z1 - 0.01], M.black, b, null);
     const sh = new THREE.Shape();
-    [[X0, z0 - 0.02], [X0 + d + 0.025, z0 - 0.02], [X0 + d + 0.025, z1 + 0.02], [X0, z1 + 0.02]].forEach(([x, z], i) => (i ? sh.lineTo(x, -z) : sh.moveTo(x, -z)));
+    [[X0, z0 - 0.02], [X0 + d + 0.025, z0 - 0.02], [X0 + d + 0.025, z1 + 0.02], [X0, z1 + 0.02]].forEach(([x, z], i) => { if (i) sh.lineTo(x, -z); else sh.moveTo(x, -z); });
     const hole = new THREE.Path();
     hole.absellipse(X0 + 0.3, -zc, 0.15, 0.12, 0, Math.PI * 2, true, 0);
     sh.holes.push(hole);
@@ -150,7 +150,7 @@ export function buildBathroom(c: HomeCtx) {
       hinge.userData.sd = sd;
       doors.push(hinge);
     }
-    lidHooks.vanityDoors = (k) => doors.forEach((g) => (g.rotation.y = g.userData.sd * 1.7 * k));
+    lidHooks.vanityDoors = (k) => doors.forEach((g) => { g.rotation.y = g.userData.sd * 1.7 * k; });
     slab([X0, 1.02, z0 + 0.02], [X0 + 0.03, 1.66, z1 - 0.02], M.walnut, b, 'thin');
     slab([X0 + 0.03, 1.05, z0 + 0.05], [X0 + 0.034, 1.63, z1 - 0.05], toon(0xcfe3ee, { shine: 1 }), b, null);
     pick(b, [X0, 0, z0 - 0.03], [X0 + 0.58, 1.7, z1 + 0.03]);

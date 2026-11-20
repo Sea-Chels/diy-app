@@ -62,7 +62,7 @@ export function initCarousel(root: HTMLElement): void {
       slide.setAttribute('aria-hidden', String(!on));
     });
     // Restart the progress bar: drop the class, force a reflow, add it back.
-    dots.forEach((d) => d.classList.remove('is-active'));
+    for (const d of dots) d.classList.remove('is-active');
     void dotsEl.offsetWidth;
     dots.forEach((d, i) => {
       d.classList.toggle('is-active', i === index);

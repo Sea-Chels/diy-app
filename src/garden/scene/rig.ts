@@ -150,7 +150,7 @@ export function buildRig(s: Setup): Rig {
         (p.material as THREE.MeshBasicMaterial).opacity = 0.4 * Math.sin(k2 * Math.PI);
       }
       const sw = t - swingStart;
-      toolSwing.forEach((g, i) => (g.rotation.z = sw < 3 ? Math.sin(sw * 6 + i) * 0.12 * (1 - sw / 3) : 0));
+      toolSwing.forEach((g, i) => { g.rotation.z = sw < 3 ? Math.sin(sw * 6 + i) * 0.12 * (1 - sw / 3) : 0; });
       for (let i = drops.length - 1; i >= 0; i--) {
         const d = drops[i];
         const age = t - d.userData.born;

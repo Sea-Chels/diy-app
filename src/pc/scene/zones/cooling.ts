@@ -168,7 +168,7 @@ export function buildLoop(c: PcCtx, shell: CaseShell, board: Board, gpu: Gpu, co
     }
     t.lift = lift.clone();
   }
-  aioTubes.forEach((t) => setTube(t, new THREE.Vector3()));
+  for (const t of aioTubes) setTube(t, new THREE.Vector3());
   return { setTube };
 }
 

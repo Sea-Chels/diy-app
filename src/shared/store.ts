@@ -48,7 +48,7 @@ export function createStore<S extends object>(defaults: S, persist: Persist<S>):
         state[k] = f.fix(state[k]);
         save(f.key, state[k]);
       }
-      listeners.forEach((l) => l(state, prev));
+      for (const l of listeners) l(state, prev);
     },
     subscribe(l: Listener<S>): () => void {
       listeners.add(l);

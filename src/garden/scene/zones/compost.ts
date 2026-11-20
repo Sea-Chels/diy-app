@@ -60,7 +60,7 @@ export function buildCompost(c: GardenCtx) {
       steam.push(puff);
     }
     steamBase.set(-W / 2 + bayW * 1.5, 0, 0);
-    lidHooks.compostSlats = (t) => fronts.forEach((f, i) => (f.rotation.x = (1.35 - i * 0.05) * t));
+    lidHooks.compostSlats = (t) => fronts.forEach((f, i) => { f.rotation.x = (1.35 - i * 0.05) * t; });
     pick(compost, [W + 0.3, H + 0.2, D + 0.2], [0, H / 2, 0]);
   }
 }

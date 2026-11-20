@@ -204,7 +204,7 @@ export function createScreen(): Screen {
     logo(W / 2, H / 2 - 30, 150);
     ctx.fillStyle = 'rgba(12,14,22,0.85)';
     ctx.fillRect(0, H - 52, W, 52);
-    [P.cyan, P.yellow, P.green, '#ff7a59'].forEach((c, i) => roundRect(W / 2 - 92 + i * 48, H - 42, 32, 32, 8, c));
+    [P.cyan, P.yellow, P.green, '#ff7a59'].forEach((c, i) => { roundRect(W / 2 - 92 + i * 48, H - 42, 32, 32, 8, c); });
     text('12:00', W - 24, H - 26, 22, P.text, { align: 'right', weight: 600 });
   }
 

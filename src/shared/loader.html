@@ -46,12 +46,12 @@
     <div class="ld-burst"></div>
     <span class="ld-word">DIY</span>
     <div class="ld-orbit">
-      <svg class="ld-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg>
+      <svg class="ld-wrench" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg>
     </div>
   </div>
   <p class="ld-cap">__VERB__ <b>__WHAT__</b><i></i></p>
 </div>
-<script>setTimeout(function () { var l = document.getElementById('loader'); if (l) l.classList.add('done'); }, 15000);</script>
+<script>setTimeout(() => document.getElementById('loader')?.classList.add('done'), 15000);</script>
 <noscript>
   <style>#loader { display: none; }</style>
   <p style="max-width: 36rem; margin: 15vh auto; padding: 0 16px; color: var(--text); font: 1.1rem/1.5 system-ui, sans-serif">The DIY workshops are interactive 3D scenes, so they need JavaScript. Turn it on and reload to start fixing.</p>

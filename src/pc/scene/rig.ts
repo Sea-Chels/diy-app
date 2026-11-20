@@ -59,8 +59,8 @@ export function buildRig(s: Setup): Rig {
     glass: (k) => (glassPivot.rotation.y = -1.3 * k),
     cooler: (k) => {
       coolerG.position.set(-150 * k, 34 * Math.sin(k * Math.PI * 0.5), 0);
-      if (aioTubes.length) aioTubes.forEach((t) => setTube(t, coolerG.position));
-      loopCpuTubes.forEach((m) => (m.visible = k < 0.05));
+      if (aioTubes.length) aioTubes.forEach((t) => { setTube(t, coolerG.position); });
+      loopCpuTubes.forEach((m) => { m.visible = k < 0.05; });
     },
     heatsink: (k) => {
       sinkG.position.set(-55 * k, 20 * Math.sin(k * Math.PI), 0);

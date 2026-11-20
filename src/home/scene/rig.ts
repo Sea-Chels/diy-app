@@ -139,7 +139,7 @@ export function buildRig(s: Setup): Rig {
     views,
     overview,
     setLid,
-    setLook: (n) => looks.forEach((f) => f(n)),
+    setLook: (n) => looks.forEach((f) => { f(n); }),
     poke(id) {
       if (id === 'sink') pokedDrips = 5;
       else if (id === 'lights') {
@@ -201,7 +201,7 @@ export function buildRig(s: Setup): Rig {
       const hot = t - burnAt < 3;
       for (const b of burners) b.material = hot ? burnerHot : burnerCold;
       const jg = t - jiggleAt;
-      knobs.forEach((k) => (k.rotation.x = jg < 0.8 ? Math.sin(jg * 30) * 0.3 * (1 - jg / 0.8) : 0));
+      knobs.forEach((k) => { k.rotation.x = jg < 0.8 ? Math.sin(jg * 30) * 0.3 * (1 - jg / 0.8) : 0; });
       if (!reducedMotion() || fl < 6 || jg < 0.8) return 'casters';
       return drops.length > 0 || dripsDue.length > 0 || hot ? 'picture' : false;
     },

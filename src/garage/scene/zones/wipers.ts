@@ -35,7 +35,7 @@ export function buildWipers(c: CarCtx) {
       tag: 'wipe',
       update: (k) => {
         const a = 0.5 - 0.5 * Math.cos(k * Math.PI * 4); // two full sweeps
-        wipeArms.forEach((arm, i) => (arm.rotation.y = WIPER_REST - 1.3 * Math.max(0, a - i * 0.03)));
+        wipeArms.forEach((arm, i) => { arm.rotation.y = WIPER_REST - 1.3 * Math.max(0, a - i * 0.03); });
       },
     });
   return { wipeZ, wipe };

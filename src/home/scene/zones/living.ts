@@ -88,7 +88,7 @@ export function buildLights(c: HomeCtx) {
     const C = 0.2;
     // Drywall underside with a hole for the box, then joist-cut sides and a cut top.
     const sh = new THREE.Shape();
-    [[-C, -C], [C, -C], [C, C], [-C, C]].forEach(([x, y], i) => (i ? sh.lineTo(x, y) : sh.moveTo(x, y)));
+    [[-C, -C], [C, -C], [C, C], [-C, C]].forEach(([x, y], i) => { if (i) sh.lineTo(x, y); else sh.moveTo(x, y); });
     const hole = new THREE.Path();
     hole.absarc(0, 0, 0.078, 0, Math.PI * 2, true);
     sh.holes.push(hole);
@@ -287,7 +287,7 @@ export function buildFloorCutaway(c: HomeCtx) {
     }
     look((n) => {
       for (const m of unders) m.color.setHex(under(n));
-      tops.forEach((m, i) => remap(m, plankTex(n, i)));
+      tops.forEach((m, i) => { remap(m, plankTex(n, i)); });
     });
     lidHooks.planks = (k) => planks.forEach((g, i) => {
       g.rotation.z = [0.32, 0.5, 0.22][i] * k;
