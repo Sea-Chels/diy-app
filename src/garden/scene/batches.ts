@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { outline, type InkWeight } from '../../shared/toon';
 import { tag } from '../../shared/scene/sceneTags';
+import { TONE } from '../../shared/theme';
 
 interface Batch {
   parent: THREE.Object3D;
@@ -27,7 +28,7 @@ export class Batches {
       this.batches.set(key, b);
     }
     b.matrices.push(matrix);
-    b.colors.push(new THREE.Color(o.color ?? 0xffffff));
+    b.colors.push(new THREE.Color(o.color ?? TONE.white));
   }
 
   flush(): void {

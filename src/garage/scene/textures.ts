@@ -1,6 +1,6 @@
 import type * as THREE from 'three';
-import { canvasTex, label, mapped, stripes } from '../../shared/scene/kit';
-import { cssHex, PALETTE } from '../../shared/theme';
+import { canvasTex, label, stripes, textured } from '../../shared/scene/kit';
+import { cssHex, PALETTE, TONE } from '../../shared/theme';
 import { C } from './kit';
 import { tag } from '../../shared/scene/sceneTags';
 
@@ -44,7 +44,7 @@ export const tireTex = once(() =>
 );
 
 export const plateTex = once(() => label([{ text: 'DIY·4U', size: 46, color: PALETTE.ink }, { text: 'GARAGE STATE', size: 15, color: '#2b6cb0' }], '#e8f2ff', 256, 80));
-export const plateMat = () => mapped(0xffffff, plateTex(), { shine: 0.5, halftone: 0.3 });
+export const plateMat = () => textured(plateTex(), { shine: 0.5, halftone: 0.3 });
 /** The MX-5's oval mouth: grille mesh inside a stadium outline, transparent outside it. */
 export const mouthTex = once(() =>
   canvasTex(512, 96, (ctx) => {
@@ -62,7 +62,7 @@ export const mouthTex = once(() =>
 );
 export const radiatorTex = once(() => stripes([60, 1], '#8a91a2', '#2b2f3a'));
 export const seatTex = once(() => stripes([1, 5], '#47434f', '#34313d'));
-export const engineLabel = once(() => label([{ text: 'DIY', size: 64, color: '#e6ecf5' }, { text: '2.0 · 16V', size: 22, color: PALETTE.cyan }], cssHex(C.cover), 256, 128));
+export const engineLabel = once(() => label([{ text: 'DIY', size: 64, color: '#e6ecf5' }, { text: '2.0 · 16V', size: 22, color: PALETTE.cyan }], cssHex(TONE.cover), 256, 128));
 export const batteryLabel = once(() => label([{ text: '12V', size: 52, color: PALETTE.ink }, { text: 'DIY POWER', size: 20, color: PALETTE.ink }], PALETTE.yellow, 256, 128));
 export const fuseLabel = once(() => label([{ text: 'FUSE', size: 44, color: '#e6ecf5' }, { text: '· RELAY ·', size: 20, color: PALETTE.muted }], cssHex(C.darkPart), 256, 128));
 

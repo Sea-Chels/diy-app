@@ -8,7 +8,7 @@ import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
-import { hex } from './theme';
+import { hex, TONE } from './theme';
 import { tag, tagOf } from './scene/sceneTags';
 
 export const INK = hex('ink');
@@ -127,7 +127,7 @@ export function toon(color: THREE.ColorRepresentation, o: ToonOpts = {}): THREE.
   const m = new THREE.MeshToonMaterial({
     color,
     gradientMap: gradientMap(),
-    emissive: o.emissive ?? 0x000000,
+    emissive: o.emissive ?? TONE.black,
     emissiveIntensity: o.emissiveIntensity ?? 1,
     side: o.side ?? THREE.FrontSide,
   });
@@ -157,8 +157,8 @@ export function glass(o: { tint?: THREE.ColorRepresentation; streak?: THREE.Colo
     depthWrite: false,
     side: THREE.DoubleSide,
     uniforms: {
-      uTint: { value: new THREE.Color(o.tint ?? 0x29285c) },
-      uStreak: { value: new THREE.Color(o.streak ?? 0xc3b8ff) },
+      uTint: { value: new THREE.Color(o.tint ?? TONE.glassTint) },
+      uStreak: { value: new THREE.Color(o.streak ?? TONE.glassStreak) },
       uAlpha: { value: o.alpha ?? 0.58 },
       uStreaks: { value: o.streaks ?? 1 },
     },

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { add, jitter, tube, UNIT_BOX, V } from '../../../shared/scene/kit';
 import type { GardenCtx } from '../ctx';
 import { MAT } from '../../../shared/scene/materials';
+import { TONE } from '../../../shared/theme';
 
 export function buildGround(c: GardenCtx) {
   const { r, root, M, inst } = c;
@@ -37,7 +38,7 @@ export function buildGround(c: GardenCtx) {
   const stones = new THREE.Group();
   stones.userData.batchRoot = true;
   root.add(stones);
-  const stone = (x: number, z: number) => inst(stones, UNIT_BOX, M.stone, [x + jitter(r, 0.02), 0.025, z + jitter(r, 0.02)], [0.44, 0.05, 0.44], new THREE.Color(0xffffff).offsetHSL(0, 0, jitter(r, 0.05)), [0, jitter(r, 0.08), 0]);
+  const stone = (x: number, z: number) => inst(stones, UNIT_BOX, M.stone, [x + jitter(r, 0.02), 0.025, z + jitter(r, 0.02)], [0.44, 0.05, 0.44], new THREE.Color(TONE.white).offsetHSL(0, 0, jitter(r, 0.05)), [0, jitter(r, 0.08), 0]);
   for (let z = 4.4; z > -1.7; z -= 0.56) if (Math.abs(z - 1.25) > 0.3) stone(0, z);
   for (let x = -3.6; x < 4.2; x += 0.56) stone(x, 1.25);
 }

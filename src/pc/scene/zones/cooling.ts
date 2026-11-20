@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { lerp } from '../../../shared/tween';
 import { outline, reshape } from '../../../shared/toon';
-import { add, mapped } from '../../../shared/scene/kit';
-import { PALETTE } from '../../../shared/theme';
+import { add, mapped, textured } from '../../../shared/scene/kit';
+import { PALETTE, TONE } from '../../../shared/theme';
 import { T } from '../layout';
 import { label, stripes, bentPath } from '../kit';
 import type { PcCtx } from '../ctx';
@@ -34,7 +34,7 @@ export function buildCooling(c: PcCtx, shell: CaseShell, board: Board, gpu: Gpu)
   const loopCpuTubes: THREE.Mesh[] = [];
 
   function radiator(): void {
-    const core = rbox(120, 27, radL - 28, mapped(0xb7bdcc, stripes([1, radL / 4], '#9aa1b2', '#2b2f3a'), { shine: 0.3 }), cg, { at: [radX, radY, (radZ0 + radZ1) / 2], r: 1.5, ink: 'body' });
+    const core = rbox(120, 27, radL - 28, mapped(TONE.silver, stripes([1, radL / 4], '#9aa1b2', '#2b2f3a'), { shine: 0.3 }), cg, { at: [radX, radY, (radZ0 + radZ1) / 2], r: 1.5, ink: 'body' });
     const tanks = [radZ0 + 7, radZ1 - 7].map((z) => rbox(124, 31, 14, mats.darkMetal, cg, { at: [radX, radY, z], r: 3, ink: 'body' }));
     cl.push(core, ...tanks);
     const n = Math.floor((radL - 20) / 120);
@@ -51,15 +51,15 @@ export function buildCooling(c: PcCtx, shell: CaseShell, board: Board, gpu: Gpu)
     cl.push(rbox(8, 46, 46, mats.copper, coolerG, { at: [sk.x - 12, sk.y, sk.z], r: 1.5 }));
     for (const dz of [-15, -5, 5, 15]) cl.push(cylX(3.2, 140, mats.copper, coolerG, { at: [sk.x - 84, sk.y + (dz % 10 === 5 ? 18 : -18), sk.z + dz], seg: 12 }));
     const stackLen = 108;
-    const fins = rbox(stackLen, 122, 54, mapped(0xc4cad6, stripes([22, 1], '#d4d9e3', '#6f7688'), { shine: 0.5, metal: 0.4 }), coolerG, { at: [sk.x - 42 - stackLen / 2, sk.y, sk.z], ink: 'body' });
-    const cap = rbox(6, 126, 58, mapped(0xffffff, label([{ text: 'DIY', size: 44, color: PALETTE.ink }], '#d8dce6', 128, 256)), coolerG, { at: [sk.x - 153, sk.y, sk.z], r: 2.5, ink: 'body' });
+    const fins = rbox(stackLen, 122, 54, mapped(TONE.steel, stripes([22, 1], '#d4d9e3', '#6f7688'), { shine: 0.5, metal: 0.4 }), coolerG, { at: [sk.x - 42 - stackLen / 2, sk.y, sk.z], ink: 'body' });
+    const cap = rbox(6, 126, 58, textured(label([{ text: 'DIY', size: 44, color: PALETTE.ink }], '#d8dce6', 128, 256)), coolerG, { at: [sk.x - 153, sk.y, sk.z], r: 2.5, ink: 'body' });
     const f = fan(120, coolerG, { ring: s.rgb !== 'off', boost: 'cooler', phase: 0.2 });
     f.position.set(sk.x - 96, sk.y, sk.z + 27 + 13);
     cl.push(fins, cap, f);
     coolerTop.x = sk.x - 156;
   } else if (s.cooling === 'aio' || s.size === 'itx') {
     cl.push(cylX(34, 34, mats.darkMetal, coolerG, { at: [sk.x - 21, sk.y, sk.z], seg: 40, ink: 'body' }));
-    const capMat = mapped(0xffffff, label([{ text: 'DIY', size: 96, color: PALETTE.text }], '#1b1a23', 256, 256));
+    const capMat = textured(label([{ text: 'DIY', size: 96, color: PALETTE.text }], '#1b1a23', 256, 256));
     const capMesh = cylX(29, 3, capMat, coolerG, { at: [sk.x - 39, sk.y, sk.z], seg: 40 });
     cl.push(capMesh);
     const ring = new THREE.Mesh(new THREE.TorusGeometry(31.5, 2.8, 8, 56), rgb(0.4));

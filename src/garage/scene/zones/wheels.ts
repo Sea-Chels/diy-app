@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
-import { add, mapped } from '../../../shared/scene/kit';
+import { add, textured } from '../../../shared/scene/kit';
 import { C, M, rbox } from '../kit';
 import { tireTex } from '../textures';
 import type { CarCtx } from '../ctx';
+import { TONE } from '../../../shared/theme';
 
 export function buildWheels(c: CarCtx) {
   const { S, group, tag } = c;
@@ -32,7 +33,7 @@ export function buildWheels(c: CarCtx) {
     wg.position.set(side * S.track, R, z);
     group.add(wg);
     const face = side * (W / 2 - 0.03);
-    wheelMeshes.push(add(tireGeom, mapped(0xffffff, tireTex(), { shine: 0.15 }), wg, { ink: 'body' }));
+    wheelMeshes.push(add(tireGeom, textured(tireTex(), { shine: 0.15 }), wg, { ink: 'body' }));
     const barrel = new THREE.CylinderGeometry(0.63 * R, 0.63 * R, W * 0.8, 28, 1, true);
     barrel.rotateZ(Math.PI / 2);
     add(barrel, toon(C.barrel, { side: THREE.DoubleSide, halftone: 0.6 }), wg, { ink: null });
@@ -61,7 +62,7 @@ export function buildWheels(c: CarCtx) {
     const hat = new THREE.CylinderGeometry(0.27 * R, 0.27 * R, 0.04, 24);
     hat.rotateZ(Math.PI / 2);
     brakeMeshes.push(add(hat, toon(C.barrel, { metal: 0.5 }), wg, { at: [side * 0.01, 0, 0], ink: null }));
-    const caliper = add(rbox(0.07, 0.17, 0.12, 0.03), toon(C.caliper, { shine: 0.6 }), wg, { at: [side * 0.03, 0.26 * R, -0.28 * R] });
+    const caliper = add(rbox(0.07, 0.17, 0.12, 0.03), toon(TONE.brightRed, { shine: 0.6 }), wg, { at: [side * 0.03, 0.26 * R, -0.28 * R] });
     caliper.rotation.x = 0.6;
     brakeMeshes.push(caliper);
   }

@@ -1,9 +1,11 @@
 import * as THREE from 'three';
-import { add, box, canvasTex, jitter, mapped, speckle, UNIT_BOX, V } from '../../../shared/scene/kit';
+import { add, box, canvasTex, jitter, speckle, UNIT_BOX, V, textured } from '../../../shared/scene/kit';
 import { alyssum, beeBalm, cosmos, echinacea, zinnia } from '../plants/flowers';
 import { basil, sunflower } from '../plants/fruiting';
 import { chamomile, chives, lavender, marshmallow, rosemary, sage, thyme } from '../plants/herbs';
 import type { GardenCtx } from '../ctx';
+import { C } from '../palette';
+import { TONE, hex } from '../../../shared/theme';
 
 export function buildHerbSpiral(c: GardenCtx) {
   const { r, k, M, area, pick, inst, tag } = c;
@@ -48,7 +50,7 @@ export function buildHerbSpiral(c: GardenCtx) {
       sg.setAttribute('uv', new THREE.Float32BufferAttribute(posA.flatMap((_, q) => (q % 3 === 0 ? [posA[q], posA[q + 2]] : [])), 2));
       sg.setIndex(idx);
       sg.computeVertexNormals();
-      add(sg, mapped(0xffffff, speckle('#4a3222', ['#3a2618', '#5d4030', '#2c1c12', '#6a4a35'], 900, [2, 5], [1, 1], 4), { side: THREE.DoubleSide }), herbs, { ink: null });
+      add(sg, textured(speckle('#4a3222', ['#3a2618', '#5d4030', '#2c1c12', '#6a4a35'], 900, [2, 5], [1, 1], 4), { side: THREE.DoubleSide }), herbs, { ink: null });
     }
     const n = 48;
     for (let i = 0; i < n; i++) {
@@ -58,7 +60,7 @@ export function buildHerbSpiral(c: GardenCtx) {
       const courses = Math.max(1, Math.round(wall(t) / 0.11));
       for (let c = 0; c < courses; c++) {
         const y = 0.055 + c * 0.11;
-        inst(herbs, UNIT_BOX, M.stone, [Math.cos(a) * rr, y, Math.sin(a) * rr], [0.17, 0.1, 0.12], new THREE.Color(0xffffff).offsetHSL(0.02 * jitter(r, 1), 0, jitter(r, 0.1)), [jitter(r, 0.05), -a + Math.PI / 2 + jitter(r, 0.15), jitter(r, 0.05)]);
+        inst(herbs, UNIT_BOX, M.stone, [Math.cos(a) * rr, y, Math.sin(a) * rr], [0.17, 0.1, 0.12], new THREE.Color(TONE.white).offsetHSL(0.02 * jitter(r, 1), 0, jitter(r, 0.1)), [jitter(r, 0.05), -a + Math.PI / 2 + jitter(r, 0.15), jitter(r, 0.05)]);
       }
     }
     // Herbs from the dry top to the moist bottom.
@@ -95,11 +97,11 @@ export function buildPollinators(c: GardenCtx) {
   {
     add(new THREE.CircleGeometry(1.3, 28), M.soil, pollinators, { at: [0, 0.008, 0], rot: [-Math.PI / 2, 0, 0], ink: null }).castShadow = false;
     for (let i = 0; i < 4; i++) sunflower(k, pollinators, V(-0.75 + i * 0.5, 0, -0.55 + jitter(r, 0.1)), Math.PI / 2 - 0.3 + jitter(r, 0.3));
-    const zc = [0xff3d7f, 0xff8a2a, 0xffd23f, 0xd83a5a, 0xff6ad8];
+    const zc = [C.pink.zinnia, C.orange.turning, hex('yellow'), C.red.zinnia, C.pink.zinniaLight];
     for (let i = 0; i < 6; i++) zinnia(k, pollinators, V(-0.9 + i * 0.36, 0, 0.15 + jitter(r, 0.1)), zc[i % zc.length]);
-    for (let i = 0; i < 4; i++) cosmos(k, pollinators, V(-0.7 + i * 0.45, 0, 0.65 + jitter(r, 0.1)), [0xff8ad8, 0xffffff, 0xd84a9a][i % 3]);
-    beeBalm(k, pollinators, V(-1.0, 0, 0.45), 0xe0283f);
-    beeBalm(k, pollinators, V(0.95, 0, 0.5), 0xa04ad0);
+    for (let i = 0; i < 4; i++) cosmos(k, pollinators, V(-0.7 + i * 0.45, 0, 0.65 + jitter(r, 0.1)), [C.pink.cosmos, TONE.white, C.pink.cosmosDeep][i % 3]);
+    beeBalm(k, pollinators, V(-1.0, 0, 0.45), C.red.beeBalm);
+    beeBalm(k, pollinators, V(0.95, 0, 0.5), C.purple.beeBalm);
     for (let i = 0; i < 3; i++) echinacea(k, pollinators, V(-0.45 + i * 0.45 + jitter(r, 0.06), 0, 0.98 + jitter(r, 0.06)));
     for (let i = 0; i < 5; i++) {
       const a = Math.PI * (0.2 + i * 0.15);
@@ -114,7 +116,7 @@ export function buildPollinators(c: GardenCtx) {
     const roofG = new THREE.CylinderGeometry(0.01, 0.3, 0.14, 4, 1);
     roofG.rotateY(Math.PI / 4);
     add(roofG, M.roof, hotel, { at: [0, 1.64, 0], scale: [1, 1, 0.7] });
-    const holes = mapped(0xffffff, canvasTex(64, 64, (ctx) => {
+    const holes = textured(canvasTex(64, 64, (ctx) => {
       ctx.fillStyle = '#d8b878';
       ctx.fillRect(0, 0, 64, 64);
       for (let y = 4; y < 64; y += 8) for (let x = 4 + ((y / 8) % 2) * 4; x < 64; x += 8) {

@@ -1,14 +1,15 @@
 import * as THREE from 'three';
 import { leafMatrix, range, jitter, tube } from '../../../shared/scene/kit';
 import { V, UP, SPHERE, CAPSULE, flowerGeo, type PlantKit, plantGroup, put, faceM, ballM, vary, outUp, G, WIND } from './kit';
+import { C } from '../palette';
 
 export function pawpaw(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3): THREE.Group {
   const g = plantGroup(parent, p, k.r() * 6.28);
   const s = k.season;
   const H = 3.1;
-  const bark = k.stem(0x6b5b55);
+  const bark = k.stem(C.wood.bark);
   tube([V(0, 0, 0), V(0.03, H * 0.4, 0), V(-0.02, H * 0.75, 0.02), V(0, H, 0)], 0.075, bark, g, { wind: WIND, taper: 0.75, radial: 8 });
-  const leafCol = s === 'fall' ? 0xf0c43a : s === 'spring' ? 0x86c45a : 0x3f8b3a;
+  const leafCol = s === 'fall' ? C.yellow.fall : s === 'spring' ? C.green.springLeaf : C.green.shrubLeaf;
   const tiers = [[0.95, 4, 1.15], [1.45, 4, 1.0], [1.95, 4, 0.82], [2.45, 3, 0.6], [2.85, 3, 0.4]] as const;
   let bi = 0;
   for (const [h, n, len] of tiers) {
@@ -33,7 +34,7 @@ export function pawpaw(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3): T
         // Maroon, three-petalled bells hang along bare wood before the leaves fill in.
         for (let j = 0; j < 3; j++) {
           const at = curve.getPointAt(0.3 + j * 0.2).add(V(0, -0.03, 0));
-          put(k, g, flowerGeo(6, 0.35, -0.5, 0.9), k.plain, faceM(at, V(0, -1, 0.2), 0.035, k.r() * 6), 0x6e1a2a, 'body');
+          put(k, g, flowerGeo(6, 0.35, -0.5, 0.9), k.plain, faceM(at, V(0, -1, 0.2), 0.035, k.r() * 6), C.red.currant, 'body');
         }
       } else if (i % 2 === 0 && h < 2.6) {
         const at = curve.getPointAt(0.55);
@@ -41,7 +42,7 @@ export function pawpaw(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3): T
         for (let f = 0; f < n2; f++) {
           const fa = (f / n2) * 6.28;
           const fp = at.clone().add(V(Math.cos(fa) * 0.06, -0.2, Math.sin(fa) * 0.06));
-          put(k, g, CAPSULE, k.shiny, leafMatrix(fp, V(Math.cos(fa) * 0.4, 1, Math.sin(fa) * 0.4), V(1, 0, 0), 0.05, 0.045, 0.045), s === 'fall' ? 0xc7cf48 : 0x86b83f, 'body');
+          put(k, g, CAPSULE, k.shiny, leafMatrix(fp, V(Math.cos(fa) * 0.4, 1, Math.sin(fa) * 0.4), V(1, 0, 0), 0.05, 0.045, 0.045), s === 'fall' ? C.yellow.gooseberry : C.green.gooseberry, 'body');
         }
       }
     }
@@ -51,7 +52,7 @@ export function pawpaw(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3): T
 
 export function goji(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3): THREE.Group {
   const g = plantGroup(parent, p, k.r() * 6.28);
-  const cane = k.stem(0xa89a7a);
+  const cane = k.stem(C.wood.cane);
   const canes = 9;
   for (let c = 0; c < canes; c++) {
     const a = (c / canes) * 6.28 + jitter(k.r, 0.3);
@@ -64,12 +65,12 @@ export function goji(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3): THR
       const t = 0.2 + 0.8 * (i / 24);
       const at = curve.getPointAt(t);
       for (let j = 0; j < 3; j++) {
-        put(k, g, G.lance, k.leaf, leafMatrix(at, outUp(k.r() * 6.28, range(k.r, -0.4, 0.5)), UP, range(k.r, 0.07, 0.095)), vary(k, 0x5c8f4a, 0.06));
+        put(k, g, G.lance, k.leaf, leafMatrix(at, outUp(k.r() * 6.28, range(k.r, -0.4, 0.5)), UP, range(k.r, 0.07, 0.095)), vary(k, C.green.cane, 0.06));
       }
       if (t > 0.5 && k.season !== 'spring' && i % (k.season === 'fall' ? 1 : 3) === 0) {
-        put(k, g, CAPSULE, k.shiny, leafMatrix(at.clone().add(V(jitter(k.r, 0.03), -0.03, jitter(k.r, 0.03))), V(jitter(k.r, 0.3), 1, jitter(k.r, 0.3)), V(1, 0, 0), 0.011, 0.01, 0.011), 0xff3a1c);
+        put(k, g, CAPSULE, k.shiny, leafMatrix(at.clone().add(V(jitter(k.r, 0.03), -0.03, jitter(k.r, 0.03))), V(jitter(k.r, 0.3), 1, jitter(k.r, 0.3)), V(1, 0, 0), 0.011, 0.01, 0.011), C.red.raspberry);
       }
-      if (k.season === 'summer' && i % 4 === 1) put(k, g, flowerGeo(5, 0.25, 0.2), k.plain, faceM(at, outUp(k.r() * 6.28, 0.4), 0.012), 0x9358cf);
+      if (k.season === 'summer' && i % 4 === 1) put(k, g, flowerGeo(5, 0.25, 0.2), k.plain, faceM(at, outUp(k.r() * 6.28, 0.4), 0.012), C.purple.raspberry);
     }
   }
   return g;
@@ -77,8 +78,8 @@ export function goji(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3): THR
 
 export function blueberry(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3): THREE.Group {
   const g = plantGroup(parent, p, k.r() * 6.28);
-  const wood = k.stem(0x8a5a4a);
-  const leafCol = k.season === 'fall' ? 0xc2372b : 0x3b7a4b;
+  const wood = k.stem(C.wood.blueberry);
+  const leafCol = k.season === 'fall' ? C.red.blueberryFall : C.green.blueberry;
   for (let c = 0; c < 6; c++) {
     const a = (c / 6) * 6.28 + jitter(k.r, 0.3);
     const h = range(k.r, 0.75, 1.0);
@@ -92,8 +93,8 @@ export function blueberry(k: PlantKit, parent: THREE.Object3D, p: THREE.Vector3)
       if (i % 7 === 3) {
         for (let b = 0; b < 6; b++) {
           const bp = at.clone().add(V(jitter(k.r, 0.025), -0.025 - k.r() * 0.025, jitter(k.r, 0.025)));
-          if (k.season === 'spring') put(k, g, CAPSULE, k.plain, ballM(bp, 0.008, 0.008, 0.008), 0xfdf3e3);
-          else put(k, g, SPHERE, k.shiny, ballM(bp, 0.013), k.season === 'summer' && b === 5 ? 0xa8c45a : 0x3a4fa8);
+          if (k.season === 'spring') put(k, g, CAPSULE, k.plain, ballM(bp, 0.008, 0.008, 0.008), C.cream.blossom);
+          else put(k, g, SPHERE, k.shiny, ballM(bp, 0.013), k.season === 'summer' && b === 5 ? C.green.berryUnripe : C.blue.blueberry);
         }
       }
     }

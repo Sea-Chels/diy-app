@@ -5,6 +5,8 @@ import { basil } from '../plants/fruiting';
 import { lettuce, strawberry } from '../plants/greens';
 import { UP, UNIT_CYL, BH } from '../geometry';
 import type { GardenCtx } from '../ctx';
+import { C } from '../palette';
+import { TONE } from '../../../shared/theme';
 
 export function buildRainBarrel(c: GardenCtx) {
   const { spigot, root, M, area, pick, inst } = c;
@@ -35,7 +37,7 @@ export function buildRainBarrel(c: GardenCtx) {
       for (const z of [-0.15, 0.25]) {
         const pts = [V(x0 - 1.1, top, z), V(x0 + 1.1, top, z)];
         tube(pts, 0.007, M.drip, beds, { seg: 4, ink: null });
-        for (let i = 0; i < 8; i++) inst(beds, UNIT_CYL, M.drip, [x0 - 1.0 + i * 0.28, top + 0.005, z], [0.012, 0.012, 0.012], 0xffffff, [0, 0, 0], null);
+        for (let i = 0; i < 8; i++) inst(beds, UNIT_CYL, M.drip, [x0 - 1.0 + i * 0.28, top + 0.005, z], [0.012, 0.012, 0.012], TONE.white, [0, 0, 0], null);
       }
     }
   }
@@ -49,12 +51,12 @@ export function buildHydro(c: GardenCtx) {
     // The NFT rack stands on the ground, so its reservoir gets a smaller base beside it.
     const nftMode = s.hydro === 'nft';
     const baseX = nftMode ? -0.82 : 0;
-    for (let row = 0; row < 3; row++) inst(hydro, UNIT_BOX, M.brick, [baseX, 0.06 + row * 0.12, 0], nftMode ? [0.78, 0.12, 0.62] : [1.3, 0.12, 0.7], new THREE.Color(0xffffff).offsetHSL(0, 0, jitter(r, 0.04)));
+    for (let row = 0; row < 3; row++) inst(hydro, UNIT_BOX, M.brick, [baseX, 0.06 + row * 0.12, 0], nftMode ? [0.78, 0.12, 0.62] : [1.3, 0.12, 0.7], new THREE.Color(TONE.white).offsetHSL(0, 0, jitter(r, 0.04)));
     const baseTop = 0.36;
-    const net = toon(0x2a2a2e);
+    const net = toon(C.rubber);
     const cup = (g: THREE.Object3D, p: THREE.Vector3, dir: THREE.Vector3, plant: number) => {
       add(UNIT_CYL, M.pvc, g, { at: [p.x, p.y, p.z], scale: [0.04, 0.07, 0.04], rot: [Math.atan2(dir.z, dir.y), 0, -Math.atan2(dir.x, dir.y)] });
-      inst(g, UNIT_CYL, net, [p.x, p.y + 0.03, p.z], [0.032, 0.02, 0.032], 0xffffff, [0, 0, 0], null);
+      inst(g, UNIT_CYL, net, [p.x, p.y + 0.03, p.z], [0.032, 0.02, 0.032], TONE.white, [0, 0, 0], null);
       const at = V(p.x, p.y + 0.04, p.z);
       if (plant === 0) lettuce(k, hydro, at, { s: 0.6, red: r() > 0.6 });
       else if (plant === 1) strawberry(k, hydro, at);
@@ -101,10 +103,10 @@ export function buildHydro(c: GardenCtx) {
     } else {
       // Deep water culture: a tote with a floating raft and an air pump.
       box(1.2, 0.36, 0.6, M.tote, hydro, { at: [0, baseTop + 0.18, 0], r: 0.03 });
-      box(1.1, 0.04, 0.52, toon(0xf4f4f0), hydro, { at: [0, baseTop + 0.37, 0], r: 0.01 });
+      box(1.1, 0.04, 0.52, toon(TONE.porcelain), hydro, { at: [0, baseTop + 0.37, 0], r: 0.01 });
       for (let i = 0; i < 4; i++) for (let j = 0; j < 2; j++) cup(hydro, V(-0.42 + i * 0.28, baseTop + 0.38, -0.12 + j * 0.24), UP, i === 3 ? 2 : 0);
-      box(0.18, 0.1, 0.12, toon(0x2a2a2e), hydro, { at: [0.75, 0.05, 0.3], r: 0.02 });
-      tube([V(0.75, 0.1, 0.3), V(0.7, 0.4, 0.3), V(0.55, 0.6, 0.25), V(0.4, 0.58, 0.2)], 0.006, toon(0xe8f4ff), hydro, { seg: 20, ink: null });
+      box(0.18, 0.1, 0.12, toon(C.rubber), hydro, { at: [0.75, 0.05, 0.3], r: 0.02 });
+      tube([V(0.75, 0.1, 0.3), V(0.7, 0.4, 0.3), V(0.55, 0.6, 0.25), V(0.4, 0.58, 0.2)], 0.006, toon(C.cream.airline), hydro, { seg: 20, ink: null });
     }
     pick(hydro, [nftMode ? 2.3 : 1.4, 2.4, 0.9], [nftMode ? -0.1 : 0, 1.2, 0]);
   }

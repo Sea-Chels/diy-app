@@ -1,9 +1,11 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
-import { add, box, mapped, range, tube, V } from '../../../shared/scene/kit';
+import { add, box, range, tube, V, textured } from '../../../shared/scene/kit';
 import { X0, Z0, PH, BX } from '../room';
 import { subway } from '../textures';
 import type { HomeCtx } from '../ctx';
+import { C } from '../palette';
+import { TONE } from '../../../shared/theme';
 
 export function buildBathroom(c: HomeCtx) {
   const { r, lidHooks, M, area, pick, slab, pivot, shaker } = c;
@@ -17,11 +19,11 @@ export function buildBathroom(c: HomeCtx) {
     slab([X0, 0, Z0], [BX, 0.5, Z0 + 0.08], M.porcelain, b);
     slab([X0, 0, Z0], [X0 + 0.1, 0.5, Z0 + TD], M.porcelain, b);
     slab([BX - 0.1, 0, Z0], [BX, 0.5, Z0 + TD], M.porcelain, b);
-    slab([X0 + 0.1, 0, Z0 + 0.08], [BX - 0.1, 0.1, Z0 + TD - 0.08], toon(0xeef3f4, { shine: 0.5 }), b, null);
+    slab([X0 + 0.1, 0, Z0 + 0.08], [BX - 0.1, 0.1, Z0 + TD - 0.08], toon(C.tub, { shine: 0.5 }), b, null);
     add(new THREE.CylinderGeometry(0.035, 0.035, 0.006, 16), M.chrome, b, { at: [X0 + 0.3, 0.103, Z0 + TD / 2] });
     add(new THREE.CylinderGeometry(0.035, 0.035, 0.008, 16), M.chrome, b, { at: [X0 + 0.104, 0.36, Z0 + TD / 2], rot: [0, 0, Math.PI / 2] });
     // Tile surround on three sides.
-    const tileM = (w: number, h: number) => mapped(0xffffff, subway([w / 0.3, h / 0.6], '#ffffff', '#b9c4c6'));
+    const tileM = (w: number, h: number) => textured(subway([w / 0.3, h / 0.6], '#ffffff', '#b9c4c6'));
     slab([X0, 0.5, Z0], [BX, 1.85, Z0 + 0.008], tileM(BX - X0, 1.35), b, 'thin');
     slab([X0, 0.5, Z0], [X0 + 0.008, 1.85, Z0 + TD], tileM(TD, 1.35), b, 'thin');
     slab([BX - 0.008, 0.5, Z0], [BX, PH, Z0 + TD], tileM(TD, PH - 0.5), b, 'thin');
@@ -35,7 +37,7 @@ export function buildBathroom(c: HomeCtx) {
     // The caulk bead where the tub meets the tile, going moldy in spots.
     tube([V(X0, 0.505, Z0 + 0.012), V(BX, 0.505, Z0 + 0.012)], 0.007, M.porcelain, b, { seg: 4, ink: null });
     tube([V(X0 + 0.012, 0.505, Z0), V(X0 + 0.012, 0.505, Z0 + TD)], 0.007, M.porcelain, b, { seg: 4, ink: null });
-    const mold = toon(0x4a4f3a);
+    const mold = toon(C.mold);
     for (let i = 0; i < 9; i++) add(new THREE.SphereGeometry(0.008, 6, 4), mold, b, { at: [range(r, X0 + 0.1, BX - 0.1), 0.508, Z0 + 0.016], ink: null });
     pick(b, [X0, 0, Z0], [BX, 1.9, Z0 + TD]);
   }
@@ -62,8 +64,8 @@ export function buildBathroom(c: HomeCtx) {
     tankWater.push(water);
     // Flush valve with its overflow tube and the flapper at the bottom.
     const fx = (tx0 + tx1) / 2 + 0.01;
-    add(new THREE.CylinderGeometry(0.035, 0.035, 0.02, 16), toon(0xdcdcd4), t, { at: [fx, 0.43, TZ - 0.02] });
-    add(new THREE.CylinderGeometry(0.012, 0.012, 0.24, 10), toon(0xdcdcd4), t, { at: [fx - 0.05, 0.54, TZ - 0.02] });
+    add(new THREE.CylinderGeometry(0.035, 0.035, 0.02, 16), toon(C.valve), t, { at: [fx, 0.43, TZ - 0.02] });
+    add(new THREE.CylinderGeometry(0.012, 0.012, 0.24, 10), toon(C.valve), t, { at: [fx - 0.05, 0.54, TZ - 0.02] });
     flapper.position.set(fx - 0.04, 0.445, TZ - 0.02);
     t.add(flapper);
     add(new THREE.CylinderGeometry(0.04, 0.036, 0.016, 18), M.red, flapper, { at: [0.04, 0, 0] });
@@ -76,9 +78,9 @@ export function buildBathroom(c: HomeCtx) {
     tube([V(fx + 0.02, 0.455, TZ - 0.02), V(fx + 0.0, 0.6, TZ - 0.03), V(tx1 - 0.02, 0.715, hz + 0.15)], 0.0025, M.chrome, t, { seg: 12, ink: null });
     // Fill valve with a float cup and the refill tube into the overflow.
     const vz = TZ + 0.14;
-    add(new THREE.CylinderGeometry(0.016, 0.02, 0.27, 12), toon(0x7d8590), t, { at: [fx - 0.02, 0.555, vz] });
-    add(new THREE.CylinderGeometry(0.03, 0.03, 0.06, 14), toon(0x2c2f36), t, { at: [fx - 0.02, 0.6, vz] });
-    add(new THREE.CylinderGeometry(0.022, 0.022, 0.03, 12), toon(0x7d8590), t, { at: [fx - 0.02, 0.7, vz] });
+    add(new THREE.CylinderGeometry(0.016, 0.02, 0.27, 12), toon(TONE.gunmetal), t, { at: [fx - 0.02, 0.555, vz] });
+    add(new THREE.CylinderGeometry(0.03, 0.03, 0.06, 14), toon(TONE.plastic), t, { at: [fx - 0.02, 0.6, vz] });
+    add(new THREE.CylinderGeometry(0.022, 0.022, 0.03, 12), toon(TONE.gunmetal), t, { at: [fx - 0.02, 0.7, vz] });
     tube([V(fx - 0.02, 0.71, vz - 0.02), V(fx - 0.04, 0.74, TZ + 0.06), V(fx - 0.05, 0.68, TZ - 0.02)], 0.004, M.black, t, { seg: 14, ink: null });
     // Lid, lifted when the toilet is open.
     const lid = box(tx1 - tx0 + 0.02, 0.026, tz1 - tz0 + 0.02, M.porcelain, t, { at: [(tx0 + tx1) / 2, 0.793, TZ], r: 0.008 });
@@ -101,7 +103,7 @@ export function buildBathroom(c: HomeCtx) {
     slab([X0 + 0.2, 0.03, TZ - 0.12], [X0 + 0.25, 0.4, TZ + 0.12], M.porcelain, t, 'thin');
     for (const sd of [-1, 1]) add(new THREE.SphereGeometry(0.018, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), M.porcelain, t, { at: [X0 + 0.5, 0.02, TZ + sd * 0.12] });
     add(new THREE.CylinderGeometry(0.01, 0.01, 0.05, 10), M.chrome, t, { at: [X0 + 0.025, 0.17, TZ + 0.14], rot: [0, 0, Math.PI / 2] });
-    box(0.02, 0.012, 0.045, toon(0xd8d8d8, { shine: 0.6 }), t, { at: [X0 + 0.06, 0.17, TZ + 0.14], r: 0.005 });
+    box(0.02, 0.012, 0.045, toon(C.valve, { shine: 0.6 }), t, { at: [X0 + 0.06, 0.17, TZ + 0.14], r: 0.005 });
     tube([V(X0 + 0.05, 0.18, TZ + 0.14), V(X0 + 0.09, 0.28, TZ + 0.15), V(fx - 0.02, 0.39, vz)], 0.006, M.braided, t, { seg: 14 });
     pick(t, [X0, 0, TZ - 0.27], [X0 + 0.7, 0.9, TZ + 0.27]);
   }
@@ -152,7 +154,7 @@ export function buildBathroom(c: HomeCtx) {
     }
     lidHooks.vanityDoors = (k) => doors.forEach((g) => { g.rotation.y = g.userData.sd * 1.7 * k; });
     slab([X0, 1.02, z0 + 0.02], [X0 + 0.03, 1.66, z1 - 0.02], M.walnut, b, 'thin');
-    slab([X0 + 0.03, 1.05, z0 + 0.05], [X0 + 0.034, 1.63, z1 - 0.05], toon(0xcfe3ee, { shine: 1 }), b, null);
+    slab([X0 + 0.03, 1.05, z0 + 0.05], [X0 + 0.034, 1.63, z1 - 0.05], toon(C.mirror, { shine: 1 }), b, null);
     pick(b, [X0, 0, z0 - 0.03], [X0 + 0.58, 1.7, z1 + 0.03]);
   }
   return { TZ, tankWater, flapper, handleArm };

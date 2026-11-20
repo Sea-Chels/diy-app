@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { inkLine } from '../../../shared/toon';
-import { add, mapped } from '../../../shared/scene/kit';
-import { PALETTE } from '../../../shared/theme';
+import { add, mapped, textured } from '../../../shared/scene/kit';
+import { PALETTE, TONE } from '../../../shared/theme';
 import { T } from '../layout';
 import { label, C, stripes } from '../kit';
 import type { PcCtx } from '../ctx';
@@ -31,7 +31,7 @@ export function buildMotherboard(c: PcCtx, shell: CaseShell) {
   cg.add(ioRgb);
   const [vt0, vt1, vtv] = L.vrmTop;
   const vtp = P((vt0 + vt1) / 2, vtv, 10);
-  const vrmTex = () => mapped(C.metal, stripes([1, 10]), { shine: 0.6, metal: 0.5 });
+  const vrmTex = () => mapped(TONE.silver, stripes([1, 10]), { shine: 0.6, metal: 0.5 });
   mb.push(rbox(20, 22, vt1 - vt0, vrmTex(), cg, { at: [vtp.x, vtp.y, vtp.z], r: 2.5, ink: 'body' }));
   const [vsu, vs0, vs1] = L.vrmSide;
   const vsp = P(vsu, (vs0 + vs1) / 2, 10);
@@ -48,7 +48,7 @@ export function buildMotherboard(c: PcCtx, shell: CaseShell) {
   if (L.chipset) {
     const [u0, u1, v0, v1] = L.chipset;
     const p = P((u0 + u1) / 2, (v0 + v1) / 2, 6);
-    const chip = rbox(12, v1 - v0, u1 - u0, mapped(0xffffff, label([{ text: 'DIY', size: 64, color: PALETTE.text }, { text: 'B650', size: 30, color: PALETTE.cyan }], '#3c4252')), cg, { at: [p.x, p.y, p.z], r: 3, ink: 'body' });
+    const chip = rbox(12, v1 - v0, u1 - u0, textured(label([{ text: 'DIY', size: 64, color: PALETTE.text }, { text: 'B650', size: 30, color: PALETTE.cyan }], '#3c4252')), cg, { at: [p.x, p.y, p.z], r: 3, ink: 'body' });
     mb.push(chip);
   }
   if (L.sata) {
@@ -70,7 +70,7 @@ export function buildMotherboard(c: PcCtx, shell: CaseShell) {
     cylX(7.5, 1.4, mats.paste, cg, { at: [sk.x - 8, sk.y, sk.z], seg: 24 }),
   ];
   const tri = new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(7, 0), new THREE.Vector2(0, 7)]);
-  const triMesh = new THREE.Mesh(new THREE.ShapeGeometry(tri), new THREE.MeshBasicMaterial({ color: 0xd9b45a }));
+  const triMesh = new THREE.Mesh(new THREE.ShapeGeometry(tri), new THREE.MeshBasicMaterial({ color: C.gold }));
   triMesh.rotation.y = -Math.PI / 2;
   triMesh.position.set(sk.x - 7.6, sk.y - 19, sk.z - 19);
   cg.add(triMesh);
@@ -108,7 +108,7 @@ export function buildMotherboard(c: PcCtx, shell: CaseShell) {
   ];
   const sinkG = new THREE.Group();
   cg.add(sinkG);
-  const sink = rbox(8, 27, m1 - m0 + 6, mapped(0x9aa3b4, stripes([16, 1], '#aeb5c4', '#6b7284'), { shine: 0.6, metal: 0.5 }), sinkG, { at: [m2c.x - 8, m2c.y, m2c.z], r: 2.5, ink: 'body' });
+  const sink = rbox(8, 27, m1 - m0 + 6, mapped(TONE.toolSteel, stripes([16, 1], '#aeb5c4', '#6b7284'), { shine: 0.6, metal: 0.5 }), sinkG, { at: [m2c.x - 8, m2c.y, m2c.z], r: 2.5, ink: 'body' });
   hot('m2', m2Stick, ...m2Chips, sink);
 
   const cmosG = new THREE.Group();

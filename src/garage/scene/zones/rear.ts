@@ -5,6 +5,7 @@ import { C, M, rbox } from '../kit';
 import { plateMat } from '../textures';
 import type { CarCtx } from '../ctx';
 import type { Trunk } from './trunk';
+import { TONE } from '../../../shared/theme';
 
 export function buildRear(c: CarCtx, trunk: Trunk) {
   const { S, group, paint, tag, lowerTop, lowerBottom, sideX } = c;
@@ -15,7 +16,7 @@ export function buildRear(c: CarCtx, trunk: Trunk) {
     if (S.suv) continue; // built with the liftgate
     const mat = M.lamp(C.taillight, 0.6);
     tails.push(add(rbox(0.42, 0.11, 0.06, 0.03), mat, group, { at: [side * 0.56, tailTop - 0.1, S.tailZ + 0.0], ink: 'body' }));
-    tails.push(add(rbox(0.1, 0.07, 0.02, 0.01), toon(C.reverse, { shine: 0.8, halftone: 0 }), group, { at: [side * 0.42, tailTop - 0.1, S.tailZ - 0.03], ink: null }));
+    tails.push(add(rbox(0.1, 0.07, 0.02, 0.01), toon(TONE.coolWhite, { shine: 0.8, halftone: 0 }), group, { at: [side * 0.42, tailTop - 0.1, S.tailZ - 0.03], ink: null }));
     tails.push(add(rbox(0.3, 0.012, 0.02, 0.004), toon(C.lampBezel), group, { at: [side * 0.6, tailTop - 0.1, S.tailZ - 0.03], ink: null }));
   }
   for (const side of [1, -1]) {

@@ -7,6 +7,7 @@ import type { RideRig } from './parts3d';
 import { viewFrom } from '../../shared/scene/rigKit';
 import type { BikePart } from '../data/parts';
 import { add } from '../../shared/scene/kit';
+import { TONE } from '../../shared/theme';
 
 /** Kickstand lean, toward the rider's left (+x). */
 const LEAN = -0.1;
@@ -29,7 +30,7 @@ export function buildBike(): RideRig<BikePart> {
     body.add(w);
     tireMeshes.push(add(tire(R, 0.018), M.rubber(), w));
     tireMeshes.push(add(onAxle(new THREE.TorusGeometry(R - 0.03, 0.009, 8, 48), 'z').scale(1.6, 1, 1), M.metal(), w));
-    add(spokes(28, 0.024, 0.028, R - 0.036, 0.0018), toon(C.spoke, { shine: 0.6, halftone: 0 }), w, { ink: null });
+    add(spokes(28, 0.024, 0.028, R - 0.036, 0.0018), toon(TONE.steel, { shine: 0.6, halftone: 0 }), w, { ink: null });
     add(onAxle(new THREE.CylinderGeometry(0.02, 0.02, 0.1, 14)), M.metal(), w);
   }
   tag('bike_tire', ...tireMeshes);
@@ -81,7 +82,7 @@ export function buildBike(): RideRig<BikePart> {
   const guide = { c: [RZ - 0.015, R - 0.105] as [number, number], r: 0.024, wrap: -1 as const };
   const tension = { c: [RZ + 0.02, R - 0.19] as [number, number], r: 0.024, wrap: 1 as const };
   const chainMeshes = [
-    add(chain([ring, cog, guide, tension] as Pulley[], CX, 0.006), toon(C.chain, { shine: 0.6, metal: 0.5 }), body),
+    add(chain([ring, cog, guide, tension] as Pulley[], CX, 0.006), toon(TONE.gunmetal, { shine: 0.6, metal: 0.5 }), body),
     add(onAxle(new THREE.TorusGeometry(0.098, 0.01, 6, 40), 'z').scale(0.4, 1, 1), M.metal(), body, { at: [CX - 0.004, BB[1], BB[2]] }),
   ];
   for (let i = 0; i < 5; i++) {

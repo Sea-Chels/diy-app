@@ -10,6 +10,7 @@ import { easeInOutCubic, lerp, tweenScope } from '../../shared/tween';
 import { disposeTree } from '../../shared/toon';
 import { reducedMotion } from '../../shared/motion';
 import { remap, type V3 } from '../../shared/scene/kit';
+import { TONE } from '../../shared/theme';
 import type { StageRig, View } from '../../shared/scene/stage';
 import { createBeacons, createLids, viewFrom, rigClock } from '../../shared/scene/rigKit';
 import { findMovers, mergeInk, moves } from '../../shared/scene/ink';
@@ -122,7 +123,7 @@ export function buildRig(s: Setup): Rig {
   const ovP = ovT.clone().addScaledVector(new THREE.Vector3(-0.62, 0.4, 1).normalize(), 1900 * Math.max(scale, 0.8));
   const overview: View = { target: [ovT.x * K, ovT.y * K, ovT.z * K], pos: [ovP.x * K, ovP.y * K, ovP.z * K] };
 
-  const glow = new THREE.PointLight(0xffffff, 0, 4, 2);
+  const glow = new THREE.PointLight(TONE.white, 0, 4, 2);
   glow.position.set(innerCx * K, (H * 0.6 + FEET) * K, 0);
   const glowHolder = new THREE.Group();
   glowHolder.add(glow);
@@ -247,8 +248,8 @@ export function buildRig(s: Setup): Rig {
       const on = rgbMode !== 'off';
       for (const { mat, phase } of rgbMats) {
         if (!on) {
-          mat.color.setHex(0x3a3d48);
-          mat.emissive.setHex(0x000000);
+          mat.color.setHex(TONE.graphite);
+          mat.emissive.setHex(TONE.black);
           continue;
         }
         if (rgbMode === 'solid') tmp.copy(rgbColor);

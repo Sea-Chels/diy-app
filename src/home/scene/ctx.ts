@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { toon, type InkWeight } from '../../shared/toon';
-import { add, box, mapped, rng, speckle, woodTexture, type V3 } from '../../shared/scene/kit';
+import { add, box, rng, speckle, woodTexture, type V3, textured } from '../../shared/scene/kit';
 import { WALL_HEX, type Setup } from '../data/setup';
 import type { AreaId, LidId } from '../data/areas';
 import { K } from './room';
@@ -8,6 +8,8 @@ import { EXT_LAYERS, INT_LAYERS, sectionTex, lapSiding } from './textures';
 import { MAT } from '../../shared/scene/materials';
 import { createSpots } from '../../shared/scene/rigKit';
 import { tag } from '../../shared/scene/sceneTags';
+import { C } from './palette';
+import { TONE } from '../../shared/theme';
 
 export function createCtx(s: Setup) {
   const r = rng(77);
@@ -20,40 +22,40 @@ export function createCtx(s: Setup) {
 
   const M = {
     paint: toon(WALL_HEX[s.wall]),
-    bathPaint: toon(0xcfe4e0),
-    cut: toon(0xf4efe4),
-    concrete: mapped(0xffffff, speckle('#a7a39b', ['#8e8a82', '#bdb9b0'], 300, [1, 3], [3, 1], 44)),
-    gutter: toon(0xf1efe9, { shine: 0.5 }),
-    secExtV: mapped(0xffffff, sectionTex(EXT_LAYERS, false)),
-    secExtU: mapped(0xffffff, sectionTex(EXT_LAYERS, true)),
-    secIntV: mapped(0xffffff, sectionTex(INT_LAYERS, false)),
-    secIntU: mapped(0xffffff, sectionTex(INT_LAYERS, true)),
-    dark: toon(0x23262e),
-    trim: toon(0xf6f3ec),
-    cab: toon(0x2f4a6b),
-    cabIn: toon(0x1a2230),
+    bathPaint: toon(C.bathPaint),
+    cut: toon(TONE.linen),
+    concrete: textured(speckle('#a7a39b', ['#8e8a82', '#bdb9b0'], 300, [1, 3], [3, 1], 44)),
+    gutter: toon(C.trim, { shine: 0.5 }),
+    secExtV: textured(sectionTex(EXT_LAYERS, false)),
+    secExtU: textured(sectionTex(EXT_LAYERS, true)),
+    secIntV: textured(sectionTex(INT_LAYERS, false)),
+    secIntU: textured(sectionTex(INT_LAYERS, true)),
+    dark: toon(TONE.charcoal),
+    trim: toon(C.trim),
+    cab: toon(C.cabinet),
+    cabIn: toon(C.cabinetIn),
     brass: MAT.brass(),
-    steel: toon(0xc3c9d1, { shine: 0.8, metal: 0.7 }),
-    chrome: toon(0xd9dee6, { shine: 0.9, metal: 0.8 }),
-    black: toon(0x1d1f24, { shine: 0.5 }),
-    porcelain: toon(0xf7f7f4, { shine: 0.6 }),
+    steel: toon(TONE.steel, { shine: 0.8, metal: 0.7 }),
+    chrome: toon(TONE.polished, { shine: 0.9, metal: 0.8 }),
+    black: toon(TONE.soot, { shine: 0.5 }),
+    porcelain: toon(TONE.porcelain, { shine: 0.6 }),
     pvc: MAT.pvc(),
-    copper: toon(0xc77a45, { shine: 0.7, metal: 0.6 }),
-    braided: toon(0xaab1ba, { shine: 0.5, metal: 0.4 }),
-    plate: toon(0xf3f0e8, { shine: 0.3 }),
+    copper: toon(C.copper, { shine: 0.7, metal: 0.6 }),
+    braided: toon(C.satinMetal, { shine: 0.5, metal: 0.4 }),
+    plate: toon(C.trim, { shine: 0.3 }),
     red: MAT.red(),
     coldBlue: MAT.coldBlue(),
-    door: toon(0xb5452e),
-    oak: mapped(0xffffff, woodTexture('#c8955c', '#9a6a3a', [1, 1])),
-    walnut: mapped(0xffffff, woodTexture('#7a5236', '#553620', [1, 1])),
+    door: toon(C.door),
+    oak: textured(woodTexture('#c8955c', '#9a6a3a', [1, 1])),
+    walnut: textured(woodTexture('#7a5236', '#553620', [1, 1])),
     water: MAT.water(),
-    wire: { black: toon(0x202020), white: toon(0xf1f1f1), bare: toon(0xc77a45, { shine: 0.7, metal: 0.6 }), green: toon(0x2e9a4c) },
+    wire: { black: toon(C.wire.black), white: toon(TONE.porcelain), bare: toon(C.copper, { shine: 0.7, metal: 0.6 }), green: toon(C.wire.ground) },
   };
 
   look((n) => M.paint.color.setHex(WALL_HEX[n.wall]));
 
   const { groups: areas, picks, spot: area, pick: pickBox } = createSpots<AreaId>(root);
-  const siding = (y0: number, y1: number) => mapped(0xffffff, lapSiding(y0, y1), { halftone: 0.5 });
+  const siding = (y0: number, y1: number) => textured(lapSiding(y0, y1), { halftone: 0.5 });
   /** Outer walls: picks behind them don't count. */
   const blocker = (m: THREE.Mesh) => {
     tag(m, 'blocker', true);

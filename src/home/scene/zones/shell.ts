@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { add, canvasTex, mapped, remap, type V3 } from '../../../shared/scene/kit';
+import { add, canvasTex, remap, type V3, textured } from '../../../shared/scene/kit';
 import { X0, X1, Z0, Z1, T, WH, PH, BX, BZ, PT, HOLE, WIN, DOOR } from '../room';
 import { hexTile, floorTex } from '../textures';
 import type { HomeCtx } from '../ctx';
@@ -7,7 +7,7 @@ import type { HomeCtx } from '../ctx';
 /** Floor slab, cut to show the layers. */
 export function buildFloor(c: HomeCtx) {
   const { root, M, slab, s, look } = c;
-  const floorFront = mapped(0xffffff, canvasTex(256, 64, (ctx) => {
+  const floorFront = textured(canvasTex(256, 64, (ctx) => {
     // Front cut: finish floor, underlayment, subfloor, joist ends every 16 in, drywall ceiling below.
     ctx.fillStyle = '#2a2420';
     ctx.fillRect(0, 0, 256, 64);
@@ -21,7 +21,7 @@ export function buildFloor(c: HomeCtx) {
     }
     ctx.fillStyle = '#f4efe4'; ctx.fillRect(0, 58, 256, 6);
   }, [2, 1]));
-  const floorSide = mapped(0xffffff, canvasTex(256, 64, (ctx) => {
+  const floorSide = textured(canvasTex(256, 64, (ctx) => {
     // Side cut runs along a joist.
     ctx.fillStyle = '#c8955c'; ctx.fillRect(0, 0, 256, 4);
     ctx.fillStyle = '#5b6f8a'; ctx.fillRect(0, 4, 256, 2);
@@ -36,7 +36,7 @@ export function buildFloor(c: HomeCtx) {
   slab([X0 - T, -0.34, Z0 - T], [X1, 0, Z1], [floorSide, M.concrete, M.dark, M.dark, floorFront, M.concrete]);
 
   // Finish floor with a hole at the front where planks lift out (the floor area).
-  const floorMat = mapped(0xffffff, floorTex(s.floor), { halftone: 0.6 });
+  const floorMat = textured(floorTex(s.floor), { halftone: 0.6 });
   look((n) => remap(floorMat, floorTex(n.floor)));
   {
     const sh = new THREE.Shape();
@@ -55,7 +55,7 @@ export function buildFloor(c: HomeCtx) {
   {
     const g = new THREE.PlaneGeometry(BX - X0, BZ - Z0);
     g.rotateX(-Math.PI / 2);
-    const f = add(g, mapped(0xffffff, hexTile([4, 6]), { halftone: 0.5 }), root, { at: [(X0 + BX) / 2, 0.003, (Z0 + BZ) / 2], ink: null });
+    const f = add(g, textured(hexTile([4, 6]), { halftone: 0.5 }), root, { at: [(X0 + BX) / 2, 0.003, (Z0 + BZ) / 2], ink: null });
     f.castShadow = false;
   }
 }

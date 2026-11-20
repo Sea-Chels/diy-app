@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
-import { add, box, canvasTex, label, leafGeo, leafMatrix, mapped, range, remap, rng, speckle, tube, V, type V3 } from '../../../shared/scene/kit';
-import { hex, PALETTE } from '../../../shared/theme';
+import { add, box, canvasTex, label, leafGeo, leafMatrix, range, remap, rng, speckle, tube, V, type V3, textured } from '../../../shared/scene/kit';
+import { cssHex, hex, PALETTE, TONE } from '../../../shared/theme';
 import { Z0, WH, HOLE } from '../room';
 import { floorTex } from '../textures';
 import type { HomeCtx } from '../ctx';
 import type { Setup } from '../../data/setup';
 import { MAT } from '../../../shared/scene/materials';
+import { C } from '../palette';
 
 export function buildLiving(c: HomeCtx) {
   const { r, root, M, slab } = c;
@@ -21,11 +22,11 @@ export function buildLiving(c: HomeCtx) {
     });
     const rg = new THREE.PlaneGeometry(2.2, 1.6);
     rg.rotateX(-Math.PI / 2);
-    const rugM = add(rg, mapped(0xffffff, rug, { halftone: 0.7 }), root, { at: [1.75, 0.006, 1.25], ink: null });
+    const rugM = add(rg, textured(rug, { halftone: 0.7 }), root, { at: [1.75, 0.006, 1.25], ink: null });
     rugM.castShadow = false;
     rugM.userData.crease = true;
-    const fabric = toon(0xc96f4a);
-    const fabricDark = toon(0xa95a3a);
+    const fabric = toon(C.fabric);
+    const fabricDark = toon(C.fabricDark);
     box(0.85, 0.3, 1.9, fabric, root, { at: [2.92, 0.27, 1.25], r: 0.04 });
     box(0.25, 0.48, 1.9, fabric, root, { at: [3.22, 0.66, 1.25], r: 0.06 });
     for (const sd of [-1, 1]) box(0.85, 0.36, 0.18, fabricDark, root, { at: [2.92, 0.5, 1.25 + sd * 0.87], r: 0.06 });
@@ -34,17 +35,17 @@ export function buildLiving(c: HomeCtx) {
     for (const [lx, lz] of [[2.55, 0.35], [2.55, 2.15], [3.28, 0.35], [3.28, 2.15]]) add(new THREE.CylinderGeometry(0.025, 0.018, 0.12, 8), M.walnut, root, { at: [lx, 0.06, lz] });
     box(1.0, 0.04, 0.55, M.walnut, root, { at: [1.55, 0.42, 1.25], r: 0.012 });
     for (const [dx, dz] of [[-0.44, -0.22], [0.44, -0.22], [-0.44, 0.22], [0.44, 0.22]]) box(0.04, 0.4, 0.04, M.walnut, root, { at: [1.55 + dx, 0.2, 1.25 + dz], r: 0.008 });
-    box(0.24, 0.04, 0.17, toon(0x3d6b8a), root, { at: [1.35, 0.46, 1.15], rot: [0, 0.2, 0], r: 0.005 });
-    box(0.22, 0.035, 0.15, toon(0xd8a43a), root, { at: [1.35, 0.497, 1.15], rot: [0, -0.1, 0], r: 0.005 });
-    add(new THREE.CylinderGeometry(0.04, 0.035, 0.09, 14), toon(0xf6f3ec), root, { at: [1.8, 0.485, 1.32] });
+    box(0.24, 0.04, 0.17, toon(C.bookBlue), root, { at: [1.35, 0.46, 1.15], rot: [0, 0.2, 0], r: 0.005 });
+    box(0.22, 0.035, 0.15, toon(C.bookGold), root, { at: [1.35, 0.497, 1.15], rot: [0, -0.1, 0], r: 0.005 });
+    add(new THREE.CylinderGeometry(0.04, 0.035, 0.09, 14), toon(C.trim), root, { at: [1.8, 0.485, 1.32] });
     add(new THREE.CylinderGeometry(0.14, 0.15, 0.025, 20), M.black, root, { at: [3.15, 0.012, 2.45] });
     add(new THREE.CylinderGeometry(0.012, 0.012, 1.5, 8), M.black, root, { at: [3.15, 0.76, 2.45] });
-    add(new THREE.CylinderGeometry(0.14, 0.2, 0.26, 20, 1, true), toon(0xfff1c4, { emissive: 0xffc870, emissiveIntensity: 0.45, side: THREE.DoubleSide }), root, { at: [3.15, 1.55, 2.45] });
+    add(new THREE.CylinderGeometry(0.14, 0.2, 0.26, 20, 1, true), toon(C.lampShade, { emissive: C.shadeGlow, emissiveIntensity: 0.45, side: THREE.DoubleSide }), root, { at: [3.15, 1.55, 2.45] });
     add(new THREE.CylinderGeometry(0.17, 0.13, 0.32, 18), MAT.terracotta(), root, { at: [3.15, 0.16, -2.35] });
-    add(new THREE.CylinderGeometry(0.16, 0.16, 0.01, 18), toon(0x4a3222), root, { at: [3.15, 0.31, -2.35], ink: null });
-    tube([V(3.15, 0.3, -2.35), V(3.12, 0.9, -2.33), V(3.17, 1.5, -2.36)], 0.018, toon(0x6b4a30), root, { seg: 10 });
+    add(new THREE.CylinderGeometry(0.16, 0.16, 0.01, 18), toon(C.planter), root, { at: [3.15, 0.31, -2.35], ink: null });
+    tube([V(3.15, 0.3, -2.35), V(3.12, 0.9, -2.33), V(3.17, 1.5, -2.36)], 0.018, toon(TONE.bark), root, { seg: 10 });
     const leafG = leafGeo({ shape: 'obovate', w: 0.62, bend: 0.25, cup: 0.15, thickness: 0.004 });
-    const leafM = toon(0x3f7d3a, { side: THREE.DoubleSide });
+    const leafM = toon(TONE.leaf, { side: THREE.DoubleSide });
     for (let i = 0; i < 16; i++) {
       const y = 0.75 + (i / 16) * 0.8;
       const a = i * 2.4;
@@ -63,7 +64,7 @@ export function buildLiving(c: HomeCtx) {
         ctx.fillStyle = col; ctx.beginPath(); ctx.arc(32, 34, 18, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = PALETTE.ink; ctx.fillRect(10, 58, 44, 4);
       });
-      slab([x0 + 0.03, 1.85, Z0 + 0.03], [x1 - 0.03, 2.22, Z0 + 0.032], mapped(0xffffff, art), root, null);
+      slab([x0 + 0.03, 1.85, Z0 + 0.03], [x1 - 0.03, 2.22, Z0 + 0.032], textured(art), root, null);
     }
   }
 }
@@ -76,31 +77,31 @@ export function buildLights(c: HomeCtx) {
   const FZ = 1.6;
   const fanBlades = new THREE.Group();
   const bulbMats: THREE.Material[] = [];
-  const lamp = new THREE.PointLight(0xffd59a, 0.9, 5, 1.2);
+  const lamp = new THREE.PointLight(C.lampLight, 0.9, 5, 1.2);
   {
     const l = lightsA;
-    const ceilSec = mapped(0xffffff, canvasTex(64, 64, (ctx) => {
+    const ceilSec = textured(canvasTex(64, 64, (ctx) => {
       ctx.fillStyle = '#e9b9c8'; ctx.fillRect(0, 0, 64, 64);
       ctx.fillStyle = '#b8935c'; ctx.fillRect(0, 0, 64, 8);
       for (let x = 0; x < 64; x += 26) { ctx.fillStyle = '#d9b07a'; ctx.fillRect(x, 8, 8, 48); }
       ctx.fillStyle = '#f4efe4'; ctx.fillRect(0, 56, 64, 8);
     }));
-    const C = 0.2;
+    const HW = 0.2;
     // Drywall underside with a hole for the box, then joist-cut sides and a cut top.
     const sh = new THREE.Shape();
-    [[-C, -C], [C, -C], [C, C], [-C, C]].forEach(([x, y], i) => { if (i) sh.lineTo(x, y); else sh.moveTo(x, y); });
+    [[-HW, -HW], [HW, -HW], [HW, HW], [-HW, HW]].forEach(([x, y], i) => { if (i) sh.lineTo(x, y); else sh.moveTo(x, y); });
     const hole = new THREE.Path();
     hole.absarc(0, 0, 0.078, 0, Math.PI * 2, true);
     sh.holes.push(hole);
     const under = new THREE.ShapeGeometry(sh, 16);
     under.rotateX(Math.PI / 2);
     add(under, M.trim, l, { at: [FX, WH, FZ], ink: null });
-    slab([FX - C, WH + 0.07, FZ - C], [FX + C, WH + 0.08, FZ + C], M.cut, l, null);
-    for (const [min, max] of [[[FX - C, WH, FZ + C - 0.002], [FX + C, WH + 0.08, FZ + C]], [[FX + C - 0.002, WH, FZ - C], [FX + C, WH + 0.08, FZ + C]], [[FX - C, WH, FZ - C], [FX + C, WH + 0.08, FZ - C + 0.002]], [[FX - C, WH, FZ - C], [FX - C + 0.002, WH + 0.08, FZ + C]]] as [V3, V3][]) slab(min, max, ceilSec, l, 'body');
+    slab([FX - HW, WH + 0.07, FZ - HW], [FX + HW, WH + 0.08, FZ + HW], M.cut, l, null);
+    for (const [min, max] of [[[FX - HW, WH, FZ + HW - 0.002], [FX + HW, WH + 0.08, FZ + HW]], [[FX + HW - 0.002, WH, FZ - HW], [FX + HW, WH + 0.08, FZ + HW]], [[FX - HW, WH, FZ - HW], [FX + HW, WH + 0.08, FZ - HW + 0.002]], [[FX - HW, WH, FZ - HW], [FX - HW + 0.002, WH + 0.08, FZ + HW]]] as [V3, V3][]) slab(min, max, ceilSec, l, 'body');
     // Fan-rated box with its brace, open at the bottom.
-    add(new THREE.CylinderGeometry(0.075, 0.075, 0.07, 8, 1, true), toon(0x6d7888, { shine: 0.6, metal: 0.5, side: THREE.DoubleSide }), l, { at: [FX, WH + 0.035, FZ], ink: null });
+    add(new THREE.CylinderGeometry(0.075, 0.075, 0.07, 8, 1, true), toon(C.fanBox, { shine: 0.6, metal: 0.5, side: THREE.DoubleSide }), l, { at: [FX, WH + 0.035, FZ], ink: null });
     add(new THREE.CircleGeometry(0.075, 8), M.dark, l, { at: [FX, WH + 0.069, FZ], rot: [Math.PI / 2, 0, 0], ink: null });
-    slab([FX - C + 0.01, WH + 0.07, FZ - 0.015], [FX + C - 0.01, WH + 0.1, FZ + 0.015], M.steel, l, 'thin');
+    slab([FX - HW + 0.01, WH + 0.07, FZ - 0.015], [FX + HW - 0.01, WH + 0.1, FZ + 0.015], M.steel, l, 'thin');
     // Wires drop out of the box when the canopy comes down.
     const wires = pivot(l, [FX, WH + 0.02, FZ]);
     for (const [col, dx] of [[M.wire.black, 0.02], [M.wire.white, -0.02], [M.wire.green, 0.0]] as const) {
@@ -112,7 +113,7 @@ export function buildLights(c: HomeCtx) {
     l.add(hang);
     if (s.ceiling === 'fan') {
       slab([FX - 0.06, WH - 0.012, FZ - 0.012], [FX + 0.06, WH, FZ + 0.012], M.steel, l, 'thin');
-      const bronze = toon(0x5a4636, { shine: 0.5, metal: 0.4 });
+      const bronze = toon(C.bronze, { shine: 0.5, metal: 0.4 });
       add(new THREE.CylinderGeometry(0.012, 0.012, 0.2, 8), bronze, l, { at: [FX, WH - 0.12, FZ] });
       add(new THREE.CylinderGeometry(0.06, 0.09, 0.07, 20), bronze, hang, { at: [FX, WH - 0.036, FZ] });
       add(new THREE.CylinderGeometry(0.12, 0.14, 0.11, 24), bronze, l, { at: [FX, WH - 0.27, FZ] });
@@ -125,17 +126,17 @@ export function buildLights(c: HomeCtx) {
         box(0.12, 0.012, 0.03, bronze, arm, { at: [0.16, -0.02, 0], r: 0.004 });
         box(0.42, 0.009, 0.12, M.walnut, arm, { at: [0.42, -0.025, 0], rot: [0.2, 0, 0], r: 0.004 });
       }
-      const bulb = toon(0xfff3d2, { emissive: 0xffd88a, emissiveIntensity: 0.9 });
+      const bulb = toon(C.bulb, { emissive: C.bulbGlow, emissiveIntensity: 0.9 });
       bulbMats.push(bulb);
       add(new THREE.SphereGeometry(0.1, 20, 10, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), bulb, l, { at: [FX, WH - 0.33, FZ], scale: [1, 0.8, 1] });
       lamp.position.set(FX, WH - 0.7, FZ);
     } else {
       slab([FX - 0.1, WH - 0.01, FZ - 0.012], [FX + 0.1, WH, FZ + 0.012], M.steel, l, 'thin');
       add(new THREE.CylinderGeometry(0.03, 0.03, 0.02, 12), M.brass, hang, { at: [FX, WH - 0.01, FZ] });
-      const drum = toon(0xf2e6c8, { emissive: 0xffc870, emissiveIntensity: 0.55, side: THREE.DoubleSide });
+      const drum = toon(C.drum, { emissive: C.shadeGlow, emissiveIntensity: 0.55, side: THREE.DoubleSide });
       bulbMats.push(drum);
       add(new THREE.CylinderGeometry(0.24, 0.24, 0.15, 32, 1, true), drum, hang, { at: [FX, WH - 0.09, FZ] });
-      const diffuser = toon(0xfff6dc, { emissive: 0xffd88a, emissiveIntensity: 0.9 });
+      const diffuser = toon(C.diffuser, { emissive: C.bulbGlow, emissiveIntensity: 0.9 });
       bulbMats.push(diffuser);
       add(new THREE.CircleGeometry(0.235, 32), diffuser, hang, { at: [FX, WH - 0.16, FZ], rot: [Math.PI / 2, 0, 0], ink: null });
       add(new THREE.CylinderGeometry(0.24, 0.24, 0.01, 32), M.brass, hang, { at: [FX, WH - 0.012, FZ], ink: null });
@@ -176,7 +177,7 @@ export function buildPaintCorner(c: HomeCtx) {
     for (let i = 0; i < cp.count; i++) cp.setZ(i, Math.abs(cp.getX(i)) > 0.8 || Math.abs(cp.getY(i)) > 0.6 ? range(r, 0, 0.02) : 0);
     cg.computeVertexNormals();
     cg.rotateX(-Math.PI / 2);
-    add(cg, mapped(0xffffff, cloth, { side: THREE.DoubleSide }), p, { at: [DX + 0.1, 0.005, DZ + 0.15], ink: null }).castShadow = false;
+    add(cg, textured(cloth, { side: THREE.DoubleSide }), p, { at: [DX + 0.1, 0.005, DZ + 0.15], ink: null }).castShadow = false;
     const teal = canvasTex(128, 64, (ctx) => {
       ctx.fillStyle = '#4f8f8a'; ctx.fillRect(0, 0, 128, 64);
       const rr = rng(2);
@@ -186,8 +187,8 @@ export function buildPaintCorner(c: HomeCtx) {
         ctx.fillStyle = '#c8955c'; ctx.fillRect(x, y, w, w * 0.6);
       }
     });
-    const painted = mapped(0xffffff, teal);
-    const stripped = mapped(0xffffff, canvasTex(256, 64, (ctx) => {
+    const painted = textured(teal);
+    const stripped = textured(canvasTex(256, 64, (ctx) => {
       // Left: bare wood. Right: paint bubbling up under stripper, white primer at the edge.
       ctx.fillStyle = '#c8955c'; ctx.fillRect(0, 0, 256, 64);
       ctx.strokeStyle = 'rgba(120,80,40,0.4)';
@@ -228,7 +229,7 @@ export function buildPaintCorner(c: HomeCtx) {
     lidHooks.drawer = (k) => (drawer.position.z = front + 0.3 * k);
     const gun = pivot(p, [DX + 0.62, 0.05, DZ + 0.55]);
     gun.rotation.y = -0.6;
-    box(0.2, 0.08, 0.07, toon(0xf08a24), gun, { at: [0, 0.02, 0], r: 0.02 });
+    box(0.2, 0.08, 0.07, toon(TONE.signalOrange), gun, { at: [0, 0.02, 0], r: 0.02 });
     add(new THREE.CylinderGeometry(0.025, 0.03, 0.12, 12), M.steel, gun, { at: [0.15, 0.02, 0], rot: [0, 0, Math.PI / 2] });
     box(0.05, 0.12, 0.05, M.black, gun, { at: [-0.06, -0.03, 0], rot: [0, 0, -0.3], r: 0.015 });
     const scraper = pivot(p, [DX + 0.3, 0.012, DZ + 0.62]);
@@ -236,12 +237,12 @@ export function buildPaintCorner(c: HomeCtx) {
     add(new THREE.CylinderGeometry(0.014, 0.016, 0.13, 10), M.red, scraper, { at: [-0.07, 0, 0], rot: [0, 0, Math.PI / 2] });
     box(0.06, 0.004, 0.05, M.steel, scraper, { at: [0.03, -0.004, 0], r: 0.002 });
     const canTex = label([{ text: 'STRIPPER', size: 30, color: PALETTE.ink }, { text: 'citrus gel', size: 18, color: PALETTE.ink }], '#a3e635', 256, 96);
-    add(new THREE.CylinderGeometry(0.075, 0.075, 0.17, 20), [mapped(0xffffff, canTex), M.steel, M.steel] as unknown as THREE.Material, p, { at: [DX - 0.7, 0.09, DZ + 0.6] });
+    add(new THREE.CylinderGeometry(0.075, 0.075, 0.17, 20), [textured(canTex), M.steel, M.steel] as unknown as THREE.Material, p, { at: [DX - 0.7, 0.09, DZ + 0.6] });
     const brush = pivot(p, [DX - 0.45, 0.015, DZ + 0.7]);
     brush.rotation.y = 1.0;
     add(new THREE.CylinderGeometry(0.012, 0.012, 0.14, 8), M.oak, brush, { at: [-0.06, 0, 0], rot: [0, 0, Math.PI / 2] });
-    box(0.06, 0.016, 0.05, toon(0x8a6a3a), brush, { at: [0.04, 0, 0], r: 0.004 });
-    const curl = toon(0x4f8f8a, { side: THREE.DoubleSide });
+    box(0.06, 0.016, 0.05, toon(C.brush), brush, { at: [0.04, 0, 0], r: 0.004 });
+    const curl = toon(C.paintCurl, { side: THREE.DoubleSide });
     for (let i = 0; i < 7; i++) {
       add(new THREE.TorusGeometry(0.018, 0.006, 4, 10, Math.PI * 1.4), curl, p, { at: [DX + range(r, -0.4, 0.5), 0.015, front + range(r, 0.05, 0.35)], rot: [range(r, 0, 3), range(r, 0, 3), 0] });
     }
@@ -257,7 +258,7 @@ export function buildFloorCutaway(c: HomeCtx) {
   const planks: THREE.Group[] = [];
   {
     const f = floorA;
-    const under = (n: Setup) => ({ oak: 0xb5543c, lvp: 0x5d86b5, tile: 0x9a9a94 })[n.floor];
+    const under = (n: Setup) => C.underlay[n.floor];
     const unders: THREE.MeshToonMaterial[] = [];
     const underMat = () => {
       const m = toon(under(s));
@@ -266,7 +267,7 @@ export function buildFloorCutaway(c: HomeCtx) {
     };
     const ux = (HOLE.x0 + HOLE.x1) / 2 + 0.1;
     slab([HOLE.x0, -0.016, HOLE.z0], [ux, -0.012, HOLE.z1], underMat(), f, null);
-    const osb = mapped(0xffffff, speckle('#c9a36a', ['#a8834e', '#dcb87c', '#8f6a3c', '#e3c48e'], 500, [3, 9], [1, 1], 17));
+    const osb = textured(speckle('#c9a36a', ['#a8834e', '#dcb87c', '#8f6a3c', '#e3c48e'], 500, [3, 9], [1, 1], 17));
     slab([ux, -0.018, HOLE.z0], [HOLE.x1, -0.014, HOLE.z1], osb, f, null);
     add(new THREE.CylinderGeometry(0.035, 0.035, HOLE.z1 - HOLE.z0 - 0.02, 16), underMat(), f, { at: [ux + 0.035, 0.022, (HOLE.z0 + HOLE.z1) / 2], rot: [Math.PI / 2, 0, 0] });
     const n = 3;
@@ -281,7 +282,7 @@ export function buildFloorCutaway(c: HomeCtx) {
     const tops: THREE.MeshToonMaterial[] = [];
     for (let i = 0; i < n; i++) {
       const g = pivot(f, [HOLE.x0, 0, HOLE.z0 + pw * (i + 0.5)]);
-      tops.push(mapped(0xffffff, plankTex(s, i), { halftone: 0.6 }));
+      tops.push(textured(plankTex(s, i), { halftone: 0.6 }));
       slab([0, -0.012, -pw / 2 + 0.001], [len, 0.0025, pw / 2 - 0.001], [M.oak, M.oak, tops[i], M.oak, M.oak, M.oak], g, 'thin');
       planks.push(g);
     }
@@ -293,9 +294,9 @@ export function buildFloorCutaway(c: HomeCtx) {
       g.rotation.z = [0.32, 0.5, 0.22][i] * k;
       g.position.y = 0.02 * k * (i + 1);
     });
-    box(0.5, 0.09, 0.2, mapped(0xffffff, label([{ text: 'FLOORING', size: 28, color: PALETTE.ink }], '#c69c64', 256, 64)), f, { at: [1.85, 0.045, 2.45], rot: [0, 0.15, 0], r: 0.006 });
-    box(0.5, 0.09, 0.2, toon(0xc69c64), f, { at: [1.83, 0.135, 2.47], rot: [0, 0.05, 0], r: 0.006 });
-    box(0.22, 0.04, 0.06, toon(0x2f2f2f), f, { at: [1.55, 0.02, 2.3], rot: [0, -0.3, 0], r: 0.006 });
+    box(0.5, 0.09, 0.2, textured(label([{ text: 'FLOORING', size: 28, color: PALETTE.ink }], cssHex(TONE.tan), 256, 64)), f, { at: [1.85, 0.045, 2.45], rot: [0, 0.15, 0], r: 0.006 });
+    box(0.5, 0.09, 0.2, toon(TONE.tan), f, { at: [1.83, 0.135, 2.47], rot: [0, 0.05, 0], r: 0.006 });
+    box(0.22, 0.04, 0.06, toon(C.toolDark), f, { at: [1.55, 0.02, 2.3], rot: [0, -0.3, 0], r: 0.006 });
     pick(f, [HOLE.x0 - 0.05, -0.05, HOLE.z0 - 0.05], [HOLE.x1 + 0.05, 0.15, HOLE.z1 + 0.05]);
   }
 }

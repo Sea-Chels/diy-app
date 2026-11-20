@@ -6,6 +6,7 @@ import type { Setup } from '../data/setup';
 import type { PartId } from '../data/parts';
 import { K, FEET, DIMS, ATX, ITX } from './layout';
 import { C } from './kit';
+import { TONE } from '../../shared/theme';
 import { tagOf } from '../../shared/scene/sceneTags';
 import { createHotspots } from '../../shared/scene/rigKit';
 
@@ -49,7 +50,7 @@ export function createCtx(s: Setup) {
     addHot(part, ...found);
   }
   function rgb(phase: number): THREE.MeshToonMaterial {
-    const m = toon(0x3a3d48, { halftone: 0 });
+    const m = toon(TONE.graphite, { halftone: 0 });
     rgbMats.push({ mat: m, phase });
     return m;
   }
@@ -106,21 +107,21 @@ export function createCtx(s: Setup) {
     case: toon(s.caseColor, { shine: 0.35 }),
     inner: toon(new THREE.Color(s.caseColor).multiplyScalar(0.62), { shine: 0.1 }),
     pcb: toon(C.pcb, { shine: 0.2 }),
-    slot: toon(C.slot),
-    black: toon(C.black, { shine: 0.2 }),
-    plastic: toon(C.plastic, { shine: 0.3 }),
-    metal: toon(C.metal, { shine: 0.7, metal: 0.6 }),
+    slot: toon(TONE.cover),
+    black: toon(TONE.blackPart, { shine: 0.2 }),
+    plastic: toon(TONE.plastic, { shine: 0.3 }),
+    metal: toon(TONE.silver, { shine: 0.7, metal: 0.6 }),
     darkMetal: toon(C.darkMetal, { shine: 0.5, metal: 0.4 }),
     copper: toon(C.copper, { shine: 0.8, metal: 0.6 }),
-    sleeve: toon(C.sleeve, { shine: 0.15 }),
-    ihs: toon(C.ihs, { shine: 0.8, metal: 0.5 }),
-    ramBody: toon(C.ramBody, { shine: 0.45, metal: 0.2 }),
-    gpu: toon(C.gpu, { shine: 0.4 }),
-    fanFrame: toon(0x24252d, { shine: 0.25 }),
-    hub: toon(0x2f3240, { shine: 0.4 }),
-    blade: toon(C.blade, { shine: 0.3 }),
+    sleeve: toon(TONE.blackPart, { shine: 0.15 }),
+    ihs: toon(TONE.polished, { shine: 0.8, metal: 0.5 }),
+    ramBody: toon(TONE.cover, { shine: 0.45, metal: 0.2 }),
+    gpu: toon(TONE.plastic, { shine: 0.4 }),
+    fanFrame: toon(TONE.charcoal, { shine: 0.25 }),
+    hub: toon(TONE.cover, { shine: 0.4 }),
+    blade: toon(TONE.graphite, { shine: 0.3 }),
     m2: toon(C.m2, { shine: 0.2 }),
-    paste: toon(0x9aa0ab, { shine: 0.5 }),
+    paste: toon(TONE.alloy, { shine: 0.5 }),
   };
   return { dm, W, H, D, L, loop, root, cg, hotspots, rgbMats, coolantMats, rotors, boost, rbox, cylX, hot, rgb, coolant, fan, mats, s };
 }

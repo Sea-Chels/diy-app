@@ -4,6 +4,7 @@ import { ringLine, ringPoint, sheet, shell, surfaceLine, tAtY, type Section } fr
 import { C, M, rbox } from '../kit';
 import type { CarCtx } from '../ctx';
 import { add } from '../../../shared/scene/kit';
+import { TONE } from '../../../shared/theme';
 
 export function buildDoors(c: CarCtx) {
   const { S, group, paint, tag, LOWER_N, lower, front, sideX, gh, GH_N, GH_CORNER_T, beltTrim } = c;
@@ -18,7 +19,7 @@ export function buildDoors(c: CarCtx) {
   const doorGeom = shell(lower, LOWER_N, doorZ0, doorZ1, tLow, tHigh, 0.006, 0.026, 24, 14);
   doorGeom.translate(-doorHinge.x, -doorHinge.y, -doorHinge.z);
   const door = add(doorGeom, paint(), doorPivot, { ink: 'body' });
-  add(shell(lower, LOWER_N, doorZ0 + 0.02, doorZ1 - 0.02, tLow + 0.01, tHigh - 0.01, 0.002, 0.002, 10, 8), toon(C.bay, { halftone: 0.5, side: THREE.DoubleSide }), group, { ink: null });
+  add(shell(lower, LOWER_N, doorZ0 + 0.02, doorZ1 - 0.02, tLow + 0.01, tHigh - 0.01, 0.002, 0.002, 10, 8), toon(TONE.blackPart, { halftone: 0.5, side: THREE.DoubleSide }), group, { ink: null });
   // The door's own pane of the glasshouse, so the window swings out with it.
   const toDoor = (g: THREE.BufferGeometry) => g.translate(-doorHinge.x, -doorHinge.y, -doorHinge.z);
   const doorGlass = new THREE.Mesh(toDoor(sheet(gh, GH_N, doorZ0, doorZ1, -0.015, GH_CORNER_T, 40, 8)), glass());

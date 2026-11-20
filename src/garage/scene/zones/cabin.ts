@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
-import { add, mapped } from '../../../shared/scene/kit';
+import { add, textured } from '../../../shared/scene/kit';
 import { C, M, decal, rbox } from '../kit';
 import { gaugeTex, screenTex, seatTex } from '../textures';
 import type { CarCtx } from '../ctx';
 
 export function buildCabin(c: CarCtx) {
   const { S, group, tag } = c;
-  const seatMat = () => mapped(0xffffff, seatTex(), { halftone: 0.7 });
+  const seatMat = () => textured(seatTex(), { halftone: 0.7 });
   const seatParts: THREE.Mesh[] = [];
   const cushionY = S.floorY + 0.14;
   const backTop = S.belt + 0.2;

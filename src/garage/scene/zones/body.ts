@@ -4,6 +4,7 @@ import { loft, sheet, shell } from '../loft';
 import { C, M, rbox } from '../kit';
 import type { CarCtx } from '../ctx';
 import { add } from '../../../shared/scene/kit';
+import { TONE } from '../../../shared/theme';
 
 export function buildBody(c: CarCtx) {
   const { S, group, paint, hoodLine, roofLine, archR, LOWER_N, lower, fenderW, fender, front, hoodEdgeT, hoodZ1, GH_N, TUB_T, gh, GH_CORNER_T, beltTrim, roofY } = c;
@@ -13,7 +14,7 @@ export function buildBody(c: CarCtx) {
   if (!S.suv) add(loft(lower, S.tailZ, S.ghRearZ, LOWER_N, 60), paint(), group, { ink: 'body' });
   const WALL = 0.045;
   add(shell(lower, LOWER_N, tubZ0, S.cowlZ, 0.5 - TUB_T, 1 + TUB_T, -WALL, WALL, 110, 44), paint(), group, { ink: 'body' });
-  const interior = () => toon(C.bay, { halftone: 0.6, side: THREE.DoubleSide });
+  const interior = () => toon(TONE.blackPart, { halftone: 0.6, side: THREE.DoubleSide });
   add(shell(lower, LOWER_N, tubZ0 + 0.01, S.cowlZ - 0.01, 0.5 - TUB_T + 0.004, 1 + TUB_T - 0.004, -WALL - 0.004, 0.002, 60, 30), interior(), group, { ink: null });
   const floorHalf = S.halfW - 0.1;
   const floorZ0 = -0.96;
@@ -30,8 +31,8 @@ export function buildBody(c: CarCtx) {
   for (const side of [1, -1]) add(loft(fender(side), S.cowlZ, hoodZ1, LOWER_N, 60), paint(), group, { ink: null });
 
   const bayHalf = S.halfW - 2 * fenderW + 0.02;
-  add(loft((z) => ({ z, yb: S.bottom + 0.02, yt: S.bayFloor, wb: bayHalf, wt: bayHalf }), S.cowlZ - 0.02, S.fasciaZ + 0.02, 8, 8), toon(C.bay, { halftone: 0.4 }), group, { ink: null });
-  add(rbox(bayHalf * 2, hoodLine(S.cowlZ) - S.bayFloor, 0.02, 0.005), toon(C.bay, { halftone: 0.4 }), group, { at: [0, (hoodLine(S.cowlZ) + S.bayFloor) / 2, S.cowlZ + 0.005], ink: null });
+  add(loft((z) => ({ z, yb: S.bottom + 0.02, yt: S.bayFloor, wb: bayHalf, wt: bayHalf }), S.cowlZ - 0.02, S.fasciaZ + 0.02, 8, 8), toon(TONE.blackPart, { halftone: 0.4 }), group, { ink: null });
+  add(rbox(bayHalf * 2, hoodLine(S.cowlZ) - S.bayFloor, 0.02, 0.005), toon(TONE.blackPart, { halftone: 0.4 }), group, { at: [0, (hoodLine(S.cowlZ) + S.bayFloor) / 2, S.cowlZ + 0.005], ink: null });
 
   // The driver's door glass is left out here; it rides on the door (door.ts).
   const [dz0, dz1] = S.door;

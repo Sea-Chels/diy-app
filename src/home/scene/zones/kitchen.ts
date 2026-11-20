@@ -1,9 +1,11 @@
 import * as THREE from 'three';
 import { glass, toon } from '../../../shared/toon';
-import { add, box, canvasTex, mapped, range, rng, speckle, tube, V, type V3 } from '../../../shared/scene/kit';
+import { add, box, canvasTex, range, rng, speckle, tube, V, type V3, textured } from '../../../shared/scene/kit';
 import { Z0, T, WIN } from '../room';
 import { subway } from '../textures';
 import type { HomeCtx } from '../ctx';
+import { C } from '../palette';
+import { TONE } from '../../../shared/theme';
 
 export function buildKitchen(c: HomeCtx) {
   const { lidHooks, M, area, pick, slab, pivot, shaker, plateWith, s } = c;
@@ -44,8 +46,8 @@ export function buildKitchen(c: HomeCtx) {
 
   // Countertop with the sink cut out, in the chosen material.
   const counterMat = {
-    laminate: () => mapped(0xffffff, speckle('#cdc6b8', ['#a39b8d', '#e2dccf', '#8f877a', '#b8b0a2'], 1600, [1, 2], [2, 2], 21)),
-    butcher: () => mapped(0xffffff, canvasTex(256, 64, (ctx) => {
+    laminate: () => textured(speckle('#cdc6b8', ['#a39b8d', '#e2dccf', '#8f877a', '#b8b0a2'], 1600, [1, 2], [2, 2], 21)),
+    butcher: () => textured(canvasTex(256, 64, (ctx) => {
       const rr = rng(4);
       for (let x = 0; x < 256; x += 8) {
         ctx.fillStyle = ['#c98f55', '#b97c45', '#d39d63', '#ad7240', '#c58a50'][Math.floor(rr() * 5)];
@@ -54,7 +56,7 @@ export function buildKitchen(c: HomeCtx) {
         ctx.fillRect(x, 0, 1, 64);
       }
     }, [0.5, 2])),
-    quartz: () => mapped(0xffffff, canvasTex(256, 256, (ctx) => {
+    quartz: () => textured(canvasTex(256, 256, (ctx) => {
       ctx.fillStyle = '#f1efea';
       ctx.fillRect(0, 0, 256, 256);
       const rr = rng(8);
@@ -87,7 +89,7 @@ export function buildKitchen(c: HomeCtx) {
   }
   // Subway backsplash, one tile texture per patch so the tiles stay the same size.
   const splash = (x0: number, x1: number, y0: number, y1: number) => {
-    slab([x0, y0, Z0], [x1, y1, Z0 + 0.008], mapped(0xffffff, subway([(x1 - x0) / 0.3, (y1 - y0) / 0.6])), counters, 'thin');
+    slab([x0, y0, Z0], [x1, y1, Z0 + 0.008], textured(subway([(x1 - x0) / 0.3, (y1 - y0) / 0.6])), counters, 'thin');
   };
   splash(-1.76, -1.0, 0.92, 1.58);
   splash(-1.0, 1.5, CTOP, 1.02);
@@ -121,7 +123,7 @@ export function buildKitchen(c: HomeCtx) {
   {
     const cz = (SINK.z0 + SINK.z1) / 2;
     add(new THREE.CylinderGeometry(0.05, 0.04, 0.05, 16), M.steel, sink, { at: [SINK.cx, 0.635, cz] });
-    const disp = add(new THREE.CylinderGeometry(0.095, 0.1, 0.27, 20), toon(0x2b2f3a, { shine: 0.4 }), sink, { at: [SINK.cx, 0.47, cz] });
+    const disp = add(new THREE.CylinderGeometry(0.095, 0.1, 0.27, 20), toon(TONE.plastic, { shine: 0.4 }), sink, { at: [SINK.cx, 0.47, cz] });
     disp.userData.label = 'disposal';
     add(new THREE.CylinderGeometry(0.1, 0.1, 0.02, 20), M.steel, sink, { at: [SINK.cx, 0.59, cz] });
     // Disposal outlet elbow into the P-trap, then the trap arm to the wall.
@@ -135,7 +137,7 @@ export function buildKitchen(c: HomeCtx) {
       tube([V(vx, 0.32, Z0 + 0.065), V(vx, 0.5, Z0 + 0.07), V(SINK.cx + (vx < 0 ? -0.02 : 0.02), 0.75, Z0 + 0.065), V(SINK.cx + (vx < 0 ? -0.01 : 0.01), 0.86, Z0 + 0.06)], 0.007, M.braided, sink, { seg: 24 });
     }
     // Dishwasher drain hose, looped high before it drops into the disposal.
-    tube([V(0.29, 0.15, Z0 + 0.2), V(0.2, 0.5, Z0 + 0.15), V(0.05, 0.8, Z0 + 0.12), V(-0.05, 0.7, cz - 0.06), V(SINK.cx + 0.08, 0.53, cz)], 0.01, toon(0x8e939c), sink, { seg: 30 });
+    tube([V(0.29, 0.15, Z0 + 0.2), V(0.2, 0.5, Z0 + 0.15), V(0.05, 0.8, Z0 + 0.12), V(-0.05, 0.7, cz - 0.06), V(SINK.cx + 0.08, 0.53, cz)], 0.01, toon(C.drainHose), sink, { seg: 30 });
   }
 
   // Window over the sink: double-hung, the lower sash slides up.
@@ -152,7 +154,7 @@ export function buildKitchen(c: HomeCtx) {
     jamb([WIN.x0 - 0.1, WIN.y0 - 0.025, Z0 - 0.03], [WIN.x1 + 0.1, WIN.y0, Z0 + 0.06]);
     jamb([WIN.x0 - 0.05, 1.02, Z0], [WIN.x1 + 0.05, WIN.y0 - 0.025, Z0 + 0.015]);
     slab([WIN.x0 - 0.06, WIN.y0 - 0.04, Z0 - T - 0.06], [WIN.x1 + 0.06, WIN.y0, Z0 - T], M.trim, w, 'thin');
-    const pane = glass({ tint: 0x22355a, streak: 0xcfe6ff, alpha: 0.32, streaks: 0.8 });
+    const pane = glass({ tint: C.windowTint, streak: C.windowStreak, alpha: 0.32, streaks: 0.8 });
     const sash = (y0: number, z: number) => {
       const g = new THREE.Group();
       g.position.set((WIN.x0 + WIN.x1) / 2, y0, z);
@@ -185,13 +187,13 @@ export function buildKitchen(c: HomeCtx) {
     box(x1 - x0, 0.1, 0.06, M.steel, a, { at: [cx, 0.96, Z0 + 0.04], r: 0.01 });
     // Oven door with a window, bar handle, knobs and a storage drawer.
     box(0.72, 0.52, 0.025, M.steel, a, { at: [cx, 0.44, Z0 + 0.67], r: 0.008 });
-    box(0.5, 0.24, 0.01, toon(0x15171c, { shine: 0.6 }), a, { at: [cx, 0.44, Z0 + 0.684], r: 0.008 });
+    box(0.5, 0.24, 0.01, toon(C.ovenGlass, { shine: 0.6 }), a, { at: [cx, 0.44, Z0 + 0.684], r: 0.008 });
     tube([V(x0 + 0.06, 0.72, Z0 + 0.68), V(x0 + 0.06, 0.72, Z0 + 0.72), V(x1 - 0.06, 0.72, Z0 + 0.72), V(x1 - 0.06, 0.72, Z0 + 0.68)], 0.011, M.chrome, a, { seg: 20 });
     box(0.72, 0.12, 0.02, M.steel, a, { at: [cx, 0.1, Z0 + 0.665], r: 0.006 });
     for (let i = 0; i < 4; i++) add(new THREE.CylinderGeometry(0.02, 0.02, 0.025, 14), M.black, a, { at: [x0 + 0.13 + i * 0.165, 0.83, Z0 + 0.665], rot: [Math.PI / 2, 0, 0] });
     const burners: THREE.Mesh[] = [];
     for (const [bx, bz, rr] of [[-0.18, 0.18, 0.09], [0.18, 0.18, 0.07], [-0.18, 0.46, 0.07], [0.18, 0.46, 0.09]] as const) {
-      const ring = add(new THREE.TorusGeometry(rr, 0.006, 6, 28), toon(0x4a2a26), a, { at: [cx + bx, 0.915, Z0 + bz], rot: [Math.PI / 2, 0, 0], ink: null });
+      const ring = add(new THREE.TorusGeometry(rr, 0.006, 6, 28), toon(C.burnerRing), a, { at: [cx + bx, 0.915, Z0 + bz], rot: [Math.PI / 2, 0, 0], ink: null });
       burners.push(ring);
     }
     a.userData.burners = burners;
@@ -204,7 +206,7 @@ export function buildKitchen(c: HomeCtx) {
   {
     const a = appliances;
     box(0.59, 0.76, 0.025, M.steel, a, { at: [0.6, 0.48, Z0 + 0.585], r: 0.008 });
-    box(0.59, 0.06, 0.03, toon(0x2b2f36, { shine: 0.4 }), a, { at: [0.6, 0.84, Z0 + 0.58], r: 0.006 });
+    box(0.59, 0.06, 0.03, toon(TONE.plastic, { shine: 0.4 }), a, { at: [0.6, 0.84, Z0 + 0.58], r: 0.006 });
     tube([V(0.36, 0.77, Z0 + 0.6), V(0.36, 0.77, Z0 + 0.635), V(0.84, 0.77, Z0 + 0.635), V(0.84, 0.77, Z0 + 0.6)], 0.009, M.chrome, a, { seg: 16 });
     slab([0.31, 0, Z0], [0.89, 0.1, Z0 + 0.53], M.black, a, null);
   }
@@ -219,7 +221,7 @@ export function buildKitchen(c: HomeCtx) {
       box(0.444, 1.0, 0.05, M.steel, a, { at: [cx, 1.26, Z0 + 0.765], r: 0.012 });
       tube([V(cx - sd * 0.19, 0.9, Z0 + 0.79), V(cx - sd * 0.19, 0.9, Z0 + 0.83), V(cx - sd * 0.19, 1.5, Z0 + 0.83), V(cx - sd * 0.19, 1.5, Z0 + 0.79)], 0.011, M.chrome, a, { seg: 16 });
     }
-    box(0.15, 0.24, 0.01, toon(0x24272e, { shine: 0.5 }), a, { at: [(x0 + x1) / 2 - 0.26, 1.3, Z0 + 0.792], r: 0.012 });
+    box(0.15, 0.24, 0.01, toon(TONE.charcoal, { shine: 0.5 }), a, { at: [(x0 + x1) / 2 - 0.26, 1.3, Z0 + 0.792], r: 0.012 });
     box(0.89, 0.68, 0.05, M.steel, a, { at: [(x0 + x1) / 2, 0.38, Z0 + 0.765], r: 0.012 });
     tube([V(x0 + 0.15, 0.66, Z0 + 0.79), V(x0 + 0.15, 0.66, Z0 + 0.83), V(x1 - 0.15, 0.66, Z0 + 0.83), V(x1 - 0.15, 0.66, Z0 + 0.79)], 0.011, M.chrome, a, { seg: 16 });
   }

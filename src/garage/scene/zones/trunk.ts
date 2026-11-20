@@ -5,6 +5,7 @@ import { ringPoint, shell, type Section, type SectionFn } from '../loft';
 import { C, M, rbox } from '../kit';
 import { plateMat } from '../textures';
 import type { CarCtx } from '../ctx';
+import { TONE } from '../../../shared/theme';
 
 export function buildTrunk(c: CarCtx) {
   const { S, group, paint, tag, lowerTop, lowerBottom, lowerWidth, roofLine, LOWER_N, lower, GH_N, sill, ghBaseY } = c;
@@ -23,7 +24,7 @@ export function buildTrunk(c: CarCtx) {
     const lidGeom = shell(lower, LOWER_N, dz0, dz1, 0.07, 0.43, 0.006, 0.028, 24, 16);
     lidGeom.translate(-hinge.x, -hinge.y, -hinge.z);
     const lid = add(lidGeom, paint(), trunkPivot, { ink: 'body' });
-    add(shell(lower, LOWER_N, dz0 + 0.04, dz1 - 0.03, 0.09, 0.41, 0.002, 0.002, 12, 10), toon(C.bay, { halftone: 0.5, side: THREE.DoubleSide }), group, { ink: null });
+    add(shell(lower, LOWER_N, dz0 + 0.04, dz1 - 0.03, 0.09, 0.41, 0.002, 0.002, 12, 10), toon(TONE.blackPart, { halftone: 0.5, side: THREE.DoubleSide }), group, { ink: null });
     const spare = add(new THREE.CylinderGeometry(0.24, 0.24, 0.02, 32), M.rubber('matte'), group, { at: [0.1, lowerTop((dz0 + dz1) / 2) + 0.004, (dz0 + dz1) / 2] });
     tag('trunk', lid, spare);
     trunkOpen = 1.15;
@@ -138,12 +139,12 @@ export function buildTrunk(c: CarCtx) {
       const uGeom = new THREE.ExtrudeGeometry(u, { depth: 0.05, bevelEnabled: true, bevelThickness: BT, bevelSize: BT, bevelSegments: 2, curveSegments: 10 });
       uGeom.translate(0, 0, S.tailZ + BT);
       add(uGeom, paint(), group, { ink: 'body' });
-      add(rbox(2 * G - 0.02, cargoY - gb, 0.02, 0.006), toon(C.bay, { halftone: 0.6 }), group, { at: [0, (cargoY + gb) / 2, S.tailZ + 0.06], ink: null });
+      add(rbox(2 * G - 0.02, cargoY - gb, 0.02, 0.006), toon(TONE.blackPart, { halftone: 0.6 }), group, { at: [0, (cargoY + gb) / 2, S.tailZ + 0.06], ink: null });
     }
 
     const cargoZ0 = S.tailZ + 0.05;
     const cargoZ1 = (S.rearSeatZ ?? S.seatZ) - 0.2;
-    add(rbox((S.halfW - 0.1) * 2, 0.03, cargoZ1 - cargoZ0, 0.01), toon(C.bay, { halftone: 0.6 }), group, { at: [0, cargoY, (cargoZ0 + cargoZ1) / 2], ink: null });
+    add(rbox((S.halfW - 0.1) * 2, 0.03, cargoZ1 - cargoZ0, 0.01), toon(TONE.blackPart, { halftone: 0.6 }), group, { at: [0, cargoY, (cargoZ0 + cargoZ1) / 2], ink: null });
     const spare = add(new THREE.CylinderGeometry(0.27, 0.27, 0.1, 32), M.rubber('matte'), group, { at: [0.15, cargoY + 0.065, (cargoZ0 + cargoZ1) / 2 - 0.1] });
     const spareHub = add(new THREE.CylinderGeometry(0.15, 0.15, 0.104, 24), M.metal(), group, { at: [0.15, cargoY + 0.066, (cargoZ0 + cargoZ1) / 2 - 0.1] });
     tag('trunk', panel, handle, spare, spareHub);

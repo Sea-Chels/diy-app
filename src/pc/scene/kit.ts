@@ -8,18 +8,14 @@ export const label: typeof kitLabel = (lines, bg, w, h) => kitLabel(lines, bg, w
 export const C = {
   pcb: 0x1e2433,
   trace: 0x3a4870,
-  slot: 0x2c303d,
-  black: 0x18171e,
-  plastic: 0x2b2d36,
-  metal: 0xb7bfcf,
   darkMetal: 0x4a5061,
   copper: 0xd88a4f,
-  sleeve: 0x1f1e27,
-  ihs: 0xd3d8e2,
-  ramBody: 0x30333f,
-  gpu: 0x2a2c36,
-  blade: 0x3a3e4c,
   m2: 0x1d3b30,
+  keys: 0x3d4150,
+  /** The pin-1 marker on the socket. */
+  gold: 0xd9b45a,
+  panelTint: 0x1d1b3a,
+  panelStreak: 0xd9d2ff,
 };
 
 export const stripes: typeof kitStripes = (repeat, light, dark) => kitStripes(repeat, light, dark, 1);

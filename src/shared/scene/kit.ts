@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { outline, toon, type InkWeight, type ToonOpts } from '../toon';
-import { PALETTE } from '../theme';
+import { PALETTE, TONE } from '../theme';
 import { must } from '../must';
 
 export type V3 = [number, number, number];
@@ -115,6 +115,9 @@ export function mapped(color: THREE.ColorRepresentation, map: THREE.Texture, o: 
   m.map = map;
   return m;
 }
+
+/** A toon material showing `map` in its own colors. */
+export const textured = (map: THREE.Texture, o: ToonOpts = {}) => mapped(TONE.white, map, o);
 
 /** Swaps a material's texture for a new one, disposing the old. */
 export function remap(m: THREE.MeshToonMaterial, map: THREE.Texture): void {

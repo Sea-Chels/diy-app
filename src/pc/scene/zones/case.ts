@@ -2,9 +2,9 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { glass, inkLine, toon } from '../../../shared/toon';
 import { add, mapped } from '../../../shared/scene/kit';
-import { hex } from '../../../shared/theme';
+import { hex, TONE } from '../../../shared/theme';
 import { T, FEET } from '../layout';
-import { stripes, perforated } from '../kit';
+import { C, stripes, perforated } from '../kit';
 import type { PcCtx } from '../ctx';
 import type { Cooling } from '../zones/cooling';
 
@@ -42,7 +42,7 @@ export function buildCaseShell(c: PcCtx) {
   }
 
   // Top vent over the fans or radiator.
-  const vent = rbox(W - 50, 1.6, D * 0.62, mapped(0x9aa0ab, stripes([1, 34], '#3b3f4c', '#1a1b22')), cg, { at: [-8, H + 0.6, -D * 0.12], r: 0.6, ink: null });
+  const vent = rbox(W - 50, 1.6, D * 0.62, mapped(TONE.alloy, stripes([1, 34], '#3b3f4c', '#1a1b22')), cg, { at: [-8, H + 0.6, -D * 0.12], r: 0.6, ink: null });
   hot('case', vent);
 
   // Rear: I/O cutout, slot covers, a fan grille.
@@ -69,7 +69,7 @@ export function buildCaseShell(c: PcCtx) {
   const glassPivot = new THREE.Group();
   glassPivot.position.set(-W / 2, 0, -D / 2);
   cg.add(glassPivot);
-  const pane = new THREE.Mesh(new THREE.PlaneGeometry(D - 4, H - 4), glass({ tint: 0x1d1b3a, streak: 0xd9d2ff, alpha: 0.08, streaks: 0.4 }));
+  const pane = new THREE.Mesh(new THREE.PlaneGeometry(D - 4, H - 4), glass({ tint: C.panelTint, streak: C.panelStreak, alpha: 0.08, streaks: 0.4 }));
   pane.rotation.y = -Math.PI / 2;
   pane.position.set(-1.5, H / 2, D / 2);
   pane.renderOrder = 2;
@@ -88,7 +88,7 @@ export function buildCaseShell(c: PcCtx) {
   const ioPlate = rbox(W * 0.62, 2.4, 30, mats.black, cg, { at: [-W / 2 + W * 0.36, H + 1.2, ioz], r: 1 });
   const btnX = -W / 2 + 24;
   const btn = add(new THREE.CylinderGeometry(9, 9, 4, 28), mats.metal, cg, { at: [btnX, H + 2.6, ioz] });
-  const ledMat = toon(0x3a3d48, { halftone: 0, emissive: hex('cyan'), emissiveIntensity: 1 });
+  const ledMat = toon(TONE.graphite, { halftone: 0, emissive: hex('cyan'), emissiveIntensity: 1 });
   const led = new THREE.Mesh(new THREE.TorusGeometry(9.6, 1.1, 8, 40), ledMat);
   led.rotation.x = Math.PI / 2;
   led.position.set(btnX, H + 4.4, ioz);
@@ -104,7 +104,7 @@ export function buildCaseShell(c: PcCtx) {
   usb.scale.setScalar(0.001);
   cg.add(usb);
   rbox(12, 12, 4.6, mats.metal, usb, { at: [0, 6, 0], r: 0.6 });
-  rbox(17, 34, 7, toon(0xffd23f, { shine: 0.5 }), usb, { at: [0, 27, 0], r: 3 });
+  rbox(17, 34, 7, toon(hex('yellow'), { shine: 0.5 }), usb, { at: [0, 27, 0], r: 3 });
   hot('monitor', usb);
   return { trayX, innerX0, innerCx, bw, bh, boardRear, boardTop, boardFace, P, glassPivot, ioz, btnX, ledMat, usb };
 }

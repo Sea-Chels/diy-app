@@ -12,7 +12,7 @@ import { disposeTree, toon } from '../../shared/toon';
 import { reducedMotion } from '../../shared/motion';
 import { tweenScope } from '../../shared/tween';
 import type { V3 } from '../../shared/scene/kit';
-import { hex } from '../../shared/theme';
+import { hex, TONE } from '../../shared/theme';
 import type { StageRig, View } from '../../shared/scene/stage';
 import { createBeacons, createLids, glowMeshes, viewFrom, rigClock } from '../../shared/scene/rigKit';
 import type { AreaId, LidId } from '../data/areas';
@@ -28,6 +28,7 @@ import { addCreases } from './creases';
 import { findMovers, mergeInk, moves } from '../../shared/scene/ink';
 import { K, X0, Z0, WH } from './room';
 import { tag } from '../../shared/scene/sceneTags';
+import { C } from './palette';
 
 export interface Rig extends StageRig<AreaId, LidId> {
   /** The wall color and floor change in place, without a rebuild. */
@@ -116,7 +117,7 @@ export function buildRig(s: Setup): Rig {
   let jiggleAt = -10;
   const burners = (appliances.userData.burners ?? []) as THREE.Mesh[];
   const burnerCold = burners[0]?.material as THREE.Material;
-  const burnerHot = new THREE.MeshBasicMaterial({ color: 0xff5a1f });
+  const burnerHot = new THREE.MeshBasicMaterial({ color: C.burnerHot });
   const drip = () => {
     const d = new THREE.Mesh(dropGeo, dropMat);
     d.position.copy(DRIP_FROM);
@@ -153,7 +154,7 @@ export function buildRig(s: Setup): Rig {
       else if (id === 'utility') {
         // Reset the tripped breaker: all the way off, then on.
         const handle = tripped.children[1];
-        (handle as THREE.Mesh).material = toon(0x3a3d44);
+        (handle as THREE.Mesh).material = toon(TONE.graphite);
         handle.position.z = -0.012;
       }
     },

@@ -1,11 +1,12 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
 import { easeInOutCubic, lerp } from '../../../shared/tween';
-import { add, mapped } from '../../../shared/scene/kit';
+import { add, textured } from '../../../shared/scene/kit';
 import { moves } from '../../../shared/scene/ink';
 import { C, M, rbox } from '../kit';
 import { mouthTex, plateMat } from '../textures';
 import type { CarCtx } from '../ctx';
+import { TONE } from '../../../shared/theme';
 
 /**
  * An NA MX-5 face: slanted pop-up headlamps that blink shut when clicked,
@@ -76,7 +77,7 @@ export function buildFront(c: CarCtx) {
     lamp.rotation.set(at.pitch, at.yaw, 0, 'YXZ');
     group.add(lamp);
     const capsule = new THREE.CapsuleGeometry(0.026, 0.13, 6, 14).rotateZ(Math.PI / 2).scale(1, 1, 0.45);
-    heads.push(add(capsule, M.lamp(C.reverse, 0.15, C.lampGlow), lamp));
+    heads.push(add(capsule, M.lamp(TONE.coolWhite, 0.15, C.lampGlow), lamp));
     heads.push(add(rbox(0.07, 0.03, 0.012, 0.012), M.lamp(C.marker, 0.4), lamp, { at: [-side * 0.045, 0, 0.008], ink: null }));
     const markerZ = S.fasciaZ + 0.14;
     heads.push(add(rbox(0.012, 0.035, 0.1, 0.006), M.lamp(C.marker, 0.5), group, { at: [side * (fasciaWidth(markerZ) + 0.004), base + 0.16, markerZ], ink: null }));
@@ -92,7 +93,7 @@ export function buildFront(c: CarCtx) {
     mp.setXYZ(i, ...at.pos);
   }
   mouthGeo.computeVertexNormals();
-  const mouthMat = mapped(0xffffff, mouthTex(), { halftone: 0.4 });
+  const mouthMat = textured(mouthTex(), { halftone: 0.4 });
   mouthMat.alphaTest = 0.5;
   add(mouthGeo, mouthMat, group, { ink: null });
 

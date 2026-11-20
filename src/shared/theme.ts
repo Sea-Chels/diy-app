@@ -54,10 +54,63 @@ export type ColorName = keyof typeof PALETTE;
 
 export const WORKSHOP_COLOR = { pc: 'cyan', garage: 'coral', home: 'yellow', garden: 'green', hub: 'pink' } as const satisfies Record<string, ColorName>;
 
-/** The comic lighting every scene shares: warm key, cool front fill, magenta and cyan rims, and a sky a shade paler over a whole room or yard than over one model. */
-export const LIGHT = { key: 0xfff0dc, front: 0xb8c4ff, rimPink: 0xff4fd8, rimCyan: 0x45e0ff, ground: 0x2a1830, skyObject: 0xc9d2ff, skySite: 0xd9e2ff } as const;
-
 export const hex = (name: ColorName): number => parseInt(PALETTE[name].slice(1), 16);
+
+/** The comic lighting every scene shares: warm key, cool front fill, magenta and cyan rims, and a sky a shade paler over a whole room or yard than over one model. */
+export const LIGHT = { key: 0xfff0dc, front: 0xb8c4ff, rimPink: hex('pink'), rimCyan: hex('rim'), ground: 0x2a1830, skyObject: 0xc9d2ff, skySite: 0xd9e2ff } as const;
+
+/** Scene colors more than one workshop paints with, as 0xrrggbb. */
+export const TONE = {
+  /** The base under a texture, and under instances tinted one by one. */
+  white: hex('hi'),
+  black: hex('shade'),
+  brass: 0xd8b04a,
+  /** Fire-extinguisher, shut-off and hot-tap red. */
+  safetyRed: 0xd8432f,
+  /** The cold tap's blue next to `safetyRed`. */
+  coldBlue: 0x3b82f6,
+  hose: 0x3f9a4a,
+  terracotta: 0xc8643a,
+  /** Hand tools: blades, shovels, scrapers. */
+  toolSteel: 0x9aa3b2,
+  /** The dark disc the models stand on. */
+  ground: 0x1d2133,
+  /** Fan hubs and engine covers. */
+  cover: 0x2f3240,
+  /** Glazed and plastic whites: toilets, PVC, row cover, hydro rafts. */
+  porcelain: 0xf6f6f2,
+  /** Warm off-white: cut drywall, garden trim. */
+  linen: 0xf4efe4,
+  /** Near-black parts: cable sleeves, hoses, the engine bay, the PC's black plastic. */
+  blackPart: 0x1b1922,
+  /** Black switches, trim and drip line. */
+  soot: 0x1d1f24,
+  /** Dark plastic and painted metal: fan frames, trays, boxes. */
+  charcoal: 0x23262e,
+  /** Dark gray plastic: GPU shroud, battery, appliance controls. */
+  plastic: 0x2b2d36,
+  /** Mid-dark gray: RGB parts switched off, fan blades, breaker handles, the airbox. */
+  graphite: 0x3a3d48,
+  /** Satin gray metal: thermal paste, vents, the breaker panel. */
+  alloy: 0x9aa0ab,
+  /** Bright bare metal: PC metal, radiators, galvanized steel. */
+  silver: 0xb7bdcc,
+  /** Brushed steel: fins, appliances, spokes. */
+  steel: 0xc4cad6,
+  /** Polished metal: CPU lids, chrome fixtures, wheel rims. */
+  polished: 0xd4dbe8,
+  gunmetal: 0x7d8590,
+  /** Near-black brown: the hole in the drywall, a bee. */
+  umber: 0x1a1411,
+  bark: 0x6b4a30,
+  leaf: 0x3f7a34,
+  tan: 0xc69c64,
+  signalOrange: 0xf08a24,
+  coolWhite: 0xf4f0ff,
+  brightRed: 0xe2364a,
+  glassTint: 0x29285c,
+  glassStreak: 0xc3b8ff,
+} as const;
 
 /** A 0xrrggbb number as a CSS color. */
 export const cssHex = (c: number) => `#${c.toString(16).padStart(6, '0')}`;

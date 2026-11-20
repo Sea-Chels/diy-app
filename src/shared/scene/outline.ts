@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { hex } from '../theme';
 
 export const HOVER_LAYER = 1;
 export const SELECT_LAYER = 2;
@@ -12,7 +13,8 @@ export const SELECT_LAYER = 2;
 export function createOutlinePass(renderer: THREE.WebGLRenderer) {
   const target = new THREE.WebGLRenderTarget(1, 1);
   const mask = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, depthTest: false, depthWrite: false });
-  const uniforms = { uMask: { value: target.texture as THREE.Texture }, uTexel: { value: new THREE.Vector2(1, 1) }, uScale: { value: 1 } };
+  // Read as linear so the shader, which skips color conversion, writes the palette's cyan unchanged.
+  const uniforms = { uColor: { value: new THREE.Color().setHex(hex('cyan'), THREE.LinearSRGBColorSpace) }, uMask: { value: target.texture as THREE.Texture }, uTexel: { value: new THREE.Vector2(1, 1) }, uScale: { value: 1 } };
   const mat = new THREE.ShaderMaterial({
     uniforms,
     transparent: true,
@@ -20,7 +22,7 @@ export function createOutlinePass(renderer: THREE.WebGLRenderer) {
     depthWrite: false,
     vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
     fragmentShader: `
-      uniform sampler2D uMask; uniform vec2 uTexel; uniform float uScale;
+      uniform sampler2D uMask; uniform vec2 uTexel; uniform float uScale; uniform vec3 uColor;
       varying vec2 vUv;
       void main() {
         vec2 c = texture2D(uMask, vUv).rg;
@@ -39,7 +41,7 @@ export function createOutlinePass(renderer: THREE.WebGLRenderer) {
         float hover = near.r * (1.0 - c.r) * (1.0 - smoothstep(0.55, 0.75, cover.r)) * 0.85;
         float rim = max(sel, hover);
         if (rim < 0.01) discard;
-        gl_FragColor = vec4(0.431, 0.906, 1.0, rim);
+        gl_FragColor = vec4(uColor, rim);
       }`,
   });
   const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat);

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { toon } from '../../shared/toon';
+import { TONE } from '../../shared/theme';
 import { tweenScope } from '../../shared/tween';
 import type { BodyKind } from '../data/paint';
 import { curve, ringPoint, tAtY, type SectionFn } from './loft';
@@ -19,7 +20,7 @@ export function createCtx(kind: BodyKind) {
 
   // The rig paints every body panel before the first frame, so the starting color never shows.
   const paint = () => {
-    const m = toon(0xffffff);
+    const m = toon(TONE.white);
     paintMats.push(m);
     return m;
   };

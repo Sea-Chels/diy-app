@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 import { lerp } from '../../../shared/tween';
 import { inkLine, toon } from '../../../shared/toon';
-import { add, box, canvasTex, jitter, label, mapped, range, speckle, UNIT_BOX, V, woodTexture } from '../../../shared/scene/kit';
-import { PALETTE } from '../../../shared/theme';
+import { add, box, canvasTex, jitter, label, range, speckle, UNIT_BOX, V, woodTexture, textured } from '../../../shared/scene/kit';
+import { PALETTE, TONE } from '../../../shared/theme';
 import { basil, corn, marigold, nasturtium, squash, tomato } from '../plants/fruiting';
 import { cabbage, carrot, chard, kale, lettuce } from '../plants/greens';
 import { UNIT_CYL, LOW_SPHERE, corrugated, BW, BD, BH } from '../geometry';
 import type { GardenCtx } from '../ctx';
+import { C } from '../palette';
 
 export function buildBeds(c: GardenCtx) {
   const { r, k, lidHooks, M, area, pick, inst, tag, s } = c;
@@ -39,7 +40,7 @@ export function buildBeds(c: GardenCtx) {
     const iw = BW - 0.04;
     const id = BD - 0.04;
     type Layer = { name: string; h: number; mat: THREE.Material };
-    const tex = (base: string, flecks: string[], n = 700, size: [number, number] = [2, 6]) => mapped(0xffffff, speckle(base, flecks, n, size, [3, 1], 21 + n));
+    const tex = (base: string, flecks: string[], n = 700, size: [number, number] = [2, 6]) => textured(speckle(base, flecks, n, size, [3, 1], 21 + n));
     const LAYERS: Record<typeof s.fill, Layer[]> = {
       hugel: [
         { name: 'Logs', h: 0.22, mat: tex('#3c2818', ['#2a1a10', '#4a3424'], 300) },
@@ -74,7 +75,7 @@ export function buildBeds(c: GardenCtx) {
       add(UNIT_BOX, L.mat, bed, { at: [0, y + L.h / 2, 0], scale: [iw, L.h, id], ink: null });
       if (s.fill === 'hugel' && i === 0) {
         // Log ends with rings face the front.
-        const rings = mapped(0xffffff, canvasTex(64, 64, (ctx) => {
+        const rings = textured(canvasTex(64, 64, (ctx) => {
           ctx.fillStyle = '#d8b07a';
           ctx.fillRect(0, 0, 64, 64);
           ctx.strokeStyle = '#9a6a3a';
@@ -91,7 +92,7 @@ export function buildBeds(c: GardenCtx) {
           ctx.strokeStyle = '#4a2e18';
           ctx.stroke();
         }));
-        const bark = mapped(0xffffff, woodTexture('#5a3e2a', '#3a2616', [1, 3]));
+        const bark = textured(woodTexture('#5a3e2a', '#3a2616', [1, 3]));
         for (const [x, rad] of [[-0.95, 0.1], [-0.55, 0.11], [-0.12, 0.1], [0.3, 0.11], [0.72, 0.1], [1.0, 0.08]] as const) {
           const log = new THREE.Mesh(new THREE.CylinderGeometry(rad, rad, id, 14), [bark, rings, rings]);
           log.rotation.x = Math.PI / 2;
@@ -101,13 +102,13 @@ export function buildBeds(c: GardenCtx) {
         }
       }
       if (s.fill === 'hugel' && i === 1) {
-        const twig = toon(0x6a4a30);
+        const twig = toon(TONE.bark);
         for (let t = 0; t < 26; t++) {
           // Cut ends sit flush with the layer's face, so nothing pokes through the closed front panel.
           const len = range(r, 0.2, 0.5);
           const tilt = jitter(r, 0.6);
           const z = id / 2 + 0.005 - (len / 2) * Math.abs(Math.cos(tilt));
-          inst(twigs, UNIT_CYL, twig, [range(r, -1.1, 1.1), y + range(r, 0.01, L.h - 0.01), z], [0.014, len, 0.014], 0xffffff, [Math.PI / 2 + tilt, jitter(r, 1.4), 0], null);
+          inst(twigs, UNIT_CYL, twig, [range(r, -1.1, 1.1), y + range(r, 0.01, L.h - 0.01), z], [0.014, len, 0.014], TONE.white, [Math.PI / 2 + tilt, jitter(r, 1.4), 0], null);
         }
       }
       // A comic caption per layer, shown when the front is open.
@@ -131,7 +132,7 @@ export function buildBeds(c: GardenCtx) {
   }
   {
     const top = BH - 0.03;
-    for (let i = 0; i < 4; i++) chard(k, bed, V(-0.95 + i * 0.32, top, -0.32), [0xe0344b, 0xffc21a, 0xff7ad8, 0xe0344b][i]);
+    for (let i = 0; i < 4; i++) chard(k, bed, V(-0.95 + i * 0.32, top, -0.32), [TONE.brightRed, C.yellow.gold, C.pink.chard, TONE.brightRed][i]);
     for (let i = 0; i < 3; i++) kale(k, bed, V(0.4 + i * 0.32, top, -0.3));
     for (let i = 0; i < 7; i++) lettuce(k, bed, V(-1.0 + i * 0.3, top, 0.05), { red: i % 2 === 1 });
     for (let i = 0; i < 12; i++) carrot(k, bed, V(-1.05 + i * 0.19, top, 0.36));
@@ -195,7 +196,7 @@ export function buildBeds(c: GardenCtx) {
     cover.add(cloth);
     const roll = add(new THREE.TorusGeometry(R + 0.04, 0.045, 8, 32, Math.PI), M.cloth, tunnel, { at: [L / 2 - L, H, 0], rot: [0, Math.PI / 2, 0], ink: null });
     roll.renderOrder = 2;
-    for (const x of [-0.8, 0, 0.8]) box(0.2, 0.06, 0.12, toon(0xb39a6a), tunnel, { at: [x, H + 0.03, R + 0.06], r: 0.03 });
+    for (const x of [-0.8, 0, 0.8]) box(0.2, 0.06, 0.12, toon(C.clip), tunnel, { at: [x, H + 0.03, R + 0.06], r: 0.03 });
     lidHooks.rowCover = (t) => {
       const sx = lerp(1, 0.2, t);
       cover.scale.x = sx;

@@ -10,6 +10,7 @@ import { canvasTex, leafGeo, leafMatrix, jitter } from '../../../shared/scene/ki
 import type { Batches } from '../batches';
 import type { Season } from '../../data/setup';
 import { toon, type InkWeight, type ToonOpts } from '../../../shared/toon';
+import { TONE } from '../../../shared/theme';
 
 /** Sway strength shared by every plant material, so stems, leaves and fruit move together. */
 export const WIND = 0.008;
@@ -155,7 +156,7 @@ export function plantKit(b: Batches, season: Season, r: () => number): PlantKit 
       ctx.fill();
     }
   });
-  const leaf = plantMat(0xffffff);
+  const leaf = plantMat(TONE.white);
   leaf.map = leafTexture();
   return {
     b,
@@ -163,8 +164,8 @@ export function plantKit(b: Batches, season: Season, r: () => number): PlantKit 
     growth: season === 'spring' ? 0.55 : 1,
     r,
     leaf,
-    plain: plantMat(0xffffff),
-    shiny: plantMat(0xffffff, { shine: 0.65 }),
+    plain: plantMat(TONE.white),
+    shiny: plantMat(TONE.white, { shine: 0.65 }),
     stem: (c) => {
       const key = new THREE.Color(c).getHex();
       const m = stems.get(key) ?? plantMat(c);
@@ -172,7 +173,7 @@ export function plantKit(b: Batches, season: Season, r: () => number): PlantKit 
       return m;
     },
     seedHead: (() => {
-      const m = plantMat(0xffffff);
+      const m = plantMat(TONE.white);
       m.map = seed;
       return m;
     })(),

@@ -7,6 +7,7 @@ import { chain, coil, createCycle, onAxle, pipe, rod, tire } from './cycle';
 import type { RideRig } from './parts3d';
 import { viewFrom } from '../../shared/scene/rigKit';
 import type { MotoPart } from '../data/parts';
+import { TONE } from '../../shared/theme';
 
 /** Side-stand lean, toward the rider's left (+x). */
 const LEAN = -0.09;
@@ -72,7 +73,7 @@ export function buildMoto(): RideRig<MotoPart> {
   body.add(jug);
   add(rbox(0.24, 0.2, 0.15, 0.02), M.casting(), jug);
   for (let y = -0.07; y <= 0.08; y += 0.03) add(rbox(0.3, 0.012, 0.2, 0.004), M.metal(), jug, { at: [0, y, 0], ink: null });
-  add(rbox(0.26, 0.06, 0.17, 0.02), toon(C.cover), jug, { at: [0, 0.12, 0] });
+  add(rbox(0.26, 0.06, 0.17, 0.02), toon(TONE.cover), jug, { at: [0, 0.12, 0] });
   const leftCover = add(onAxle(new THREE.CylinderGeometry(0.1, 0.1, 0.03, 28)), M.metal('bright'), body, { at: [0.155, 0.36, 0.02] });
   const sight = add(onAxle(new THREE.CylinderGeometry(0.024, 0.024, 0.012, 20)), M.lamp(C.oil, 0.25), body, { at: [0.176, 0.3, 0.12], ink: null });
   const sightRim = add(onAxle(new THREE.TorusGeometry(0.026, 0.006, 6, 20), 'z'), M.chrome(), body, { at: [0.178, 0.3, 0.12], ink: null });
@@ -88,24 +89,24 @@ export function buildMoto(): RideRig<MotoPart> {
   const sprocketF = { c: [-0.14, 0.38] as [number, number], r: 0.05, wrap: 1 as const };
   const sprocketR = { c: [RZ, 0.31] as [number, number], r: 0.12, wrap: 1 as const };
   const chainMeshes = [
-    add(chain([sprocketF, sprocketR], CX, 0.011), toon(C.chain, { shine: 0.6, metal: 0.5 }), body),
+    add(chain([sprocketF, sprocketR], CX, 0.011), toon(TONE.gunmetal, { shine: 0.6, metal: 0.5 }), body),
     add(onAxle(new THREE.CylinderGeometry(sprocketR.r, sprocketR.r, 0.008, 36)), M.metal(), body, { at: [CX, 0.31, RZ] }),
-    add(onAxle(new THREE.CylinderGeometry(0.07, 0.07, 0.03, 20)), toon(C.cover), body, { at: [CX + 0.005, 0.38, -0.14] }),
+    add(onAxle(new THREE.CylinderGeometry(0.07, 0.07, 0.03, 20)), toon(TONE.cover), body, { at: [CX + 0.005, 0.38, -0.14] }),
   ];
   tag('moto_chain', ...chainMeshes);
 
   for (const x of [0.13, -0.13]) {
     add(rod([x, 0.36, -0.56], [x, 0.8, -0.47], 0.016), M.trim(), body);
-    add(coil([x, 0.42, -0.547], [x, 0.74, -0.483], 0.03, 0.006, 7), toon(C.caliper), body, { ink: null });
+    add(coil([x, 0.42, -0.547], [x, 0.74, -0.483], 0.03, 0.006, 7), toon(TONE.brightRed), body, { ink: null });
   }
 
   const disc = (x: number, z: number, y: number, r: number) =>
     add(onAxle(new THREE.CylinderGeometry(r, r, 0.006, 40)), toon(C.disc, { shine: 0.9, metal: 0.8 }), body, { at: [x, y, z] });
   const brakeMeshes = [
     disc(0.07, FZ, 0.3, 0.15),
-    add(rbox(0.035, 0.1, 0.06, 0.012), toon(C.caliper, { shine: 0.6 }), body, { at: [0.08, 0.39, FZ - 0.1] }),
+    add(rbox(0.035, 0.1, 0.06, 0.012), toon(TONE.brightRed, { shine: 0.6 }), body, { at: [0.08, 0.39, FZ - 0.1] }),
     disc(-0.095, RZ, 0.31, 0.11),
-    add(rbox(0.03, 0.06, 0.08, 0.01), toon(C.caliper, { shine: 0.6 }), body, { at: [-0.1, 0.22, RZ + 0.06] }),
+    add(rbox(0.03, 0.06, 0.08, 0.01), toon(TONE.brightRed, { shine: 0.6 }), body, { at: [-0.1, 0.22, RZ + 0.06] }),
     add(rbox(0.05, 0.035, 0.045, 0.01), M.trim(), body, { at: [-0.17, 1.12, forkZ(1.12) - 0.04] }),
   ];
   brakeMeshes[1].rotation.x = 0.8;
@@ -122,10 +123,10 @@ export function buildMoto(): RideRig<MotoPart> {
   body.add(seatPivot);
   const seat = add(rbox(0.27, 0.075, 0.52, 0.035), toon(C.darkPart, { halftone: 0.6 }), seatPivot, { at: [0, 0.02, -0.26], ink: 'body' });
   seat.rotation.x = 0.08;
-  add(rbox(0.22, 0.015, 0.42, 0.005), toon(C.bay), body, { at: [0, 0.685, -0.33], ink: null });
+  add(rbox(0.22, 0.015, 0.42, 0.005), toon(TONE.blackPart), body, { at: [0, 0.685, -0.33], ink: null });
   const battery = [
-    add(rbox(0.14, 0.1, 0.12, 0.01), toon(C.battery, { halftone: 0.5 }), body, { at: [0, 0.74, -0.3] }),
-    add(new THREE.CylinderGeometry(0.012, 0.012, 0.02, 10), toon(C.positive), body, { at: [0.045, 0.8, -0.3], ink: null }),
+    add(rbox(0.14, 0.1, 0.12, 0.01), toon(TONE.plastic, { halftone: 0.5 }), body, { at: [0, 0.74, -0.3] }),
+    add(new THREE.CylinderGeometry(0.012, 0.012, 0.02, 10), toon(TONE.brightRed), body, { at: [0.045, 0.8, -0.3], ink: null }),
     add(new THREE.CylinderGeometry(0.012, 0.012, 0.02, 10), M.trim(), body, { at: [-0.045, 0.8, -0.3], ink: null }),
   ];
   tag('moto_battery', ...battery);
@@ -167,7 +168,7 @@ export function buildMoto(): RideRig<MotoPart> {
     controls.push(mirror, add(new THREE.CircleGeometry(0.047, 24).rotateY(Math.PI), toon(C.mirror, { shine: 1, halftone: 0 }), mirror, { at: [0, 0, -0.0095], ink: null }));
   }
   tag('moto_controls', ...controls);
-  add(new THREE.CylinderGeometry(0.05, 0.05, 0.03, 24).rotateX(Math.PI / 2 - 0.5), toon(C.cover), body, { at: [0, 1.1, forkZ(1.1) + 0.03] });
+  add(new THREE.CylinderGeometry(0.05, 0.05, 0.03, 24).rotateX(Math.PI / 2 - 0.5), toon(TONE.cover), body, { at: [0, 1.1, forkZ(1.1) + 0.03] });
 
   // Footpegs sit outboard of the chain.
   for (const s of [1, -1]) add(rod([s * 0.2, 0.37, -0.22], [s * 0.31, 0.37, -0.23], 0.014), M.trim(), body, { ink: null });

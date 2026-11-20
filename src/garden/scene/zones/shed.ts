@@ -1,11 +1,13 @@
 import * as THREE from 'three';
 import { toon } from '../../../shared/toon';
-import { add, box, jitter, label, mapped, tube, UNIT_BOX, V } from '../../../shared/scene/kit';
+import { add, box, jitter, label, tube, UNIT_BOX, V, textured } from '../../../shared/scene/kit';
 import { climber } from '../plants/flowers';
 import { marigold, nasturtium } from '../plants/fruiting';
 import { PUMPKIN } from '../plants/kit';
 import { UNIT_CYL, LOW_SPHERE, JAR } from '../geometry';
 import type { GardenCtx } from '../ctx';
+import { C } from '../palette';
+import { TONE } from '../../../shared/theme';
 
 export function buildToolFence(c: GardenCtx) {
   const { r, k, toolSwing, M, area, pick, inst } = c;
@@ -13,7 +15,7 @@ export function buildToolFence(c: GardenCtx) {
   {
     for (let x = -3.6; x < 4.95; x += 0.155) {
       const h = 1.55 + (Math.round(x / 0.155) % 2 ? 0 : 0.03);
-      inst(tools, UNIT_BOX, M.cedar, [x, h / 2, 0], [0.14, h, 0.022], new THREE.Color(0xffffff).offsetHSL(0, 0, jitter(r, 0.05)));
+      inst(tools, UNIT_BOX, M.cedar, [x, h / 2, 0], [0.14, h, 0.022], new THREE.Color(TONE.white).offsetHSL(0, 0, jitter(r, 0.05)));
     }
     for (const y of [0.3, 1.3]) inst(tools, UNIT_BOX, M.cedarDark, [0.65, y, -0.04], [8.6, 0.09, 0.04]);
     for (let x = -3.6; x < 5; x += 2.2) box(0.1, 1.7, 0.1, M.cedarDark, tools, { at: [x, 0.85, -0.08], r: 0.01 });
@@ -67,17 +69,17 @@ export function buildToolFence(c: GardenCtx) {
     wb.position.set(-0.3, 0, 0.75);
     wb.rotation.y = 0.35;
     tools.add(wb);
-    add(new THREE.CylinderGeometry(0.15, 0.15, 0.06, 18), toon(0x2a2a2e), wb, { at: [0.55, 0.15, 0], rot: [Math.PI / 2, 0, 0] });
+    add(new THREE.CylinderGeometry(0.15, 0.15, 0.06, 18), toon(C.rubber), wb, { at: [0.55, 0.15, 0], rot: [Math.PI / 2, 0, 0] });
     const tray = new THREE.CylinderGeometry(0.34, 0.22, 0.24, 4, 1, true);
     tray.rotateY(Math.PI / 4);
     tray.scale(1.3, 1, 0.9);
-    add(tray, toon(0x2f7a5a, { shine: 0.4, side: THREE.DoubleSide }), wb, { at: [0.1, 0.42, 0] });
+    add(tray, toon(C.barrow, { shine: 0.4, side: THREE.DoubleSide }), wb, { at: [0.1, 0.42, 0] });
     for (const z of [-0.18, 0.18]) {
       add(UNIT_CYL, M.steel, wb, { at: [-0.15, 0.3, z], rot: [0, 0, 1.25], scale: [0.015, 1.1, 0.015] });
       add(UNIT_CYL, M.steel, wb, { at: [-0.15, 0.15, z], scale: [0.012, 0.3, 0.012] });
     }
     // Clematis climbing the fence on the left.
-    climber(k, tools, [V(-3.4, 0, 0.06), V(-3.1, 0.7, 0.07), V(-2.6, 1.3, 0.06), V(-2.0, 1.45, 0.07), V(-1.5, 1.2, 0.06)], { leaf: 0x3f7a3a, flowers: [0x8a5ad8, 0xb07ae8], petals: 6, flowerSize: 0.05 });
+    climber(k, tools, [V(-3.4, 0, 0.06), V(-3.1, 0.7, 0.07), V(-2.6, 1.3, 0.06), V(-2.0, 1.45, 0.07), V(-1.5, 1.2, 0.06)], { leaf: TONE.leaf, flowers: [C.purple.clematis, C.purple.clematisLight], petals: 6, flowerSize: 0.05 });
     pick(tools, [2.4, 1.7, 1.4], [0.0, 0.85, 0.5]);
   }
 }
@@ -112,7 +114,7 @@ export function buildPantry(c: GardenCtx) {
     box(0.08, 0.08, D + 0.34, M.trim, pantry, { at: [0, y0 + H + 0.66, 0], r: 0.01 });
     for (const x of [-doorW / 2 - 0.04, doorW / 2 + 0.04]) box(0.07, doorH + 0.06, 0.03, M.trim, pantry, { at: [x, y0 + doorH / 2, D / 2 + 0.03], r: 0.008 });
     box(doorW + 0.15, 0.07, 0.03, M.trim, pantry, { at: [0, y0 + doorH + 0.04, D / 2 + 0.03], r: 0.008 });
-    const sign = add(new THREE.BoxGeometry(0.62, 0.16, 0.02), [M.trim, M.trim, M.trim, M.trim, mapped(0xffffff, label([{ text: 'PANTRY', size: 54, color: '#2a3a4a' }], '#f1ece0', 384, 100)), M.trim] as unknown as THREE.Material, pantry, { at: [0, y0 + H + 0.22, D / 2 + 0.02] });
+    const sign = add(new THREE.BoxGeometry(0.62, 0.16, 0.02), [M.trim, M.trim, M.trim, M.trim, textured(label([{ text: 'PANTRY', size: 54, color: '#2a3a4a' }], '#f1ece0', 384, 100)), M.trim] as unknown as THREE.Material, pantry, { at: [0, y0 + H + 0.22, D / 2 + 0.02] });
     sign.castShadow = true;
     // Doors swing out from the outer edges.
     const doors: THREE.Group[] = [];
@@ -136,37 +138,37 @@ export function buildPantry(c: GardenCtx) {
       box(w, 0.03, 0.3, M.weathered, pantry, { at: [shelfX, y0 + y, z], r: 0.004 });
     }
     for (const x of [-W / 2 + 0.25, W / 2 - 0.25]) box(0.04, 1.5, 0.04, M.weathered, pantry, { at: [x, y0 + 0.75, -D / 2 + 0.07] });
-    const contents = [0xd83a2a, 0x7a9a3a, 0xf3a43a, 0x7a2a5a, 0x5aa04a, 0xe8d08a, 0xc8402a, 0xb04a7a];
+    const contents = [C.red.jarTomato, C.green.jarPickle, C.orange.jarPeach, C.red.jarBeet, C.green.jarBean, C.straw.pale, C.red.jarPepper, C.pink.jarBerry];
     for (const y of [0.565, 1.015, 1.465]) {
       for (let i = 0; i < 14; i++) {
         const x = -W / 2 + 0.2 + i * 0.115;
         const z = -D / 2 + 0.2 + jitter(r, 0.04);
         const col = contents[Math.floor(r() * contents.length)];
         inst(pantry, JAR, whiteShiny, [x, y0 + y, z], [1, 1, 1], col);
-        inst(pantry, UNIT_CYL, M.brass, [x, y0 + y + 0.137, z], [0.036, 0.016, 0.036], 0xffffff, [0, 0, 0], null);
+        inst(pantry, UNIT_CYL, M.brass, [x, y0 + y + 0.137, z], [0.036, 0.016, 0.036], TONE.white, [0, 0, 0], null);
       }
     }
     const crate = (x: number, z: number, col: number, n: number, sz: number) => {
       box(0.42, 0.24, 0.32, M.weathered, pantry, { at: [x, y0 + 0.12, z], r: 0.01 });
       for (let i = 0; i < n; i++) inst(pantry, LOW_SPHERE, white, [x + jitter(r, 0.15), y0 + 0.25 + r() * 0.03, z + jitter(r, 0.1)], [sz, sz * 0.8, sz * 0.9], new THREE.Color(col).offsetHSL(0, 0, jitter(r, 0.05)));
     };
-    crate(-0.55, D / 2 - 0.55, 0xb08a5a, 10, 0.045);
-    crate(-0.55, D / 2 - 0.95, 0xd8a24a, 10, 0.04);
-    inst(pantry, PUMPKIN, white, [0.6, y0 + 0.1, D / 2 - 0.6], [0.14, 0.14, 0.14], 0xe8a85a);
-    inst(pantry, PUMPKIN, white, [0.7, y0 + 0.08, D / 2 - 0.95], [0.11, 0.11, 0.11], 0x5a7a3a);
+    crate(-0.55, D / 2 - 0.55, C.yellow.potato, 10, 0.045);
+    crate(-0.55, D / 2 - 0.95, C.yellow.onion, 10, 0.04);
+    inst(pantry, PUMPKIN, white, [0.6, y0 + 0.1, D / 2 - 0.6], [0.14, 0.14, 0.14], C.orange.squash);
+    inst(pantry, PUMPKIN, white, [0.7, y0 + 0.08, D / 2 - 0.95], [0.11, 0.11, 0.11], C.green.squashKeep);
     box(W - 0.1, 0.06, 0.06, M.weathered, pantry, { at: [0, y0 + H - 0.08, 0.1] });
     for (let i = 0; i < 5; i++) {
       const x = -0.7 + i * 0.35;
-      inst(pantry, UNIT_CYL, white, [x, y0 + H - 0.2, 0.1], [0.004, 0.2, 0.004], 0x8a7a5a, [0, 0, 0], null);
-      if (i % 2 === 0) for (let j = 0; j < 5; j++) inst(pantry, LOW_SPHERE, white, [x + jitter(r, 0.02), y0 + H - 0.34 - j * 0.07, 0.1], [0.032, 0.038, 0.032], 0xf0e6d6);
-      else inst(pantry, new THREE.ConeGeometry(1, 1, 8), white, [x, y0 + H - 0.4, 0.1], [0.06, 0.24, 0.06], [0x6a8a5a, 0x8a9a7a][i % 2], [Math.PI, 0, 0]);
+      inst(pantry, UNIT_CYL, white, [x, y0 + H - 0.2, 0.1], [0.004, 0.2, 0.004], C.straw.twine, [0, 0, 0], null);
+      if (i % 2 === 0) for (let j = 0; j < 5; j++) inst(pantry, LOW_SPHERE, white, [x + jitter(r, 0.02), y0 + H - 0.34 - j * 0.07, 0.1], [0.032, 0.038, 0.032], C.cream.garlic);
+      else inst(pantry, new THREE.ConeGeometry(1, 1, 8), white, [x, y0 + H - 0.4, 0.1], [0.06, 0.24, 0.06], [C.green.herbBundle, C.sage.stem][i % 2], [Math.PI, 0, 0]);
     }
     // A window with a flower box on the side facing the garden.
-    box(0.05, 0.55, 0.65, toon(0x9fd8f0, { shine: 0.9 }), pantry, { at: [W / 2 + 0.01, y0 + 1.35, 0.1], r: 0.005 });
+    box(0.05, 0.55, 0.65, toon(C.window, { shine: 0.9 }), pantry, { at: [W / 2 + 0.01, y0 + 1.35, 0.1], r: 0.005 });
     box(0.07, 0.62, 0.72, M.trim, pantry, { at: [W / 2 + 0.005, y0 + 1.35, 0.1], r: 0.008 });
     box(0.18, 0.16, 0.7, M.cedar, pantry, { at: [W / 2 + 0.11, y0 + 0.98, 0.1], r: 0.01 });
     nasturtium(k, pantry, V(W / 2 + 0.11, y0 + 1.05, -0.12));
-    marigold(k, pantry, V(W / 2 + 0.11, y0 + 1.05, 0.18), 0xffc21a);
+    marigold(k, pantry, V(W / 2 + 0.11, y0 + 1.05, 0.18), C.yellow.gold);
     pick(pantry, [W + 0.2, H + 0.7, D + 0.2], [0, (H + 0.7) / 2, 0]);
     // Gutter and downspout to the rain barrel (part of the water area visually).
     add(UNIT_CYL, M.galv, pantry, { at: [W / 2 + 0.16, y0 + H - 0.05, 0], rot: [Math.PI / 2, 0, 0], scale: [0.045, D + 0.3, 0.045] });
