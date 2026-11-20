@@ -21,3 +21,12 @@ export function announce(text: string): void {
   r.textContent = '';
   timer = window.setTimeout(() => (r.textContent = text), SETTLE_MS);
 }
+
+/** Announces a result that redraws: quiet on the first draw, and on redraws that say the same thing. */
+export function resultAnnouncer(): (text: string) => void {
+  let said: string | null = null;
+  return (text) => {
+    if (said !== null && text !== said) announce(text);
+    said = text;
+  };
+}

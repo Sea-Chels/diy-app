@@ -4,6 +4,8 @@
 /* The model's dots for keyboards: a row over the quick fixes that shows while focus is in it. */
 .spot-nav { bottom: var(--overlay-row); }
 .spot-nav:not(:focus-within) { opacity: 0; pointer-events: none; }
+/* The open panel covers the stage's right side; the bottom rows end where it starts, so no chip sits (and takes focus) under it. */
+@media (--above-phone) { main:has(> .panel.open) .quick-fixes { right: min(var(--panel-width), 100%); } }
 .scene-menu { position: absolute; top: var(--overlay-gap); left: var(--overlay-gap); z-index: var(--z-overlay); }
 .scene-menu.open .menu-card { display: flex; }
 .swatches.dim { opacity: var(--dim); }

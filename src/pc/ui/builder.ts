@@ -10,6 +10,7 @@ import { h, clear } from '../../shared/dom';
 import { keepFocus } from '../../shared/focus';
 import { icon, type IconName } from '../../shared/icons';
 import { closeModal, openModal } from '../../shared/modal';
+import { resultAnnouncer } from '../../shared/announce';
 
 const LEVEL_ICON: Record<Issue['level'], IconName> = { error: 'bad', warn: 'alert', ok: 'ok' };
 
@@ -82,16 +83,17 @@ export function openBuilder(focus?: Category): void {
     const b = build();
     const p = resolve(b);
     const errors = issues.filter((i) => i.level === 'error').length;
+    const verdict = errors ? `${errors} problem${errors > 1 ? 's' : ''} to fix` : 'No clashes found';
+    const watts = p.cpu || p.gpu ? `Estimated peak draw ~${estimateWatts(p)} W · suggest ${suggestedPsu(p)} W or more` : '';
     side.append(
       h('div', { class: `verdict ${errors ? 'bad' : 'good'}` },
         icon(errors ? 'bad' : 'ok', 22),
         h('div', {},
-          h('strong', {}, errors ? `${errors} problem${errors > 1 ? 's' : ''} to fix` : 'No clashes found'),
+          h('strong', {}, verdict),
           h('span', { class: 'muted small' }, errors ? 'Red parts don’t work together.' : 'Double-check exact sizes on PCPartPicker.'))),
     );
-    if (p.cpu || p.gpu) {
-      side.append(h('p', { class: 'watts' }, icon('zap', 16), h('span', {}, `Estimated peak draw ~${estimateWatts(p)} W · suggest ${suggestedPsu(p)} W or more`)));
-    }
+    if (watts) side.append(h('p', { class: 'watts' }, icon('zap', 16), h('span', {}, watts)));
+    sayResult(watts ? `${verdict}. ${watts}` : verdict);
     side.append(h('ul', { class: 'issues' }, ...issues.map((i) => h('li', { class: `lvl-${i.level}` }, icon(LEVEL_ICON[i.level], 15), h('span', {}, i.text)))));
 
     const patch = setupFromBuild(b);
@@ -115,6 +117,7 @@ export function openBuilder(focus?: Category): void {
   }
 
   const render = () => keepFocus(body, renderNow);
+  const sayResult = resultAnnouncer();
   function renderNow(): void {
     const issues = checkBuild(build());
     renderList(issues);

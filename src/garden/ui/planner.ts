@@ -12,6 +12,7 @@ import { openModal } from '../../shared/modal';
 import { openPlantGuide } from './plantGuide';
 import { chip } from '../../shared/ui/choices';
 import { must } from '../../shared/must';
+import { resultAnnouncer } from '../../shared/announce';
 
 const LEVEL_ICON: Record<PlanIssue['level'], IconName> = { error: 'bad', warn: 'alert', ok: 'ok' };
 const BED_KEY = 'diy-garden:bed';
@@ -89,6 +90,7 @@ export function openPlanner(): void {
   }
 
   const renderSide = () => keepFocus(side, renderSideNow);
+  const sayResult = resultAnnouncer();
   function renderSideNow(): void {
     clear(side);
     const bed = must(BED_SIZES.find((b) => b.id === bedId), `bed size ${bedId}`);
@@ -96,6 +98,8 @@ export function openPlanner(): void {
     const rows = planRows(plan());
     const used = rows.reduce((n, r) => n + r.squares, 0);
     const { issues, good } = checkPlan(rows, total);
+    const checks = issues.filter((i) => i.level !== 'ok').length;
+    sayResult(`${used} of ${total} square feet planted${checks ? `, ${checks} thing${checks > 1 ? 's' : ''} to check` : ''}`);
 
     const seg = h('div', { class: 'seg' }, ...BED_SIZES.map((b) => h('button', { class: b.id === bedId ? 'active' : '', onClick: () => {
       bedId = b.id;
