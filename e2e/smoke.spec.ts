@@ -111,9 +111,16 @@ test.describe(() => {
     const errors = watchErrors(page);
     await page.goto('./pc/');
     await expect(page.locator(READY)).toBeAttached();
+    // A slow runner can pass through the swapping state between two polls, so record it as it happens.
+    await page.evaluate(() => {
+      const canvas = document.querySelector('canvas');
+      new MutationObserver(() => {
+        if (canvas?.dataset.scene === 'swapping') document.body.dataset.swapped = '';
+      }).observe(canvas as HTMLCanvasElement, { attributeFilter: ['data-scene'] });
+    });
     await page.locator('#rig-menu .menu-toggle').click();
     await page.locator('#rig-card .seg[aria-label="Cooling"] button[aria-pressed="false"]').first().click();
-    await expect(page.locator('canvas[data-scene="swapping"]')).toBeAttached();
+    await expect(page.locator('body[data-swapped]')).toBeAttached();
     await expect(page.locator(READY)).toBeAttached();
     expect(await drawnShare(page)).toBeGreaterThan(0.05);
     expect(errors).toEqual([]);
