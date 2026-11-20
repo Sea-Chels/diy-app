@@ -125,7 +125,7 @@ garden/index.html        Garden workshop page (likewise)
 home/index.html          Home workshop page (likewise)
 src/
   shared/
-    theme.ts             the color palette; injected into every page as CSS variables
+    theme.ts             the color palette, injected into every page as CSS variables; LIGHT and TONE, the colors every scene shares
     base.css             design tokens, page shell, top bar, buttons, side panel, modals
     media.css, media.ts  the breakpoints, for stylesheets and scripts alike
     workshop.css         styles shared by the workshop pages
@@ -150,7 +150,7 @@ src/
     scene/outline.ts     the silhouette highlight pass
     scene/kit.ts         leaf shapes, canvas textures, the add(), box() and merge() mesh helpers
     scene/rigKit.ts      clickable spots, beacons, lids and camera views every rig uses
-    scene/materials.ts   material recipes shared between workshops
+    scene/materials.ts   material recipes and metal finishes shared between workshops
     ui/guidePanel.ts     the side panel for a selected part or area
     ui/choices.ts        segmented controls, swatches and chips
     ui/guideCard.ts      guide card pieces (chips, steps, cautions, video button)
@@ -194,6 +194,7 @@ src/
     scene/rig.ts         builds the garden from scene/zones/ (beds, compost, shed, water, herbs, …)
     scene/plants/        the plant builders (tomato, corn, pawpaw, …)
     scene/batches.ts     instance batches: one draw call per leaf, petal or berry kind
+    scene/palette.ts     the garden's colors, plants by hue family
     ui/*                 guide cards, plant guide, bed planner
   home/
     data/areas.ts        clickable areas (AreaId) and what opens for each
@@ -203,6 +204,7 @@ src/
     scene/scene.ts       stage settings
     scene/rig.ts         builds the room from scene/zones/ (kitchen, bathroom, left wall, living, outside)
     scene/creases.ts     the ink crease lines on hard edges
+    scene/palette.ts     the house's colors
     ui/*                 guide cards, home menu, toolbox, calculators
 e2e/                     Playwright smoke tests
 ```
