@@ -264,9 +264,10 @@ const smoothCache = new WeakMap<THREE.BufferGeometry, THREE.BufferGeometry>();
 function smoothNormals(g: THREE.BufferGeometry): THREE.BufferGeometry {
   let s = smoothCache.get(g);
   if (!s) {
+    // A view of just the positions, so vertices merge across uv and normal seams; mergeVertices only reads it, so no copy is needed.
     const c = new THREE.BufferGeometry();
-    c.setAttribute('position', g.getAttribute('position').clone());
-    if (g.index) c.setIndex(g.index.clone());
+    c.setAttribute('position', g.getAttribute('position'));
+    c.setIndex(g.index);
     s = mergeVertices(c, 1e-4);
     s.computeVertexNormals();
     smoothCache.set(g, s);
@@ -320,12 +321,22 @@ export function reshape(mesh: THREE.Mesh, g: THREE.BufferGeometry): void {
 /** Every live LineMaterial, so the scene can keep their resolution in sync. */
 export const lineMaterials = new Set<LineMaterial>();
 
+/** One LineMaterial per width and color, shared by every ink line drawn with them. */
+const inkLineMaterials = new Map<string, LineMaterial>();
+
 export function inkLine(points: THREE.Vector3[], width = 2, color: THREE.ColorRepresentation = INK): Line2 {
   const g = new LineGeometry();
   g.setPositions(points.flatMap((p) => [p.x, p.y, p.z]));
-  const m = new LineMaterial({ color: new THREE.Color(color).getHex(), linewidth: width, worldUnits: false });
-  m.resolution.set(window.innerWidth, window.innerHeight);
-  lineMaterials.add(m);
+  const hexColor = new THREE.Color(color).getHex();
+  const key = `${width}|${hexColor}`;
+  let m = inkLineMaterials.get(key);
+  if (!m) {
+    m = new LineMaterial({ color: hexColor, linewidth: width, worldUnits: false });
+    m.resolution.set(window.innerWidth, window.innerHeight);
+    tag(m, 'sharedMaterial', true);
+    lineMaterials.add(m);
+    inkLineMaterials.set(key, m);
+  }
   const line = new Line2(g, m);
   line.computeLineDistances();
   line.raycast = () => {};
@@ -344,6 +355,7 @@ export function disposeTree(root: THREE.Object3D): void {
     if (!tagOf(o, 'sharedGeometry')) mesh.geometry?.dispose();
     const mats = Array.isArray(mesh.material) ? mesh.material : mesh.material ? [mesh.material] : [];
     for (const m of mats) {
+      if (tagOf(m, 'sharedMaterial')) continue;
       if (m instanceof LineMaterial) lineMaterials.delete(m);
       for (const slot of TEXTURE_SLOTS) {
         const t = (m as unknown as Record<string, unknown>)[slot];

@@ -32,7 +32,8 @@ export function buildMotherboard(c: PcCtx, shell: CaseShell) {
   cg.add(ioRgb);
   const [vt0, vt1, vtv] = L.vrmTop;
   const vtp = P((vt0 + vt1) / 2, vtv, 10);
-  const vrmTex = () => mapped(TONE.silver, stripes([1, 10]), FINISH.brushed);
+  const vrmFins = stripes([1, 10]);
+  const vrmTex = () => mapped(TONE.silver, vrmFins, FINISH.brushed);
   mb.push(rbox(20, 22, vt1 - vt0, vrmTex(), cg, { at: [vtp.x, vtp.y, vtp.z], r: 2.5, ink: 'body' }));
   const [vsu, vs0, vs1] = L.vrmSide;
   const vsp = P(vsu, (vs0 + vs1) / 2, 10);

@@ -41,11 +41,11 @@ export function canvasTex(w: number, h: number, draw: (ctx: CanvasRenderingConte
 }
 
 /** Wood planks: warm base with darker grain lines along u. */
-export function woodTexture(base = '#b9844f', grain = '#8a5a32', repeat: [number, number] = [1, 1]): THREE.CanvasTexture {
+export function woodTexture(base = '#b9844f', grain = '#8a5a32', repeat: [number, number] = [1, 1], seed = 7): THREE.CanvasTexture {
   return canvasTex(128, 64, (ctx) => {
     ctx.fillStyle = base;
     ctx.fillRect(0, 0, 128, 64);
-    const r = rng(7);
+    const r = rng(seed);
     ctx.strokeStyle = grain;
     for (let i = 0; i < 9; i++) {
       ctx.globalAlpha = 0.25 + r() * 0.35;

@@ -45,6 +45,8 @@ export function createScreen(): Screen {
   let now = 0;
   let specs = DEFAULT_SPECS;
   let lastDraw = -1;
+  /** What the BIOS frame on the canvas shows, so a frame that would look the same isn't drawn and uploaded again. */
+  let biosShown = '';
 
   function text(s: string, x: number, y: number, size: number, color: string, o: { weight?: number; align?: CanvasTextAlign; font?: string; stroke?: string; strokeW?: number } = {}): void {
     ctx.font = `${o.weight ?? 600} ${size}px ${o.font ?? FONT}`;
@@ -111,6 +113,9 @@ export function createScreen(): Screen {
     if (reducedMotion() || Math.floor(e * 2.5) % 2 === 0 || e > 1.6) text('Press DEL to enter setup  ·  F11 boot menu', W / 2, H - 60, 26, '#e7e9ef', { align: 'center', font: MONO, weight: 500 });
   }
 
+  const biosTemp = (e: number) => 38 + Math.round(Math.sin(e * 1.3) * 2);
+  const biosGlow = (e: number) => 0.2 + (0.75 + 0.25 * Math.sin(e * 5)) * 0.2;
+
   function drawBios(e: number): void {
     ctx.fillStyle = '#141a33';
     ctx.fillRect(0, 0, W, H);
@@ -121,7 +126,7 @@ export function createScreen(): Screen {
     text('EZ Mode  ·  F7 Advanced', W - 28, 33, 22, P.muted, { align: 'right', weight: 500 });
     roundRect(28, 88, 460, 300, 18, '#1d2547', '#2f3a6b', 3);
     text('System', 52, 120, 22, P.muted, { weight: 700 });
-    const rows: [string, string][] = [['CPU', specs.cpu], ['Memory', specs.ram], ['Graphics', specs.gpu], ['CPU temp', `${38 + Math.round(Math.sin(e * 1.3) * 2)} °C`]];
+    const rows: [string, string][] = [['CPU', specs.cpu], ['Memory', specs.ram], ['Graphics', specs.gpu], ['CPU temp', `${biosTemp(e)} °C`]];
     rows.forEach(([k, v], i) => {
       text(k, 52, 165 + i * 48, 22, P.muted, { weight: 500 });
       text(v.length > 26 ? `${v.slice(0, 25)}…` : v, 170, 165 + i * 48, 22, P.text, { weight: 700 });
@@ -141,8 +146,7 @@ export function createScreen(): Screen {
     boot.forEach((b, i) => {
       const y = 160 + i * 66;
       const on = i === sel;
-      const pulse = on ? 0.75 + 0.25 * Math.sin(e * 5) : 0;
-      roundRect(540, y, 432, 52, 12, on ? `rgba(110,231,255,${0.2 + pulse * 0.2})` : '#262f57', on ? P.cyan : undefined, 3);
+      roundRect(540, y, 432, 52, 12, on ? `rgba(110,231,255,${biosGlow(e)})` : '#262f57', on ? P.cyan : undefined, 3);
       text(`${i + 1}`, 566, y + 26, 24, on ? P.cyan : P.muted, { weight: 800 });
       text(b, 600, y + 26, 21, P.text, { weight: on ? 700 : 500 });
     });
@@ -210,10 +214,14 @@ export function createScreen(): Screen {
 
   function draw(): void {
     const e = now - since;
+    // The BIOS only uses time for its idle pulse and temperature flicker.
+    const be = reducedMotion() ? 0 : e;
+    const bios = current === 'bios' ? `${biosTemp(be)}|${biosGlow(be)}` : '';
+    if (bios && bios === biosShown) return;
+    biosShown = bios;
     if (current === 'off') drawOff();
     else if (current === 'post') drawPost(e);
-    // The BIOS only uses time for its idle pulse and temperature flicker.
-    else if (current === 'bios') drawBios(reducedMotion() ? 0 : e);
+    else if (current === 'bios') drawBios(be);
     else if (current === 'install') drawInstall(e);
     else drawDesktop();
     texture.needsUpdate = true;
@@ -228,10 +236,12 @@ export function createScreen(): Screen {
       current = s;
       since = now;
       lastDraw = -1;
+      biosShown = '';
     },
     setSpecs(s) {
       specs = s;
       lastDraw = -1;
+      biosShown = '';
     },
     update(t) {
       now = t;

@@ -29,6 +29,13 @@ export function createCtx(s: Setup) {
   // White materials are tinted per instance.
   const white = toon(TONE.white);
   const whiteShiny = toon(TONE.white, { shine: 0.7 });
+  const soilTex = speckle('#4a3222', ['#3a2618', '#5d4030', '#2c1c12', '#6a4a35'], 900, [2, 5], [3, 2], 4);
+  /** The soil texture at another repeat, sharing its canvas rather than drawing it again. */
+  const soilTexAt = (x: number, y: number) => {
+    const t = soilTex.clone();
+    t.repeat.set(x, y);
+    return t;
+  };
   const M = {
     galv: toon(TONE.silver, FINISH.bright),
     galvDark: toon(C.galvDark, FINISH.satin),
@@ -46,7 +53,7 @@ export function createCtx(s: Setup) {
         for (let c = 0; c < 6; c++) ctx.fillRect(((c + (row % 2) * 0.5) * 128) / 6, row * 16, 2, 14);
       }
     }, [3, 2])),
-    soil: textured(speckle('#4a3222', ['#3a2618', '#5d4030', '#2c1c12', '#6a4a35'], 900, [2, 5], [3, 2], 4)),
+    soil: textured(soilTex),
     gravel: textured(speckle('#b9ad9b', ['#8f8576', '#d8cfc0', '#a39684', '#7d7366', '#e6ddd0'], 2600, [2, 5], [10, 8], 9), { halftone: 0.8 }),
     stone: textured(speckle('#a7a39b', ['#8e8a82', '#bdb9b0', '#7b776f'], 300, [1, 3], [1, 1], 12)),
     brick: textured(canvasTex(128, 64, (ctx) => {
@@ -117,7 +124,7 @@ export function createCtx(s: Setup) {
     const face = add(new THREE.BoxGeometry(0.13, 0.05, 0.008), [M.weathered, M.weathered, M.weathered, M.weathered, textured(label([{ text, size: 40, color: '#3a2a1a' }], '#e7d5b0', 256, 96)), M.weathered], t, { at: [0, 0.15, 0.002] });
     face.castShadow = true;
   }
-  return { season, r, b, k, lidHooks, steam, steamBase, toolSwing, spigot, root, white, whiteShiny, M, areas, picks, area, pick, inst, tag, s };
+  return { season, r, b, k, lidHooks, steam, steamBase, toolSwing, spigot, root, white, whiteShiny, M, soilTexAt, areas, picks, area, pick, inst, tag, s };
 }
 
 export type GardenCtx = ReturnType<typeof createCtx>;

@@ -23,6 +23,8 @@ export interface SceneTags {
   sharedGeometry: true;
   /** A texture cached across rebuilds, which disposing the rig leaves alone. */
   sharedTexture: true;
+  /** A material cached across rebuilds, which disposing the rig leaves alone. */
+  sharedMaterial: true;
   /** On a toon material: its own uniforms. */
   uniforms: ToonUniforms;
 }

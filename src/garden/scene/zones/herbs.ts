@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { add, box, canvasTex, jitter, speckle, UNIT_BOX, V, textured } from '../../../shared/scene/kit';
+import { add, box, canvasTex, jitter, UNIT_BOX, V, textured } from '../../../shared/scene/kit';
 import { alyssum, beeBalm, cosmos, echinacea, zinnia } from '../plants/flowers';
 import { basil, sunflower } from '../plants/fruiting';
 import { chamomile, chives, lavender, marshmallow, rosemary, sage, thyme } from '../plants/herbs';
@@ -8,7 +8,7 @@ import { C } from '../palette';
 import { TONE, hex } from '../../../shared/theme';
 
 export function buildHerbSpiral(c: GardenCtx) {
-  const { r, k, M, area, pick, inst, tag } = c;
+  const { r, k, M, soilTexAt, area, pick, inst, tag } = c;
   const herbs = area('herbs', -4.3, 1.35);
   {
     const turns = 1.3;
@@ -50,7 +50,7 @@ export function buildHerbSpiral(c: GardenCtx) {
       sg.setAttribute('uv', new THREE.Float32BufferAttribute(posA.flatMap((_, q) => (q % 3 === 0 ? [posA[q], posA[q + 2]] : [])), 2));
       sg.setIndex(idx);
       sg.computeVertexNormals();
-      add(sg, textured(speckle('#4a3222', ['#3a2618', '#5d4030', '#2c1c12', '#6a4a35'], 900, [2, 5], [1, 1], 4), { side: THREE.DoubleSide }), herbs, { ink: null });
+      add(sg, textured(soilTexAt(1, 1), { side: THREE.DoubleSide }), herbs, { ink: null });
     }
     const n = 48;
     for (let i = 0; i < n; i++) {
