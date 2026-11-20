@@ -9,8 +9,8 @@ export default defineConfig({
   testDir: 'e2e',
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
-  // CI has no GPU. Under forced SwiftShader (two workers) the slowest test took 20 s and the longest wait, the garden's first frame, 12 s; these are about 3× that.
-  timeout: process.env.CI ? 60_000 : 30_000,
+  // CI has no GPU. Under forced SwiftShader (two workers) the slowest test took 20 s and the longest wait, the garden's first frame, 12 s. A runner is slower than that machine, so the test limit is about 6× and the wait limit about 3×.
+  timeout: process.env.CI ? 120_000 : 30_000,
   expect: { timeout: process.env.CI ? 30_000 : 10_000 },
   reporter: process.env.CI ? 'github' : 'list',
   use: {
